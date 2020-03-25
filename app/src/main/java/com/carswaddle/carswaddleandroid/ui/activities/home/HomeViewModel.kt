@@ -1,4 +1,4 @@
-package com.carswaddle.carswaddleandroid.ui.home
+package com.carswaddle.carswaddleandroid.activities.ui.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

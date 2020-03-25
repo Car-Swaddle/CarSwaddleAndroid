@@ -1,4 +1,4 @@
-package com.carswaddle.carswaddleandroid.ui.notifications
+package com.carswaddle.carswaddleandroid.activities.ui.notifications
 
 import android.os.Bundle
 import android.view.LayoutInflater
