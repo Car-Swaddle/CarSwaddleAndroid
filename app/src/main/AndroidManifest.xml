@@ -9,6 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
             android:name=".activities.ui.SplashActivity"
             android:label="@string/app_name">
@@ -27,5 +28,6 @@
             android:label="Login"
                 />
     </application>
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>
