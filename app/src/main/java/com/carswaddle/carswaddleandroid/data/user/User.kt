@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.carswaddle.carswaddleandroid.services.serviceModels.Mechanic
 
+
 @Entity
 data class User(
     @PrimaryKey val id: Int,
@@ -18,17 +19,3 @@ data class User(
     @ColumnInfo(name = "time_zone") val timeZone: String?,
     @ColumnInfo(name = "mechanic_id") val mechanicID: String?
 )
-
-//data class User (
-//    val id: String,
-//    val firstName: String,
-//    val lastName: String,
-//    val phoneNumber: String,
-//    val imageID: String,
-//    val email: String,
-//    val isEmailVerified: Boolean,
-//    val isPhoneNumberVerified: Boolean,
-//    val timeZone: String,
-//    val mechanic: Mechanic?,
-//    val mechanicID: String?
-//)
