@@ -7,8 +7,12 @@ import retrofit2.http.*
 
 interface UserService {
 
-    @Headers("Content-Type: application/json")
+    @Headers(ContentType.headerPrefix + ContentType.applicationJSON)
     @GET("/api/current-user")
+    @Authenticated
     fun currentUser(): Call<User>
 
 }
+
+
+annotation class Authenticated()

@@ -1,24 +1,30 @@
 package com.carswaddle.carswaddleandroid.data.user
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Delete
+import android.content.Context
+import androidx.lifecycle.LiveData
+import androidx.room.*
+import com.carswaddle.carswaddleandroid.Extensions.carSwaddlePreferences
+
 
 @Dao
 interface UserDao {
     @Query("SELECT * FROM user")
     fun getAll(): List<User>
 
-    @Query("SELECT * FROM user WHERE uid IN (:userIds)")
-    fun loadAllByIds(userIds: IntArray): List<User>
+    @Query("SELECT * FROM user WHERE id IN (:userIds)")
+    fun getUsersWithUserIds(userIds: IntArray): List<User>
 
-    @Query("SELECT * FROM user WHERE first_name LIKE :first AND " +
-            "last_name LIKE :last LIMIT 1")
-    fun findByName(first: String, last: String): User
+    @Query("SELECT * FROM user WHERE id IN (:userId)")
+    fun getUserWithUserId(userId: String): LiveData<User>?
 
-    @Insert
-    fun insertAll(vararg users: User)
+    @Query("SELECT * FROM user WHERE id IN (:userId)")
+    fun getDatUser(userId: String): User?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertUser(user: User)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertUsers(vararg users: User)
 
     @Delete
     fun delete(user: User)
