@@ -9,7 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 private val okHttpClient = OkHttpClient()
 
 private val production = "https://api.carswaddle.com"
-private val staging = "http://api.staging.carswaddle.com"
+private val staging = "https://api.staging.carswaddle.com"
 
 val serviceGenerator = ServiceGenerator(staging, okHttpClient)
 
