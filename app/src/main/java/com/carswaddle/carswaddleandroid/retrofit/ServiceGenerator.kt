@@ -1,6 +1,5 @@
 package com.carswaddle.carswaddleandroid.retrofit
 
-import android.app.Service
 import android.content.Context
 import com.carswaddle.carswaddleandroid.data.Authentication
 import okhttp3.OkHttpClient
@@ -9,12 +8,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 private val okHttpClient = OkHttpClient()
 
-
 private val production = "https://api.carswaddle.com"
+private val staging = "http://api.staging.carswaddle.com"
 
-val serviceGenerator = ServiceGenerator(production, okHttpClient)
-
-
+val serviceGenerator = ServiceGenerator(staging, okHttpClient)
 
 class ServiceGenerator(baseURL: String, okHttpClient: OkHttpClient) {
 
@@ -39,7 +36,7 @@ class ServiceGenerator(baseURL: String, okHttpClient: OkHttpClient) {
                     val builder = OkHttpClient.Builder()
                     builder.addInterceptor(AuthenticationInterceptor(authToken))
                     val authenticatedOkHttpClient = builder.build()
-                    val s = ServiceGenerator(production, authenticatedOkHttpClient)
+                    val s = ServiceGenerator(staging, authenticatedOkHttpClient)
                     this.authenticated = s
                     return s
                 } else {

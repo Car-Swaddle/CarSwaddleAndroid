@@ -7,4 +7,9 @@
     <string name="email_hint">email</string>
     <string name="login">Login</string>
     <string name="preferences">com.carswaddle.carswaddleandroid.preferences</string>
+    <string name="title_activity_schedule_service">Schedule service</string>
+    <string name="title_activity_maps">Service schedule</string>
+    <string name="permission_rationale_location">We use your location to find the mechanic nearest to you.</string>
+    <string name="permission_required_toast">Permission needed to find your location</string>
+    <string name="location_permission_denied">Location permission is missing</string>
 </resources>

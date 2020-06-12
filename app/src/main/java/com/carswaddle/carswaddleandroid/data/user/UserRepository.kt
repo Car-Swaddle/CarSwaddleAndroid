@@ -44,7 +44,7 @@ class UserRepository(private val userDao: UserDao) {
         call.enqueue(object : Callback<com.carswaddle.carswaddleandroid.services.serviceModels.User> {
             override fun onFailure(call: Call<com.carswaddle.carswaddleandroid.services.serviceModels.User>, t: Throwable) {
                 Log.d("retrofit ", "call failed")
-                completion(t as Error?)
+                completion(Error(t.localizedMessage))
             }
 
             override fun onResponse(call: Call<com.carswaddle.carswaddleandroid.services.serviceModels.User>, response: Response<com.carswaddle.carswaddleandroid.services.serviceModels.User>) {

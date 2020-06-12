@@ -32,7 +32,9 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "carswaddle"
-                ).build()
+                )
+                    .allowMainThreadQueries() // TODO - remove this
+                    .build()
                 INSTANCE = instance
                 return instance
             }

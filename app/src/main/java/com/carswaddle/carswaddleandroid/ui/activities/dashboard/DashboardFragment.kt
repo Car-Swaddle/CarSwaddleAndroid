@@ -1,14 +1,17 @@
 package com.carswaddle.carswaddleandroid.activities.ui.dashboard
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.carswaddle.carswaddleandroid.R
+import com.carswaddle.carswaddleandroid.ui.activities.MapsActivity
 
 class DashboardFragment : Fragment() {
 
@@ -25,6 +28,16 @@ class DashboardFragment : Fragment() {
         dashboardViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
+
+        val scheduleButton: Button = root.findViewById(R.id.schedule_button);
+        scheduleButton.setOnClickListener {
+            startActivity(Intent(activity, MapsActivity::class.java))
+        }
+
         return root
+    }
+
+    fun schedule(view: View) {
+
     }
 }
