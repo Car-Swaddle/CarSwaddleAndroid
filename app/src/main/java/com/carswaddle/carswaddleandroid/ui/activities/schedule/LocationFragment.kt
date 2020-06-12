@@ -1,9 +1,13 @@
-package com.carswaddle.carswaddleandroid.ui.activities
+package com.carswaddle.carswaddleandroid.ui.activities.schedule
 
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -12,7 +16,10 @@ import com.carswaddle.carswaddleandroid.util.PermissionUtils
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.*
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
@@ -20,8 +27,17 @@ import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
 import java.util.*
 
+// TODO: Rename parameter arguments, choose names that match
+// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+private const val ARG_PARAM1 = "param1"
+private const val ARG_PARAM2 = "param2"
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback {
+/**
+ * A simple [Fragment] subclass.
+ * Use the [LocationFragment.newInstance] factory method to
+ * create an instance of this fragment.
+ */
+class LocationFragment : Fragment(), OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback {
 
     private lateinit var map: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -29,21 +45,19 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, ActivityCompat.OnR
     private val locationPermissionRequestCode = 1
     private val zoomLevel = 18.0f;
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_maps)
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        val mapFragment = supportFragmentManager
-            .findFragmentById(R.id.map) as SupportMapFragment
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+        val view = inflater.inflate(R.layout.fragment_location, container, false)
+        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
-        // Initialize the SDK
-        Places.initialize(applicationContext, resources.getString(R.string.google_maps_key))
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity!!);
 
         // Initialize the AutocompleteSupportFragment.
         val autocompleteFragment: AutocompleteSupportFragment? =
-            supportFragmentManager.findFragmentById(R.id.autocomplete_fragment) as AutocompleteSupportFragment?
+            childFragmentManager.findFragmentById(R.id.autocomplete_fragment) as AutocompleteSupportFragment?
 
         // Specify the types of place data to return.
         autocompleteFragment?.setPlaceFields(Arrays.asList(Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.ADDRESS_COMPONENTS))
@@ -66,7 +80,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, ActivityCompat.OnR
                 Log.i("autocomplete", "An error occurred: $status")
             }
         })
-
+        return view
     }
 
     /**
@@ -86,12 +100,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, ActivityCompat.OnR
     }
 
     private fun enableMyLocation() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+        if (ContextCompat.checkSelfPermission(activity!!, Manifest.permission.ACCESS_FINE_LOCATION)
             == PackageManager.PERMISSION_GRANTED
         ) {
             map.isMyLocationEnabled = true
             fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-                if (location == null || map == null) {
+                if (location == null) {
                     return@addOnSuccessListener
                 }
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location.latitude, location.longitude), zoomLevel))
@@ -99,7 +113,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, ActivityCompat.OnR
         } else {
             // Permission to access the location is missing. Show rationale and request permission
             PermissionUtils.requestPermission(
-                this, locationPermissionRequestCode,
+                activity as AppCompatActivity, locationPermissionRequestCode,
                 Manifest.permission.ACCESS_FINE_LOCATION, true
             )
         }
