@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.carswaddle.carswaddleandroid.R
-import com.carswaddle.carswaddleandroid.ui.activities.MapsActivity
+import com.carswaddle.carswaddleandroid.ui.activities.schedule.MapsActivity
 
 class DashboardFragment : Fragment() {
 
