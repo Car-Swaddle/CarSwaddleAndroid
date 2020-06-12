@@ -7,20 +7,15 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.FragmentActivity
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.util.PermissionUtils
-import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.Status
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.tasks.Task
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
-import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
-import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest
-import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse
-import com.google.android.libraries.places.api.net.PlacesClient
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
 import java.util.*
@@ -29,8 +24,10 @@ import java.util.*
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback {
 
     private lateinit var map: GoogleMap
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     private val locationPermissionRequestCode = 1
+    private val zoomLevel = 18.0f;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,15 +36,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, ActivityCompat.OnR
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         // Initialize the SDK
         Places.initialize(applicationContext, resources.getString(R.string.google_maps_key))
-
-//        val client = Places.createClient(this);
-//        val task = client.findAutocompletePredictions(FindAutocompletePredictionsRequest.newInstance("7277 n clear sky ln"))
-//        task.addOnCompleteListener {
-//            it.result
-//        }
 
         // Initialize the AutocompleteSupportFragment.
         val autocompleteFragment: AutocompleteSupportFragment? =
@@ -66,8 +58,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, ActivityCompat.OnR
                 )
                 val latLng = place.latLng ?: return
                 // 15 is street level, 20 is building level
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18.0f));
-//                map.cameraPosition.target
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
             }
 
             override fun onError(status: Status) {
@@ -89,6 +80,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, ActivityCompat.OnR
      */
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
+        // Centered on lehi showing slc + provo
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(40.4456955, -111.8971674), 10f))
         enableMyLocation()
     }
 
@@ -97,34 +90,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, ActivityCompat.OnR
             == PackageManager.PERMISSION_GRANTED
         ) {
             map.isMyLocationEnabled = true
-
-//            val placesClient = Places.createClient(this)
-//            val placeFields = listOf(Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG)
-//            val request = FindCurrentPlaceRequest.newInstance(placeFields)
-//            val placeResponse = placesClient.findCurrentPlace(request)
-//            placeResponse.addOnCompleteListener { task: Task<FindCurrentPlaceResponse?> ->
-//                if (task.isSuccessful) {
-//                    val response = task.result
-//                    for (placeLikelihood in response!!.placeLikelihoods) {
-//                        Log.i(
-//                            "test", String.format(
-//                                "Place '%s' has likelihood: %f",
-//                                placeLikelihood.place.name,
-//                                placeLikelihood.likelihood
-//                            )
-//                        )
-//                    }
-//                } else {
-//                    val exception = task.exception
-//                    if (exception is ApiException) {
-//                        val apiException = exception as ApiException
-//                        Log.e(
-//                            "test",
-//                            "Place not found: " + apiException.statusCode
-//                        )
-//                    }
-//                }
-//            }
+            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                if (location == null || map == null) {
+                    return@addOnSuccessListener
+                }
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location.latitude, location.longitude), zoomLevel))
+            }
         } else {
             // Permission to access the location is missing. Show rationale and request permission
             PermissionUtils.requestPermission(
