@@ -29,7 +29,10 @@ class MapsActivity : AppCompatActivity() {
         // Initialize the SDK
         Places.initialize(applicationContext, resources.getString(R.string.google_maps_key))
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        supportFragmentManager.beginTransaction().add(R.id.fragment_placeholder, LocationFragment()).commit();
+        supportFragmentManager.beginTransaction()
+            .add(R.id.fragment_placeholder, LocationFragment())
+            .add(R.id.bottom_fragment_placeholder, ProgressFragment())
+            .commit();
     }
 
 
