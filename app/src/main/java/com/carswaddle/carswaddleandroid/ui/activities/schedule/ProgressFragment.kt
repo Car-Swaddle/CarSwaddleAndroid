@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.carswaddle.carswaddleandroid.R
+import com.carswaddle.carswaddleandroid.ui.view.ProgressBubble
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -36,6 +37,20 @@ class ProgressFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_progress, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val bubble1 = view.findViewById<ProgressBubble>(R.id.bubble1)
+        bubble1.state = ProgressBubble.ProgressState.Complete
+        bubble1.stepNumber = 1
+        val bubble2 = view.findViewById<ProgressBubble>(R.id.bubble2)
+        bubble2.state = ProgressBubble.ProgressState.Active
+        bubble2.stepNumber = 2
+        val bubble3 = view.findViewById<ProgressBubble>(R.id.bubble3)
+        bubble3.state = ProgressBubble.ProgressState.Inactive
+        bubble3.stepNumber = 3
     }
 
     companion object {
