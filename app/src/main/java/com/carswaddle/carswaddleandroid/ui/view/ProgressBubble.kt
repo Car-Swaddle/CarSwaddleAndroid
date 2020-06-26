@@ -37,12 +37,12 @@ class ProgressBubble : FrameLayout {
             when (value) {
                 ProgressState.Active -> {
                     cardView.strokeColor = Color.parseColor("#ffffff")
-                    cardView.setCardBackgroundColor(Color.parseColor("#ff0000"))
+                    cardView.setCardBackgroundColor(Color.parseColor("#EC2322"))
                     textView.setTextColor(Color.parseColor("#ffffff"))
                 }
                 ProgressState.Complete -> {
                     cardView.strokeColor = Color.parseColor("#00000000")
-                    cardView.setCardBackgroundColor(Color.parseColor("#0000ff"))
+                    cardView.setCardBackgroundColor(Color.parseColor("#3B7DFF"))
                     textView.setTextColor(Color.parseColor("#ffffff"))
                 }
                 ProgressState.Inactive -> {

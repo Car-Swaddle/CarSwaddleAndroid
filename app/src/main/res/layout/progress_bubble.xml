@@ -7,32 +7,21 @@
         android:id="@+id/cardView"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:elevation="4dp"
         app:cardBackgroundColor="#f00"
         app:strokeColor="#fff"
         app:strokeWidth="1dp"
-        app:cardCornerRadius="14dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias="0.25"
-        app:layout_constraintHorizontal_bias="0.50"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:cardCornerRadius="14dp">
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:fontFamily="@font/montserrat"
+            android:gravity="center"
             android:text="2"
             android:textAlignment="center"
-            android:textSize="16sp"
             android:textColor="#fff"
-            android:gravity="center"
-            app:layout_constraintVertical_bias="0.50"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            android:textSize="16sp" />
 
     </com.google.android.material.card.MaterialCardView>
 
