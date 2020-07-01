@@ -12,24 +12,39 @@ import kotlinx.coroutines.async
 
 class AutoServicesListViewModel(application: Application) : AndroidViewModel(application) {
 
+    init {
+        loadAutoServices()
+    }
+
     private val autoServiceRepo: AutoServiceRepository by lazy {
         val autoServiceDao = AppDatabase.getDatabase(application).autoServiceDao()
         AutoServiceRepository(autoServiceDao)
     }
 
-    private val _autoServices = MutableLiveData<AutoService>().apply {
-        autoServiceRepo.getAutoServices(100, 0, application, arrayOf<String>()) { error, autoServiceIds ->
+    private val _autoServices = MutableLiveData<List<AutoService>>()
+
+    private fun loadAutoServices() {
+        autoServiceRepo.getAutoServices(100, 0, getApplication(), listOf<String>()) { error, autoServiceIds ->
             GlobalScope.async {
                 if (autoServiceIds != null) {
-//                    _autoServices = autoServiceRepo.getAutoServices(autoServiceIds)
+                    _autoServices.value = autoServiceRepo.getAutoServices(autoServiceIds)
                 } else {
-
+                    // TODO: do something!
                 }
             }
         }
     }
 
-    val autoServices: LiveData<AutoService> = _autoServices
+    val autoServices: LiveData<List<AutoService>>
+        get() = _autoServices
+
+//    fun getAutoServices(): LiveData<List<AutoService>> {
+//        return _autoServices
+//    }
+
+//    var autoServices: LiveData<Array<AutoService>> = LiveData<Array<AutoService>>()
+
+//    var autoServices: LiveData<Array<com.carswaddle.carswaddleandroid.data.autoservice.AutoService>>
 
 }
 
