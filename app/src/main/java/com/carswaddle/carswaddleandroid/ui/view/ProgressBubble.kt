@@ -3,7 +3,6 @@ package com.carswaddle.carswaddleandroid.ui.view
 import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
-import android.util.TypedValue
 import android.widget.FrameLayout
 import android.widget.TextView
 import com.carswaddle.carswaddleandroid.R
@@ -33,7 +32,6 @@ class ProgressBubble : FrameLayout {
         get() = _state
         set(value) {
             _state = value
-            val strokeWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1f, resources.displayMetrics)
             when (value) {
                 ProgressState.Active -> {
                     cardView.strokeColor = Color.parseColor("#ffffff")

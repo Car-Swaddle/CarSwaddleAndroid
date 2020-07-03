@@ -25,6 +25,7 @@ import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import java.util.*
 
 /**
@@ -34,11 +35,16 @@ import java.util.*
  */
 class LocationFragment : Fragment(), OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback {
 
+    private lateinit var callback: OnLocationSelectedListener
     private lateinit var map: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     private val locationPermissionRequestCode = 1
-    private val zoomLevel = 18.0f;
+    private val zoomLevel = 18.0f
+
+    fun setOnLocationSelectedListener(callback: OnLocationSelectedListener) {
+        this.callback = callback
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,7 +54,12 @@ class LocationFragment : Fragment(), OnMapReadyCallback, ActivityCompat.OnReques
         val view = inflater.inflate(R.layout.fragment_location, container, false)
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity!!);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity!!)
+
+        val confirmLocationButton = view.findViewById<ExtendedFloatingActionButton>(R.id.confirm_location)
+        confirmLocationButton.setOnClickListener { v ->
+            callback.onLocationSelected(map.cameraPosition.target)
+        }
 
         // Initialize the AutocompleteSupportFragment.
         val autocompleteFragment: AutocompleteSupportFragment? =
@@ -112,5 +123,9 @@ class LocationFragment : Fragment(), OnMapReadyCallback, ActivityCompat.OnReques
                 Manifest.permission.ACCESS_FINE_LOCATION, true
             )
         }
+    }
+
+    interface OnLocationSelectedListener {
+        fun onLocationSelected(latLng: LatLng)
     }
 }

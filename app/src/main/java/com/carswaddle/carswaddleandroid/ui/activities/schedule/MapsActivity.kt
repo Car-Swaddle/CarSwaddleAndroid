@@ -21,7 +21,10 @@ import com.google.android.libraries.places.widget.listener.PlaceSelectionListene
 import java.util.*
 
 
-class MapsActivity : AppCompatActivity() {
+class MapsActivity : AppCompatActivity(), LocationFragment.OnLocationSelectedListener {
+
+    private var location: LatLng? = null
+    private lateinit var progressFragment: ProgressFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,11 +32,18 @@ class MapsActivity : AppCompatActivity() {
         // Initialize the SDK
         Places.initialize(applicationContext, resources.getString(R.string.google_maps_key))
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        val locationFragment = LocationFragment()
+        locationFragment.setOnLocationSelectedListener(this)
+        progressFragment = ProgressFragment()
         supportFragmentManager.beginTransaction()
-            .add(R.id.fragment_placeholder, LocationFragment())
-            .add(R.id.bottom_fragment_placeholder, ProgressFragment())
+            .add(R.id.fragment_placeholder, locationFragment)
+            .add(R.id.bottom_fragment_placeholder, progressFragment)
             .commit();
     }
 
+    override fun onLocationSelected(latLng: LatLng) {
+        location = latLng
+        progressFragment.stepNumber = 2
+    }
 
 }

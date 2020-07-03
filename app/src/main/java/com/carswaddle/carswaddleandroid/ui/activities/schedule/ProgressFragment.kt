@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.ui.view.ProgressBubble
+import kotlinx.android.synthetic.main.fragment_progress.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -22,6 +23,19 @@ class ProgressFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+
+    private lateinit var bubble1: ProgressBubble
+    private lateinit var bubble2: ProgressBubble
+    private lateinit var bubble3: ProgressBubble
+    private var _stepNumber: Int = 0
+
+    var stepNumber: Int
+        get() = _stepNumber
+        set(value) {
+            _stepNumber = value
+            bubble1.state = if (value == 1) ProgressBubble.ProgressState.Active else ProgressBubble.ProgressState.Complete
+            bubble2.state = if (value == 2) ProgressBubble.ProgressState.Active else ProgressBubble.ProgressState.Inactive
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,13 +56,13 @@ class ProgressFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val bubble1 = view.findViewById<ProgressBubble>(R.id.bubble1)
-        bubble1.state = ProgressBubble.ProgressState.Complete
+        bubble1 = view.findViewById(R.id.bubble1)
+        bubble1.state = ProgressBubble.ProgressState.Active
         bubble1.stepNumber = 1
-        val bubble2 = view.findViewById<ProgressBubble>(R.id.bubble2)
-        bubble2.state = ProgressBubble.ProgressState.Active
+        bubble2 = view.findViewById(R.id.bubble2)
+        bubble2.state = ProgressBubble.ProgressState.Inactive
         bubble2.stepNumber = 2
-        val bubble3 = view.findViewById<ProgressBubble>(R.id.bubble3)
+        bubble3 = view.findViewById(R.id.bubble3)
         bubble3.state = ProgressBubble.ProgressState.Inactive
         bubble3.stepNumber = 3
     }
