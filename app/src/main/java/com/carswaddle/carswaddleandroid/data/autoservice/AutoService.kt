@@ -3,6 +3,7 @@ package com.carswaddle.carswaddleandroid.data.autoservice
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.carswaddle.carswaddleandroid.Extensions.toCalendar
 import java.util.*
 
 @Entity
@@ -30,7 +31,7 @@ data class AutoService(
                 autoService.createdAt,
                 autoService.isCanceled,
                 autoService.notes,
-                autoService.scheduledDate,
+                autoService.scheduledDate?.toCalendar(),
                 autoService.status,
                 autoService.transferID,
                 autoService.userID,
@@ -39,3 +40,5 @@ data class AutoService(
                 autoService.vehicleID)
 
 }
+
+

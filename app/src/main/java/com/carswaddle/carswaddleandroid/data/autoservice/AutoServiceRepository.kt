@@ -33,7 +33,7 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
     case inProgress
     case completed
      */
-    fun getAutoServices(limit: Int, offset: Int, context: Context, status: List<String>, completion: (error: Error?, autoServiceIds: List<String>?) -> Unit) {
+    fun getAutoServices(limit: Int, offset: Int, context: Context, sortStatus: List<String>, filterStatus: List<String>, completion: (error: Error?, autoServiceIds: List<String>?) -> Unit) {
         val autoServiceService = ServiceGenerator.authenticated(context)?.retrofit?.create(AutoServiceService::class.java)
         if (autoServiceService == null) {
             // TODO: call with error
@@ -41,7 +41,7 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
             return
         }
 
-        val call = autoServiceService.autoServices(limit, offset, arrayOf<String>(), arrayOf<String>())
+        val call = autoServiceService.autoServices(limit, offset, sortStatus, filterStatus)
         call.enqueue(object : Callback<List<com.carswaddle.carswaddleandroid.services.serviceModels.AutoService>> {
             override fun onFailure(call: Call<List<AutoService>>, t: Throwable) {
                 Log.d("retrofit ", "call failed")
@@ -53,7 +53,7 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
                 val result = response?.body()
                 if (result == null) {
                     // TODO: make an error here
-                    completion(null, null) // somethind
+                    completion(null, null) // something
                 } else {
                     GlobalScope.async {
                         var ids = arrayListOf<String>()

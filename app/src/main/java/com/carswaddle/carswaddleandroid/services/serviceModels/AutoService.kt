@@ -12,7 +12,7 @@ data class AutoService (
     val updatedAt: Calendar,
     val isCanceled: Boolean?,
     val notes: String?,
-    val scheduledDate: Calendar?,
+    val scheduledDate: Date?,
     val status: String?,
     val transferID: String?,
     val userID: String?,

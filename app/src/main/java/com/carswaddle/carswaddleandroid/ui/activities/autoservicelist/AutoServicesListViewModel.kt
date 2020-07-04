@@ -1,9 +1,7 @@
 package com.carswaddle.carswaddleandroid.activities.ui.home
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.*
 import com.carswaddle.carswaddleandroid.data.AppDatabase
 import com.carswaddle.carswaddleandroid.data.location.Location
 import com.carswaddle.carswaddleandroid.data.user.User
@@ -16,50 +14,36 @@ import com.carswaddle.carswaddleandroid.data.user.UserRepository
 import com.carswaddle.carswaddleandroid.data.vehicle.VehicleRepository
 import com.carswaddle.carswaddleandroid.data.vehicleDescription.VehicleDescriptionRepository
 import com.carswaddle.carswaddleandroid.data.vehicle.Vehicle
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
+import kotlinx.coroutines.*
+import kotlinx.coroutines.future.future
 
 class AutoServicesListViewModel(application: Application) : AndroidViewModel(application) {
 
+    private val autoServiceRepo: AutoServiceRepository
+    private val locationRepo: LocationRepository
+    private val mechanicRepo: MechanicRepository
+    private val userRepo: UserRepository
+    private val vehicleRepo: VehicleRepository
+
     init {
+        val db = AppDatabase.getDatabase(application)
+        autoServiceRepo = AutoServiceRepository(db.autoServiceDao())
+        locationRepo = LocationRepository(db.locationDao())
+        mechanicRepo = MechanicRepository(db.mechanicDao())
+        userRepo = UserRepository(db.userDao())
+        vehicleRepo = VehicleRepository(db.vehicleDao())
+
         loadAutoServices()
-    }
-
-    private val autoServiceRepo: AutoServiceRepository by lazy {
-        val autoServiceDao = AppDatabase.getDatabase(application).autoServiceDao()
-        AutoServiceRepository(autoServiceDao)
-    }
-
-    private val locationRepo: LocationRepository by lazy {
-        val dao = AppDatabase.getDatabase(application).locationDao()
-        LocationRepository(dao)
-    }
-
-    private val mechanicRepo: MechanicRepository by lazy {
-        val dao = AppDatabase.getDatabase(application).mechanicDao()
-        MechanicRepository(dao)
-    }
-
-    private val vehicleRepo: VehicleRepository by lazy {
-        val dao = AppDatabase.getDatabase(application).vehicleDao()
-        VehicleRepository(dao)
-    }
-
-    private val vehicleDescriptionRepo: VehicleDescriptionRepository by lazy {
-        val dao = AppDatabase.getDatabase(application).vehicleDescriptionDao()
-        VehicleDescriptionRepository(dao)
-    }
-
-    private val userRepo: UserRepository by lazy {
-        val dao = AppDatabase.getDatabase(application).userDao()
-        UserRepository(dao)
     }
 
     private val _autoServices = MutableLiveData<List<AutoServiceListElements>>()
 
     private fun loadAutoServices() {
-        autoServiceRepo.getAutoServices(100, 0, getApplication(), listOf<String>()) { error, autoServiceIds ->
-            GlobalScope.async {
+        autoServiceRepo.getAutoServices(100, 0, getApplication(), listOf<String>(), listOf("scheduled", "canceled", "inProgress")) { error, autoServiceIds ->
+
+            print(autoServiceIds)
+
+            viewModelScope.launch {
                 if (autoServiceIds != null) {
                     var autoServiceElements: MutableList<AutoServiceListElements> = ArrayList()
                     for (id in autoServiceIds) {
@@ -70,7 +54,7 @@ class AutoServicesListViewModel(application: Application) : AndroidViewModel(app
                     }
                     _autoServices.value = autoServiceElements
                 } else {
-                    // TODO: do something!
+
                 }
             }
         }
@@ -78,14 +62,6 @@ class AutoServicesListViewModel(application: Application) : AndroidViewModel(app
 
     val autoServices: LiveData<List<AutoServiceListElements>>
         get() = _autoServices
-
-//    fun getAutoServices(): LiveData<List<AutoService>> {
-//        return _autoServices
-//    }
-
-//    var autoServices: LiveData<Array<AutoService>> = LiveData<Array<AutoService>>()
-
-//    var autoServices: LiveData<Array<com.carswaddle.carswaddleandroid.data.autoservice.AutoService>>
 
     suspend private fun fetchAutoServiceListElements(autoServiceId: String): AutoServiceListElements? {
         val autoService = autoServiceRepo.getAutoService(autoServiceId)

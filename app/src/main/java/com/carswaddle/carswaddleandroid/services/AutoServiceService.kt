@@ -9,8 +9,8 @@ private const val autoServiceEndpoint = "/api/auto-service"
 interface AutoServiceService {
 
     @Headers(ContentType.headerPrefix + ContentType.applicationJSON)
-    @POST(autoServiceEndpoint)
-    fun autoServices(@Query("limit") limit: Int, @Query("offset") offset: Int, @Query("sortStatus") sortStatus: Array<String>, @Query("filterStatus") filterStatus: Array<String>): Call<List<AutoService>>
+    @GET(autoServiceEndpoint)
+    fun autoServices(@Query("limit") limit: Int, @Query("offset") offset: Int, @Query("sortStatus") sortStatus: List<String>, @Query("filterStatus") filterStatus: List<String>): Call<List<AutoService>>
 
 }
 

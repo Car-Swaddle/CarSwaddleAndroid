@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.carswaddle.carswaddleandroid.R
+import com.carswaddle.carswaddleandroid.data.Authentication
 import com.carswaddle.carswaddleandroid.data.autoservice.AutoService
 
 class AutoServicesListFragment : Fragment() {
@@ -26,6 +27,13 @@ class AutoServicesListFragment : Fragment() {
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
+
+//        if (context != null) {
+//            Authentication(context!!).logout() { throwable, response ->
+//                print("test logout")
+//            }
+//        }
+
         autoServicesListViewModel = ViewModelProviders.of(this).get(AutoServicesListViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_home, container, false)
 
