@@ -19,10 +19,7 @@ import com.carswaddle.carswaddleandroid.data.vehicleDescription.VehicleDescripti
 import com.carswaddle.carswaddleandroid.data.vehicleDescription.VehicleDescriptionDao
 import com.carswaddle.carswaddleandroid.generic.SingletonHolder
 
-
-
-
-@Database(entities = arrayOf(User::class, AutoService::class, Vehicle::class, Location::class, VehicleDescription::class, Mechanic::class), version = 2)
+@Database(entities = arrayOf(User::class, AutoService::class, Vehicle::class, Location::class, VehicleDescription::class, Mechanic::class), version = 3)
 @TypeConverters(DateConverter::class, CalendarConverter::class, ArrayListConverter::class)
 abstract class AppDatabase : RoomDatabase() {
 
@@ -50,6 +47,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "carswaddle"
                 )
+                    .fallbackToDestructiveMigration()
                     .allowMainThreadQueries() // TODO - remove this
                     .build()
                 INSTANCE = instance
