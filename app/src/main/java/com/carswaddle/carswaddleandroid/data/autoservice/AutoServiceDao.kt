@@ -28,6 +28,9 @@ interface AutoServiceDao {
     @Query("SELECT * FROM autoService WHERE id IN (:autoServiceIds)")
     fun getAutoServicesWithIds(autoServiceIds: List<String>): List<AutoService>
 
+    @Query("SELECT * FROM autoService WHERE id IN (:autoServiceId)")
+    fun getAutoService(autoServiceId: String): AutoService?
+
 //    @Insert(onConflict = OnConflictStrategy.REPLACE)
 //    fun insertUsers(vararg users: User)
 //

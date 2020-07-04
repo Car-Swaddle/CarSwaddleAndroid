@@ -44,8 +44,7 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
         userRepo.updateCurrentUser(this) {
-//            val user = userRepo.getCurrentUser(this)
-            val user = userRepo.getDatUser(this)
+            val user = userRepo.getCurrentUser(this)
             Log.d("got user", "user: " + user?.firstName)
         }
 

@@ -6,8 +6,8 @@ data class Location(
     val id: String,
     val point: Point,
     val streetAddress: String,
-    val createdAt: Date,
-    val updatedAt: Date,
+    val createdAt: Calendar,
+    val updatedAt: Calendar,
     val autoServiceID: String,
     val mechanicID: String?
 )

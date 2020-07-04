@@ -23,6 +23,10 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
         return autoServiceDao.getAutoServicesWithIds(autoServiceIds)
     }
 
+    suspend fun getAutoService(autoServiceId: String): com.carswaddle.carswaddleandroid.data.autoservice.AutoService? {
+        return autoServiceDao.getAutoService(autoServiceId)
+    }
+
     /**
     case scheduled
     case canceled
@@ -37,7 +41,7 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
             return
         }
 
-        val call = autoServiceService.autoServices(limit, offset, arrayOf<String>())
+        val call = autoServiceService.autoServices(limit, offset, arrayOf<String>(), arrayOf<String>())
         call.enqueue(object : Callback<List<com.carswaddle.carswaddleandroid.services.serviceModels.AutoService>> {
             override fun onFailure(call: Call<List<AutoService>>, t: Throwable) {
                 Log.d("retrofit ", "call failed")
