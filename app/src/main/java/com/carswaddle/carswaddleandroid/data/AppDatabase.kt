@@ -14,7 +14,7 @@ import com.carswaddle.carswaddleandroid.generic.SingletonHolder
 
 
 
-@Database(entities = arrayOf(User::class, AutoService::class), version = 1)
+@Database(entities = arrayOf(User::class, AutoService::class), version = 2)
 @TypeConverters(DateConverter::class)
 abstract class AppDatabase : RoomDatabase() {
 
@@ -38,6 +38,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "carswaddle"
                 )
+                    .fallbackToDestructiveMigration()
                     .allowMainThreadQueries() // TODO - remove this
                     .build()
                 INSTANCE = instance
