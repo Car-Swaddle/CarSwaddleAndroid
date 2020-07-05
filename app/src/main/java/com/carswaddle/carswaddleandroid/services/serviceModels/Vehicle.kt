@@ -8,8 +8,8 @@ data class Vehicle(
     val state: String,
     val name: String,
     val vin: String,
-    val createdAt: Date,
-    val updatedAt: Date,
+    val createdAt: Calendar,
+    val updatedAt: Calendar,
     val userID: String,
     val vehicleDescription: VehicleDescription?
 )

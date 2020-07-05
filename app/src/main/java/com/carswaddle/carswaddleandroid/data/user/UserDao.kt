@@ -13,10 +13,7 @@ interface UserDao {
     fun getUsersWithUserIds(userIds: IntArray): List<User>
 
     @Query("SELECT * FROM user WHERE id IN (:userId)")
-    fun getUserWithUserId(userId: String): LiveData<User>?
-
-    @Query("SELECT * FROM user WHERE id IN (:userId)")
-    fun getDatUser(userId: String): User?
+    fun getUserWithUserId(userId: String): User?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertUser(user: User)

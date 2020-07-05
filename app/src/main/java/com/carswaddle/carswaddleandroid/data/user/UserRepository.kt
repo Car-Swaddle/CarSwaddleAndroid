@@ -64,14 +64,13 @@ class UserRepository(private val userDao: UserDao) {
         })
     }
 
-    fun getCurrentUser(context: Context): LiveData<User>? {
+    fun getCurrentUser(context: Context): User? {
         val userId = getCurrentUserId(context) ?: return null
         return userDao.getUserWithUserId(userId)
     }
 
-    fun getDatUser(context: Context): User? {
-        val userId = getCurrentUserId(context) ?: return null
-        return userDao.getDatUser(userId)
+    fun getUser(userId: String): User? {
+        return userDao.getUserWithUserId(userId)
     }
 
     fun getCurrentUserId(context: Context): String? {

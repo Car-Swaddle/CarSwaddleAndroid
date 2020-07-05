@@ -23,10 +23,13 @@ interface AutoServiceDao {
     fun insertAutoService(autoService: AutoService)
 
     @Query("SELECT * FROM autoService WHERE creator_id is (:userId) ORDER BY creation_date ASC")
-    fun getAutoServicesForUser(userId: String): Array<AutoService>
+    fun getAutoServicesForUser(userId: String): List<AutoService>
 
     @Query("SELECT * FROM autoService WHERE id IN (:autoServiceIds)")
-    fun getAutoServicesWithIds(autoServiceIds: Array<String>): LiveData<Array<AutoService>>
+    fun getAutoServicesWithIds(autoServiceIds: List<String>): List<AutoService>
+
+    @Query("SELECT * FROM autoService WHERE id IN (:autoServiceId)")
+    fun getAutoService(autoServiceId: String): AutoService?
 
 //    @Insert(onConflict = OnConflictStrategy.REPLACE)
 //    fun insertUsers(vararg users: User)

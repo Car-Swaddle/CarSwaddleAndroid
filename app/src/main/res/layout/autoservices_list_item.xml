@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="142dp">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="142dp" >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="142dp" >
+
+            <com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.DateDisplayView
+                android:id="@+id/date_display"
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.ImageLabel
+                android:id="@+id/mechanicImageLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="39dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintBottom_toTopOf="@+id/addressImageLabel"
+                app:layout_constraintStart_toEndOf="@+id/date_display"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.ImageLabel
+                android:id="@+id/addressImageLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="39dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toTopOf="@+id/vehicleImageLabel"
+                app:layout_constraintStart_toEndOf="@+id/date_display"
+                app:layout_constraintTop_toBottomOf="@+id/mechanicImageLabel" />
+
+            <com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.ImageLabel
+                android:id="@+id/vehicleImageLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="39dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/date_display"
+                app:layout_constraintTop_toBottomOf="@+id/addressImageLabel" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>
