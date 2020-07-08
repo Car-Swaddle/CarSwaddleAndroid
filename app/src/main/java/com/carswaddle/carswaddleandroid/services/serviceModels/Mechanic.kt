@@ -3,13 +3,15 @@ package com.carswaddle.carswaddleandroid.services.serviceModels
 import java.util.*
 
 data class Mechanic (
-    val identifier: String,
+    val id: String,
     val isActive: Boolean,
     val isAllowed: Boolean,
+    val userID: String?,
     val user: User?,
-    val scheduleTimeSpans: List<TemplateTimeSpan>,
-    val services: List<AutoService>,
-    val reviews: List<Review>,
+    val scheduleTimeSpans: List<TemplateTimeSpan>?,
+    val stripeAccountID: String?,
+    val services: List<AutoService>?,
+    val reviews: List<Review>?,
     val serviceRegion: Region?,
     val dateOfBirth: Date?,
     val address: Address?,
@@ -30,32 +32,3 @@ data class Mechanic (
     val oilChangePricing: OilChangePricing?,
     val chargeForTravel: Boolean
 )
-
-
-
-//val identifier: String,
-//val isActive: Bool,
-//val isAllowed: Bool,
-//val user: User?,
-//val scheduleTimeSpans: Set<TemplateTimeSpan>,
-//val services: Set<AutoService>,
-//val reviews: Set<Review>,
-//val serviceRegion: Region?,
-//val dateOfBirth: Date?,
-//val address: Address?,
-//val stats: Stats?,
-//val profileImageID: String?,
-//val pushDeviceToken: String?,
-//val balance: Balance?,
-//val transactions: Set<Transaction>,
-//val payouts: Set<Payout>,
-//val identityDocumentID: String?,
-//val identityDocumentBackID: String?,
-//val verification: Verification?,
-//val taxYears: Set<TaxInfo>,
-//val bankAccount: BankAccount?,
-//val hasSetAvailability: Bool,
-//val hasSetServiceRegion: Bool,
-//val creationDate: Date,
-//val oilChangePricing: OilChangePricing?,
-//val chargeForTravel: Bool,

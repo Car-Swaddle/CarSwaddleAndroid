@@ -1,30 +1,22 @@
 package com.carswaddle.carswaddleandroid.ui.activities.autoservicelist
 
 import android.content.Context
-import android.media.Image
-import android.speech.tts.TextToSpeech
 import android.util.AttributeSet
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.carswaddle.carswaddleandroid.R
-import com.carswaddle.carswaddleandroid.data.autoservice.AutoService
 import com.carswaddle.carswaddleandroid.activities.ui.home.AutoServiceListElements
-import com.carswaddle.carswaddleandroid.data.AppDatabase
-import com.carswaddle.carswaddleandroid.data.location.LocationRepository
-import com.carswaddle.carswaddleandroid.data.mechanic.MechanicDao
-import com.carswaddle.carswaddleandroid.data.mechanic.MechanicRepository
-import kotlinx.android.synthetic.main.date_display.view.*
+import java.text.DateFormatSymbols
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.coroutines.coroutineContext
 
-class AutoServiceListAdapter(private val autoServices: List<AutoServiceListElements>) :
+class AutoServiceListAdapter(private val autoServices: LiveData<List<AutoServiceListElements>>) :
     RecyclerView.Adapter<AutoServiceViewHolder>() {
 
     // Provide a reference to the views for each data item
@@ -58,11 +50,16 @@ class AutoServiceListAdapter(private val autoServices: List<AutoServiceListEleme
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
 //        holder.textView.text = autoServices[position].notes
-        holder.configure(autoServices[position])
+        val autoService = autoServices.value?.get(position)
+        if (autoService != null) {
+            holder.configure(autoService)
+        }
     }
 
 
-    override fun getItemCount() = autoServices.size
+    override fun getItemCount(): Int {
+        return autoServices.value?.count() ?: 0
+    }
 }
 
 //class DateDisplayView(context: Context, attrs: AttributeSet) : ConstraintLayout {
@@ -83,34 +80,46 @@ class DateDisplayView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : View(context, attrs, defStyleAttr) {
+) : LinearLayout(context, attrs, defStyleAttr) {
 
-    val dayOfMonthTextView = findViewById<TextView>(R.id.dayOfMonth)
-    val monthTextView = findViewById<TextView>(R.id.month)
-    val dayOfWeekAndTimeTextView = findViewById<TextView>(R.id.dayAndTime)
+    val dayOfMonthTextView: TextView
+    val monthTextView: TextView
+    val dayOfWeekAndTimeTextView: TextView
 
     init {
+        LayoutInflater.from(context).inflate(R.layout.date_display, this, true)
 
+        dayOfMonthTextView = findViewById<TextView>(R.id.dayOfMonth)
+        monthTextView = findViewById<TextView>(R.id.month)
+        dayOfWeekAndTimeTextView = findViewById<TextView>(R.id.dayAndTime)
     }
 
     fun configure(calendar: Calendar) {
         dayOfMonthTextView.text = SimpleDateFormat("dd").format(calendar.getTime())
         monthTextView.text = SimpleDateFormat("MMM").format(calendar.getTime())
-        dayOfWeekAndTimeTextView.text = SimpleDateFormat("EEE hh:hh aa").format(calendar.getTime())
+        dayOfWeekAndTimeTextView.text = dayOfWeekAndTime(calendar)
+    }
+
+    private fun dayOfWeekAndTime(calendar: Calendar): String {
+        val symbols = DateFormatSymbols(Locale.getDefault())
+        symbols.setAmPmStrings(arrayOf("am", "pm"))
+        return SimpleDateFormat("EEE hh:mm aa", symbols).format(calendar.getTime())
     }
 
 }
 
 
 
+//class ImageLabel : View {
 class ImageLabel @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : View(context, attrs, defStyleAttr) {
+    defStyle: Int = 0,
+    defStyleRes: Int = 0
+) : LinearLayout(context, attrs, defStyle, defStyleRes) {
 
-    private val image: ImageView = findViewById<ImageView>(R.id.imageLabelImageView)
-    private val textView: TextView = findViewById<TextView>(R.id.imageLabelLabel)
+    private val image: ImageView
+    private val textView: TextView
 
     enum class ImageType { VEHICLE, LOCATION, OIL, PERSON }
 
@@ -125,8 +134,16 @@ class ImageLabel @JvmOverloads constructor(
     }
 
     private fun imageForCurrentImageType(): Int {
-        return R.drawable.ic_car_swaddle_pin
-        // TODO: get correct images
+        when (imageType) {
+            ImageType.VEHICLE ->
+                return R.drawable.car
+            ImageType.LOCATION ->
+                return R.drawable.pin
+            ImageType.PERSON ->
+                return R.drawable.ic_user_male
+            ImageType.OIL ->
+                return R.drawable.engine_oil
+        }
     }
 
     var text: String
@@ -134,30 +151,29 @@ class ImageLabel @JvmOverloads constructor(
         set(value) { textView.text = value }
 
     init {
+        LayoutInflater.from(context).inflate(R.layout.image_label, this, true)
+        orientation = HORIZONTAL
 
+        image = findViewById<ImageView>(R.id.image_label_imageView)
+        textView = findViewById<TextView>(R.id.image_label_label)
     }
+
+//    init {
+////        View.inflate(context, R.layout.image_label, null)
+//        View.inflate(context, R.layout.image_label, this)
+//
+//        image = findViewById<ImageView>(R.id.image_label_imageView)
+//        textView = findViewById<TextView>(R.id.image_label_label)
+//        Log.d("tag", "init image label")
+//    }
 
 }
 
 class AutoServiceViewHolder (view: View) : RecyclerView.ViewHolder(view) {
 
-    private val mechanicImageLabel: ImageLabel by lazy {
-        val label: ImageLabel = view.findViewById(R.id.mechanicImageLabel)
-        label.imageType = ImageLabel.ImageType.VEHICLE
-        label
-    }
-
-    private val locationImageLabel: ImageLabel by lazy {
-        val label: ImageLabel = view.findViewById(R.id.addressImageLabel)
-        label.imageType = ImageLabel.ImageType.LOCATION
-        label
-    }
-
-    private val vehicleImageLabel: ImageLabel by lazy {
-        val label: ImageLabel = view.findViewById(R.id.vehicleImageLabel)
-        label.imageType = ImageLabel.ImageType.PERSON
-        label
-    }
+    private val mechanicImageLabel: ImageLabel
+    private val locationImageLabel: ImageLabel
+    private val vehicleImageLabel: ImageLabel
 
 
     val dateDisplayView: DateDisplayView = view.findViewById(R.id.date_display)
@@ -179,6 +195,18 @@ class AutoServiceViewHolder (view: View) : RecyclerView.ViewHolder(view) {
         // Define click listener for the ViewHolder's View.
 //        v.setOnClickListener { Log.d(TAG, "Element $adapterPosition clicked.") }
 //        textView = v.findViewById(R.id.textView)
+
+        val mImageLabel: ImageLabel = view.findViewById(R.id.mechanicImageLabel)
+        mImageLabel.imageType = ImageLabel.ImageType.VEHICLE
+        mechanicImageLabel = mImageLabel
+
+        val lImageLabel: ImageLabel = view.findViewById(R.id.addressImageLabel)
+        lImageLabel.imageType = ImageLabel.ImageType.LOCATION
+        locationImageLabel = lImageLabel
+
+        val vLabel: ImageLabel = view.findViewById(R.id.vehicleImageLabel)
+        vLabel.imageType = ImageLabel.ImageType.PERSON
+        vehicleImageLabel = vLabel
 
     }
 }

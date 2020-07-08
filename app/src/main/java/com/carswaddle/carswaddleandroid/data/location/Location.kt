@@ -3,6 +3,7 @@ package com.carswaddle.carswaddleandroid.data.location
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.carswaddle.carswaddleandroid.Extensions.toCalendar
 import com.carswaddle.carswaddleandroid.services.serviceModels.Location
 import java.util.*
 
@@ -17,5 +18,5 @@ data class Location(
     @ColumnInfo val updatedAt: Calendar
 ){
     constructor(location: Location) :
-            this(location.id, location.streetAddress, location.point.latitude(), location.point.latitude(), location.createdAt, location.updatedAt)
+            this(location.id, location.streetAddress, location.point.latitude(), location.point.latitude(), location.createdAt.toCalendar(), location.updatedAt.toCalendar())
 }

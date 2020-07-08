@@ -2,6 +2,7 @@ package com.carswaddle.carswaddleandroid.retrofit
 
 import android.content.Context
 import com.carswaddle.carswaddleandroid.data.Authentication
+import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -18,9 +19,10 @@ class ServiceGenerator(baseURL: String, okHttpClient: OkHttpClient) {
     val retrofit: Retrofit
 
     init {
+        val gson = GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create()
         this.retrofit = Retrofit.Builder()
             .baseUrl(baseURL)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .client(okHttpClient)
             .build()
     }

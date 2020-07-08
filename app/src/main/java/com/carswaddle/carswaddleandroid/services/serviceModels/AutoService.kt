@@ -8,8 +8,8 @@ data class AutoService (
     val balanceTransactionID: String?,
     val chargeID: String?,
     val couponID: String?,
-    val createdAt: Calendar,
-    val updatedAt: Calendar,
+    val createdAt: Date,
+    val updatedAt: Date,
     val isCanceled: Boolean?,
     val notes: String?,
     val scheduledDate: Date?,
@@ -17,10 +17,11 @@ data class AutoService (
     val transferID: String?,
     val userID: String?,
     val mechanicID: String,
+    val mechanic: Mechanic,
     val location: Location,
     val vehicleID: String?,
     val vehicle: Vehicle,
-    val serviceEntities: Array<ServiceEntity>,
+    val serviceEntities: List<ServiceEntity>,
     val reviewFromUser: Review?,
     val reviewFromMechanic: Review?
 )

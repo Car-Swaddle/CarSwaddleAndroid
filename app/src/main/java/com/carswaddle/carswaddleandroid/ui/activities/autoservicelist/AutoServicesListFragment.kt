@@ -1,6 +1,7 @@
 package com.carswaddle.carswaddleandroid.activities.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.data.Authentication
 import com.carswaddle.carswaddleandroid.data.autoservice.AutoService
+import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServiceListAdapter
 
 class AutoServicesListFragment : Fragment() {
 
@@ -28,34 +30,29 @@ class AutoServicesListFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View? {
 
-//        if (context != null) {
-//            Authentication(context!!).logout() { throwable, response ->
-//                print("test logout")
-//            }
-//        }
-
         autoServicesListViewModel = ViewModelProviders.of(this).get(AutoServicesListViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_home, container, false)
+        val root = inflater.inflate(R.layout.fragment_autoservices_list, container, false)
 
         autoServicesListViewModel.autoServices.observe(this, Observer<List<AutoServiceListElements>>{ autoServices ->
+            Log.d("log", "It done changed")
 
+            viewAdapter.notifyDataSetChanged()
         })
 
         viewManager = LinearLayoutManager(activity?.applicationContext)
-//        viewAdapter = MyAdapter(myDataset)
+        viewAdapter = AutoServiceListAdapter(autoServicesListViewModel.autoServices)
 
-//        recyclerView = findViewById<RecyclerView>(R.id.autoservices_recycler_view).apply {
-//            // use this setting to improve performance if you know that changes
-//            // in content do not change the layout size of the RecyclerView
-//            setHasFixedSize(true)
-//
-//            // use a linear layout manager
-//            layoutManager = viewManager
-//
-//            // specify an viewAdapter (see also next example)
-//            adapter = viewAdapter
-//
-//        }
+        recyclerView = root.findViewById<RecyclerView>(R.id.autoservice_recycler_view).apply {
+            // use this setting to improve performance if you know that changes
+            // in content do not change the layout size of the RecyclerView
+            setHasFixedSize(true)
+
+            // use a linear layout manager
+            layoutManager = viewManager
+
+            // specify an viewAdapter (see also next example)
+            adapter = viewAdapter
+        }
 
 ////        val textView: TextView = root.findViewById(R.id.text_home)
 ////        autoServicesListViewModel.text.observe(viewLifecycleOwner, Observer {

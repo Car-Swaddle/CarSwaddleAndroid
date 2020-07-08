@@ -16,6 +16,7 @@ import com.carswaddle.carswaddleandroid.data.vehicleDescription.VehicleDescripti
 import com.carswaddle.carswaddleandroid.data.vehicle.Vehicle
 import kotlinx.coroutines.*
 import kotlinx.coroutines.future.future
+import java.lang.Exception
 
 class AutoServicesListViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -41,14 +42,11 @@ class AutoServicesListViewModel(application: Application) : AndroidViewModel(app
     private fun loadAutoServices() {
         autoServiceRepo.getAutoServices(100, 0, getApplication(), listOf<String>(), listOf("scheduled", "canceled", "inProgress")) { error, autoServiceIds ->
 
-            print(autoServiceIds)
-
             viewModelScope.launch {
                 if (autoServiceIds != null) {
                     var autoServiceElements: MutableList<AutoServiceListElements> = ArrayList()
                     for (id in autoServiceIds) {
-                        val elements = fetchAutoServiceListElements(id)
-                        elements?.let {
+                        fetchAutoServiceListElements(id)?.let {
                             autoServiceElements.add(it)
                         }
                     }
@@ -64,22 +62,26 @@ class AutoServicesListViewModel(application: Application) : AndroidViewModel(app
         get() = _autoServices
 
     suspend private fun fetchAutoServiceListElements(autoServiceId: String): AutoServiceListElements? {
-        val autoService = autoServiceRepo.getAutoService(autoServiceId)
-        val vehicleId = autoService?.vehicleId
-        val locationId = autoService?.locationId
-        if (autoService == null || vehicleId == null || locationId == null) {
+        try {
+            val autoService = autoServiceRepo.getAutoService(autoServiceId)
+            val vehicleId = autoService?.vehicleId
+            val locationId = autoService?.locationId
+            if (autoService == null || vehicleId == null || locationId == null) {
+                return null
+            }
+            val mechanic = mechanicRepo.getMechanic(autoService.mechanicId)
+            val vehicle = vehicleRepo.getVehicle(vehicleId)
+            val location = locationRepo.getLocation(locationId)
+            val mechanicUser = userRepo.getUser(mechanic?.userId ?: "")
+
+            if (mechanic == null || vehicle == null || location == null || mechanicUser == null) {
+                return null
+            }
+            return AutoServiceListElements(autoService, mechanic, vehicle, location, mechanicUser)
+        } catch (e: Exception) {
+            print(e)
             return null
         }
-        val mechanic = mechanicRepo.getMechanic(autoService.mechanicId)
-        val vehicle = vehicleRepo.getVehicle(vehicleId)
-        val location = locationRepo.getLocation(locationId)
-        val mechanicUser = userRepo.getUser(mechanic?.userId ?: "")
-
-        if (mechanic == null || vehicle == null || location == null || mechanicUser == null) {
-            return null
-        }
-
-        return AutoServiceListElements(autoService, mechanic, vehicle, location, mechanicUser)
     }
 
 }

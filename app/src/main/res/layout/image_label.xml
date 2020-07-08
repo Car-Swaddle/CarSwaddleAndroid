@@ -7,9 +7,9 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/imageLabelImageView"
-        android:layout_width="38dp"
-        android:layout_height="38dp"
+        android:id="@+id/image_label_imageView"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -17,13 +17,13 @@
         tools:srcCompat="@drawable/ic_car_swaddle_pin" />
 
     <TextView
-        android:id="@+id/imageLabelLabel"
+        android:id="@+id/image_label_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="TextView"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imageLabelImageView"
+        app:layout_constraintStart_toEndOf="@+id/image_label_imageView"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
