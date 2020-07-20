@@ -5,12 +5,17 @@ import com.carswaddle.carswaddleandroid.services.serviceModels.AutoService
 import retrofit2.http.*
 
 private const val autoServiceEndpoint = "/api/auto-service"
+private const val autoServiceSingleEndpoint = "/api/auto-service-details"
 
 interface AutoServiceService {
 
     @Headers(ContentType.headerPrefix + ContentType.applicationJSON)
     @GET(autoServiceEndpoint)
     fun autoServices(@Query("limit") limit: Int, @Query("offset") offset: Int, @Query("sortStatus") sortStatus: List<String>, @Query("filterStatus") filterStatus: List<String>): Call<List<AutoService>>
+
+    @Headers(ContentType.headerPrefix + ContentType.applicationJSON)
+    @GET(autoServiceSingleEndpoint)
+    fun autoServices(@Query("autoServiceID") autoServiceId: String): Call<AutoService>
 
 }
 

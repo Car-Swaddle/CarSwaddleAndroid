@@ -1,25 +1,34 @@
-package com.carswaddle.carswaddleandroid.activities.ui.home
+package com.carswaddle.carswaddleandroid.ui.activities.autoserviceDetails
 
 import android.app.Application
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.carswaddle.carswaddleandroid.data.AppDatabase
-import com.carswaddle.carswaddleandroid.data.location.Location
-import com.carswaddle.carswaddleandroid.data.user.User
 import com.carswaddle.carswaddleandroid.data.autoservice.AutoService
 import com.carswaddle.carswaddleandroid.data.autoservice.AutoServiceRepository
+import com.carswaddle.carswaddleandroid.data.location.Location
 import com.carswaddle.carswaddleandroid.data.location.LocationRepository
 import com.carswaddle.carswaddleandroid.data.mechanic.Mechanic
 import com.carswaddle.carswaddleandroid.data.mechanic.MechanicRepository
+import com.carswaddle.carswaddleandroid.data.user.User
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
-import com.carswaddle.carswaddleandroid.data.vehicle.VehicleRepository
-import com.carswaddle.carswaddleandroid.data.vehicleDescription.VehicleDescriptionRepository
 import com.carswaddle.carswaddleandroid.data.vehicle.Vehicle
+import com.carswaddle.carswaddleandroid.data.vehicle.VehicleRepository
 import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServiceListElements
-import kotlinx.coroutines.*
-import kotlinx.coroutines.future.future
+import kotlinx.coroutines.launch
 import java.lang.Exception
 
-class AutoServicesListViewModel(application: Application) : AndroidViewModel(application) {
+
+class AutoServiceDetailsViewModel(application: Application) : AndroidViewModel(application) {
+
+
+    var autoServiceId: String? = null
+    set(value) {
+        field = value
+        loadAutoService()
+    }
 
     private val autoServiceRepo: AutoServiceRepository
     private val locationRepo: LocationRepository
@@ -35,32 +44,49 @@ class AutoServicesListViewModel(application: Application) : AndroidViewModel(app
         userRepo = UserRepository(db.userDao())
         vehicleRepo = VehicleRepository(db.vehicleDao())
 
-        loadAutoServices()
+        loadAutoService()
     }
 
-    private val _autoServices = MutableLiveData<List<AutoServiceListElements>>()
+    private val _autoServiceElement = MutableLiveData<AutoServiceListElements>()
 
-    private fun loadAutoServices() {
-        autoServiceRepo.getAutoServices(100, 0, getApplication(), listOf<String>(), listOf("scheduled", "canceled", "inProgress")) { error, autoServiceIds ->
+    private fun loadAutoService() {
 
-            viewModelScope.launch {
-                if (autoServiceIds != null) {
-                    var autoServiceElements: MutableList<AutoServiceListElements> = ArrayList()
-                    for (id in autoServiceIds) {
-                        fetchAutoServiceListElements(id)?.let {
-                            autoServiceElements.add(it)
-                        }
+        val localAutoServiceId = this.autoServiceId
+        if (localAutoServiceId == null) {
+
+        } else {
+
+            autoServiceRepo.getAutoService(localAutoServiceId, getApplication(), { error, autoServiceId ->
+                if (error == null && autoServiceId != null) {
+                    viewModelScope.launch {
+                        _autoServiceElement.value = fetchAutoServiceListElements(autoServiceId)
                     }
-                    _autoServices.value = autoServiceElements
                 } else {
 
                 }
-            }
+            })
         }
+
+//        autoServiceRepo.getAutoServices(100, 0, getApplication(), listOf<String>(), listOf("scheduled", "canceled", "inProgress")) { error, autoServiceIds ->
+//
+//            viewModelScope.launch {
+//                if (autoServiceIds != null) {
+//                    var autoServiceElements: MutableList<AutoServiceListElements> = ArrayList()
+//                    for (id in autoServiceIds) {
+//                        fetchAutoServiceListElements(id)?.let {
+//                            autoServiceElements.add(it)
+//                        }
+//                    }
+//                    _autoServices.value = autoServiceElements
+//                } else {
+//
+//                }
+//            }
+//        }
     }
 
-    val autoServices: LiveData<List<AutoServiceListElements>>
-        get() = _autoServices
+    val autoServiceElement: LiveData<AutoServiceListElements>
+        get() = _autoServiceElement
 
     suspend private fun fetchAutoServiceListElements(autoServiceId: String): AutoServiceListElements? {
         try {
@@ -86,28 +112,4 @@ class AutoServicesListViewModel(application: Application) : AndroidViewModel(app
     }
 
 }
-
-
-
-
-/**
- *
- *
-enum Status: String {
-case scheduled
-case canceled
-case inProgress
-case completed
-
-public var localizedString: String {
-switch self {
-case .canceled: return NSLocalizedString("canceled", comment: "auto service status")
-case .inProgress: return NSLocalizedString("in progress", comment: "auto service status")
-case .completed: return NSLocalizedString("completed", comment: "auto service status")
-case .scheduled: return NSLocalizedString("scheduled", comment: "auto service status")
-}
-}
-
-}
- */
 

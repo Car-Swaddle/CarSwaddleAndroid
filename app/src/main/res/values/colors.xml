@@ -5,4 +5,6 @@
     <color name="colorAccent">#EC2322</color>
     <color name="content2">#F9F9F9</color>
     <color name="stroke">#AAAAAA</color>
+    <color name="background">#FFFFFF</color>
+    <color name="background2">#CCCCCC</color>
 </resources>

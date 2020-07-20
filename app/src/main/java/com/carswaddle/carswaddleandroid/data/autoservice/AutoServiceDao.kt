@@ -25,20 +25,6 @@ public abstract class AutoServiceDao {
 //    fun getDatUser(userId: String): User?
 //
 
-    fun insertAutoServiceAndNestedEntities(autoService: AutoService) {
-        insertAutoService(autoService)
-        val mechanic = getMechanic(autoService.mechanicId)
-        if (mechanic != null) {
-            insertMechanic(mechanic)
-            val mechanicUser = mechanic.userId?.let { getUser(it) }
-            mechanicUser?.let { insertUser(it) }
-        }
-        val vehicle = autoService.vehicleId?.let { getVehicle(it) }
-        vehicle?.let { insertVehicle(it) }
-        val location = autoService.locationId?.let { getLocation(it) }
-        location?.let { insertLocation(it) }
-    }
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertMechanic(mechanic: Mechanic)
 
