@@ -9,7 +9,7 @@ data class TransactionMetadata (
     val drivingDistance: Int,
     val autoServiceID: String,
     val mechanicID: String,
-    val createdAt: Calendar,
+    val createdAt: Date,
     val transaction: Transaction?,
     val autoService: AutoService?,
     val receipts: List<TransactionReceipt>

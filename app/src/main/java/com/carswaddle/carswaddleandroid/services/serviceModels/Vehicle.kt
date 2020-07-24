@@ -5,11 +5,11 @@ import java.util.*
 data class Vehicle(
     val id: String,
     val licensePlate: String,
-    val state: String,
+    val state: String?,
     val name: String,
-    val vin: String,
-    val createdAt: Calendar,
-    val updatedAt: Calendar,
+    val vin: String?,
+    val createdAt: Date,
+    val updatedAt: Date,
     val userID: String,
     val vehicleDescription: VehicleDescription?
 )

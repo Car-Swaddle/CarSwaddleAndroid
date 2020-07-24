@@ -6,12 +6,23 @@ import java.util.*
 class ArrayListConverter {
 
     @TypeConverter
-    fun toArray(value: String?): List<String>? {
+    fun toArrayOptional(value: String?): List<String>? {
         return value?.split(",")?.toList()
     }
 
     @TypeConverter
-    fun fromArray(value: List<String>?): String? {
+    fun fromArrayOptional(value: List<String>?): String? {
         return value?.joinToString()
     }
+
+//    @TypeConverter
+//    fun toArray(value: String): List<String> {
+//        return value.split(",").toList()
+//    }
+//
+//    @TypeConverter
+//    fun fromArray(value: List<String>): String {
+//        return value.joinToString()
+//    }
+
 }

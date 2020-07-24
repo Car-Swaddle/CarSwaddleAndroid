@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.carswaddle.carswaddleandroid.Extensions.toCalendar
+import com.carswaddle.carswaddleandroid.data.mechanic.Mechanic
 import java.util.*
 
 @Entity
@@ -28,7 +29,7 @@ data class AutoService(
                 autoService.balanceTransactionID,
                 autoService.chargeID,
                 autoService.couponID,
-                autoService.createdAt,
+                autoService.createdAt.toCalendar(),
                 autoService.isCanceled,
                 autoService.notes,
                 autoService.scheduledDate?.toCalendar(),
