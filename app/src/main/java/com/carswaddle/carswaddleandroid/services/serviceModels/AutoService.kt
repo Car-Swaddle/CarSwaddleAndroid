@@ -1,6 +1,7 @@
 package com.carswaddle.carswaddleandroid.services.serviceModels
 
 import android.app.Service
+import com.google.gson.annotations.SerializedName
 import java.util.*
 
 data class AutoService (
@@ -13,15 +14,33 @@ data class AutoService (
     val isCanceled: Boolean?,
     val notes: String?,
     val scheduledDate: Date?,
-    val status: String?,
+    val status: AutoServiceStatus?,
     val transferID: String?,
     val userID: String?,
     val mechanicID: String,
     val mechanic: Mechanic,
-    val location: Location,
+    val location: AutoServiceLocation,
     val vehicleID: String?,
     val vehicle: Vehicle,
     val serviceEntities: List<ServiceEntity>,
     val reviewFromUser: Review?,
     val reviewFromMechanic: Review?
 )
+
+enum class AutoServiceStatus {
+    @SerializedName("scheduled") scheduled,
+    @SerializedName("canceled") canceled,
+    @SerializedName("inProgress") inProgress,
+    @SerializedName("completed") completed;
+
+    fun localizedString(): String {
+        when (this) {
+            AutoServiceStatus.scheduled -> return "scheduled"
+            AutoServiceStatus.canceled -> return "canceled"
+            AutoServiceStatus.inProgress -> return "inprogress"
+            AutoServiceStatus.completed -> return "completed"
+            else -> return ""
+        }
+    }
+
+}

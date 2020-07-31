@@ -3,26 +3,19 @@ package com.carswaddle.carswaddleandroid.activities.ui.home
 import android.app.Application
 import androidx.lifecycle.*
 import com.carswaddle.carswaddleandroid.data.AppDatabase
-import com.carswaddle.carswaddleandroid.data.location.Location
-import com.carswaddle.carswaddleandroid.data.user.User
-import com.carswaddle.carswaddleandroid.data.autoservice.AutoService
 import com.carswaddle.carswaddleandroid.data.autoservice.AutoServiceRepository
-import com.carswaddle.carswaddleandroid.data.location.LocationRepository
-import com.carswaddle.carswaddleandroid.data.mechanic.Mechanic
+import com.carswaddle.carswaddleandroid.data.location.AutoServiceLocationRepository
 import com.carswaddle.carswaddleandroid.data.mechanic.MechanicRepository
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
 import com.carswaddle.carswaddleandroid.data.vehicle.VehicleRepository
-import com.carswaddle.carswaddleandroid.data.vehicleDescription.VehicleDescriptionRepository
-import com.carswaddle.carswaddleandroid.data.vehicle.Vehicle
 import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServiceListElements
 import kotlinx.coroutines.*
-import kotlinx.coroutines.future.future
 import java.lang.Exception
 
 class AutoServicesListViewModel(application: Application) : AndroidViewModel(application) {
 
     private val autoServiceRepo: AutoServiceRepository
-    private val locationRepo: LocationRepository
+    private val locationRepo: AutoServiceLocationRepository
     private val mechanicRepo: MechanicRepository
     private val userRepo: UserRepository
     private val vehicleRepo: VehicleRepository
@@ -30,7 +23,7 @@ class AutoServicesListViewModel(application: Application) : AndroidViewModel(app
     init {
         val db = AppDatabase.getDatabase(application)
         autoServiceRepo = AutoServiceRepository(db.autoServiceDao())
-        locationRepo = LocationRepository(db.locationDao())
+        locationRepo = AutoServiceLocationRepository(db.locationDao())
         mechanicRepo = MechanicRepository(db.mechanicDao())
         userRepo = UserRepository(db.userDao())
         vehicleRepo = VehicleRepository(db.vehicleDao())

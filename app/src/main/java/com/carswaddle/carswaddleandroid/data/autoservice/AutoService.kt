@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.carswaddle.carswaddleandroid.Extensions.toCalendar
 import com.carswaddle.carswaddleandroid.data.mechanic.Mechanic
+import com.carswaddle.carswaddleandroid.services.serviceModels.AutoServiceStatus
 import java.util.*
 
 @Entity
@@ -17,7 +18,7 @@ data class AutoService(
     @ColumnInfo(name = "is_canceled") val isCanceled: Boolean?,
     @ColumnInfo(name = "notes") val notes: String?,
     @ColumnInfo(name = "scheduled_date") val scheduledDate: Calendar?,
-    @ColumnInfo(name = "status") val status: String?,
+    @ColumnInfo(name = "status") val status: AutoServiceStatus?,
     @ColumnInfo(name = "transfer_id") val transferId: String?,
     @ColumnInfo(name = "creator_id") val creatorId: String?,
     @ColumnInfo(name = "mechanic_id") val mechanicId: String,
@@ -41,5 +42,3 @@ data class AutoService(
                 autoService.vehicleID)
 
 }
-
-

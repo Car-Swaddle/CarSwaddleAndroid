@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.carswaddle.carswaddleandroid.R
@@ -34,7 +35,6 @@ class AutoServicesListFragment : Fragment(), View.OnClickListener {
         autoServicesListViewModel = ViewModelProviders.of(this).get(AutoServicesListViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_autoservices_list, container, false)
 
-
         autoServicesListViewModel.autoServices.observe(this, Observer<List<AutoServiceListElements>>{ autoServices ->
             viewAdapter.notifyDataSetChanged()
         })
@@ -46,9 +46,7 @@ class AutoServicesListFragment : Fragment(), View.OnClickListener {
             if (manager != null) {
                 val details = AutoServiceDetailsFragment(it.autoService.id)
                 val transaction = manager.beginTransaction()
-                transaction.add(R.id.autoservices_list_container, details)
-//                transaction.add(R.id.autoservices_list_container, details)
-//                transaction.add(R.layout.fragment_autoservices_list_container, details)
+                transaction.add(R.id.autoservices_fragment, details)
                 transaction.addToBackStack(null)
                 transaction.commit()
             }

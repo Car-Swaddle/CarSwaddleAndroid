@@ -6,20 +6,6 @@ import androidx.room.PrimaryKey
 import com.carswaddle.carswaddleandroid.Extensions.toCalendar
 import java.util.*
 
-//data class Vehicle(
-//    val id: String,
-//    val licensePlate: String,
-//    val state: String,
-//    val name: String,
-//    val vin: String,
-//    val createdAt: Date,
-//    val updatedAt: Date,
-//    val userID: String,
-//    val vehicleDescription: VehicleDescription?
-//)
-
-
-
 @Entity
 data class Vehicle(
     @PrimaryKey val id: String,
@@ -44,4 +30,13 @@ data class Vehicle(
                 vehicle.userID,
                 vehicle.vehicleDescription?.id
             )
+
+    fun displayValue(): String {
+        if (name != null) {
+            return name + " • " + licensePlate
+        } else {
+            return licensePlate
+        }
+    }
+
 }

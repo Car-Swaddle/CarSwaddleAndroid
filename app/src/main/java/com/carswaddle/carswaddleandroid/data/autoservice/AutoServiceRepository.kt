@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import com.carswaddle.carswaddleandroid.data.AppDatabase
-import com.carswaddle.carswaddleandroid.data.location.Location
+import com.carswaddle.carswaddleandroid.data.location.AutoServiceLocation
 import com.carswaddle.carswaddleandroid.data.mechanic.Mechanic
 import com.carswaddle.carswaddleandroid.data.mechanic.MechanicRepository
 import com.carswaddle.carswaddleandroid.data.user.User
@@ -35,12 +35,19 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
         return autoServiceDao.getAutoService(autoServiceId)
     }
 
-    fun getAutoService(autoServiceId: String, context: Context, completion: (error: Error?, autoServiceId: String?) -> Unit) {
+    fun getAutoService(autoServiceId: String, context: Context, cacheCompletion: (autoServiceId: String) -> Unit, completion: (error: Error?, autoServiceId: String?) -> Unit) {
         val autoServiceService = ServiceGenerator.authenticated(context)?.retrofit?.create(AutoServiceService::class.java)
         if (autoServiceService == null) {
             // TODO: call with error
             completion(null, null)
             return
+        }
+
+        GlobalScope.async {
+            val autoService = getAutoService(autoServiceId)
+            if (autoService != null) {
+                cacheCompletion(autoServiceId)
+            }
         }
 
         val call = autoServiceService.autoServices(autoServiceId)
@@ -116,7 +123,7 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
 
     suspend private fun insertNestedAutoService(autoService: com.carswaddle.carswaddleandroid.services.serviceModels.AutoService): com.carswaddle.carswaddleandroid.data.autoservice.AutoService {
         val storedAutoService = com.carswaddle.carswaddleandroid.data.autoservice.AutoService(autoService)
-        val location = Location(autoService.location)
+        val location = AutoServiceLocation(autoService.location)
         autoServiceDao.insertLocation(location)
         val vehicle = Vehicle(autoService.vehicle)
         autoServiceDao.insertVehicle(vehicle)

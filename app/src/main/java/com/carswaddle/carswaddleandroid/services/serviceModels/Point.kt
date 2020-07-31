@@ -6,11 +6,11 @@ data class Point (
 ) {
 
     fun latitude(): Double {
-        return coordinates[0]
+        return coordinates[1]
     }
 
     fun longitude(): Double {
-        return coordinates[1]
+        return coordinates[0]
     }
 
 }

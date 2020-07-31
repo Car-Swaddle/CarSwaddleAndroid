@@ -28,6 +28,10 @@ import com.google.android.libraries.places.widget.listener.PlaceSelectionListene
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import java.util.*
 
+
+
+public val saltLakeAndProvo = LatLng(40.4456955, -111.8971674)
+
 /**
  * A simple [Fragment] subclass.
  * Use the [LocationFragment.newInstance] factory method to
@@ -100,15 +104,12 @@ class LocationFragment : Fragment(), OnMapReadyCallback, ActivityCompat.OnReques
      */
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
-        // Centered on lehi showing slc + provo
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(40.4456955, -111.8971674), 10f))
         enableMyLocation()
     }
 
     private fun enableMyLocation() {
-        if (ContextCompat.checkSelfPermission(activity!!, Manifest.permission.ACCESS_FINE_LOCATION)
-            == PackageManager.PERMISSION_GRANTED
-        ) {
+        if (ContextCompat.checkSelfPermission(activity!!, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             map.isMyLocationEnabled = true
             fusedLocationClient.lastLocation.addOnSuccessListener { location ->
                 if (location == null) {

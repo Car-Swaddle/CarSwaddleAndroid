@@ -20,4 +20,8 @@ data class User(
     constructor(user: com.carswaddle.carswaddleandroid.services.serviceModels.User) :
             this(user.id, user.firstName, user.lastName, user.phoneNumber, user.imageID, user.email, user.isEmailVerified, user.isPhoneNumberVerified, user.timeZone, user.mechanicID)
 
+    fun displayName(): String {
+        return firstName + " " + lastName
+    }
+
 }

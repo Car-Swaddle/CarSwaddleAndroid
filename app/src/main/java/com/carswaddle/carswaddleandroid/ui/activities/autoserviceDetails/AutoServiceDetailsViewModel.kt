@@ -6,15 +6,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.carswaddle.carswaddleandroid.data.AppDatabase
-import com.carswaddle.carswaddleandroid.data.autoservice.AutoService
 import com.carswaddle.carswaddleandroid.data.autoservice.AutoServiceRepository
-import com.carswaddle.carswaddleandroid.data.location.Location
-import com.carswaddle.carswaddleandroid.data.location.LocationRepository
-import com.carswaddle.carswaddleandroid.data.mechanic.Mechanic
+import com.carswaddle.carswaddleandroid.data.location.AutoServiceLocation
+import com.carswaddle.carswaddleandroid.data.location.AutoServiceLocationRepository
 import com.carswaddle.carswaddleandroid.data.mechanic.MechanicRepository
-import com.carswaddle.carswaddleandroid.data.user.User
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
-import com.carswaddle.carswaddleandroid.data.vehicle.Vehicle
 import com.carswaddle.carswaddleandroid.data.vehicle.VehicleRepository
 import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServiceListElements
 import kotlinx.coroutines.launch
@@ -31,7 +27,7 @@ class AutoServiceDetailsViewModel(application: Application) : AndroidViewModel(a
     }
 
     private val autoServiceRepo: AutoServiceRepository
-    private val locationRepo: LocationRepository
+    private val locationRepo: AutoServiceLocationRepository
     private val mechanicRepo: MechanicRepository
     private val userRepo: UserRepository
     private val vehicleRepo: VehicleRepository
@@ -39,7 +35,7 @@ class AutoServiceDetailsViewModel(application: Application) : AndroidViewModel(a
     init {
         val db = AppDatabase.getDatabase(application)
         autoServiceRepo = AutoServiceRepository(db.autoServiceDao())
-        locationRepo = LocationRepository(db.locationDao())
+        locationRepo = AutoServiceLocationRepository(db.locationDao())
         mechanicRepo = MechanicRepository(db.mechanicDao())
         userRepo = UserRepository(db.userDao())
         vehicleRepo = VehicleRepository(db.vehicleDao())
@@ -55,8 +51,11 @@ class AutoServiceDetailsViewModel(application: Application) : AndroidViewModel(a
         if (localAutoServiceId == null) {
 
         } else {
-
-            autoServiceRepo.getAutoService(localAutoServiceId, getApplication(), { error, autoServiceId ->
+            autoServiceRepo.getAutoService(localAutoServiceId, getApplication(), {
+                viewModelScope.launch {
+                    _autoServiceElement.value = fetchAutoServiceListElements(it)
+                }
+            }, { error, autoServiceId ->
                 if (error == null && autoServiceId != null) {
                     viewModelScope.launch {
                         _autoServiceElement.value = fetchAutoServiceListElements(autoServiceId)
@@ -66,23 +65,6 @@ class AutoServiceDetailsViewModel(application: Application) : AndroidViewModel(a
                 }
             })
         }
-
-//        autoServiceRepo.getAutoServices(100, 0, getApplication(), listOf<String>(), listOf("scheduled", "canceled", "inProgress")) { error, autoServiceIds ->
-//
-//            viewModelScope.launch {
-//                if (autoServiceIds != null) {
-//                    var autoServiceElements: MutableList<AutoServiceListElements> = ArrayList()
-//                    for (id in autoServiceIds) {
-//                        fetchAutoServiceListElements(id)?.let {
-//                            autoServiceElements.add(it)
-//                        }
-//                    }
-//                    _autoServices.value = autoServiceElements
-//                } else {
-//
-//                }
-//            }
-//        }
     }
 
     val autoServiceElement: LiveData<AutoServiceListElements>

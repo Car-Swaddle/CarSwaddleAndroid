@@ -1,8 +1,9 @@
 package com.carswaddle.carswaddleandroid.services.serviceModels
 
+import android.location.Location
 import java.util.*
 
-data class Location(
+data class AutoServiceLocation(
     val id: String,
     val point: Point,
     val streetAddress: String,

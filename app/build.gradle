@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.carswaddle.carswaddleandroid"
-        minSdkVersion 21
+        minSdkVersion 29
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -63,6 +63,10 @@ dependencies {
     implementation 'com.android.support:design:27.1.1'
 
     implementation 'androidx.fragment:fragment-ktx:1.1.0'
+
+//    apply plugin: "androidx.navigation.safeargs"
+
+    apply plugin: "androidx.navigation.safeargs.kotlin"
 
     implementation "androidx.navigation:navigation-fragment-ktx"
     implementation "androidx.navigation:navigation-ui-ktx"

@@ -1,13 +1,10 @@
 package com.carswaddle.carswaddleandroid.data.autoservice
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.carswaddle.carswaddleandroid.data.location.Location
-import com.carswaddle.carswaddleandroid.data.location.LocationRepository
+import com.carswaddle.carswaddleandroid.data.location.AutoServiceLocation
 import com.carswaddle.carswaddleandroid.data.mechanic.Mechanic
 import com.carswaddle.carswaddleandroid.data.user.User
 import com.carswaddle.carswaddleandroid.data.vehicle.Vehicle
-import com.carswaddle.carswaddleandroid.data.vehicle.VehicleRepository
 
 
 @Dao
@@ -38,7 +35,7 @@ public abstract class AutoServiceDao {
     abstract fun insertAutoService(autoService: AutoService)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertLocation(location: Location)
+    abstract fun insertLocation(location: AutoServiceLocation)
 
     @Query("SELECT * FROM autoService WHERE creator_id is (:userId) ORDER BY creation_date ASC")
     abstract fun getAutoServicesForUser(userId: String): List<AutoService>
@@ -55,8 +52,8 @@ public abstract class AutoServiceDao {
     @Query("SELECT * FROM vehicle WHERE id IN (:vehicleId)")
     abstract fun getVehicle(vehicleId: String): Vehicle
 
-    @Query("SELECT * FROM location WHERE id IN (:locationId)")
-    abstract fun getLocation(locationId: String): Location?
+    @Query("SELECT * FROM autoservicelocation WHERE id IN (:locationId)")
+    abstract fun getLocation(locationId: String): AutoServiceLocation?
 
     @Query("SELECT * FROM user WHERE id IN (:userId)")
     abstract fun getUser(userId: String): User?

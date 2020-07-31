@@ -7,8 +7,8 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.carswaddle.carswaddleandroid.data.autoservice.AutoService
 import com.carswaddle.carswaddleandroid.data.autoservice.AutoServiceDao
-import com.carswaddle.carswaddleandroid.data.location.Location
-import com.carswaddle.carswaddleandroid.data.location.LocationDao
+import com.carswaddle.carswaddleandroid.data.location.AutoServiceLocation
+import com.carswaddle.carswaddleandroid.data.location.AutoServiceLocationDao
 import com.carswaddle.carswaddleandroid.data.mechanic.Mechanic
 import com.carswaddle.carswaddleandroid.data.mechanic.MechanicDao
 import com.carswaddle.carswaddleandroid.data.user.User
@@ -19,14 +19,14 @@ import com.carswaddle.carswaddleandroid.data.vehicleDescription.VehicleDescripti
 import com.carswaddle.carswaddleandroid.data.vehicleDescription.VehicleDescriptionDao
 import com.carswaddle.carswaddleandroid.generic.SingletonHolder
 
-@Database(entities = arrayOf(User::class, AutoService::class, Vehicle::class, Location::class, VehicleDescription::class, Mechanic::class), version = 5)
-@TypeConverters(DateConverter::class, CalendarConverter::class, ArrayListConverter::class)
+@Database(entities = arrayOf(User::class, AutoService::class, Vehicle::class, AutoServiceLocation::class, VehicleDescription::class, Mechanic::class), version = 8)
+@TypeConverters(DateConverter::class, CalendarConverter::class, ArrayListConverter::class, AutoServiceStatusConverter::class)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun userDao(): UserDao
     abstract fun autoServiceDao(): AutoServiceDao
     abstract fun mechanicDao(): MechanicDao
-    abstract fun locationDao(): LocationDao
+    abstract fun locationDao(): AutoServiceLocationDao
     abstract fun vehicleDao(): VehicleDao
     abstract fun vehicleDescriptionDao(): VehicleDescriptionDao
 
