@@ -25,6 +25,7 @@ class MapsActivity : AppCompatActivity(), LocationFragment.OnLocationSelectedLis
 
     private var location: LatLng? = null
     private lateinit var progressFragment: ProgressFragment
+    private lateinit var mechanicFragment: MechanicFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,15 +36,20 @@ class MapsActivity : AppCompatActivity(), LocationFragment.OnLocationSelectedLis
         val locationFragment = LocationFragment()
         locationFragment.setOnLocationSelectedListener(this)
         progressFragment = ProgressFragment()
+        mechanicFragment = MechanicFragment()
         supportFragmentManager.beginTransaction()
-            .add(R.id.fragment_placeholder, locationFragment)
-            .add(R.id.bottom_fragment_placeholder, progressFragment)
+            .add(R.id.fragment_container, locationFragment)
+            .add(R.id.bottom_fragment_container, progressFragment)
             .commit();
     }
 
     override fun onLocationSelected(latLng: LatLng) {
         location = latLng
         progressFragment.stepNumber = 2
+        supportFragmentManager.beginTransaction()
+            .add(R.id.fragment_container, mechanicFragment)
+            .addToBackStack("Mechanic")
+            .commit()
     }
 
 }
