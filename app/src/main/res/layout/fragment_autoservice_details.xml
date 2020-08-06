@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="#FFFFFF"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:clickable="true" >
+    android:clickable="true"
+    android:windowSoftInputMode="adjustPan" >
 
     <TableLayout
         android:layout_width="match_parent"
@@ -18,12 +19,12 @@
 
         <TableRow
             android:id="@+id/row_1"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp" >
+            android:padding="16dp" >
 
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
@@ -38,10 +39,13 @@
                     app:layout_constraintVertical_bias="0.0" />
 
                 <LinearLayout
+                    android:id="@+id/details_stuff"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
                     android:gravity="center_horizontal"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    app:layout_constraintStart_toEndOf="@id/date_display">
 
                     <TextView
                         android:id="@+id/mechanic_name_text_view"
@@ -54,6 +58,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Completed"
+                        android:background="@drawable/pill_bg"
                         android:textAllCaps="false" />
 
                 </LinearLayout>
@@ -61,24 +66,36 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
                     android:gravity="center_horizontal"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/details_stuff">
 
                     <Button
-                        android:id="@+id/button2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Button" />
+                        android:id="@+id/chatButton"
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        android:background="@drawable/round_button"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:scaleType="fitXY"
+                        app:icon="@drawable/ic_sms_bubble"
+                        app:iconSize="32dp"/>
 
                     <Button
-                        android:id="@+id/button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Button" />
+                        android:id="@+id/phoneButton"
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        android:background="@drawable/round_button"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:scaleType="fitXY"
+                        app:icon="@drawable/phone"
+                        app:iconSize="32dp" />
 
                 </LinearLayout>
 
-            </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         </TableRow>
 
@@ -111,7 +128,8 @@
                 <com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.ImageLabel
                     android:id="@+id/vehicle_image_label"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"/>
 
                 <com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.ImageLabel
                     android:id="@+id/oil_type_image_label"
@@ -139,41 +157,53 @@
         </TableRow>
 
         <TableRow
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_weight="1">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingBottom="16dp">
 
                     <com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.ImageLabel
                         android:id="@+id/location_image_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"/>
+                        android:layout_alignParentLeft="true"
+                        android:paddingRight="16dp" />
 
                     <TextView
                         android:id="@+id/distance_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="0 mi"
-                        android:layout_alignParentRight="true" />
+                        android:layout_alignParentRight="true"
+                        android:text="0 mi" />
 
                 </LinearLayout>
 
-                <com.google.android.gms.maps.MapView
-                    android:id="@+id/preview_location_map_view"
+                <androidx.cardview.widget.CardView
+                    app:cardCornerRadius="16dp"
                     android:layout_width="match_parent"
-                    android:layout_height="132dp" />
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/border">
+
+                    <com.google.android.gms.maps.MapView
+                        android:id="@+id/preview_location_map_view"
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="132dp"/>
+
+                </androidx.cardview.widget.CardView>
 
             </LinearLayout>
 
@@ -192,6 +222,7 @@
                 android:layout_weight="1"
                 android:background="#FF909090"
                 android:padding="2dip" />
+
         </TableRow>
 
         <TableRow
@@ -199,12 +230,12 @@
             android:layout_height="match_parent"
             android:layout_margin="16dp" >
 
-            <View
-                android:id="@+id/view3"
-                android:layout_width="wrap_content"
+            <com.carswaddle.carswaddleandroid.ui.activities.autoserviceDetails.NotesView
+                android:id="@+id/notesView"
+                android:layout_weight="1"
                 android:layout_height="196dp" />
 
         </TableRow>
     </TableLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

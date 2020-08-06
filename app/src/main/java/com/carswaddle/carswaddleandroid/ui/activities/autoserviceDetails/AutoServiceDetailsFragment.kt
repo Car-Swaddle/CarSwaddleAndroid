@@ -1,12 +1,12 @@
 package com.carswaddle.carswaddleandroid.ui.activities.autoserviceDetails
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.icu.text.MeasureFormat
 import android.icu.util.Measure
 import android.icu.util.MeasureUnit
 import android.location.Location
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,7 +14,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -33,7 +32,6 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import java.math.RoundingMode
 
@@ -54,6 +52,10 @@ class AutoServiceDetailsFragment(val autoServiceId: String) : Fragment(), OnMapR
     private lateinit var streetAddressImageLabel: ImageLabel
     private lateinit var locationMapView: MapView
     private lateinit var distanceBetweenTextView: TextView
+    private lateinit var chatButton: Button
+    private lateinit var phoneButton: Button
+
+    private lateinit var notesTextView: TextView
 
     private var userLocation: Location? = null
 
@@ -87,6 +89,21 @@ class AutoServiceDetailsFragment(val autoServiceId: String) : Fragment(), OnMapR
         locationMapView = root.findViewById(R.id.preview_location_map_view)
         streetAddressImageLabel = root.findViewById(R.id.location_image_label)
         distanceBetweenTextView = root.findViewById(R.id.distance_text_view)
+        chatButton = root.findViewById(R.id.chatButton)
+        phoneButton = root.findViewById(R.id.phoneButton)
+
+        chatButton.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                val phoneNumber = autoServiceDetailsViewModel.autoServiceElement.value?.mechanicUser?.phoneNumber
+                if (phoneNumber != null) {
+                    val smsIntent = Intent(Intent.ACTION_VIEW)
+                    smsIntent.setType("vnd.android-dir/mms-sms")
+                    smsIntent.putExtra("address", phoneNumber)
+                    smsIntent.putExtra("sms_body", "Test")
+                    startActivity(smsIntent)
+                }
+            }
+        })
 
         streetAddressImageLabel.imageType = ImageLabel.ImageType.LOCATION
         vehicleImageLabel.imageType = ImageLabel.ImageType.VEHICLE
@@ -121,44 +138,6 @@ class AutoServiceDetailsFragment(val autoServiceId: String) : Fragment(), OnMapR
                     .title("Service location")
             )
         })
-
-//        autoServicesListViewModel = ViewModelProviders.of(this).get(AutoServicesListViewModel::class.java)
-//        val root = inflater.inflate(R.layout.fragment_autoservices_list, container, false)
-//
-//        autoServicesListViewModel.autoServices.observe(this, Observer<List<AutoServiceListElements>>{ autoServices ->
-//            Log.d("log", "It done changed")
-//
-//            viewAdapter.notifyDataSetChanged()
-//        })
-//
-//        viewManager = LinearLayoutManager(activity?.applicationContext)
-//        viewAdapter = AutoServiceListAdapter(autoServicesListViewModel.autoServices)
-//
-//        recyclerView = root.findViewById<RecyclerView>(R.id.autoservice_recycler_view).apply {
-//            // use this setting to improve performance if you know that changes
-//            // in content do not change the layout size of the RecyclerView
-//            setHasFixedSize(true)
-//
-//            // use a linear layout manager
-//            layoutManager = viewManager
-//
-//            // specify an viewAdapter (see also next example)
-//            adapter = viewAdapter
-//        }
-
-////        val textView: TextView = root.findViewById(R.id.text_home)
-////        autoServicesListViewModel.text.observe(viewLifecycleOwner, Observer {
-////            textView.text = it
-////        })
-//
-//        autoServicesListViewModel.also {
-//
-//        }
-
-//        val model: AutoServicesListViewModel by viewModels()
-//        model.getUsers().observe(this, Observer<List<User>>{ users ->
-//            // update UI
-//        })
 
         return root
     }

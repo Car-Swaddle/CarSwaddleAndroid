@@ -48,7 +48,8 @@
         </activity>
         <activity
             android:name=".activities.ui.MainActivity"
-            android:label="Main" />
+            android:label="Main"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".activities.ui.LoginActivity"
             android:label="Login" />
