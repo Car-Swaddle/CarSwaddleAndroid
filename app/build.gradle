@@ -84,6 +84,8 @@ dependencies {
 
     implementation 'com.squareup.retrofit2:retrofit:2.8.1'
 
+    implementation 'com.haibin:calendarview:3.6.9'
+
     def room_version = "2.2.5"
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
