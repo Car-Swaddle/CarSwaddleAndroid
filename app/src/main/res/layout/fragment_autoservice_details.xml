@@ -76,7 +76,7 @@
                         android:id="@+id/chatButton"
                         android:layout_width="64dp"
                         android:layout_height="64dp"
-                        android:background="@drawable/round_button"
+                        android:background="@drawable/pill_bg"
                         android:gravity="center_vertical|center_horizontal"
                         android:scaleType="fitXY"
                         app:icon="@drawable/ic_sms_bubble"
@@ -86,11 +86,11 @@
                         android:id="@+id/phoneButton"
                         android:layout_width="64dp"
                         android:layout_height="64dp"
-                        android:background="@drawable/round_button"
+                        android:background="@drawable/pill_bg"
                         android:gravity="center_vertical|center_horizontal"
                         android:scaleType="fitXY"
                         app:icon="@drawable/phone"
-                        app:iconSize="32dp" />
+                        app:iconSize="32dp"/>
 
                 </LinearLayout>
 

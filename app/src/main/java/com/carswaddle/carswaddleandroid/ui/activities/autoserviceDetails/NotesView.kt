@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.widget.EditText
 import android.widget.LinearLayout
 import com.carswaddle.carswaddleandroid.R
+import org.w3c.dom.Text
 
 class NotesView @JvmOverloads constructor(
     context: Context,
@@ -18,11 +19,13 @@ class NotesView @JvmOverloads constructor(
 
     var notesDidChange: (text: String?) -> Unit = { }
 
-    private var notesText: String
+    var notesText: String?
         get() = notesTextView.text.toString()
-        set(value) { notesTextView.setText(value) }
+        set(value) { notesTextView.setTextWithNoListener(value, textWatcher) }
 
     private val notesTextView: EditText
+
+    private lateinit var textWatcher: TextWatcher
 
     init {
         LayoutInflater.from(context).inflate(R.layout.notes_view, this, true)
@@ -30,13 +33,22 @@ class NotesView @JvmOverloads constructor(
 
         notesTextView = findViewById<EditText>(R.id.notesEditText)
 
-        notesTextView.addTextChangedListener(object: TextWatcher {
+        textWatcher = object: TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 notesDidChange(s?.toString())
             }
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-        })
+        }
+
+        notesTextView.addTextChangedListener(textWatcher)
     }
 
+}
+
+
+fun EditText.setTextWithNoListener(text: String?, textWatcher: TextWatcher) {
+    removeTextChangedListener(textWatcher)
+    setText(text)
+    addTextChangedListener(textWatcher)
 }

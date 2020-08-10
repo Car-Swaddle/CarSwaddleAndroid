@@ -2,6 +2,7 @@ package com.carswaddle.carswaddleandroid.services
 
 import retrofit2.Call
 import com.carswaddle.carswaddleandroid.services.serviceModels.AutoService
+import com.carswaddle.carswaddleandroid.services.serviceModels.UpdateAutoService
 import retrofit2.http.*
 
 private const val autoServiceEndpoint = "/api/auto-service"
@@ -15,7 +16,11 @@ interface AutoServiceService {
 
     @Headers(ContentType.headerPrefix + ContentType.applicationJSON)
     @GET(autoServiceSingleEndpoint)
-    fun autoServices(@Query("autoServiceID") autoServiceId: String): Call<AutoService>
+    fun autoServiceDetails(@Query("autoServiceID") autoServiceId: String): Call<AutoService>
+
+    @Headers(ContentType.headerPrefix + ContentType.applicationJSON)
+    @PATCH(autoServiceEndpoint)
+    fun updateAutoService(@Query("autoServiceID") autoServiceId: String, @Body updateAutoService: UpdateAutoService): Call<AutoService>
 
 }
 

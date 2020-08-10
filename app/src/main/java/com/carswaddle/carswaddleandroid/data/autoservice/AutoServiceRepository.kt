@@ -12,6 +12,7 @@ import com.carswaddle.carswaddleandroid.data.vehicle.Vehicle
 import com.carswaddle.carswaddleandroid.retrofit.ServiceGenerator
 import com.carswaddle.carswaddleandroid.services.AutoServiceService
 import com.carswaddle.carswaddleandroid.services.serviceModels.AutoService
+import com.carswaddle.carswaddleandroid.services.serviceModels.UpdateAutoService
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -35,6 +36,42 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
         return autoServiceDao.getAutoService(autoServiceId)
     }
 
+    fun updateNotes(autoServiceId: String, notes: String, context: Context, completion: (error: Error?, autoServiceId: String?) -> Unit) {
+        val autoServiceService = ServiceGenerator.authenticated(context)?.retrofit?.create(AutoServiceService::class.java)
+        if (autoServiceService == null) {
+            // TODO: call with error
+            completion(null, null)
+            return
+        }
+
+        val updateAutoService = UpdateAutoService(null, notes, null, null, null, null, null)
+
+        val call = autoServiceService.updateAutoService(autoServiceId, updateAutoService)
+        call.enqueue(object : Callback<com.carswaddle.carswaddleandroid.services.serviceModels.AutoService> {
+            override fun onFailure(call: Call<AutoService>, t: Throwable) {
+                completion(null, null)
+            }
+
+            override fun onResponse(call: Call<AutoService>, response: Response<AutoService>) {
+                val autoService = response.body()
+                if (autoService == null) {
+                    print("no auto service")
+                    completion(null, null)
+                } else {
+                    GlobalScope.async {
+                        try {
+                            insertNestedAutoService(autoService)
+                            completion(null, autoService.id)
+                        } catch (e: Exception) {
+                            print(e)
+                            completion(null, null)
+                        }
+                    }
+                }
+            }
+        })
+    }
+
     fun getAutoService(autoServiceId: String, context: Context, cacheCompletion: (autoServiceId: String) -> Unit, completion: (error: Error?, autoServiceId: String?) -> Unit) {
         val autoServiceService = ServiceGenerator.authenticated(context)?.retrofit?.create(AutoServiceService::class.java)
         if (autoServiceService == null) {
@@ -50,7 +87,7 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
             }
         }
 
-        val call = autoServiceService.autoServices(autoServiceId)
+        val call = autoServiceService.autoServiceDetails(autoServiceId)
         call.enqueue(object : Callback<com.carswaddle.carswaddleandroid.services.serviceModels.AutoService> {
             override fun onFailure(call: Call<AutoService>, t: Throwable) {
                 completion(null, null)

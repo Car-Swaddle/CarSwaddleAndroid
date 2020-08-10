@@ -1,6 +1,7 @@
 package com.carswaddle.carswaddleandroid.ui.activities.autoserviceDetails
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -91,6 +92,18 @@ class AutoServiceDetailsViewModel(application: Application) : AndroidViewModel(a
             print(e)
             return null
         }
+    }
+
+    fun updateNotes(notes: String, completion: (error: Error?, autoServiceId: String?) -> Unit) {
+        val id = autoServiceId
+        if (id == null) {
+            return
+        }
+        autoServiceRepo.updateNotes(id, notes, getApplication(), completion)
+//        autoServiceRepo.updateNotes(id, notes, getApplication()) { error, autoServiceId
+//            Log.w("car swaddle android", "updated notes")
+//            completion(error, autoServiceId)
+//        }
     }
 
 }

@@ -1,12 +1,14 @@
 package com.carswaddle.carswaddleandroid.ui.activities.autoserviceDetails
 
 import android.Manifest
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.icu.text.MeasureFormat
 import android.icu.util.Measure
 import android.icu.util.MeasureUnit
 import android.location.Location
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,11 +16,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.carswaddle.carswaddleandroid.Extensions.openSettingsToAppActions
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServiceListElements
 import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.DateDisplayView
@@ -33,16 +38,11 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.MarkerOptions
+import kotlinx.android.synthetic.main.fragment_autoservice_details.*
 import java.math.RoundingMode
 
 
 class AutoServiceDetailsFragment(val autoServiceId: String) : Fragment(), OnMapReadyCallback {
-
-//    private lateinit var autoServicesListViewModel: AutoServicesListViewModel
-//
-//    private lateinit var recyclerView: RecyclerView
-//    private lateinit var viewAdapter: RecyclerView.Adapter<*>
-//    private lateinit var viewManager: RecyclerView.LayoutManager
 
     private lateinit var dateDisplay: DateDisplayView
     private lateinit var mechanicNameTextView: TextView
@@ -55,7 +55,7 @@ class AutoServiceDetailsFragment(val autoServiceId: String) : Fragment(), OnMapR
     private lateinit var chatButton: Button
     private lateinit var phoneButton: Button
 
-    private lateinit var notesTextView: TextView
+    private lateinit var notesView: NotesView
 
     private var userLocation: Location? = null
 
@@ -69,6 +69,7 @@ class AutoServiceDetailsFragment(val autoServiceId: String) : Fragment(), OnMapR
     private var fusedLocationClient: FusedLocationProviderClient? = null
 
     private lateinit var autoServiceDetailsViewModel: AutoServiceDetailsViewModel
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -91,17 +92,27 @@ class AutoServiceDetailsFragment(val autoServiceId: String) : Fragment(), OnMapR
         distanceBetweenTextView = root.findViewById(R.id.distance_text_view)
         chatButton = root.findViewById(R.id.chatButton)
         phoneButton = root.findViewById(R.id.phoneButton)
+        notesView = root.findViewById(R.id.notesView)
+
+        notesView.notesDidChange = {
+            autoServiceDetailsViewModel.updateNotes(it ?: "") { error, autoServiceId ->
+                Log.w("car swaddle android", "returned")
+            }
+        }
 
         chatButton.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
-                val phoneNumber = autoServiceDetailsViewModel.autoServiceElement.value?.mechanicUser?.phoneNumber
-                if (phoneNumber != null) {
-                    val smsIntent = Intent(Intent.ACTION_VIEW)
-                    smsIntent.setType("vnd.android-dir/mms-sms")
-                    smsIntent.putExtra("address", phoneNumber)
-                    smsIntent.putExtra("sms_body", "Test")
-                    startActivity(smsIntent)
-                }
+                val phoneNumber = autoServiceDetailsViewModel.autoServiceElement.value?.mechanicUser?.phoneNumber ?: return
+                val intent = Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", phoneNumber, null))
+                startActivity(intent)
+            }
+        })
+
+        phoneButton.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                val phoneNumber = autoServiceDetailsViewModel.autoServiceElement.value?.mechanicUser?.phoneNumber ?: return
+                val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber))
+                startActivity(intent)
             }
         })
 
@@ -137,6 +148,7 @@ class AutoServiceDetailsFragment(val autoServiceId: String) : Fragment(), OnMapR
                     .position(location)
                     .title("Service location")
             )
+            notesView.notesText = autoService.autoService.notes
         })
 
         return root
@@ -151,15 +163,18 @@ class AutoServiceDetailsFragment(val autoServiceId: String) : Fragment(), OnMapR
     }
 
     private fun localizedDistance(autoServiceLocation: Location, userLocation: Location): String? {
-        val locale = resources.configuration.locales.get(0)
-        if (locale == null) {
-            return null
-        }
+        val locale = resources.configuration.locales.get(0) ?: return null
         val measureFormat = MeasureFormat.getInstance(locale, MeasureFormat.FormatWidth.SHORT)
         var metersBetween = userLocation.distanceTo(autoServiceLocation)
         metersBetween = metersBetween.toBigDecimal().setScale(0, RoundingMode.HALF_DOWN).toFloat()
         val measure = Measure(metersToMiles(metersBetween), MeasureUnit.MILE)
         return measureFormat.format(measure)
+    }
+
+    private fun showCallIntent() {
+        val phoneNumber = autoServiceDetailsViewModel.autoServiceElement.value?.mechanicUser?.phoneNumber ?: return
+        val intent = Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phoneNumber))
+        startActivity(intent)
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -170,7 +185,7 @@ class AutoServiceDetailsFragment(val autoServiceId: String) : Fragment(), OnMapR
     }
 
     private fun enableMyLocation() {
-        if (ContextCompat.checkSelfPermission(activity!!, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             map.isMyLocationEnabled = true
             fusedLocationClient?.lastLocation?.addOnSuccessListener { location ->
                 if (location == null) {
@@ -187,7 +202,6 @@ class AutoServiceDetailsFragment(val autoServiceId: String) : Fragment(), OnMapR
             )
         }
     }
-
 
     private fun metersToMiles(meters: Float): Float {
         return meters / 1609.34f
