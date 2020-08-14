@@ -11,6 +11,7 @@ import com.carswaddle.carswaddleandroid.data.location.AutoServiceLocation
 import com.carswaddle.carswaddleandroid.data.location.AutoServiceLocationDao
 import com.carswaddle.carswaddleandroid.data.mechanic.Mechanic
 import com.carswaddle.carswaddleandroid.data.mechanic.MechanicDao
+import com.carswaddle.carswaddleandroid.data.oilChange.OilChange
 import com.carswaddle.carswaddleandroid.data.user.User
 import com.carswaddle.carswaddleandroid.data.user.UserDao
 import com.carswaddle.carswaddleandroid.data.vehicle.Vehicle
@@ -18,8 +19,9 @@ import com.carswaddle.carswaddleandroid.data.vehicle.VehicleDao
 import com.carswaddle.carswaddleandroid.data.vehicleDescription.VehicleDescription
 import com.carswaddle.carswaddleandroid.data.vehicleDescription.VehicleDescriptionDao
 import com.carswaddle.carswaddleandroid.generic.SingletonHolder
+import com.carswaddle.carswaddleandroid.services.serviceModels.ServiceEntity
 
-@Database(entities = arrayOf(User::class, AutoService::class, Vehicle::class, AutoServiceLocation::class, VehicleDescription::class, Mechanic::class), version = 8)
+@Database(entities = arrayOf(User::class, AutoService::class, Vehicle::class, AutoServiceLocation::class, VehicleDescription::class, Mechanic::class, ServiceEntity::class, OilChange::class), version = 8)
 @TypeConverters(DateConverter::class, CalendarConverter::class, ArrayListConverter::class, AutoServiceStatusConverter::class)
 abstract class AppDatabase : RoomDatabase() {
 

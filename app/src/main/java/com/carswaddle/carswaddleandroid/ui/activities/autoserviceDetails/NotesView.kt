@@ -9,6 +9,9 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import com.carswaddle.carswaddleandroid.R
 import org.w3c.dom.Text
+import java.util.*
+import java.util.concurrent.TimeUnit
+import kotlin.concurrent.schedule
 
 class NotesView @JvmOverloads constructor(
     context: Context,
@@ -27,6 +30,8 @@ class NotesView @JvmOverloads constructor(
 
     private lateinit var textWatcher: TextWatcher
 
+    private var timer: Timer? = null
+
     init {
         LayoutInflater.from(context).inflate(R.layout.notes_view, this, true)
         orientation = VERTICAL
@@ -35,7 +40,11 @@ class NotesView @JvmOverloads constructor(
 
         textWatcher = object: TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                notesDidChange(s?.toString())
+                timer?.cancel()
+                timer = Timer()
+                timer?.schedule(TimeUnit.SECONDS.toMillis(5)) {
+                    notesDidChange(s?.toString())
+                }
             }
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}

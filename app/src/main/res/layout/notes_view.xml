@@ -21,12 +21,15 @@
         android:id="@+id/notesEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textCursorDrawable="@drawable/cursor_color"
+        android:hint="Add a note for the mechanic here. They will receive a notification when you are done typing."
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:inputType="textMultiLine"
         android:layout_alignParentBottom="true"
+        app:backgroundTint="@color/colorPrimary"
         android:layout_below="@id/notesTitle"/>
 
 </RelativeLayout>

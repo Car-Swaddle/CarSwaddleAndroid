@@ -171,12 +171,6 @@ class AutoServiceDetailsFragment(val autoServiceId: String) : Fragment(), OnMapR
         return measureFormat.format(measure)
     }
 
-    private fun showCallIntent() {
-        val phoneNumber = autoServiceDetailsViewModel.autoServiceElement.value?.mechanicUser?.phoneNumber ?: return
-        val intent = Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phoneNumber))
-        startActivity(intent)
-    }
-
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
         // Centered on lehi showing slc + provo
