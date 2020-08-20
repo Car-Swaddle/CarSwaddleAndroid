@@ -3,27 +3,22 @@ package com.carswaddle.carswaddleandroid.data.autoservice
 import androidx.room.*
 import com.carswaddle.carswaddleandroid.data.location.AutoServiceLocation
 import com.carswaddle.carswaddleandroid.data.mechanic.Mechanic
+import com.carswaddle.carswaddleandroid.data.oilChange.OilChange
 import com.carswaddle.carswaddleandroid.data.user.User
 import com.carswaddle.carswaddleandroid.data.vehicle.Vehicle
-
+import com.carswaddle.carswaddleandroid.data.serviceEntity.ServiceEntity
 
 @Dao
 public abstract class AutoServiceDao {
-//    @Query("SELECT * FROM user")
-//    fun getAll(): List<User>
-//
-//    @Query("SELECT * FROM user WHERE id IN (:userIds)")
-//    fun getUsersWithUserIds(userIds: IntArray): List<User>
-//
-//    @Query("SELECT * FROM user WHERE id IN (:userId)")
-//    fun getUserWithUserId(userId: String): LiveData<User>?
-//
-//    @Query("SELECT * FROM user WHERE id IN (:userId)")
-//    fun getDatUser(userId: String): User?
-//
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertMechanic(mechanic: Mechanic)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract fun insertOilChange(oilChange: OilChange)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract fun insertServiceEntity(serviceEntity: ServiceEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertUser(user: User)
@@ -58,9 +53,4 @@ public abstract class AutoServiceDao {
     @Query("SELECT * FROM user WHERE id IN (:userId)")
     abstract fun getUser(userId: String): User?
 
-//    @Insert(onConflict = OnConflictStrategy.REPLACE)
-//    fun insertUsers(vararg users: User)
-//
-//    @Delete
-//    fun delete(user: User)
 }

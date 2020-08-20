@@ -25,6 +25,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.carswaddle.carswaddleandroid.Extensions.openSettingsToAppActions
 import com.carswaddle.carswaddleandroid.R
+import com.carswaddle.carswaddleandroid.data.oilChange.OilChange
 import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServiceListElements
 import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.DateDisplayView
 import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.ImageLabel
@@ -128,7 +129,7 @@ class AutoServiceDetailsFragment(val autoServiceId: String) : Fragment(), OnMapR
 
         autoServiceDetailsViewModel.autoServiceId = autoServiceId
 
-        autoServiceDetailsViewModel.autoServiceElement.observe(this, Observer<AutoServiceListElements> { autoService ->
+        autoServiceDetailsViewModel.autoServiceElement.observe(viewLifecycleOwner, Observer<AutoServiceListElements> { autoService ->
             Log.v("tag autoservice", "autoservice" + autoService.mechanicUser.firstName)
             val date = autoService.autoService.scheduledDate
             if (date != null) {
@@ -149,6 +150,10 @@ class AutoServiceDetailsFragment(val autoServiceId: String) : Fragment(), OnMapR
                     .title("Service location")
             )
             notesView.notesText = autoService.autoService.notes
+        })
+
+        autoServiceDetailsViewModel.oilChange.observe(viewLifecycleOwner, Observer<OilChange> { oilChange ->
+            oilTypeImageLabel.text = oilChange.oilType.localizedString()
         })
 
         return root

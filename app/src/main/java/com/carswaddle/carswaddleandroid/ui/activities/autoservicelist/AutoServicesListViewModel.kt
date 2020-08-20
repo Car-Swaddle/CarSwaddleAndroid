@@ -6,6 +6,8 @@ import com.carswaddle.carswaddleandroid.data.AppDatabase
 import com.carswaddle.carswaddleandroid.data.autoservice.AutoServiceRepository
 import com.carswaddle.carswaddleandroid.data.location.AutoServiceLocationRepository
 import com.carswaddle.carswaddleandroid.data.mechanic.MechanicRepository
+import com.carswaddle.carswaddleandroid.data.oilChange.OilChangeRepository
+import com.carswaddle.carswaddleandroid.data.serviceEntity.ServiceEntityRepository
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
 import com.carswaddle.carswaddleandroid.data.vehicle.VehicleRepository
 import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServiceListElements
@@ -19,6 +21,8 @@ class AutoServicesListViewModel(application: Application) : AndroidViewModel(app
     private val mechanicRepo: MechanicRepository
     private val userRepo: UserRepository
     private val vehicleRepo: VehicleRepository
+    private val serviceEntityRepo: ServiceEntityRepository
+    private val oilChangeRepo: OilChangeRepository
 
     init {
         val db = AppDatabase.getDatabase(application)
@@ -27,6 +31,8 @@ class AutoServicesListViewModel(application: Application) : AndroidViewModel(app
         mechanicRepo = MechanicRepository(db.mechanicDao())
         userRepo = UserRepository(db.userDao())
         vehicleRepo = VehicleRepository(db.vehicleDao())
+        serviceEntityRepo = ServiceEntityRepository(db.serviceEntityDao())
+        oilChangeRepo = OilChangeRepository(db.oilChangeDao())
 
         loadAutoServices()
     }
@@ -67,11 +73,13 @@ class AutoServicesListViewModel(application: Application) : AndroidViewModel(app
             val vehicle = vehicleRepo.getVehicle(vehicleId)
             val location = locationRepo.getLocation(locationId)
             val mechanicUser = userRepo.getUser(mechanic?.userId ?: "")
+            val serviceEntities = serviceEntityRepo.getServiceEntities(autoServiceId)
 
             if (mechanic == null || vehicle == null || location == null || mechanicUser == null) {
                 return null
             }
-            return AutoServiceListElements(autoService, mechanic, vehicle, location, mechanicUser)
+
+            return AutoServiceListElements(autoService, mechanic, vehicle, location, mechanicUser, serviceEntities)
         } catch (e: Exception) {
             print(e)
             return null

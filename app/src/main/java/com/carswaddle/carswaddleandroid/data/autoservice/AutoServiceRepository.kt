@@ -2,18 +2,16 @@ package com.carswaddle.carswaddleandroid.data.autoservice
 
 import android.content.Context
 import android.util.Log
-import androidx.lifecycle.LiveData
-import com.carswaddle.carswaddleandroid.data.AppDatabase
 import com.carswaddle.carswaddleandroid.data.location.AutoServiceLocation
 import com.carswaddle.carswaddleandroid.data.mechanic.Mechanic
-import com.carswaddle.carswaddleandroid.data.mechanic.MechanicRepository
+import com.carswaddle.carswaddleandroid.data.oilChange.OilChange
+import com.carswaddle.carswaddleandroid.data.serviceEntity.ServiceEntity
 import com.carswaddle.carswaddleandroid.data.user.User
 import com.carswaddle.carswaddleandroid.data.vehicle.Vehicle
 import com.carswaddle.carswaddleandroid.retrofit.ServiceGenerator
 import com.carswaddle.carswaddleandroid.services.AutoServiceService
 import com.carswaddle.carswaddleandroid.services.serviceModels.AutoService
 import com.carswaddle.carswaddleandroid.services.serviceModels.UpdateAutoService
-import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import retrofit2.Call
@@ -151,6 +149,7 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
                             completion(null, ids.toList())
                         } catch(e: Exception) {
                             print(e)
+                            Log.d("retrofit ", "error persisting auto service" + e)
                         }
                     }
                 }
@@ -159,7 +158,7 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
     }
 
     suspend private fun insertNestedAutoService(autoService: com.carswaddle.carswaddleandroid.services.serviceModels.AutoService): com.carswaddle.carswaddleandroid.data.autoservice.AutoService {
-        val storedAutoService = com.carswaddle.carswaddleandroid.data.autoservice.AutoService(autoService)
+        val storedAutoService = AutoService(autoService)
         val location = AutoServiceLocation(autoService.location)
         autoServiceDao.insertLocation(location)
         val vehicle = Vehicle(autoService.vehicle)
@@ -169,7 +168,13 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
         autoService.mechanic.user?.let {
             autoServiceDao.insertUser(User(it))
         }
-        // TODO: ServiceEntities
+        for (serviceEntityServiceModel in autoService.serviceEntities) {
+            val serviceEntity = ServiceEntity(serviceEntityServiceModel)
+            autoServiceDao.insertServiceEntity(serviceEntity)
+            val oilChange = OilChange(serviceEntityServiceModel.oilChange)
+            autoServiceDao.insertOilChange(oilChange)
+        }
+
         insert(storedAutoService)
         return storedAutoService
     }

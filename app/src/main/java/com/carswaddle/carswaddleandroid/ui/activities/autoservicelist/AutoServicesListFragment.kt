@@ -35,7 +35,7 @@ class AutoServicesListFragment : Fragment(), View.OnClickListener {
         autoServicesListViewModel = ViewModelProviders.of(this).get(AutoServicesListViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_autoservices_list, container, false)
 
-        autoServicesListViewModel.autoServices.observe(this, Observer<List<AutoServiceListElements>>{ autoServices ->
+        autoServicesListViewModel.autoServices.observe(viewLifecycleOwner, Observer<List<AutoServiceListElements>>{ autoServices ->
             viewAdapter.notifyDataSetChanged()
         })
 

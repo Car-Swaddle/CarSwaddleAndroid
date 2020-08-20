@@ -12,6 +12,7 @@ import com.carswaddle.carswaddleandroid.data.location.AutoServiceLocationDao
 import com.carswaddle.carswaddleandroid.data.mechanic.Mechanic
 import com.carswaddle.carswaddleandroid.data.mechanic.MechanicDao
 import com.carswaddle.carswaddleandroid.data.oilChange.OilChange
+import com.carswaddle.carswaddleandroid.data.oilChange.OilChangeDao
 import com.carswaddle.carswaddleandroid.data.user.User
 import com.carswaddle.carswaddleandroid.data.user.UserDao
 import com.carswaddle.carswaddleandroid.data.vehicle.Vehicle
@@ -19,10 +20,12 @@ import com.carswaddle.carswaddleandroid.data.vehicle.VehicleDao
 import com.carswaddle.carswaddleandroid.data.vehicleDescription.VehicleDescription
 import com.carswaddle.carswaddleandroid.data.vehicleDescription.VehicleDescriptionDao
 import com.carswaddle.carswaddleandroid.generic.SingletonHolder
-import com.carswaddle.carswaddleandroid.services.serviceModels.ServiceEntity
+import com.carswaddle.carswaddleandroid.data.serviceEntity.ServiceEntity
+import com.carswaddle.carswaddleandroid.data.serviceEntity.ServiceEntityDao
 
-@Database(entities = arrayOf(User::class, AutoService::class, Vehicle::class, AutoServiceLocation::class, VehicleDescription::class, Mechanic::class, ServiceEntity::class, OilChange::class), version = 8)
-@TypeConverters(DateConverter::class, CalendarConverter::class, ArrayListConverter::class, AutoServiceStatusConverter::class)
+
+@Database(entities = arrayOf(User::class, AutoService::class, Vehicle::class, AutoServiceLocation::class, VehicleDescription::class, Mechanic::class, ServiceEntity::class, OilChange::class), version = 9)
+@TypeConverters(DateConverter::class, CalendarConverter::class, ArrayListConverter::class, AutoServiceStatusConverter::class, OilTypeConverter::class)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun userDao(): UserDao
@@ -31,6 +34,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun locationDao(): AutoServiceLocationDao
     abstract fun vehicleDao(): VehicleDao
     abstract fun vehicleDescriptionDao(): VehicleDescriptionDao
+    abstract fun serviceEntityDao(): ServiceEntityDao
+    abstract fun oilChangeDao(): OilChangeDao
 
     companion object {
         // Singleton prevents multiple instances of database opening at the
