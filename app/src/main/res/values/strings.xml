@@ -2,10 +2,12 @@
     <string name="app_name">Car Swaddle</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
+    <string name="title_profile">Profile</string>
     <string name="title_notifications">Notifications</string>
     <string name="password_hint">password</string>
     <string name="email_hint">email</string>
     <string name="login">Login</string>
+    <string name="logout">Logout</string>
     <string name="preferences">com.carswaddle.carswaddleandroid.preferences</string>
     <string name="title_activity_schedule_service">Schedule service</string>
     <string name="title_activity_maps">Service schedule</string>
