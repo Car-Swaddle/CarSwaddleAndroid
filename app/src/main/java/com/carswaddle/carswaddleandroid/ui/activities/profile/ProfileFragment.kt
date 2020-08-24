@@ -13,6 +13,7 @@ import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.activities.ui.LoginActivity
 import com.carswaddle.carswaddleandroid.data.Authentication
 import com.carswaddle.carswaddleandroid.data.user.User
+import com.carswaddle.carswaddleandroid.ui.activities.autoserviceDetails.AutoServiceDetailsFragment
 import java.util.*
 
 
@@ -41,6 +42,18 @@ class ProfileFragment() : Fragment() {
                 Locale.getDefault().getCountry()
             )
         })
+
+        nameValueTextView.setOnClickListener {
+//            val details = AutoServiceDetailsFragment(it.autoService.id)
+            val manager = childFragmentManager
+            if (manager != null) {
+                val editNameFragment = EditNameFragment()
+                val transaction = manager.beginTransaction()
+                transaction.add(R.id.fragment_profile, editNameFragment)
+                transaction.addToBackStack(null)
+                transaction.commit()
+            }
+        }
 
         setHasOptionsMenu(true)
 

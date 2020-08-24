@@ -6,6 +6,8 @@
     <string name="title_notifications">Notifications</string>
     <string name="password_hint">password</string>
     <string name="email_hint">email</string>
+    <string name="first_name_label">First name</string>
+    <string name="last_name_label">Last name</string>
     <string name="login">Login</string>
     <string name="logout">Logout</string>
     <string name="preferences">com.carswaddle.carswaddleandroid.preferences</string>
@@ -115,4 +117,5 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
     <string name="notes">Notes:</string>
+    <string name="action_done">Done</string>
 </resources>
