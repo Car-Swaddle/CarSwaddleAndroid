@@ -10,8 +10,7 @@ import com.carswaddle.carswaddleandroid.data.user.User
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
 import kotlinx.coroutines.launch
 
-
-class EditNameViewModel(application: Application) : AndroidViewModel(application) {
+class EditPhoneNumberViewModel(application: Application) : AndroidViewModel(application) {
 
     private val userRepo: UserRepository
 

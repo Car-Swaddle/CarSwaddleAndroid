@@ -3,6 +3,7 @@ package com.carswaddle.carswaddleandroid.data.user
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.carswaddle.carswaddleandroid.services.serviceModels.UpdateUser
 
 @Entity
 data class User(
@@ -19,6 +20,10 @@ data class User(
 
     constructor(user: com.carswaddle.carswaddleandroid.services.serviceModels.User) :
             this(user.id, user.firstName, user.lastName, user.phoneNumber, user.imageID, user.email, user.isEmailVerified, user.isPhoneNumberVerified, user.timeZone, user.mechanicID)
+
+    constructor(user: User, updateUser: UpdateUser) :
+            this(user.id, updateUser.firstName ?: user.firstName, updateUser.lastName ?: user.lastName, updateUser.phoneNumber
+                ?: user.phoneNumber, user.imageID, user.email, user.isEmailVerified, user.isPhoneNumberVerified, updateUser.timeZone ?: user.timeZone, user.mechanicID)
 
     fun displayName(): String {
         return firstName + " " + lastName

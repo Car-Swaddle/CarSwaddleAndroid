@@ -69,6 +69,8 @@ dependencies {
 
     implementation 'androidx.fragment:fragment-ktx:1.1.0'
 
+    implementation 'com.github.mukeshsolanki:android-otpview-pinview:2.1.1'
+
 //    apply plugin: "androidx.navigation.safeargs"
 
     apply plugin: "androidx.navigation.safeargs.kotlin"

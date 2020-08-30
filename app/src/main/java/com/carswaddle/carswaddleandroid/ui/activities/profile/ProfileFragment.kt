@@ -13,6 +13,7 @@ import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.activities.ui.LoginActivity
 import com.carswaddle.carswaddleandroid.data.Authentication
 import com.carswaddle.carswaddleandroid.data.user.User
+import com.carswaddle.carswaddleandroid.ui.activities.PreAuthenticationActivity
 import com.carswaddle.carswaddleandroid.ui.activities.autoserviceDetails.AutoServiceDetailsFragment
 import java.util.*
 
@@ -35,6 +36,14 @@ class ProfileFragment() : Fragment() {
         nameValueTextView = root.findViewById(R.id.nameValueTextView)
         phoneNumberValueTextView = root.findViewById(R.id.phoneNumberValueTextView)
 
+        profileViewModel.currentUser.observeForever {
+            nameValueTextView.text = it.displayName()
+            phoneNumberValueTextView.text = PhoneNumberUtils.formatNumber(
+                it.phoneNumber,
+                Locale.getDefault().getCountry()
+            )
+        }
+
         profileViewModel.currentUser.observe(viewLifecycleOwner, Observer<User> { user ->
             nameValueTextView.text = user.displayName()
             phoneNumberValueTextView.text = PhoneNumberUtils.formatNumber(
@@ -50,6 +59,18 @@ class ProfileFragment() : Fragment() {
                 val editNameFragment = EditNameFragment()
                 val transaction = manager.beginTransaction()
                 transaction.add(R.id.fragment_profile, editNameFragment)
+                transaction.addToBackStack(null)
+                transaction.commit()
+            }
+        }
+
+        phoneNumberValueTextView.setOnClickListener {
+//            val details = AutoServiceDetailsFragment(it.autoService.id)
+            val manager = childFragmentManager
+            if (manager != null) {
+                val phone = EditPhoneNumberFragment()
+                val transaction = manager.beginTransaction()
+                transaction.add(R.id.fragment_profile, phone)
                 transaction.addToBackStack(null)
                 transaction.commit()
             }
@@ -72,7 +93,7 @@ class ProfileFragment() : Fragment() {
             Log.w("car swaddle android", "logged out∂")
             activity?.let {
                 Authentication(it).logout { error, response ->
-                    val intent = Intent(activity, LoginActivity::class.java)
+                    val intent = Intent(activity, PreAuthenticationActivity::class.java)
 
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                     startActivity(intent)

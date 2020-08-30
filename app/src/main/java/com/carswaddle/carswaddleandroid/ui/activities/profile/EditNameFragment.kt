@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -52,14 +53,21 @@ class EditNameFragment() : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
         if (item.itemId == R.id.action_done) {
             Log.w("car swaddle android", "options")
-            editNameViewModel.updateName(firstNameLabeledEditText.editTextValue ?: null, lastNameLabeledEditText.editTextValue ?: null) {
+            editNameViewModel.updateName(firstNameLabeledEditText.editTextValue ?: null, lastNameLabeledEditText.editTextValue ?: null, {
+                childFragmentManager.popBackStack()
+            }) { error ->
                 Log.w("carswaddle android", "got back from updating user name")
+                if (error != null) {
+                    activity?.baseContext.let {
+                        Toast.makeText(it, "Car Swaddle was unable to update your name", Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         }
-
+//        childFragmentManager.popBackStack()
+        activity?.onBackPressed()
         return super.onOptionsItemSelected(item)
     }
 

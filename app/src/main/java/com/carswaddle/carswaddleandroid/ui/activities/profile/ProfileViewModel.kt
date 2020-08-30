@@ -35,6 +35,12 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     private val _currentUser = MutableLiveData<User>()
 
     private fun loadCurrentUser() {
+
+        viewModelScope.launch {
+            _currentUser.value = userRepo.getCurrentUser(getApplication())
+        }
+
+
         userRepo.updateCurrentUser(getApplication()) { error ->
             viewModelScope.launch {
                 val currentUser = userRepo.getCurrentUser(getApplication())
@@ -45,6 +51,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                 }
             }
         }
+
     }
 
 }

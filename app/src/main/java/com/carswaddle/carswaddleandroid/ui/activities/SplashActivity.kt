@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.data.Authentication
+import com.carswaddle.carswaddleandroid.ui.activities.PreAuthenticationActivity
 
 
 class SplashActivity: AppCompatActivity() {
@@ -19,7 +20,7 @@ class SplashActivity: AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         } else {
-            val intent = Intent(this, LoginActivity::class.java)
+            val intent = Intent(this, PreAuthenticationActivity::class.java)
             startActivity(intent)
         }
         finish()

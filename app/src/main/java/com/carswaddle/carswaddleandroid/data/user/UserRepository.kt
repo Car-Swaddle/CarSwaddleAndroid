@@ -2,13 +2,11 @@ package com.carswaddle.carswaddleandroid.data.user
 
 import android.content.Context
 import android.util.Log
-import androidx.lifecycle.LiveData
 import com.carswaddle.carswaddleandroid.Extensions.carSwaddlePreferences
 import com.carswaddle.carswaddleandroid.retrofit.ServiceGenerator
 import com.carswaddle.carswaddleandroid.services.UserService
 import com.carswaddle.carswaddleandroid.services.serviceModels.UpdateUser
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
+import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -28,8 +26,12 @@ class UserRepository(private val userDao: UserDao) {
 //        wordDao.insert(word)
 //    }
 
-    suspend fun insert(user: User) {
+    suspend fun insert(user: User) = withContext(Dispatchers.IO + NonCancellable) {
         userDao.insertUser(user)
+    }
+
+    suspend fun update(user: User, updateUser: UpdateUser) = withContext(Dispatchers.IO + NonCancellable) {
+        userDao.insertUser(User(user, updateUser))
     }
 
     fun updateCurrentUser(context: Context, completion: (error: Error?) -> Unit) {
@@ -65,20 +67,28 @@ class UserRepository(private val userDao: UserDao) {
         })
     }
 
-    fun updateName(firstName: String?, lastName: String?, context: Context, completion: (error: Error?) -> Unit) {
-        update(firstName, lastName, null, null, null, null, context, completion)
+    fun updateName(firstName: String?, lastName: String?, context: () -> Unit, cacheCompletion: () -> Unit = {}, completion: (error: Error?) -> Unit) {
+        update(firstName, lastName, null, null, null, null, cacheCompletion, context, completion)
     }
 
-    fun updatePhoneNumber(phoneNumber: String, context: Context, completion: (error: Error?) -> Unit) {
-        update(null, null, phoneNumber, null, null, null, context, completion)
+    fun updatePhoneNumber(phoneNumber: String, context: Context, cacheCompletion: () -> Unit = {}, completion: (error: Error?) -> Unit) {
+        update(null, null, phoneNumber, null, null, null, cacheCompletion, context, completion)
     }
 
-    private fun update(updateUser: UpdateUser, context: Context, completion: (error: Error?) -> Unit) {
+    private fun update(updateUser: UpdateUser, context: Context, cacheCompletion: () -> Unit = {}, completion: (error: Error?) -> Unit) {
         val userService = ServiceGenerator.authenticated(context)?.retrofit?.create(UserService::class.java)
         if (userService == null) {
             // TODO: call with error
             completion(null)
             return
+        }
+
+        val user = getCurrentUser(context)
+        if (user != null) {
+            GlobalScope.async {
+                update(user, updateUser)
+                cacheCompletion()
+            }
         }
 
         val call = userService.updateUser(updateUser)
@@ -107,9 +117,9 @@ class UserRepository(private val userDao: UserDao) {
         })
     }
 
-    private fun update(firstName: String?, lastName: String?, phoneNumber: String?, token: String?, timeZone: String?, adminKey: String?, context: Context, completion: (error: Error?) -> Unit) {
+    private fun update(firstName: String?, lastName: String?, phoneNumber: String?, token: String?, timeZone: String?, adminKey: String?, cacheCompletion: () -> Unit, context: Context, completion: (error: Error?) -> Unit) {
         val updateUser = UpdateUser(firstName, lastName, phoneNumber, token, timeZone, adminKey)
-        update(updateUser, context, completion)
+        update(updateUser, context, cacheCompletion, completion)
     }
 
     fun getCurrentUser(context: Context): User? {

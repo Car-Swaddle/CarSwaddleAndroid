@@ -59,6 +59,30 @@ class Authentication(private val context: Context) {
         })
     }
 
+    fun signUp(email: String, password: String, completion: (error: Throwable?, response: AuthResponse?) -> Unit) {
+        val auth = serviceGenerator.retrofit.create(AuthenticationService::class.java)
+        val call = auth.signUp(email, password, false)
+        call.enqueue(object : Callback<AuthResponse> {
+            override fun onFailure(call: Call<AuthResponse>?, t: Throwable?) {
+                Log.d("retrofit ", "call failed")
+                completion(t, null)
+            }
+
+            override fun onResponse(call: Call<AuthResponse>?, response: Response<AuthResponse>?) {
+                Log.d("retrofit ", "call succeeded")
+                val result = response?.body()
+                if (result?.token != null) {
+                    setLoginToken(result.token)
+                }
+                completion(null, result)
+            }
+        })
+    }
+
+    fun sendSMSVerificationSMS() {
+
+    }
+
     fun logout(completion: (error: Throwable?, response: AuthResponse?) -> Unit) {
         removeToken()
         // TODO: make network request to remove push tokens and auth token from server
