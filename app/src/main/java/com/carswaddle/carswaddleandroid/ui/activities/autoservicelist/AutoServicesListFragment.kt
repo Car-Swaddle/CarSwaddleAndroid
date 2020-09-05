@@ -16,7 +16,7 @@ import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServic
 import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServiceListElements
 
 
-class AutoServicesListFragment : Fragment(), View.OnClickListener {
+class AutoServicesListFragment : Fragment() {
 
     private lateinit var autoServicesListViewModel: AutoServicesListViewModel
 
@@ -67,7 +67,4 @@ class AutoServicesListFragment : Fragment(), View.OnClickListener {
         return root
     }
 
-    override fun onClick(v: View?) {
-
-    }
 }

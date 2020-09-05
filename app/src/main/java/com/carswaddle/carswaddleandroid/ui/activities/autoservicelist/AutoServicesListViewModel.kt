@@ -40,7 +40,13 @@ class AutoServicesListViewModel(application: Application) : AndroidViewModel(app
     private val _autoServices = MutableLiveData<List<AutoServiceListElements>>()
 
     private fun loadAutoServices() {
-        autoServiceRepo.getAutoServices(100, 0, getApplication(), listOf<String>(), listOf("scheduled", "canceled", "inProgress")) { error, autoServiceIds ->
+        autoServiceRepo.getAutoServices(
+            100,
+            0,
+            getApplication(),
+            listOf<String>(),
+            listOf("scheduled", "canceled", "inProgress")
+        ) { error, autoServiceIds ->
 
             viewModelScope.launch {
                 if (autoServiceIds != null) {
@@ -79,7 +85,14 @@ class AutoServicesListViewModel(application: Application) : AndroidViewModel(app
                 return null
             }
 
-            return AutoServiceListElements(autoService, mechanic, vehicle, location, mechanicUser, serviceEntities)
+            return AutoServiceListElements(
+                autoService,
+                mechanic,
+                vehicle,
+                location,
+                mechanicUser,
+                serviceEntities
+            )
         } catch (e: Exception) {
             print(e)
             return null
@@ -87,28 +100,3 @@ class AutoServicesListViewModel(application: Application) : AndroidViewModel(app
     }
 
 }
-
-
-
-
-/**
- *
- *
-enum Status: String {
-case scheduled
-case canceled
-case inProgress
-case completed
-
-public var localizedString: String {
-switch self {
-case .canceled: return NSLocalizedString("canceled", comment: "auto service status")
-case .inProgress: return NSLocalizedString("in progress", comment: "auto service status")
-case .completed: return NSLocalizedString("completed", comment: "auto service status")
-case .scheduled: return NSLocalizedString("scheduled", comment: "auto service status")
-}
-}
-
-}
- */
-

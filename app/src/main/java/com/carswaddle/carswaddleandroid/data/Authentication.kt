@@ -21,6 +21,16 @@ private val authTokenKey = "authTokenKey"
 
 class Authentication(private val context: Context) {
 
+
+    private val userRepo: UserRepository
+
+    init {
+        val db = AppDatabase.getDatabase(context)
+        userRepo = UserRepository(db.userDao())
+    }
+
+
+
     fun isUserLoggedIn(): Boolean {
         return getAuthToken() != null
     }
