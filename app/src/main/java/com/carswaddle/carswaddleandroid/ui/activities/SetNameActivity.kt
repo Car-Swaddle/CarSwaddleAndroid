@@ -52,7 +52,7 @@ class SetNameActivity: Activity() {
         if (firstName == null || firstName == null) {
             return
         }
-        userRepo.updateName(firstName, lastName, {
+        userRepo.updateName(firstName, lastName, applicationContext, {
 
         }) {
             val user = userRepo.getCurrentUser(this)

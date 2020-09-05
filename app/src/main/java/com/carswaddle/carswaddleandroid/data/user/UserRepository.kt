@@ -67,7 +67,7 @@ class UserRepository(private val userDao: UserDao) {
         })
     }
 
-    fun updateName(firstName: String?, lastName: String?, context: () -> Unit, cacheCompletion: () -> Unit = {}, completion: (error: Error?) -> Unit) {
+    fun updateName(firstName: String?, lastName: String?, context: Context, cacheCompletion: () -> Unit = {}, completion: (error: Error?) -> Unit) {
         update(firstName, lastName, null, null, null, null, cacheCompletion, context, completion)
     }
 
