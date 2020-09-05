@@ -3,8 +3,12 @@ package com.carswaddle.carswaddleandroid.data.user
 import android.content.Context
 import android.util.Log
 import com.carswaddle.carswaddleandroid.Extensions.carSwaddlePreferences
+import com.carswaddle.carswaddleandroid.data.Authentication
 import com.carswaddle.carswaddleandroid.retrofit.ServiceGenerator
+import com.carswaddle.carswaddleandroid.retrofit.serviceGenerator
+import com.carswaddle.carswaddleandroid.services.AuthenticationService
 import com.carswaddle.carswaddleandroid.services.UserService
+import com.carswaddle.carswaddleandroid.services.serviceModels.AuthResponse
 import com.carswaddle.carswaddleandroid.services.serviceModels.UpdateUser
 import kotlinx.coroutines.*
 import retrofit2.Call
@@ -32,6 +36,98 @@ class UserRepository(private val userDao: UserDao) {
 
     suspend fun update(user: User, updateUser: UpdateUser) = withContext(Dispatchers.IO + NonCancellable) {
         userDao.insertUser(User(user, updateUser))
+    }
+
+    fun login(email: String, password: String, context: Context, completion: (error: Throwable?, response: AuthResponse?) -> Unit) {
+        val auth = serviceGenerator.retrofit.create(AuthenticationService::class.java)
+        val call = auth.login(email, password, false)
+        call.enqueue(object : Callback<AuthResponse> {
+            override fun onFailure(call: Call<AuthResponse>?, t: Throwable?) {
+                Log.d("retrofit ", "call failed")
+                completion(t, null)
+            }
+
+            override fun onResponse(call: Call<AuthResponse>?, response: Response<AuthResponse>?) {
+                Log.d("retrofit ", "call succeeded")
+                val result = response?.body()
+                if (result?.token != null) {
+                    val auth = Authentication(context)
+                    auth.setLoginToken(result.token)
+                }
+                val user = result?.user
+                if (user != null) {
+                    GlobalScope.async {
+                        insert(User(user))
+                        completion(null, result)
+                    }
+                } else {
+                    completion(null, result)
+                }
+            }
+
+        })
+    }
+
+    fun signUp(email: String, password: String, context: Context, completion: (error: Throwable?, response: AuthResponse?) -> Unit) {
+        val auth = serviceGenerator.retrofit.create(AuthenticationService::class.java)
+        val call = auth.signUp(email, password, false)
+        call.enqueue(object : Callback<AuthResponse> {
+            override fun onFailure(call: Call<AuthResponse>?, t: Throwable?) {
+                Log.d("retrofit ", "call failed")
+                completion(t, null)
+            }
+
+            override fun onResponse(call: Call<AuthResponse>?, response: Response<AuthResponse>?) {
+                Log.d("retrofit ", "call succeeded")
+                val result = response?.body()
+                if (result?.token != null) {
+                    val auth = Authentication(context)
+                    auth.setLoginToken(result.token)
+                }
+                completion(null, result)
+            }
+        })
+    }
+
+    fun sendSMSVerificationSMS(completion: (error: Throwable?) -> Unit) {
+        val auth = serviceGenerator.retrofit.create(AuthenticationService::class.java)
+        val call = auth.sendSMSVerification()
+        call.enqueue(object : Callback<com.carswaddle.carswaddleandroid.services.serviceModels.User> {
+            override fun onFailure(call: Call<com.carswaddle.carswaddleandroid.services.serviceModels.User>?, t: Throwable?) {
+                Log.d("retrofit ", "call failed")
+                completion(t)
+            }
+
+            override fun onResponse(call: Call<com.carswaddle.carswaddleandroid.services.serviceModels.User>?, response: Response<com.carswaddle.carswaddleandroid.services.serviceModels.User>?) {
+                Log.d("retrofit ", "call succeeded")
+                val user = response?.body()
+                if (user != null) {
+                    Log.d("retrofit ", "call succeeded")
+                    GlobalScope.async {
+                        val dataUser = User(user)
+                        insert(dataUser)
+                        completion(null)
+                    }
+                }
+                completion(null)
+            }
+        })
+    }
+
+    fun verifySMSCode(code: String, completion: (error: Throwable?) -> Unit) {
+        val auth = serviceGenerator.retrofit.create(AuthenticationService::class.java)
+        val call = auth.verifySMS(code)
+        call.enqueue(object : Callback<Void> {
+            override fun onFailure(call: Call<Void>?, t: Throwable?) {
+                Log.d("retrofit ", "call failed")
+                completion(t)
+            }
+
+            override fun onResponse(call: Call<Void>?, response: Response<Void>?) {
+                Log.d("retrofit ", "call succeeded")
+                completion(null)
+            }
+        })
     }
 
     fun updateCurrentUser(context: Context, completion: (error: Error?) -> Unit) {

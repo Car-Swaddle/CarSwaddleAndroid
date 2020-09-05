@@ -12,7 +12,9 @@ import com.carswaddle.carswaddleandroid.Extensions.isEmpty
 import com.carswaddle.carswaddleandroid.Extensions.isValidEmail
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.R.layout.activity_login
+import com.carswaddle.carswaddleandroid.data.AppDatabase
 import com.carswaddle.carswaddleandroid.data.Authentication
+import com.carswaddle.carswaddleandroid.data.user.UserRepository
 
 
 class LoginActivity : AppCompatActivity() {
@@ -21,8 +23,13 @@ class LoginActivity : AppCompatActivity() {
     private val emailEditText: EditText by lazy { findViewById(R.id.email_edit_text) as EditText }
     private val loginButton: Button by lazy { findViewById(R.id.loginButton) as Button }
 
+    private lateinit var userRepo: UserRepository
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val db = AppDatabase.getDatabase(this)
+        userRepo = UserRepository(db.userDao())
 
         setContentView(activity_login)
 
@@ -59,7 +66,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun didTapLogin() {
         val auth = Authentication(applicationContext)
-        auth.login(emailEditText.text.toString(), passwordEditText.text.toString()) { throwable, authResponse ->
+        userRepo.login(emailEditText.text.toString(), passwordEditText.text.toString(), this) { throwable, authResponse ->
             if (throwable == null && auth.isUserLoggedIn()) {
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)

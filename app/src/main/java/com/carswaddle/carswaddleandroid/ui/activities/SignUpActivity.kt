@@ -13,7 +13,9 @@ import com.carswaddle.carswaddleandroid.Extensions.isValidEmail
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.R.layout.activity_sign_up
 import com.carswaddle.carswaddleandroid.activities.ui.MainActivity
+import com.carswaddle.carswaddleandroid.data.AppDatabase
 import com.carswaddle.carswaddleandroid.data.Authentication
+import com.carswaddle.carswaddleandroid.data.user.UserRepository
 
 class SignUpActivity: Activity() {
 
@@ -21,8 +23,13 @@ class SignUpActivity: Activity() {
     private val emailEditText: EditText by lazy { findViewById(R.id.email_edit_text) as EditText }
     private val signUpButton: Button by lazy { findViewById(R.id.sign_up_button) as Button }
 
+    private lateinit var userRepo: UserRepository
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val db = AppDatabase.getDatabase(this)
+        userRepo = UserRepository(db.userDao())
 
         setContentView(activity_sign_up)
 
@@ -59,7 +66,7 @@ class SignUpActivity: Activity() {
 
     private fun didTapLogin() {
         val auth = Authentication(applicationContext)
-        auth.signUp(emailEditText.text.toString(), passwordEditText.text.toString()) { throwable, authResponse ->
+        userRepo.signUp(emailEditText.text.toString(), passwordEditText.text.toString(), this) { throwable, authResponse ->
             if (throwable == null && auth.isUserLoggedIn()) {
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
