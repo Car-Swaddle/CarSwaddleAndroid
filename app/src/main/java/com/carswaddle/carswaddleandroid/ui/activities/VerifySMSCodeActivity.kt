@@ -31,4 +31,9 @@ class VerifySMSCodeActivity: Activity() {
         })
     }
 
+
+    private fun verifyPhone() {
+
+    }
+
 }

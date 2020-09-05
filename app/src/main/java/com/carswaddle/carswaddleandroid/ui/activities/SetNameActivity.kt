@@ -4,10 +4,12 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import com.carswaddle.carswaddleandroid.Extensions.afterTextChanged
 import com.carswaddle.carswaddleandroid.R
+import com.carswaddle.carswaddleandroid.activities.ui.MainActivity
 import com.carswaddle.carswaddleandroid.data.AppDatabase
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
 
@@ -52,17 +54,20 @@ class SetNameActivity: Activity() {
         if (firstName == null || firstName == null) {
             return
         }
-        userRepo.updateName(firstName, lastName, applicationContext, {
+        userRepo.updateName(firstName, lastName, this, {
 
         }) {
-            val user = userRepo.getCurrentUser(this)
             if (it == null) {
-                if (user?.phoneNumber == null || user?.isPhoneNumberVerified == false) {
+                val user = userRepo.getCurrentUser(this)
+                if (user == null) {
+                    Log.d("dunno", "something messed up, no user, but signed in")
+                } else if (user.phoneNumber.isNullOrBlank() || user.isPhoneNumberVerified == false) {
                     val intent = Intent(this, SetPhoneNumberActivity::class.java)
                     startActivity(intent)
                 } else {
-                    val intent = Intent(this, SetPhoneNumberActivity::class.java)
+                    val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
+                    finish()
                 }
             } else {
 

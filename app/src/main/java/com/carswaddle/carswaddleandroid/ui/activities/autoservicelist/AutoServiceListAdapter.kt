@@ -21,12 +21,8 @@ class AutoServiceListAdapter(private val autoServices: LiveData<List<AutoService
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(holder: AutoServiceViewHolder, position: Int) {
-        // - get element from your dataset at this position
-        // - replace the contents of the view with that element
-//        holder.textView.text = autoServices[position].notes
         val autoService = autoServices.value?.get(position)
         if (autoService != null) {
-//            holder.configure(autoService, onClickListener)
             holder.configure(autoService, listener)
         }
     }

@@ -3,6 +3,7 @@ package com.carswaddle.carswaddleandroid.ui.activities.autoservicelist
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.carswaddle.carswaddleandroid.R
+import com.carswaddle.carswaddleandroid.ui.activities.autoserviceDetails.AutoServiceDetailsFragment
 import java.util.*
 
 //interface AutoServiceViewHolderDelegate {
@@ -17,7 +18,7 @@ class AutoServiceViewHolder (view: View) : RecyclerView.ViewHolder(view) {
     private val vehicleImageLabel: ImageLabel
 
     val dateDisplayView: DateDisplayView = view.findViewById(R.id.date_display)
-    val context = view.context
+    val context = view.context // Use itemView.context
 
     fun configure(autoServiceElements: AutoServiceListElements, listener: (AutoServiceListElements) -> Unit) {
         if (autoServiceElements.autoService.scheduledDate != null) {
@@ -30,9 +31,23 @@ class AutoServiceViewHolder (view: View) : RecyclerView.ViewHolder(view) {
         locationImageLabel.text = autoServiceElements.location.streetAddress
         vehicleImageLabel.text = autoServiceElements.vehicle.name ?: ""
 
+        itemView.context
+
+        // Show the fragment from this class
+
         itemView.setOnClickListener {
             listener(autoServiceElements)
+
+            // Navigation.createNavigationOnClickListener(R.id.action_searchFragment)
+
 //            delegate.didSelectItem(autoServiceElements)
+
+//            val details = AutoServiceDetailsFragment(it.autoService.id)
+//            val transaction = manager.beginTransaction()
+//            transaction.add(R.id.autoservices_fragment, details)
+//            transaction.addToBackStack(null)
+//            transaction.commit()
+
         }
     }
 
