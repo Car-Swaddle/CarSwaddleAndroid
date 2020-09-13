@@ -40,7 +40,6 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
             _currentUser.value = userRepo.getCurrentUser(getApplication())
         }
 
-
         userRepo.updateCurrentUser(getApplication()) { error ->
             viewModelScope.launch {
                 val currentUser = userRepo.getCurrentUser(getApplication())

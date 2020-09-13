@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.activities.ui.LoginActivity
+import com.carswaddle.carswaddleandroid.data.AppDatabase
 import com.carswaddle.carswaddleandroid.data.Authentication
 import com.carswaddle.carswaddleandroid.data.user.User
 import com.carswaddle.carswaddleandroid.ui.activities.PreAuthenticationActivity
@@ -38,18 +39,22 @@ class ProfileFragment() : Fragment() {
 
         profileViewModel.currentUser.observeForever {
             nameValueTextView.text = it.displayName()
-            phoneNumberValueTextView.text = PhoneNumberUtils.formatNumber(
-                it.phoneNumber,
-                Locale.getDefault().getCountry()
-            )
+            if (!it.phoneNumber.isNullOrBlank()) {
+                phoneNumberValueTextView.text = PhoneNumberUtils.formatNumber(
+                    it.phoneNumber,
+                    Locale.getDefault().getCountry()
+                )
+            }
         }
 
         profileViewModel.currentUser.observe(viewLifecycleOwner, Observer<User> { user ->
             nameValueTextView.text = user.displayName()
-            phoneNumberValueTextView.text = PhoneNumberUtils.formatNumber(
-                user.phoneNumber,
-                Locale.getDefault().getCountry()
-            )
+            if (!user.phoneNumber.isNullOrBlank()) {
+                phoneNumberValueTextView.text = PhoneNumberUtils.formatNumber(
+                    user.phoneNumber,
+                    Locale.getDefault().getCountry()
+                )
+            }
         })
 
         nameValueTextView.setOnClickListener {
@@ -82,16 +87,17 @@ class ProfileFragment() : Fragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        // TODO Add your menu entries here
-        inflater.inflate(R.menu.profile_menu, menu);
+        inflater.inflate(R.menu.profile_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
         if (item.itemId == R.id.profile_action_logout) {
             Log.w("car swaddle android", "logged out∂")
             activity?.let {
+                val db = context?.let { context -> AppDatabase.getDatabase(context) }
+                db?.clearAllTables()
+
                 Authentication(it).logout { error, response ->
                     val intent = Intent(activity, PreAuthenticationActivity::class.java)
 
@@ -103,18 +109,5 @@ class ProfileFragment() : Fragment() {
 
         return super.onOptionsItemSelected(item)
     }
-
-//    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
-//        R.id.logout -> {
-//            // User chose the "Settings" item, show the app settings UI...
-//            Log.w("tag app name", "Option logout selected")
-//            true
-//        }
-//        else -> {
-//            // If we got here, the user's action was not recognized.
-//            // Invoke the superclass to handle it.
-//            super.onOptionsItemSelected(item)
-//        }
-//    }
 
 }

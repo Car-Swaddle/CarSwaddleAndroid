@@ -32,22 +32,45 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
         <activity
             android:name=".ui.activities.schedule.MapsActivity"
-            android:label="@string/title_activity_maps"></activity>
+            android:label="@string/title_activity_maps"/>
         <activity
             android:name=".ui.activities.PreAuthenticationActivity"
-            android:label="@string/title_pre_authentication"></activity>
+            android:label="@string/title_pre_authentication"/>
+        <activity
+            android:name=".ui.activities.SetNameActivity"
+            android:label="@string/set_name"/>
         <activity
             android:name=".ui.activities.SignUpActivity"
-            android:label="@string/title_sign_up"></activity>
+            android:label="@string/title_sign_up"/>
+        <activity
+            android:name=".ui.activities.SetPhoneNumberActivity"
+            android:label="@string/title_set_phone_number"/>
+        <activity
+            android:name=".ui.activities.VerifySMSCodeActivity"
+            android:label="@string/title_verify_phone_number"/>
+        <activity
+            android:name=".ui.activities.ForgotPasswordActivity"
+            android:label="@string/title_forgot_password"/>
         <activity
             android:name=".activities.ui.SplashActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.activities.resetPassword.ResetPasswordActivity"
+            android:label="@string/title_reset_password" >
+            <intent-filter android:label="@string/title_reset_password">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https"
+                    android:host="www.carswaddle.com"
+                    android:pathPrefix="/car-swaddle/reset-password"/>
             </intent-filter>
         </activity>
         <activity

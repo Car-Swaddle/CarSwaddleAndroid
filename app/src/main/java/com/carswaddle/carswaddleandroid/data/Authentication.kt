@@ -21,16 +21,6 @@ private val authTokenKey = "authTokenKey"
 
 class Authentication(private val context: Context) {
 
-
-    private val userRepo: UserRepository
-
-    init {
-        val db = AppDatabase.getDatabase(context)
-        userRepo = UserRepository(db.userDao())
-    }
-
-
-
     fun isUserLoggedIn(): Boolean {
         return getAuthToken() != null
     }
@@ -43,7 +33,6 @@ class Authentication(private val context: Context) {
         val editContext = preferences().edit()
         editContext.putString(authTokenKey, token)
         editContext.apply()
-
     }
 
     private fun removeToken() {

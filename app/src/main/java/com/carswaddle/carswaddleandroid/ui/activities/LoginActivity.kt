@@ -15,13 +15,15 @@ import com.carswaddle.carswaddleandroid.R.layout.activity_login
 import com.carswaddle.carswaddleandroid.data.AppDatabase
 import com.carswaddle.carswaddleandroid.data.Authentication
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
+import com.carswaddle.carswaddleandroid.ui.activities.SetNameActivity
+import com.carswaddle.carswaddleandroid.ui.activities.SetPhoneNumberActivity
 
 
 class LoginActivity : AppCompatActivity() {
 
     private val passwordEditText: EditText by lazy { findViewById(R.id.password_edit_text) as EditText }
     private val emailEditText: EditText by lazy { findViewById(R.id.email_edit_text) as EditText }
-    private val loginButton: Button by lazy { findViewById(R.id.loginButton) as Button }
+    private val loginButton: Button by lazy { findViewById(R.id.sendResetButton) as Button }
 
     private lateinit var userRepo: UserRepository
 
@@ -68,9 +70,20 @@ class LoginActivity : AppCompatActivity() {
         val auth = Authentication(applicationContext)
         userRepo.login(emailEditText.text.toString(), passwordEditText.text.toString(), this) { throwable, authResponse ->
             if (throwable == null && auth.isUserLoggedIn()) {
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-                finish()
+                val user = userRepo.getCurrentUser(this)
+                if (user == null) {
+                    Log.d("dunno", "something messed up, no user, but signed in")
+                } else if (user.firstName.isNullOrBlank() || user.lastName.isNullOrBlank()) {
+                    val intent = Intent(this, SetNameActivity::class.java)
+                    startActivity(intent)
+                } else if (user.phoneNumber.isNullOrBlank() || user.isPhoneNumberVerified == null || user.isPhoneNumberVerified == false) {
+                    val intent = Intent(this, SetPhoneNumberActivity::class.java)
+                    startActivity(intent)
+                } else {
+                    val intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }
             } else {
                 Log.d("dunno", "Unable to login")
             }

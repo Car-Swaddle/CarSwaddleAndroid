@@ -10,7 +10,7 @@ import com.carswaddle.carswaddleandroid.R.layout.activity_pre_auth
 
 class PreAuthenticationActivity: AppCompatActivity() {
 
-    private val loginButton: Button by lazy { findViewById(R.id.loginButton) as Button }
+    private val loginButton: Button by lazy { findViewById(R.id.sendResetButton) as Button }
     private val signUpButton: Button by lazy { findViewById(R.id.signUpButton) as Button }
 
     override fun onCreate(savedInstanceState: Bundle?) {

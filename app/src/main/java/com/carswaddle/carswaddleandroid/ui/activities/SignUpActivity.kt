@@ -8,6 +8,7 @@ import android.text.TextWatcher
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import androidx.appcompat.app.AppCompatActivity
 import com.carswaddle.carswaddleandroid.Extensions.isEmpty
 import com.carswaddle.carswaddleandroid.Extensions.isValidEmail
 import com.carswaddle.carswaddleandroid.R
@@ -17,7 +18,7 @@ import com.carswaddle.carswaddleandroid.data.AppDatabase
 import com.carswaddle.carswaddleandroid.data.Authentication
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
 
-class SignUpActivity: Activity() {
+class SignUpActivity: AppCompatActivity() {
 
     private val passwordEditText: EditText by lazy { findViewById(R.id.password_edit_text) as EditText }
     private val emailEditText: EditText by lazy { findViewById(R.id.email_edit_text) as EditText }
@@ -32,9 +33,6 @@ class SignUpActivity: Activity() {
         userRepo = UserRepository(db.userDao())
 
         setContentView(activity_sign_up)
-
-        val db = AppDatabase.getDatabase(application)
-        userRepo = UserRepository(db.userDao())
 
         passwordEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {}
@@ -74,10 +72,10 @@ class SignUpActivity: Activity() {
                 val user = userRepo.getCurrentUser(this)
                 if (user == null) {
                     Log.d("dunno", "something messed up, no user, but signed in")
-                } else if (user.displayName().isNullOrBlank()) {
+                } else if (user.firstName.isNullOrBlank() || user.lastName.isNullOrBlank()) {
                     val intent = Intent(this, SetNameActivity::class.java)
                     startActivity(intent)
-                } else if (user.phoneNumber.isNullOrBlank() || user.isPhoneNumberVerified == false) {
+                } else if (user.phoneNumber.isNullOrBlank() || user.isPhoneNumberVerified == false || user.isPhoneNumberVerified == false) {
                     val intent = Intent(this, SetPhoneNumberActivity::class.java)
                     startActivity(intent)
                 } else {

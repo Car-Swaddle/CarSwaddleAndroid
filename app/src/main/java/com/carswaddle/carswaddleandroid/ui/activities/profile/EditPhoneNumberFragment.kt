@@ -28,7 +28,7 @@ class EditPhoneNumberFragment() : Fragment() {
         phoneNumberEditText = root.findViewById(R.id.phoneNumberLabeledEditText)
 //        lastNameLabeledEditText = root.findViewById(R.id.lastNameLabeledEditText)
 
-        phoneNumberEditText.labelText = getString(R.string.first_name_label)
+        phoneNumberEditText.labelText = getString(R.string.phone_number)
 
         editPhoneNumberViewModel.currentUser.observe(viewLifecycleOwner, Observer<User> { user ->
             phoneNumberEditText.editTextValue = user.phoneNumber

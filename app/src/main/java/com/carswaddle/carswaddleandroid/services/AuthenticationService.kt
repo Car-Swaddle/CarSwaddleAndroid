@@ -16,6 +16,10 @@ interface AuthenticationService {
     @POST("/login")
     fun login(@Field("email") email: String?, @Field("password") password: String, @Query("isMechanic") isMechanic: Boolean): Call<AuthResponse>
 
+    @Headers(headerPrefix + applicationJSON)
+    @POST("/api/logout")
+    fun logout(@Body deviceToken: String): Call<AuthResponse>
+
     @Headers(headerPrefix + applicationFormURLEncoded)
     @FormUrlEncoded
     @POST("/signup")
@@ -23,10 +27,23 @@ interface AuthenticationService {
 
     @Headers(headerPrefix + applicationJSON)
     @GET("/api/sms/verify")
-    fun verifySMS(code: String): Call<Void>
+    fun verifySMS(@Query("code") code: String): Call<User>
 
     @Headers(headerPrefix + applicationJSON)
     @GET("/api/sms/send-verification")
-    fun sendSMSVerification(): Call<User>
+    fun sendSMSVerification(): Call<Void>
+
+    @Headers(headerPrefix + applicationJSON)
+    @GET("/api/reset-password")
+    fun resetPassword(): Call<Void>
+
+    @Headers(headerPrefix + applicationJSON)
+    @GET("/api/request-reset-password")
+    fun requestResetPasswordLink(): Call<Void>
+
+    @Headers(headerPrefix + applicationFormURLEncoded)
+    @FormUrlEncoded
+    @POST("/api/request-reset-password")
+    fun signUp(@Field("email") email: String?, @Field("appName") appName: String): Call<AuthResponse>
 
 }

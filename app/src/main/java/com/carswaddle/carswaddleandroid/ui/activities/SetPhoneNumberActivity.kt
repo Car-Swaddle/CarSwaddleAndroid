@@ -5,16 +5,22 @@ import android.content.Intent
 import android.os.Bundle
 import android.telephony.PhoneNumberUtils
 import android.text.TextWatcher
+import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.carswaddle.carswaddleandroid.Extensions.afterTextChanged
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.R.layout.activity_set_phone_number
 import com.carswaddle.carswaddleandroid.data.AppDatabase
+import com.carswaddle.carswaddleandroid.data.Authentication
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
 
 
-class SetPhoneNumberActivity: Activity() {
+class SetPhoneNumberActivity: AppCompatActivity() {
 
     private val phoneNumberEditText: EditText by lazy { findViewById(R.id.phoneNumberEditText) as EditText }
     private val saveButton: Button by lazy { findViewById(R.id.savePhoneNumberButton) as Button }
@@ -36,7 +42,6 @@ class SetPhoneNumberActivity: Activity() {
         phoneNumberEditText.afterTextChanged {
             updateButtonEnabledness()
         }
-
     }
 
     private fun updateButtonEnabledness() {
@@ -58,6 +63,28 @@ class SetPhoneNumberActivity: Activity() {
 
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.profile_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.profile_action_logout) {
+            Log.w("car swaddle android", "logged out∂")
+            val db = AppDatabase.getDatabase(applicationContext)
+            db?.clearAllTables()
+
+            Authentication(applicationContext).logout { error, response ->
+                val intent = Intent(this, PreAuthenticationActivity::class.java)
+
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                startActivity(intent)
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
 }
