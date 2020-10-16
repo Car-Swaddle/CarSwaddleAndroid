@@ -66,6 +66,7 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
                                 val newJSONTree = gson.toJsonTree(newMap)
                                 val mechanic = gson.fromJson<Mechanic>(newJSONTree, Mechanic::class.java)
                                 insertNestedMechanic(mechanic)
+                                ids.add(mechanic.id)
                             }
                             
                             completion(null, ids.toList())
@@ -91,14 +92,14 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
 
         val call = mechanicService.getStats(mechanicId)
         call.enqueue(object :
-            Callback<Stats> {
-            override fun onFailure(call: Call<Stats>, t: Throwable) {
+            Callback<Map<String, Any>> {
+            override fun onFailure(call: Call<Map<String, Any>>, t: Throwable) {
                 completion(t, null)
             }
 
             override fun onResponse(
-                call: Call<Stats>,
-                response: Response<Stats>
+                call: Call<Map<String, Any>>,
+                response: Response<Map<String, Any>>
             ) {
                 val result = response?.body()
                 val code = response?.code()
@@ -110,10 +111,16 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
                         if (mechanic == null) {
                             return@launch
                         }
+                        
+                        val gson = Gson()
+                        val json = gson.toJsonTree(result[mechanicId])
+                        val stats = gson.fromJson<Stats>(json, Stats::class.java)
+                        
+                        Log.w("logging stuff", "map: $result")
 
-                        mechanic.averageRating = result.averageRating
-                        mechanic.numberOfRatings = result.numberOfRatings
-                        mechanic.autoServicesProvided = result.autoServicesProvided
+                        mechanic.averageRating = stats.averageRating
+                        mechanic.numberOfRatings = stats.numberOfRatings
+                        mechanic.autoServicesProvided = stats.autoServicesProvided
 
                         mechanicDao.insertMechanic(mechanic)
                         completion(null, mechanicId)

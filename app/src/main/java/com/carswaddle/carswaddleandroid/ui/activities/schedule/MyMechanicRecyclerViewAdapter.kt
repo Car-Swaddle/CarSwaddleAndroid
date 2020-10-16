@@ -38,7 +38,7 @@ class MyMechanicRecyclerViewAdapter(
         // TODO - set image
         holder.nameTextView.text = item.user.displayName()
         holder.ratingBar.rating = item.mechanic.averageRating?.toFloat() ?: 0.0F
-        val roundedValue = Math.round(item.mechanic.averageRating?.toFloat() ?: 0.0F * 10) / 10.0
+        val roundedValue = Math.round(item.mechanic.averageRating?.toFloat() ?: 0.0F).times(10).div(10).toFloat()
         holder.ratingTextView.text = "$roundedValue avg from ${item.mechanic.numberOfRatings} ratings"
         holder.servicesCompletedTextView.text = "${item.mechanic.autoServicesProvided} services completed"
     }
