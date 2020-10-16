@@ -17,7 +17,6 @@ import com.carswaddle.carswaddleandroid.data.mechanic.MechanicListElements
 class MyMechanicRecyclerViewAdapter(
 ) : RecyclerView.Adapter<MyMechanicRecyclerViewAdapter.ViewHolder>() {
     
-    
     var mechanicElements: List<MechanicListElements> = arrayListOf()
     set(newValue) {
         field = newValue

@@ -9,6 +9,9 @@ import com.carswaddle.carswaddleandroid.services.MechanicService
 //import com.carswaddle.carswaddleandroid.data.mechanic.Mechanic
 import com.carswaddle.carswaddleandroid.services.serviceModels.Mechanic
 import com.carswaddle.carswaddleandroid.services.serviceModels.Stats
+import com.google.gson.Gson
+import com.google.gson.JsonObject
+import com.google.protobuf.Parser
 import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -35,15 +38,15 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
         }
 
         val call = mechanicService.getNearestMechanic(latitude, longitude, maxDistance, limit)
-        call.enqueue(object :
-            Callback<List<com.carswaddle.carswaddleandroid.services.serviceModels.Mechanic>> {
-            override fun onFailure(call: Call<List<Mechanic>>, t: Throwable) {
+        call.enqueue(object : Callback<List<Map<String, Any>>> {
+            
+            override fun onFailure(call: Call<List<Map<String, Any>>>, t: Throwable) {
                 completion(t, null)
             }
 
             override fun onResponse(
-                call: Call<List<Mechanic>>,
-                response: Response<List<Mechanic>>
+                call: Call<List<Map<String, Any>>>,
+                response: Response<List<Map<String, Any>>>
             ) {
                 val result = response?.body()
                 val code = response?.code()
@@ -53,10 +56,18 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
                     CoroutineScope(Dispatchers.IO).launch {
                         try {
                             var ids = arrayListOf<String>()
-                            for (mechanic in result) {
+                            val gson = Gson()
+                            for (map in result) {
+                                var newMap = map.toMutableMap() 
+                                val jsonTree = gson.toJsonTree(map)
+                                val user = gson.fromJson<User>(jsonTree, User::class.java)
+                                val userMap = gson.fromJson<Map<String, Any>>(gson.toJsonTree(user), Map::class.java)
+                                newMap["user"] = userMap
+                                val newJSONTree = gson.toJsonTree(newMap)
+                                val mechanic = gson.fromJson<Mechanic>(newJSONTree, Mechanic::class.java)
                                 insertNestedMechanic(mechanic)
-                                ids.add(mechanic.id)
                             }
+                            
                             completion(null, ids.toList())
                         } catch (e: Exception) {
                             print(e)

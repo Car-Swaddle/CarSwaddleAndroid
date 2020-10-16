@@ -33,6 +33,3 @@ data class Mechanic(
                 mechanic.stats?.autoServicesProvided)
 
 }
-
-
-
