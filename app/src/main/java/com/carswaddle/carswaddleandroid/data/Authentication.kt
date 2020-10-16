@@ -44,6 +44,9 @@ class Authentication(private val context: Context) {
     fun logout(completion: (error: Throwable?, response: AuthResponse?) -> Unit) {
         removeToken()
         // TODO: make network request to remove push tokens and auth token from server
+
+
+
         completion(null, null)
     }
 

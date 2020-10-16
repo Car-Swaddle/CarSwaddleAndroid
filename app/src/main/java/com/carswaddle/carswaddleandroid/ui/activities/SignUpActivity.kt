@@ -1,6 +1,5 @@
 package com.carswaddle.carswaddleandroid.ui.activities
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -21,7 +20,7 @@ import com.carswaddle.carswaddleandroid.data.user.UserRepository
 class SignUpActivity: AppCompatActivity() {
 
     private val passwordEditText: EditText by lazy { findViewById(R.id.password_edit_text) as EditText }
-    private val emailEditText: EditText by lazy { findViewById(R.id.email_edit_text) as EditText }
+    private val emailEditText: EditText by lazy { findViewById(R.id.emailEditText) as EditText }
     private val signUpButton: Button by lazy { findViewById(R.id.sign_up_button) as Button }
 
     private lateinit var userRepo: UserRepository

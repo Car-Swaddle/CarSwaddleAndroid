@@ -11,6 +11,8 @@ import com.carswaddle.carswaddleandroid.data.location.AutoServiceLocation
 import com.carswaddle.carswaddleandroid.data.location.AutoServiceLocationDao
 import com.carswaddle.carswaddleandroid.data.mechanic.Mechanic
 import com.carswaddle.carswaddleandroid.data.mechanic.MechanicDao
+import com.carswaddle.carswaddleandroid.data.mechanic.TemplateTimeSpan
+import com.carswaddle.carswaddleandroid.data.mechanic.TemplateTimeSpanDao
 import com.carswaddle.carswaddleandroid.data.oilChange.OilChange
 import com.carswaddle.carswaddleandroid.data.oilChange.OilChangeDao
 import com.carswaddle.carswaddleandroid.data.user.User
@@ -24,7 +26,7 @@ import com.carswaddle.carswaddleandroid.data.serviceEntity.ServiceEntity
 import com.carswaddle.carswaddleandroid.data.serviceEntity.ServiceEntityDao
 
 
-@Database(entities = arrayOf(User::class, AutoService::class, Vehicle::class, AutoServiceLocation::class, VehicleDescription::class, Mechanic::class, ServiceEntity::class, OilChange::class), version = 9)
+@Database(entities = arrayOf(User::class, AutoService::class, Vehicle::class, AutoServiceLocation::class, VehicleDescription::class, Mechanic::class, ServiceEntity::class, OilChange::class, TemplateTimeSpan::class), version = 10)
 @TypeConverters(DateConverter::class, CalendarConverter::class, ArrayListConverter::class, AutoServiceStatusConverter::class, OilTypeConverter::class)
 abstract class AppDatabase : RoomDatabase() {
 
@@ -36,6 +38,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun vehicleDescriptionDao(): VehicleDescriptionDao
     abstract fun serviceEntityDao(): ServiceEntityDao
     abstract fun oilChangeDao(): OilChangeDao
+    abstract fun templateTimeSpanDao(): TemplateTimeSpanDao
 
     companion object {
         // Singleton prevents multiple instances of database opening at the
@@ -62,9 +65,7 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
     }
-
-
-
+    
 }
 
 

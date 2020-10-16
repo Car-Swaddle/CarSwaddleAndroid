@@ -124,7 +124,7 @@ class VerifySMSCodeActivity: AppCompatActivity() {
                 val intent = Intent(this, SetPhoneNumberActivity::class.java)
                 startActivity(intent)
             })
-        
+
         val alert = dialogBuilder.create()
         alert.setTitle(R.string.error_verifying_title)
         alert.show()

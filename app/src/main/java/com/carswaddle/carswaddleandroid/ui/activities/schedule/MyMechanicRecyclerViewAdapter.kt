@@ -7,15 +7,27 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatRatingBar
 import com.carswaddle.carswaddleandroid.R
+import com.carswaddle.carswaddleandroid.data.mechanic.Mechanic
+import com.carswaddle.carswaddleandroid.data.mechanic.MechanicListElements
 
 /**
  * [RecyclerView.Adapter] that can display a [DummyItem].
  * TODO: Replace the implementation with code for your data type.
  */
 class MyMechanicRecyclerViewAdapter(
-    private val values: List<Mechanic>
 ) : RecyclerView.Adapter<MyMechanicRecyclerViewAdapter.ViewHolder>() {
-
+    
+    
+    var mechanicElements: List<MechanicListElements> = arrayListOf()
+    set(newValue) {
+        field = newValue
+        notifyDataSetChanged()
+    }
+    
+    init {
+        this.mechanicElements = mechanicElements
+    }
+    
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.fragment_mechanic_item, parent, false)
@@ -23,16 +35,16 @@ class MyMechanicRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = values[position]
+        val item = mechanicElements[position]
         // TODO - set image
-        holder.nameTextView.text = item.name
-        holder.ratingBar.rating = item.averageRating
-        val roundedValue = Math.round(item.averageRating * 10) / 10.0
-        holder.ratingTextView.text = "$roundedValue avg from ${item.ratingCount} ratings"
-        holder.servicesCompletedTextView.text = "${item.servicesCompleted} services completed"
+        holder.nameTextView.text = item.user.displayName()
+        holder.ratingBar.rating = item.mechanic.averageRating?.toFloat() ?: 0.0F
+        val roundedValue = Math.round(item.mechanic.averageRating?.toFloat() ?: 0.0F * 10) / 10.0
+        holder.ratingTextView.text = "$roundedValue avg from ${item.mechanic.numberOfRatings} ratings"
+        holder.servicesCompletedTextView.text = "${item.mechanic.autoServicesProvided} services completed"
     }
 
-    override fun getItemCount(): Int = values.size
+    override fun getItemCount(): Int = mechanicElements.size
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val nameTextView: TextView = view.findViewById(R.id.name)
@@ -44,13 +56,5 @@ class MyMechanicRecyclerViewAdapter(
 //            return super.toString() + " '" + contentView.text + "'"
 //        }
     }
-
-    public class Mechanic() {
-
-        val id: Int = 0
-        val name: String = "Johnny Appleseed"
-        val averageRating: Float = 4.755f
-        val ratingCount: Int = 8
-        val servicesCompleted: Int = 20
-    }
+    
 }

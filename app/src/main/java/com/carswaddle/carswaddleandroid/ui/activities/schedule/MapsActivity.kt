@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.carswaddle.carswaddleandroid.R
+import com.carswaddle.carswaddleandroid.services.serviceModels.Point
 import com.carswaddle.carswaddleandroid.util.PermissionUtils
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -25,7 +26,7 @@ class MapsActivity : AppCompatActivity(), LocationFragment.OnLocationSelectedLis
 
     private var location: LatLng? = null
     private lateinit var progressFragment: ProgressFragment
-    private lateinit var mechanicFragment: MechanicFragment
+//    private lateinit var mechanicFragment: MechanicFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,16 +37,24 @@ class MapsActivity : AppCompatActivity(), LocationFragment.OnLocationSelectedLis
         val locationFragment = LocationFragment()
         locationFragment.setOnLocationSelectedListener(this)
         progressFragment = ProgressFragment()
-        mechanicFragment = MechanicFragment()
+//        mechanicFragment = MechanicFragment()
         supportFragmentManager.beginTransaction()
             .add(R.id.fragment_container, locationFragment)
             .add(R.id.bottom_fragment_container, progressFragment)
             .commit();
     }
 
+    override fun onResume() {
+        super.onResume()
+        Log.d("maps", "resume")
+    }
+
     override fun onLocationSelected(latLng: LatLng) {
         location = latLng
         progressFragment.stepNumber = 2
+
+        val mechanicFragment = MechanicFragment(Point(latLng))
+
         supportFragmentManager.beginTransaction()
             .add(R.id.fragment_container, mechanicFragment)
             .addToBackStack("Mechanic")

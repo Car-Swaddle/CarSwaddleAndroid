@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,19 +16,30 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import com.carswaddle.carswaddleandroid.R
+import com.carswaddle.carswaddleandroid.activities.ui.home.AutoServicesListViewModel
+import com.carswaddle.carswaddleandroid.data.mechanic.Mechanic
+import com.carswaddle.carswaddleandroid.data.mechanic.MechanicListElements
+import com.carswaddle.carswaddleandroid.services.serviceModels.AutoServiceLocation
+import com.carswaddle.carswaddleandroid.services.serviceModels.Point
+import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServiceListElements
+import androidx.lifecycle.Observer
 import com.haibin.calendarview.Calendar
 import com.haibin.calendarview.CalendarView
 import java.text.DateFormatSymbols
 import java.util.*
 
 
-class MechanicFragment : Fragment() {
+class MechanicFragment(val point: Point) : Fragment() {
 
     private var itemWidth: Int = 0
     private var times: List<String> = listOf("10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM")
     private var spanCount = 4
     private var rawSpanCount = 12
     private lateinit var monthYearTextView: TextView
+
+    private lateinit var mechanicViewModel: SelectMechanicViewModel
+    
+    private lateinit var mechanicViewAdapter: MyMechanicRecyclerViewAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,11 +48,15 @@ class MechanicFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_mechanic, container, false)
 
+        mechanicViewModel = ViewModelProviders.of(this).get(SelectMechanicViewModel::class.java)
+
+        mechanicViewModel.point = point
+
+        mechanicViewAdapter = MyMechanicRecyclerViewAdapter()
+
         val recyclerView = view.findViewById<RecyclerView>(R.id.mechanic_list_container)
         with (recyclerView) {
-            this.adapter = MyMechanicRecyclerViewAdapter(
-                listOf(MyMechanicRecyclerViewAdapter.Mechanic(), MyMechanicRecyclerViewAdapter.Mechanic(), MyMechanicRecyclerViewAdapter.Mechanic())
-            )
+            this.adapter = mechanicViewAdapter
             this.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
             PagerSnapHelper().attachToRecyclerView(this)
         }
@@ -49,7 +65,7 @@ class MechanicFragment : Fragment() {
                 return@Runnable
             }
             itemWidth = recyclerView.layoutManager!!.findViewByPosition(0)!!.width
-            recyclerView.layoutManager = MechanicLinearLayoutManager(context, activity!!.window.decorView.width, itemWidth)
+            recyclerView.layoutManager = MechanicLinearLayoutManager(context, requireActivity().window.decorView.width, itemWidth)
         })
 
         monthYearTextView = view.findViewById<TextView>(R.id.month_year_text_view)
@@ -80,7 +96,17 @@ class MechanicFragment : Fragment() {
 //            this.addItemDecoration(EqualSpacingItemDecoration(16))
         }
 
+
+        mechanicViewModel.mechanics.observe(viewLifecycleOwner, Observer<List<MechanicListElements>> { mechanicElements ->
+            updateMechanicList()
+            this.mechanicViewAdapter.mechanicElements = mechanicElements
+        })
+        
         return view
+    }
+
+    private fun updateMechanicList() {
+        
     }
 
     private fun updateMonthYear(month: Int, year: Int) {

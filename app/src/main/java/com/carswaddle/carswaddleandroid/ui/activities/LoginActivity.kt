@@ -15,6 +15,7 @@ import com.carswaddle.carswaddleandroid.R.layout.activity_login
 import com.carswaddle.carswaddleandroid.data.AppDatabase
 import com.carswaddle.carswaddleandroid.data.Authentication
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
+import com.carswaddle.carswaddleandroid.ui.activities.ForgotPasswordActivity
 import com.carswaddle.carswaddleandroid.ui.activities.SetNameActivity
 import com.carswaddle.carswaddleandroid.ui.activities.SetPhoneNumberActivity
 
@@ -22,8 +23,9 @@ import com.carswaddle.carswaddleandroid.ui.activities.SetPhoneNumberActivity
 class LoginActivity : AppCompatActivity() {
 
     private val passwordEditText: EditText by lazy { findViewById(R.id.password_edit_text) as EditText }
-    private val emailEditText: EditText by lazy { findViewById(R.id.email_edit_text) as EditText }
+    private val emailEditText: EditText by lazy { findViewById(R.id.emailEditText) as EditText }
     private val loginButton: Button by lazy { findViewById(R.id.sendResetButton) as Button }
+    private val forgotPasswordButton: Button by lazy { findViewById(R.id.forgotPasswordButton) as Button }
 
     private lateinit var userRepo: UserRepository
 
@@ -55,7 +57,16 @@ class LoginActivity : AppCompatActivity() {
             didTapLogin()
         }
 
+        forgotPasswordButton.setOnClickListener {
+            didTapForgotPassword()
+        }
+
         updateLoginButton()
+    }
+
+    private fun didTapForgotPassword() {
+        val intent = Intent(this, ForgotPasswordActivity::class.java)
+        startActivity(intent)
     }
 
     private fun isLoginButtonEnabled(): Boolean {

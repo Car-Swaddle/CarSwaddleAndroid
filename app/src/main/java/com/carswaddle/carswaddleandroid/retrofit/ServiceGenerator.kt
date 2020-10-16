@@ -52,3 +52,7 @@ class ServiceGenerator(baseURL: String, okHttpClient: OkHttpClient) {
     }
 
 }
+
+
+class ServiceNotAvailable(message: String) : Throwable(message) {}
+

@@ -68,8 +68,16 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="https"
-                    android:host="www.carswaddle.com"
+                <data android:scheme="http"
+                    android:host="api.carswaddle.com"
+                    android:pathPrefix="/car-swaddle/reset-password"/>
+            </intent-filter>
+            <intent-filter android:label="@string/title_reset_password">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http"
+                    android:host="api.staging.carswaddle.com"
                     android:pathPrefix="/car-swaddle/reset-password"/>
             </intent-filter>
         </activity>

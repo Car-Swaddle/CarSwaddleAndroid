@@ -15,16 +15,16 @@ data class Mechanic(
     @ColumnInfo val serviceIds: List<String>?,
     @ColumnInfo val reviewIds: List<String>?,
     @ColumnInfo val serviceRegionId: String?,
-    @ColumnInfo val averageRating: Double?,
-    @ColumnInfo val numberOfRatings: Int?,
-    @ColumnInfo val autoServicesProvided: Int?) {
+    @ColumnInfo var averageRating: Double?,
+    @ColumnInfo var numberOfRatings: Int?,
+    @ColumnInfo var autoServicesProvided: Int?) {
 
     constructor(mechanic: com.carswaddle.carswaddleandroid.services.serviceModels.Mechanic) :
             this(mechanic.id,
                 mechanic.isActive,
                 mechanic.isAllowed,
                 mechanic.userID,
-                mechanic.scheduleTimeSpans?.map { it.identifier },
+                mechanic.scheduleTimeSpans?.map { it.id },
                 mechanic.services?.map { it.id },
                 mechanic.reviews?.map { it.id },
                 mechanic.serviceRegion?.identifier,

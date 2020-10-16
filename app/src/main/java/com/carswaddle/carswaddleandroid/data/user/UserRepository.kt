@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Log
 import com.carswaddle.carswaddleandroid.Extensions.carSwaddlePreferences
 import com.carswaddle.carswaddleandroid.data.Authentication
-import com.carswaddle.carswaddleandroid.data.user.User
 import com.carswaddle.carswaddleandroid.retrofit.ServiceGenerator
 import com.carswaddle.carswaddleandroid.retrofit.serviceGenerator
 import com.carswaddle.carswaddleandroid.services.AuthenticationService
@@ -116,31 +115,54 @@ class UserRepository(private val userDao: UserDao) {
         })
     }
 
-    fun sendResetLink(context: Context, completion: (error: Throwable?) -> Unit) {
-//        val auth = ServiceGenerator.authenticated(context)?.retrofit?.create(AuthenticationService::class.java)
-//        val call = auth?.sendRe
-//        call?.enqueue(object : Callback<com.carswaddle.carswaddleandroid.services.serviceModels.User> {
-//            override fun onFailure(call: Call<com.carswaddle.carswaddleandroid.services.serviceModels.User>?, t: Throwable?) {
-//                Log.d("retrofit ", "call failed")
-//                completion(t)
-//            }
-//
-//            override fun onResponse(call: Call<com.carswaddle.carswaddleandroid.services.serviceModels.User>?, response: Response<com.carswaddle.carswaddleandroid.services.serviceModels.User>?) {
-//                Log.d("retrofit ", "call succeeded")
-//                val user = response?.body()
-//                if (user != null) {
-//                    Log.d("retrofit ", "call succeeded")
-//                    GlobalScope.async {
-//                        val dataUser = User(user)
-//                        insert(dataUser)
-//                        completion(null)
-//                    }
-//                } else {
-//                    val e = Throwable("unable to verify")
-//                    completion(e)
-//                }
-//            }
-//        })
+    fun sendResetLink(email: String, context: Context, completion: (error: Throwable?) -> Unit) {
+        val auth = serviceGenerator.retrofit?.create(AuthenticationService::class.java)
+        val call = auth?.requestResetPasswordLink(email, "car-swaddle")
+        call?.enqueue(object : Callback<Void> {
+            override fun onFailure(call: Call<Void>?, t: Throwable?) {
+                Log.d("retrofit ", "call failed")
+                completion(t)
+            }
+
+            override fun onResponse(call: Call<Void>?, response: Response<Void>?) {
+                Log.d("retrofit ", "call succeeded")
+                val code = response?.code()
+                if (code == null) {
+                    completion(null)
+                } else if (code == 404) {
+                    val e = EmailNotFoundError("No email was found")
+                    completion(e)
+                } else if (code < 200 || code >= 300) {
+                    val e = EmailNotFoundError("Unable to send email")
+                    completion(e)
+                } else {
+                    // Code is between 200 and 299 inclusive
+                    completion(null)
+                }
+            }
+        })
+    }
+
+    fun resetPassword(newPassword: String, resetToken: String, completion: (error: Throwable?) -> Unit) {
+        val auth = serviceGenerator.retrofit?.create(AuthenticationService::class.java)
+        val call = auth?.resetPassword(newPassword, resetToken)
+        call?.enqueue(object : Callback<Void> {
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                Log.d("retrofit", "call failed")
+                completion(t)
+            }
+
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                Log.d("retrofit ", "call succeeded")
+                val code = response?.code()
+                if (code < 200 || code >= 300) {
+                    val e = Throwable("Unable to reset password")
+                    completion(e)
+                } else {
+                    completion(null)
+                }
+            }
+        })
     }
 
     fun verifySMSCode(context: Context, code: String, completion: (error: Throwable?) -> Unit) {
@@ -192,7 +214,7 @@ class UserRepository(private val userDao: UserDao) {
                     // TODO: make an error here
                     completion(null) // somethind
                 } else {
-                    GlobalScope.async {
+                    CoroutineScope(Dispatchers.IO).launch {
                         val user = User(result)
                         insert(user)
                         setCurrentUserId(user.id, context)
@@ -279,3 +301,7 @@ class UserRepository(private val userDao: UserDao) {
     }
 
 }
+
+
+
+class EmailNotFoundError(message: String) : Throwable(message) {}

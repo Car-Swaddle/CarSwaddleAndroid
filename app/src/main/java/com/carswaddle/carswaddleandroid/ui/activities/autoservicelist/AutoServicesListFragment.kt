@@ -1,9 +1,11 @@
 package com.carswaddle.carswaddleandroid.activities.ui.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
@@ -14,6 +16,7 @@ import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.ui.activities.autoserviceDetails.AutoServiceDetailsFragment
 import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServiceListAdapter
 import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServiceListElements
+import com.carswaddle.carswaddleandroid.ui.activities.schedule.MapsActivity
 
 
 class AutoServicesListFragment : Fragment() {
@@ -24,6 +27,8 @@ class AutoServicesListFragment : Fragment() {
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
 
+    private lateinit var scheduleButton: Button
+
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -32,7 +37,9 @@ class AutoServicesListFragment : Fragment() {
         autoServicesListViewModel = ViewModelProviders.of(this).get(AutoServicesListViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_autoservices_list, container, false)
 
-        autoServicesListViewModel.autoServices.observe(viewLifecycleOwner, Observer<List<AutoServiceListElements>>{ autoServices ->
+        scheduleButton = root.findViewById(R.id.scheduleButton)
+
+        autoServicesListViewModel.autoServices.observe(viewLifecycleOwner, Observer<List<AutoServiceListElements>> { autoServices ->
             viewAdapter.notifyDataSetChanged()
         })
 
@@ -40,9 +47,6 @@ class AutoServicesListFragment : Fragment() {
 
         viewAdapter = AutoServiceListAdapter(autoServicesListViewModel.autoServices) {
             val manager = childFragmentManager
-//            FragmentActivity.supportFragmentManager
-//            context.support
-//            val manager = FragmentActivity.get/**/SupportFragmentManager()
             if (manager != null) {
                 val details = AutoServiceDetailsFragment(it.autoService.id)
                 val transaction = manager.beginTransaction()
@@ -64,7 +68,15 @@ class AutoServicesListFragment : Fragment() {
             adapter = viewAdapter
         }
 
+        scheduleButton.setOnClickListener {
+            didTapSchedule()
+        }
+
         return root
+    }
+
+    private fun didTapSchedule() {
+        startActivity(Intent(activity, MapsActivity::class.java))
     }
 
 }

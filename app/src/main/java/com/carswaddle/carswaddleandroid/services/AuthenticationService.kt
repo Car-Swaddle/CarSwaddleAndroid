@@ -33,17 +33,14 @@ interface AuthenticationService {
     @GET("/api/sms/send-verification")
     fun sendSMSVerification(): Call<Void>
 
-    @Headers(headerPrefix + applicationJSON)
-    @GET("/api/reset-password")
-    fun resetPassword(): Call<Void>
-
-    @Headers(headerPrefix + applicationJSON)
-    @GET("/api/request-reset-password")
-    fun requestResetPasswordLink(): Call<Void>
+    @Headers(headerPrefix + applicationFormURLEncoded)
+    @FormUrlEncoded
+    @POST("/api/reset-password")
+    fun resetPassword(@Field("newPassword") newPassword: String?, @Field("token") resetToken: String): Call<Void>
 
     @Headers(headerPrefix + applicationFormURLEncoded)
     @FormUrlEncoded
     @POST("/api/request-reset-password")
-    fun signUp(@Field("email") email: String?, @Field("appName") appName: String): Call<AuthResponse>
+    fun requestResetPasswordLink(@Field("email") email: String, @Field("appName") appName: String): Call<Void>
 
 }

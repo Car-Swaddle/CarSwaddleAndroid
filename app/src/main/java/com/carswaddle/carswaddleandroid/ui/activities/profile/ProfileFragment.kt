@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.activities.ui.LoginActivity
 import com.carswaddle.carswaddleandroid.data.AppDatabase
@@ -58,27 +59,33 @@ class ProfileFragment() : Fragment() {
         })
 
         nameValueTextView.setOnClickListener {
+            val action = ProfileFragmentDirections.actionNavigationProfileToNavigationEditName()
+
+            findNavController().navigate(action)
 //            val details = AutoServiceDetailsFragment(it.autoService.id)
-            val manager = childFragmentManager
-            if (manager != null) {
-                val editNameFragment = EditNameFragment()
-                val transaction = manager.beginTransaction()
-                transaction.add(R.id.fragment_profile, editNameFragment)
-                transaction.addToBackStack(null)
-                transaction.commit()
-            }
+//            val manager = childFragmentManager
+//            if (manager != null) {
+//                val editNameFragment = EditNameFragment()
+//                val transaction = manager.beginTransaction()
+//                transaction.add(R.id.fragment_profile, editNameFragment)
+//                transaction.addToBackStack(null)
+//                transaction.commit()
+//            }
         }
 
         phoneNumberValueTextView.setOnClickListener {
 //            val details = AutoServiceDetailsFragment(it.autoService.id)
-            val manager = childFragmentManager
-            if (manager != null) {
-                val phone = EditPhoneNumberFragment()
-                val transaction = manager.beginTransaction()
-                transaction.add(R.id.fragment_profile, phone)
-                transaction.addToBackStack(null)
-                transaction.commit()
-            }
+//            val manager = childFragmentManager
+//            if (manager != null) {
+//                val phone = EditPhoneNumberFragment()
+//                val transaction = manager.beginTransaction()
+//                transaction.add(R.id.fragment_profile, phone)
+//                transaction.addToBackStack(null)
+//                transaction.commit()
+//            }
+
+            val action = ProfileFragmentDirections.actionNavigationProfileToEditPhoneNumberFragment()
+            findNavController().navigate(action)
         }
 
         setHasOptionsMenu(true)
