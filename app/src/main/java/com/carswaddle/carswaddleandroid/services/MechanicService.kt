@@ -11,6 +11,7 @@ import kotlin.collections.Map
 
 private const val nearestMechanicEndpoint = "/api/nearest-mechanics"
 private const val statsEndpoint = "/api/stats"
+private const val availabilityEndpoint = "/api/availability"
 
 interface MechanicService {
 
@@ -20,6 +21,10 @@ interface MechanicService {
 
     @Headers(ContentType.headerPrefix + ContentType.applicationJSON)
     @GET(statsEndpoint)
+    fun getStats(@Query("mechanic") mechanic: String): Call<Map<String, Any>>
+
+    @Headers(ContentType.headerPrefix + ContentType.applicationJSON)
+    @GET(availabilityEndpoint)
     fun getStats(@Query("mechanic") mechanic: String): Call<Map<String, Any>>
 
 }
