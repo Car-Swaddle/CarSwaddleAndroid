@@ -23,8 +23,4 @@ interface MechanicService {
     @GET(statsEndpoint)
     fun getStats(@Query("mechanic") mechanic: String): Call<Map<String, Any>>
 
-    @Headers(ContentType.headerPrefix + ContentType.applicationJSON)
-    @GET(availabilityEndpoint)
-    fun getStats(@Query("mechanic") mechanic: String): Call<Map<String, Any>>
-
 }
