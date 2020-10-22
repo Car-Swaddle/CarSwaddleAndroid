@@ -80,7 +80,7 @@ class SimpleWeekView(context: Context?) : WeekView(context) {
                 baselineY,
                 if (calendar.isCurrentDay) mCurDayTextPaint else if (calendar.isCurrentMonth) mSchemeTextPaint else mSchemeTextPaint
             )
-        } else if (calendar.isWithinDaysOfToday(1, 7)) {
+        } else if (!calendar.isWithinDaysOfToday(1, 7)) {
             canvas.drawText(
                 calendar.day.toString(), cx.toFloat(), baselineY,
                 if (calendar.isCurrentDay) mCurDayTextPaint else disabledTextPaint

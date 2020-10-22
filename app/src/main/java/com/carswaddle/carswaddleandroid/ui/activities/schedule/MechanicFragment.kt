@@ -80,6 +80,18 @@ class MechanicFragment(val point: Point) : Fragment() {
         calendarView.clearSingleSelect()
         calendarView.putMultiSelect(Calendar().today().addDays(1))
 
+        calendarView.setOnWeekChangeListener {  }
+        calendarView.setOnCalendarInterceptListener(object: CalendarView.OnCalendarInterceptListener {
+            override fun onCalendarIntercept(calendar: Calendar?): Boolean {
+                Log.i("", "")
+                return true
+            }
+
+            override fun onCalendarInterceptClick(calendar: Calendar?, isClick: Boolean) {
+                Log.i("", "")
+            }
+
+        })
         calendarView.setOnCalendarSelectListener(object: CalendarView.OnCalendarSelectListener {
             override fun onCalendarSelect(calendar: Calendar?, isClick: Boolean) {
                 if (calendar == null || !calendar.isWithinDaysOfToday(1, 7)) {
