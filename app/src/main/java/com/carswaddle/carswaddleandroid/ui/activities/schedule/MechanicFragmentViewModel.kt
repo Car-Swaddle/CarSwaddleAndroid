@@ -18,12 +18,14 @@ import com.carswaddle.carswaddleandroid.data.serviceEntity.ServiceEntityReposito
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
 import com.carswaddle.carswaddleandroid.data.vehicle.VehicleRepository
 import com.carswaddle.carswaddleandroid.services.serviceModels.AutoServiceLocation
+import com.carswaddle.carswaddleandroid.services.serviceModels.AutoServiceStatus
 import com.carswaddle.carswaddleandroid.services.serviceModels.Point
 import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServiceListElements
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
+import java.util.*
 
 
 class SelectMechanicViewModel(application: Application) : AndroidViewModel(application) {
@@ -31,6 +33,7 @@ class SelectMechanicViewModel(application: Application) : AndroidViewModel(appli
     private val mechanicRepo: MechanicRepository
     private val userRepo: UserRepository
     private val timeSpanRepo: TemplateTimeSpanRepository
+    private val autoServiceRepo: AutoServiceRepository
 
     var point: Point? = null
         set(newValue) {
@@ -44,13 +47,19 @@ class SelectMechanicViewModel(application: Application) : AndroidViewModel(appli
         mechanicRepo = MechanicRepository(db.mechanicDao())
         userRepo = UserRepository(db.userDao())
         timeSpanRepo = TemplateTimeSpanRepository(db.templateTimeSpanDao())
+        autoServiceRepo = AutoServiceRepository(db.autoServiceDao())
     }
 
     val mechanics: LiveData<List<MechanicListElements>>
         get() = _mechanics
 
     private val _mechanics = MutableLiveData<List<MechanicListElements>>()
+    
+    val mechanicTimeSlots: LiveData<Map<String,Map<Calendar, Int>>>
+        get() = _mechanicTimeSlots
 
+    private val _mechanicTimeSlots = MutableLiveData<Map<String,Map<Calendar, Int>>>()
+    
     fun loadNearestMechanics() {
 
         val p = point
@@ -116,6 +125,46 @@ class SelectMechanicViewModel(application: Application) : AndroidViewModel(appli
 //                }
 //            }
 //        }
+    }
+    
+    fun loadTimeSlots(mechanicId: String) {
+
+        viewModelScope.launch {
+            val startDate = Calendar.getInstance()
+            startDate.add(Calendar.DAY_OF_YEAR, 1)
+            startDate.set(Calendar.HOUR_OF_DAY, 0)
+            startDate.set(Calendar.MINUTE, 0)
+            startDate.set(Calendar.SECOND, 0)
+            startDate.set(Calendar.MILLISECOND, 0)
+    
+            val endDate = Calendar.getInstance()
+            endDate.add(Calendar.DAY_OF_YEAR, 8)
+            endDate.set(Calendar.HOUR_OF_DAY, 0)
+            endDate.set(Calendar.MINUTE, 0)
+            endDate.set(Calendar.SECOND, 0)
+            endDate.set(Calendar.MILLISECOND, 0)
+            
+    
+            val filterAutoServiceStatus = listOf<AutoServiceStatus>(
+                AutoServiceStatus.scheduled,
+                AutoServiceStatus.inProgress,
+                AutoServiceStatus.completed
+            )
+            autoServiceRepo.getAutoServicesDate(
+                mechanicId,
+                startDate,
+                endDate,
+                filterAutoServiceStatus,
+                getApplication()
+            ) { error, autoServiceIds ->
+                Log.w("autoservices date", "autoservice ids $autoServiceIds")
+            }
+    
+    
+            mechanicRepo.getTimeSlots(mechanicId, getApplication()) { error, spanIds ->
+                Log.w("time spans", "got time spans $spanIds")
+            }
+        }
     }
 
     fun loadStats(mechanicId: String) {

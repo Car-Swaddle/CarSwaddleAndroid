@@ -19,10 +19,11 @@ class ServiceGenerator(baseURL: String, okHttpClient: OkHttpClient) {
     val retrofit: Retrofit
 
     init {
-        val gson = GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create()
+        val gson = GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create()
         this.retrofit = Retrofit.Builder()
             .baseUrl(baseURL)
             .addConverterFactory(GsonConverterFactory.create(gson))
+            .addConverterFactory(EnumConverterFactory())
             .client(okHttpClient)
             .build()
     }

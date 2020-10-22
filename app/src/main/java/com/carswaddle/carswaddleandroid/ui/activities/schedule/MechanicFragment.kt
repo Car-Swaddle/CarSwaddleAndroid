@@ -100,6 +100,10 @@ class MechanicFragment(val point: Point) : Fragment() {
         mechanicViewModel.mechanics.observe(viewLifecycleOwner, Observer<List<MechanicListElements>> { mechanicElements ->
             updateMechanicList()
             this.mechanicViewAdapter.mechanicElements = mechanicElements
+            val firstMechanicId = mechanicElements.first()?.mechanic.id
+            if (firstMechanicId != null) {
+                mechanicViewModel.loadTimeSlots(firstMechanicId)
+            }
         })
         
         return view

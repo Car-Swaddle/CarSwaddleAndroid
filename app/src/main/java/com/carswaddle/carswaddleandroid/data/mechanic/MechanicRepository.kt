@@ -9,6 +9,7 @@ import com.carswaddle.carswaddleandroid.services.MechanicService
 //import com.carswaddle.carswaddleandroid.data.mechanic.Mechanic
 import com.carswaddle.carswaddleandroid.services.serviceModels.Mechanic
 import com.carswaddle.carswaddleandroid.services.serviceModels.Stats
+import com.carswaddle.carswaddleandroid.services.serviceModels.TemplateTimeSpan as TemplateTimeSpanModel
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.protobuf.Parser
@@ -91,8 +92,8 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
         }
 
         val call = mechanicService.getStats(mechanicId)
-        call.enqueue(object :
-            Callback<Map<String, Any>> {
+        call.enqueue(object : Callback<Map<String, Any>> {
+            
             override fun onFailure(call: Call<Map<String, Any>>, t: Throwable) {
                 completion(t, null)
             }
@@ -131,6 +132,67 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
         })
     }
 
+    fun getTimeSlots(mechanicId: String, context: Context, completion: (error: Throwable?, timeSpanIds: List<String>?) -> Unit) {
+        val mechanicService = ServiceGenerator.authenticated(context)?.retrofit?.create(MechanicService::class.java)
+        if (mechanicService == null) {
+            // TODO: call with error
+            completion(ServiceNotAvailable("No able to make service to make network call"), null)
+            return
+        }
+
+        val call = mechanicService.getAvailability(mechanicId)
+        call.enqueue(object : Callback<List<TemplateTimeSpanModel>> { 
+            
+            override fun onFailure(call: Call<List<TemplateTimeSpanModel>>, t: Throwable) {
+                completion(t, null)
+            }
+
+            override fun onResponse(
+                call: Call<List<TemplateTimeSpanModel>>,
+                response: Response<List<TemplateTimeSpanModel>>
+            ) {
+                val result = response?.body()
+                val code = response?.code()
+                if (code < 200 || code >= 300 || result == null) {
+                    completion(Throwable("The result was empty or got invalid response code"), null)
+                } else {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        
+                        var spanIds = mutableListOf<String>()
+                        
+                        for (s in result) {
+                            val newSpan = TemplateTimeSpan(s)
+                            mechanicDao.insertTimeSpan(newSpan)
+                            spanIds.add(newSpan.id)
+                        }
+                        
+                        completion(null, spanIds)
+                        
+//                        var mechanic = mechanicDao.getMechanic(mechanicId)
+//                        if (mechanic == null) {
+//                            return@launch
+//                        }
+//
+//                        val gson = Gson()
+//                        val json = gson.toJsonTree(result[mechanicId])
+//                        val stats = gson.fromJson<Stats>(json, Stats::class.java)
+//
+//                        Log.w("logging stuff", "map: $result")
+//
+//                        mechanic.averageRating = stats.averageRating
+//                        mechanic.numberOfRatings = stats.numberOfRatings
+//                        mechanic.autoServicesProvided = stats.autoServicesProvided
+//
+//                        mechanicDao.insertMechanic(mechanic)
+//                        completion(null, mechanicId)
+                        
+                    }
+                }
+            }
+
+        })
+    }
+
 
     suspend private fun insertNestedMechanic(mechanic: com.carswaddle.carswaddleandroid.services.serviceModels.Mechanic): MechanicListElements? {
         var storedUser = mechanic.user?.let { User(it) }
@@ -160,7 +222,6 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
         } else {
             return null
         }
-        
     }
 
 

@@ -11,6 +11,7 @@ import com.carswaddle.carswaddleandroid.data.vehicle.Vehicle
 import com.carswaddle.carswaddleandroid.retrofit.ServiceGenerator
 import com.carswaddle.carswaddleandroid.services.AutoServiceService
 import com.carswaddle.carswaddleandroid.services.serviceModels.AutoService
+import com.carswaddle.carswaddleandroid.services.serviceModels.AutoServiceStatus
 import com.carswaddle.carswaddleandroid.services.serviceModels.UpdateAutoService
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -18,6 +19,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.lang.Exception
+import java.util.*
 
 
 class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
@@ -145,6 +147,46 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
                             for (autoService in result) {
                                 insertNestedAutoService(autoService)
                                 ids.add(autoService.id)
+                            }
+                            completion(null, ids.toList())
+                        } catch(e: Exception) {
+                            print(e)
+                            Log.d("retrofit ", "error persisting auto service" + e)
+                        }
+                    }
+                }
+            }
+        })
+    }
+
+    fun getAutoServicesDate(mechanicId: String, startDate: Calendar, endDate: Calendar, filterStatus: List<AutoServiceStatus>, context: Context, completion: (error: Error?, autoServiceIds: List<String>?) -> Unit) {
+        val autoServiceService = ServiceGenerator.authenticated(context)?.retrofit?.create(AutoServiceService::class.java)
+        if (autoServiceService == null) {
+            // TODO: call with error
+            completion(null, null)
+            return
+        }
+        
+        val call = autoServiceService.autoServiceDate(mechanicId, startDate, endDate, filterStatus.map { it.name }) // .map { it.name }
+        call.enqueue(object : Callback<List<Map<String, Any>>> {
+            override fun onFailure(call: Call<List<Map<String, Any>>>, t: Throwable) {
+                Log.d("retrofit ", "call failed")
+                completion(t as Error?, null)
+            }
+
+            override fun onResponse(call: Call<List<Map<String, Any>>>, response: Response<List<Map<String, Any>>>) {
+                Log.d("retrofit ", "call succeeded")
+                val result = response?.body()
+                if (result == null) {
+                    // TODO: make an error here
+                    completion(null, null) // something
+                } else {
+                    GlobalScope.async {
+                        try {
+                            var ids = arrayListOf<String>()
+                            for (autoService in result) {
+//                                insertNestedAutoService(autoService)
+//                                ids.add(autoService.id)
                             }
                             completion(null, ids.toList())
                         } catch(e: Exception) {

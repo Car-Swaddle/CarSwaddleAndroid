@@ -1,9 +1,6 @@
 package com.carswaddle.carswaddleandroid.services
 
-import com.carswaddle.carswaddleandroid.services.serviceModels.AutoService
-import com.carswaddle.carswaddleandroid.services.serviceModels.Mechanic
-import com.carswaddle.carswaddleandroid.services.serviceModels.Stats
-import com.carswaddle.carswaddleandroid.services.serviceModels.UpdateAutoService
+import com.carswaddle.carswaddleandroid.services.serviceModels.*
 import retrofit2.Call
 import retrofit2.http.*
 import kotlin.collections.Map
@@ -25,6 +22,6 @@ interface MechanicService {
 
     @Headers(ContentType.headerPrefix + ContentType.applicationJSON)
     @GET(availabilityEndpoint)
-    fun getStats(@Query("mechanic") mechanic: String): Call<Map<String, Any>>
+    fun getAvailability(@Query("mechanicID") mechanicId: String): Call<List<TemplateTimeSpan>>
 
 }
