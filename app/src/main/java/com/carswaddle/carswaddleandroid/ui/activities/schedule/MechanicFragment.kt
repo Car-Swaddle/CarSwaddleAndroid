@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
@@ -16,17 +17,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
-import com.carswaddle.carswaddleandroid.R
-import com.carswaddle.carswaddleandroid.activities.ui.home.AutoServicesListViewModel
-import com.carswaddle.carswaddleandroid.data.mechanic.Mechanic
-import com.carswaddle.carswaddleandroid.data.mechanic.MechanicListElements
-import com.carswaddle.carswaddleandroid.services.serviceModels.AutoServiceLocation
-import com.carswaddle.carswaddleandroid.services.serviceModels.Point
-import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServiceListElements
-import androidx.lifecycle.Observer
 import com.carswaddle.carswaddleandroid.Extensions.addDays
 import com.carswaddle.carswaddleandroid.Extensions.isWithinDaysOfToday
 import com.carswaddle.carswaddleandroid.Extensions.today
+import com.carswaddle.carswaddleandroid.R
+import com.carswaddle.carswaddleandroid.data.mechanic.MechanicListElements
+import com.carswaddle.carswaddleandroid.services.serviceModels.Point
 import com.haibin.calendarview.Calendar
 import com.haibin.calendarview.CalendarView
 import java.text.DateFormatSymbols
@@ -39,11 +35,29 @@ class MechanicFragment(val point: Point) : Fragment() {
     private var times: List<String> = listOf("10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM")
     private var spanCount = 4
     private var rawSpanCount = 12
+
+    private var _currentCalendar: Calendar? = null
+    private var currentCalendar: Calendar
+        get() {
+            if (_currentCalendar == null) {
+                // Never select today, always start tomorrow
+                _currentCalendar = Calendar().today().addDays(1)
+            }
+            return _currentCalendar!!
+        }
+        set(value) {
+            _currentCalendar = value
+            calendarView.putMultiSelect(_currentCalendar!!)
+            updateMonthYear(value.month - 1, value.year)
+        }
+
     private lateinit var monthYearTextView: TextView
 
     private lateinit var mechanicViewModel: SelectMechanicViewModel
     
     private lateinit var mechanicViewAdapter: MyMechanicRecyclerViewAdapter
+
+    private lateinit var calendarView: CalendarView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -74,14 +88,20 @@ class MechanicFragment(val point: Point) : Fragment() {
 
         monthYearTextView = view.findViewById<TextView>(R.id.month_year_text_view)
         updateMonthYear(java.util.Calendar.getInstance().get(java.util.Calendar.MONTH), java.util.Calendar.getInstance().get(java.util.Calendar.YEAR))
-        val calendarView = view.findViewById<CalendarView>(R.id.calendar_view)
+        calendarView = view.findViewById<CalendarView>(R.id.calendar_view)
+//        calendarView.setSelectRangeMode()
+//        calendarView.setSelectStartCalendar()
+        resetSelectedDay()
 
-        // Never select today, always start tomorrow
-        calendarView.clearSingleSelect()
-        calendarView.putMultiSelect(Calendar().today().addDays(1))
-
-        calendarView.setOnWeekChangeListener {  }
-        calendarView.setOnCalendarInterceptListener(object: CalendarView.OnCalendarInterceptListener {
+        calendarView.setOnWeekChangeListener(object: CalendarView.OnWeekChangeListener {
+            override fun onWeekChange(weekCalendars: List<Calendar?>?) {
+                // Probably reset the day? Use the previous one?
+                Log.i("", "")
+                resetSelectedDay()
+            }
+        })
+        calendarView.setOnCalendarInterceptListener(object :
+            CalendarView.OnCalendarInterceptListener {
             override fun onCalendarIntercept(calendar: Calendar?): Boolean {
                 Log.i("", "")
                 return true
@@ -92,14 +112,14 @@ class MechanicFragment(val point: Point) : Fragment() {
             }
 
         })
-        calendarView.setOnCalendarSelectListener(object: CalendarView.OnCalendarSelectListener {
+        calendarView.setOnCalendarSelectListener(object : CalendarView.OnCalendarSelectListener {
             override fun onCalendarSelect(calendar: Calendar?, isClick: Boolean) {
                 if (calendar == null || !calendar.isWithinDaysOfToday(1, 7)) {
                     // Reset if not a valid selection
-                    calendarView.clearSingleSelect()
+                    resetSelectedDay()
                     return
                 }
-                updateMonthYear(calendar.month - 1, calendar.year)
+                currentCalendar = calendar
             }
 
             override fun onCalendarOutOfRange(calendar: Calendar?) {
@@ -109,7 +129,7 @@ class MechanicFragment(val point: Point) : Fragment() {
         })
 
         val timeRecycler = view.findViewById<RecyclerView>(R.id.time_slot)
-        with (timeRecycler) {
+        with(timeRecycler) {
             this.adapter = TimePickerRecyclerViewAdapter(
                 times
             )
@@ -139,6 +159,15 @@ class MechanicFragment(val point: Point) : Fragment() {
     private fun updateMonthYear(month: Int, year: Int) {
         val monthStr = DateFormatSymbols(Locale.getDefault()).months[month];
         monthYearTextView.text = monthStr + " " + year
+    }
+
+    private fun resetSelectedDay() {
+        val currentCalendars = calendarView.multiSelectCalendars
+        if (!currentCalendars.contains(currentCalendar) || currentCalendars.size > 1) {
+            calendarView.clearSingleSelect()
+            calendarView.clearMultiSelect()
+            calendarView.putMultiSelect(currentCalendar)
+        }
     }
 
     class MySizeLookup(val rawSpanCount: Int, val spanCount: Int, val itemCount: Int) : SpanSizeLookup() {
