@@ -136,7 +136,7 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
 
             override fun onResponse(call: Call<List<com.carswaddle.carswaddleandroid.services.serviceModels.AutoService>>, response: Response<List<AutoService>>) {
                 Log.d("retrofit ", "call succeeded")
-                val result = response?.body()
+                val result = response.body()
                 if (result == null) {
                     // TODO: make an error here
                     completion(null, null) // something
@@ -167,7 +167,7 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
             return
         }
         
-        val call = autoServiceService.autoServiceDate(mechanicId, startDate, endDate, filterStatus.map { it.name }) // .map { it.name }
+        val call = autoServiceService.autoServiceDate(mechanicId, startDate, endDate, filterStatus) // .map { it.name }
         call.enqueue(object : Callback<List<Map<String, Any>>> {
             override fun onFailure(call: Call<List<Map<String, Any>>>, t: Throwable) {
                 Log.d("retrofit ", "call failed")
@@ -176,7 +176,7 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
 
             override fun onResponse(call: Call<List<Map<String, Any>>>, response: Response<List<Map<String, Any>>>) {
                 Log.d("retrofit ", "call succeeded")
-                val result = response?.body()
+                val result = response.body()
                 if (result == null) {
                     // TODO: make an error here
                     completion(null, null) // something
