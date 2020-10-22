@@ -20,9 +20,6 @@ data class TemplateTimeSpan(
 
     var startTimeInt: Int = 0
     get() {
-        val format = DateTimeFormatter.ofPattern("HH:mm")
-        val date = LocalDate.parse(startTime, format)
-
         val cal = Calendar.getInstance()
         val sdf = SimpleDateFormat("HH:mm", Locale.ENGLISH)
         cal.time = sdf.parse(startTime)

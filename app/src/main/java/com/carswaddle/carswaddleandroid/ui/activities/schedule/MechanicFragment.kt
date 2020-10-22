@@ -2,6 +2,7 @@ package com.carswaddle.carswaddleandroid.ui.activities.schedule
 
 import android.graphics.Rect
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,6 +25,7 @@ import com.carswaddle.carswaddleandroid.services.serviceModels.Point
 import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServiceListElements
 import androidx.lifecycle.Observer
 import com.carswaddle.carswaddleandroid.Extensions.addDays
+import com.carswaddle.carswaddleandroid.Extensions.isWithinDaysOfToday
 import com.carswaddle.carswaddleandroid.Extensions.today
 import com.haibin.calendarview.Calendar
 import com.haibin.calendarview.CalendarView
@@ -78,9 +80,23 @@ class MechanicFragment(val point: Point) : Fragment() {
         calendarView.clearSingleSelect()
         calendarView.putMultiSelect(Calendar().today().addDays(1))
 
+        calendarView.setOnWeekChangeListener {  }
+        calendarView.setOnCalendarInterceptListener(object: CalendarView.OnCalendarInterceptListener {
+            override fun onCalendarIntercept(calendar: Calendar?): Boolean {
+                Log.i("", "")
+                return true
+            }
+
+            override fun onCalendarInterceptClick(calendar: Calendar?, isClick: Boolean) {
+                Log.i("", "")
+            }
+
+        })
         calendarView.setOnCalendarSelectListener(object: CalendarView.OnCalendarSelectListener {
             override fun onCalendarSelect(calendar: Calendar?, isClick: Boolean) {
-                if (calendar == null) {
+                if (calendar == null || !calendar.isWithinDaysOfToday(1, 7)) {
+                    // Reset if not a valid selection
+                    calendarView.clearSingleSelect()
                     return
                 }
                 updateMonthYear(calendar.month - 1, calendar.year)
