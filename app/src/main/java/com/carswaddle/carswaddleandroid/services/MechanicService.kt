@@ -19,7 +19,7 @@ interface MechanicService {
     @Headers(ContentType.headerPrefix + ContentType.applicationJSON)
     @GET(statsEndpoint)
     fun getStats(@Query("mechanic") mechanic: String): Call<Map<String, Any>>
-
+    
     @Headers(ContentType.headerPrefix + ContentType.applicationJSON)
     @GET(availabilityEndpoint)
     fun getAvailability(@Query("mechanicID") mechanicId: String): Call<List<TemplateTimeSpan>>

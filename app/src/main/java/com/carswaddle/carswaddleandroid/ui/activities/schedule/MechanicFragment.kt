@@ -23,6 +23,8 @@ import com.carswaddle.carswaddleandroid.services.serviceModels.AutoServiceLocati
 import com.carswaddle.carswaddleandroid.services.serviceModels.Point
 import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServiceListElements
 import androidx.lifecycle.Observer
+import com.carswaddle.carswaddleandroid.Extensions.addDays
+import com.carswaddle.carswaddleandroid.Extensions.today
 import com.haibin.calendarview.Calendar
 import com.haibin.calendarview.CalendarView
 import java.text.DateFormatSymbols
@@ -71,6 +73,11 @@ class MechanicFragment(val point: Point) : Fragment() {
         monthYearTextView = view.findViewById<TextView>(R.id.month_year_text_view)
         updateMonthYear(java.util.Calendar.getInstance().get(java.util.Calendar.MONTH), java.util.Calendar.getInstance().get(java.util.Calendar.YEAR))
         val calendarView = view.findViewById<CalendarView>(R.id.calendar_view)
+
+        // Never select today, always start tomorrow
+        calendarView.clearSingleSelect()
+        calendarView.putMultiSelect(Calendar().today().addDays(1))
+
         calendarView.setOnCalendarSelectListener(object: CalendarView.OnCalendarSelectListener {
             override fun onCalendarSelect(calendar: Calendar?, isClick: Boolean) {
                 if (calendar == null) {
