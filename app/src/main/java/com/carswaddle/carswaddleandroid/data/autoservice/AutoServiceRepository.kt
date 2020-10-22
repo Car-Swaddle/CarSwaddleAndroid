@@ -159,7 +159,7 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
         })
     }
 
-    fun getAutoServicesDate(mechanicId: String, startDate: Calendar, endDate: Calendar, filterStatus: List<AutoServiceStatus>, context: Context, completion: (error: Error?, autoServiceIds: List<String>?) -> Unit) {
+    fun getAutoServicesDate(mechanicId: String, startDate: Calendar, endDate: Calendar, filterStatus: List<AutoServiceStatus>, context: Context, completion: (exception: Exception?, autoServiceIds: List<String>?) -> Unit) {
         val autoServiceService = ServiceGenerator.authenticated(context)?.retrofit?.create(AutoServiceService::class.java)
         if (autoServiceService == null) {
             // TODO: call with error
@@ -171,7 +171,7 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
         call.enqueue(object : Callback<List<Map<String, Any>>> {
             override fun onFailure(call: Call<List<Map<String, Any>>>, t: Throwable) {
                 Log.d("retrofit ", "call failed")
-                completion(t as Error?, null)
+                completion(t as Exception?, null)
             }
 
             override fun onResponse(call: Call<List<Map<String, Any>>>, response: Response<List<Map<String, Any>>>) {
