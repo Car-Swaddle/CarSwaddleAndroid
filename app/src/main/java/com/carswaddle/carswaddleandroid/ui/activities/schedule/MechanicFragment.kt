@@ -25,9 +25,10 @@ import com.carswaddle.carswaddleandroid.data.mechanic.MechanicListElements
 import com.carswaddle.carswaddleandroid.services.serviceModels.Point
 import com.haibin.calendarview.Calendar
 import com.haibin.calendarview.CalendarView
-import kotlinx.coroutines.coroutineScope
 import java.text.DateFormatSymbols
-import java.util.*
+import java.util.Calendar.DAY_OF_YEAR
+import java.util.Locale
+import java.util.Calendar as KotlinCalendar
 
 
 class MechanicFragment(val point: Point) : Fragment() {
@@ -162,7 +163,11 @@ class MechanicFragment(val point: Point) : Fragment() {
         if (mechanicId == null) {
             return
         }
-        val slots = mechanicViewModel.timeSlots(mechanicId, 0)
+        var tomorrow = KotlinCalendar.getInstance()
+//        tomorrow.add(Calendar.DAY_OF_)
+//        tomorrow.add(Calendar.DAY_OF_YEAR, 1)
+        tomorrow.add(KotlinCalendar.DAY_OF_YEAR, 1)
+        val slots = mechanicViewModel.timeSlots(mechanicId, tomorrow)
         Log.w("slots", "slots: $slots")
     }
 

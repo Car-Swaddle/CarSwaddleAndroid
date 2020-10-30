@@ -10,26 +10,18 @@ import androidx.lifecycle.viewModelScope
 import com.carswaddle.carswaddleandroid.data.AppDatabase
 import com.carswaddle.carswaddleandroid.data.autoservice.AutoService
 import com.carswaddle.carswaddleandroid.data.autoservice.AutoServiceRepository
-import com.carswaddle.carswaddleandroid.data.location.AutoServiceLocationRepository
 import com.carswaddle.carswaddleandroid.data.mechanic.MechanicListElements
 import com.carswaddle.carswaddleandroid.data.mechanic.MechanicRepository
 import com.carswaddle.carswaddleandroid.data.mechanic.TemplateTimeSpan
 import com.carswaddle.carswaddleandroid.services.serviceModels.TemplateTimeSpan as TemplateTimeSpanModel
 import com.carswaddle.carswaddleandroid.data.mechanic.TemplateTimeSpanRepository
-import com.carswaddle.carswaddleandroid.data.oilChange.OilChangeRepository
-import com.carswaddle.carswaddleandroid.data.serviceEntity.ServiceEntityRepository
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
-import com.carswaddle.carswaddleandroid.data.vehicle.VehicleRepository
 import com.carswaddle.carswaddleandroid.generic.DispatchGroup
-import com.carswaddle.carswaddleandroid.services.serviceModels.AutoServiceLocation
 import com.carswaddle.carswaddleandroid.services.serviceModels.AutoServiceStatus
 import com.carswaddle.carswaddleandroid.services.serviceModels.Point
-import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServiceListElements
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import okhttp3.Dispatcher
-import java.lang.Exception
 import java.time.DayOfWeek
 import java.util.*
 
@@ -68,17 +60,50 @@ class SelectMechanicViewModel(application: Application) : AndroidViewModel(appli
     /// Mechanic: {Weekday: [Slot]}
     private val _mechanicTimeSlots = MutableLiveData<Map<String,Map<Int, List<TemplateTimeSpan>>>>()
     
-    /// Map of mechanic ids to list of tempalte time spans
+    /// Map of mechanic ids to list of template time spans. The list of time spans is all time slots the mechanic originally set, including those that
+    /// are potentially filled by existing appointments. You must remove all time slots that shouldn't be displayed.
     private var mechanicSlots: MutableMap<String, List<TemplateTimeSpan>> = mutableMapOf()
     
-    /// This must be called after the closure for load time slots is called
-    fun timeSlots(mechanicId: String, dayOfWeek: Int): List<TemplateTimeSpan> {
+    /// This must be called after the closure for load time slots is called.
+    /// calendar - The day whose available time slots will be returned. Must have hours, minutes, seconds and milliseconds zero'd out.
+    fun timeSlots(mechanicId: String, calendar: Calendar): List<TemplateTimeSpan> {
         var spans: MutableList<TemplateTimeSpan> = mutableListOf()
         
         val allSpans = mechanicSlots[mechanicId] ?: listOf()
+        // The day of the week of the calendar parameter. Must subtract 1 because Car Swaddle server is 0 based. Calendar is 1 based.
+        val calendarDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1
+        
+        var autoServicesOnDay: MutableList<AutoService> = mutableListOf()
+        for (a in autoServices) {
+            
+            var zerodScheduledDate = a.scheduledDate
+            if (zerodScheduledDate == null) {
+                continue
+            }
+
+            zerodScheduledDate.set(Calendar.HOUR_OF_DAY, 0)
+            zerodScheduledDate.set(Calendar.MINUTE, 0)
+            zerodScheduledDate.set(Calendar.SECOND, 0)
+            zerodScheduledDate.set(Calendar.MILLISECOND, 0)
+            
+            if (zerodScheduledDate == calendar) {
+                autoServicesOnDay.add(a)
+            }
+        }
         
         for (s in allSpans) {
-            if (s.weekDayInt == dayOfWeek) {
+            var slotAvailable = true
+            for (a in autoServicesOnDay) {
+                var aStartTime = a.startTimeSecondsSinceMidnight()
+                if (aStartTime == null) {
+                    continue
+                }
+                if (s.startTime == aStartTime) {
+                    slotAvailable = false
+                }
+            }
+            
+            if (s.weekDayInt == calendarDayOfWeek && slotAvailable) {
                 spans.add(s)
             }
         }
@@ -88,6 +113,8 @@ class SelectMechanicViewModel(application: Application) : AndroidViewModel(appli
     
     private var spanIds: MutableMap<String,List<String>> = mutableMapOf()
     private var autoServiceIds: MutableMap<String, List<String>> = mutableMapOf()
+    
+    private var autoServices: List<AutoService> = listOf()
     
     fun loadNearestMechanics() {
 
@@ -193,22 +220,23 @@ class SelectMechanicViewModel(application: Application) : AndroidViewModel(appli
             group.notify {
                 viewModelScope.launch(Dispatchers.IO) {
                     val allSpans = timeSpanRepo.getTimeSpans(spanIds[mechanicId] ?: listOf()) ?: listOf()
-                    var availableSpans: MutableList<TemplateTimeSpan> = mutableListOf()
-                    val allAutoServices: List<AutoService> = autoServiceRepo.getAutoServices(autoServiceIds[mechanicId] ?: listOf())
-                    for (span in allSpans) {
-                        // loop through all spans for the next 7 days
-                        // if an autoservice already exists with the same weekday and start time, remove it
-                        
-                        for (autoservice in allAutoServices) {
-                            val serviceDayOfWeek = autoservice.scheduledDate?.get(Calendar.DAY_OF_WEEK) ?: 0
-                            val serviceSecondOfDay = autoservice.startTimeSecondsSinceMidnight() ?: 0
-                            if (span.weekDayInt != serviceDayOfWeek && span.startTime != serviceSecondOfDay) {
-                                availableSpans.add(span)
-                            }
-                        }
-                    }
-                    
-                    mechanicSlots[mechanicId] = availableSpans.toList()
+//                    var availableSpans: MutableList<TemplateTimeSpan> = mutableListOf()
+//                    val allAutoServices: List<AutoService> = autoServiceRepo.getAutoServices(autoServiceIds[mechanicId] ?: listOf())
+//                    for (span in allSpans) {
+//                        // loop through all spans for the next 7 days
+//                        // if an autoservice already exists with the same weekday and start time, remove it
+//                        
+//                        for (autoservice in allAutoServices) {
+//                            val serviceDayOfWeek = autoservice.scheduledDate?.get(Calendar.DAY_OF_WEEK) ?: 0
+//                            val serviceSecondOfDay = autoservice.startTimeSecondsSinceMidnight() ?: 0
+//                            if (span.weekDayInt != serviceDayOfWeek && span.startTime != serviceSecondOfDay) {
+//                                availableSpans.add(span)
+//                            }
+//                        }
+//                    }
+
+                    autoServices = autoServiceRepo.getAutoServices(autoServiceIds[mechanicId] ?: listOf())
+                    mechanicSlots[mechanicId] = allSpans.toList()
                     
                     completion()
                     
