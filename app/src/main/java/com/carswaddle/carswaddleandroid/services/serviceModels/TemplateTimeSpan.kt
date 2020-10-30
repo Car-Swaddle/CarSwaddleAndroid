@@ -5,6 +5,9 @@ import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
+import kotlin.time.ExperimentalTime
+import kotlin.time.milliseconds
+import kotlin.time.seconds
 
 data class TemplateTimeSpan(
     val id: String,
@@ -25,13 +28,25 @@ data class TemplateTimeSpan(
         val cal = Calendar.getInstance()
         val sdf = SimpleDateFormat("HH:mm:ss", Locale.ENGLISH)
         
+        cal.set(0,0,0,0,0,0)
+        
         cal.time = sdf.parse(startTime)
 
-        val appointmentTimeOfDay = cal.getTimeInMillis()
-        return (appointmentTimeOfDay / 60 / 60).toInt()
+        val hour = cal.get(Calendar.HOUR_OF_DAY)
+        val minute = cal.get(Calendar.MINUTE)
+        val second = cal.get(Calendar.SECOND)
+        
+        val sum = (hour*60*60) + (minute*60) + second
+        
+        return sum
     }
     
 }
+
+private fun Long.millisecondsToSeconds(): Long {
+    return this / 1000
+}
+
 
 enum class Weekday(val value: Int) {
     sunday(0),
