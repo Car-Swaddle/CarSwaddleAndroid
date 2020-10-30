@@ -26,6 +26,7 @@ import com.carswaddle.carswaddleandroid.services.serviceModels.Point
 import com.haibin.calendarview.Calendar
 import com.haibin.calendarview.CalendarView
 import java.text.DateFormatSymbols
+import java.util.Calendar.*
 import java.util.Locale
 import kotlin.math.max
 import java.util.Calendar as KotlinCalendar
@@ -126,7 +127,8 @@ class MechanicFragment(val point: Point) : Fragment() {
     }
 
     private fun updateTimeSlots(calendar: java.util.Calendar) {
-        val mechanicId = mechanicViewModel.mechanics.value?.first()?.mechanic?.id 
+        val mechanicId = mechanicViewModel.mechanics.value?.first()?.mechanic?.id
+        updateMonthYear(calendar.get(MONTH), calendar.get(YEAR))
         if (mechanicId == null) {
             return
         }
