@@ -25,6 +25,7 @@ import com.carswaddle.carswaddleandroid.data.mechanic.MechanicListElements
 import com.carswaddle.carswaddleandroid.services.serviceModels.Point
 import com.haibin.calendarview.Calendar
 import com.haibin.calendarview.CalendarView
+import org.apache.commons.lang3.reflect.FieldUtils
 import java.text.DateFormatSymbols
 import java.util.Calendar.DAY_OF_YEAR
 import java.util.Locale
@@ -37,21 +38,6 @@ class MechanicFragment(val point: Point) : Fragment() {
     private var times: List<String> = listOf("10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM")
     private var spanCount = 4
     private var rawSpanCount = 12
-
-    private var _currentCalendar: Calendar? = null
-    private var currentCalendar: Calendar
-        get() {
-            if (_currentCalendar == null) {
-                // Never select today, always start tomorrow
-                _currentCalendar = Calendar().today().addDays(1)
-            }
-            return _currentCalendar!!
-        }
-        set(value) {
-            _currentCalendar = value
-            calendarView.putMultiSelect(_currentCalendar!!)
-            updateMonthYear(value.month - 1, value.year)
-        }
 
     private lateinit var monthYearTextView: TextView
 
@@ -93,13 +79,14 @@ class MechanicFragment(val point: Point) : Fragment() {
         calendarView = view.findViewById<CalendarView>(R.id.calendar_view)
 //        calendarView.setSelectRangeMode()
 //        calendarView.setSelectStartCalendar()
-        resetSelectedDay()
+        calendarView.setRange(2020, 10, 30, 2020, 11, 5)
+        calendarView.setSelectStartCalendar(Calendar().today().addDays(1))
+//        resetSelectedDay()
 
         calendarView.setOnWeekChangeListener(object: CalendarView.OnWeekChangeListener {
             override fun onWeekChange(weekCalendars: List<Calendar?>?) {
                 // Probably reset the day? Use the previous one?
                 Log.i("", "")
-                resetSelectedDay()
             }
         })
         calendarView.setOnCalendarInterceptListener(object :
@@ -116,16 +103,11 @@ class MechanicFragment(val point: Point) : Fragment() {
         })
         calendarView.setOnCalendarSelectListener(object : CalendarView.OnCalendarSelectListener {
             override fun onCalendarSelect(calendar: Calendar?, isClick: Boolean) {
-                if (calendar == null || !calendar.isWithinDaysOfToday(1, 7)) {
-                    // Reset if not a valid selection
-                    resetSelectedDay()
-                    return
-                }
-                currentCalendar = calendar
+                return
             }
 
             override fun onCalendarOutOfRange(calendar: Calendar?) {
-                TODO("Not yet implemented")
+                return
             }
 
         })
@@ -174,15 +156,6 @@ class MechanicFragment(val point: Point) : Fragment() {
     private fun updateMonthYear(month: Int, year: Int) {
         val monthStr = DateFormatSymbols(Locale.getDefault()).months[month];
         monthYearTextView.text = monthStr + " " + year
-    }
-
-    private fun resetSelectedDay() {
-        val currentCalendars = calendarView.multiSelectCalendars
-        if (!currentCalendars.contains(currentCalendar) || currentCalendars.size > 1) {
-            calendarView.clearSingleSelect()
-            calendarView.clearMultiSelect()
-            calendarView.putMultiSelect(currentCalendar)
-        }
     }
 
     class MySizeLookup(val rawSpanCount: Int, val spanCount: Int, val itemCount: Int) : SpanSizeLookup() {
