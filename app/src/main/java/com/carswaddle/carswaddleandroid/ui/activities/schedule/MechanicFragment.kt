@@ -26,6 +26,7 @@ import com.carswaddle.carswaddleandroid.services.serviceModels.Point
 import com.haibin.calendarview.Calendar
 import com.haibin.calendarview.CalendarView
 import java.text.DateFormatSymbols
+import java.util.Calendar.*
 import java.util.Locale
 import kotlin.math.max
 import java.util.Calendar as KotlinCalendar
@@ -75,15 +76,14 @@ class MechanicFragment(val point: Point) : Fragment() {
             recyclerView.layoutManager = MechanicLinearLayoutManager(context, requireActivity().window.decorView.width, itemWidth)
         })
 
-        monthYearTextView = view.findViewById<TextView>(R.id.month_year_text_view)
+        monthYearTextView = view.findViewById(R.id.month_year_text_view)
         updateMonthYear(java.util.Calendar.getInstance().get(java.util.Calendar.MONTH), java.util.Calendar.getInstance().get(java.util.Calendar.YEAR))
-        calendarView = view.findViewById<CalendarView>(R.id.calendar_view)
+        calendarView = view.findViewById(R.id.calendar_view)
 
         val minCalendar = Calendar().today().addDays(1)
         val maxCalendar = Calendar().today().addDays(7)
         calendarView.setRange(minCalendar.year, minCalendar.month, minCalendar.day, maxCalendar.year, maxCalendar.month, maxCalendar.day)
-        calendarView.setSelectStartCalendar(Calendar().today().addDays(1))
-        calendarView.scrollToCurrent()
+        calendarView.scrollToCalendar(minCalendar.year, minCalendar.month, minCalendar.day)
 
         calendarView.setOnCalendarSelectListener(object : CalendarView.OnCalendarSelectListener {
             override fun onCalendarSelect(calendar: Calendar?, isClick: Boolean) {
@@ -108,7 +108,6 @@ class MechanicFragment(val point: Point) : Fragment() {
 //            this.addItemDecoration(EqualSpacingItemDecoration(16))
         }
 
-
         mechanicViewModel.mechanics.observe(viewLifecycleOwner, Observer<List<MechanicListElements>> { mechanicElements ->
             this.mechanicViewAdapter.mechanicElements = mechanicElements
             val firstMechanicId = mechanicElements.first()?.mechanic.id
@@ -128,7 +127,8 @@ class MechanicFragment(val point: Point) : Fragment() {
     }
 
     private fun updateTimeSlots(calendar: java.util.Calendar) {
-        val mechanicId = mechanicViewModel.mechanics.value?.first()?.mechanic?.id 
+        val mechanicId = mechanicViewModel.mechanics.value?.first()?.mechanic?.id
+        updateMonthYear(calendar.get(MONTH), calendar.get(YEAR))
         if (mechanicId == null) {
             return
         }
