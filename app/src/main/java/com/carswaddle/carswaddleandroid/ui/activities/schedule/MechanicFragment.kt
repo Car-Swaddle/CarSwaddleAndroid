@@ -18,16 +18,13 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import com.carswaddle.carswaddleandroid.Extensions.addDays
-import com.carswaddle.carswaddleandroid.Extensions.isWithinDaysOfToday
 import com.carswaddle.carswaddleandroid.Extensions.today
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.data.mechanic.MechanicListElements
 import com.carswaddle.carswaddleandroid.services.serviceModels.Point
 import com.haibin.calendarview.Calendar
 import com.haibin.calendarview.CalendarView
-import org.apache.commons.lang3.reflect.FieldUtils
 import java.text.DateFormatSymbols
-import java.util.Calendar.DAY_OF_YEAR
 import java.util.Locale
 import java.util.Calendar as KotlinCalendar
 
