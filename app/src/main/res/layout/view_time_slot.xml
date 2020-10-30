@@ -18,10 +18,11 @@
         app:strokeColor="#777">
 
         <TextView
+            android:id="@+id/timeTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:text="7:30 PM"/>
+            android:text="7:30 PM"
+            android:textAlignment="center" />
 
     </com.google.android.material.card.MaterialCardView>
 

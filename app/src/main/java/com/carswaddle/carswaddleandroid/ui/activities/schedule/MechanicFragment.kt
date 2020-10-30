@@ -98,7 +98,7 @@ class MechanicFragment(val point: Point) : Fragment() {
             }
         })
 
-        timeSlotViewAdapter = TimePickerRecyclerViewAdapter(emptyList())
+        timeSlotViewAdapter = TimePickerRecyclerViewAdapter()
         val timeRecycler = view.findViewById<RecyclerView>(R.id.time_slot)
         with(timeRecycler) {
             this.adapter = timeSlotViewAdapter
@@ -133,7 +133,8 @@ class MechanicFragment(val point: Point) : Fragment() {
             return
         }
         val slots = mechanicViewModel.timeSlots(mechanicId, calendar)
-        timeSlotViewAdapter = TimePickerRecyclerViewAdapter(slots)
+        timeSlotViewAdapter.timeSlots = slots
+//        timeSlotViewAdapter = TimePickerRecyclerViewAdapter(slots)
         // TODO - update
         Log.w("slots", "slots: $slots")
     }

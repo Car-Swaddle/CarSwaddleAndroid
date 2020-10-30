@@ -4,6 +4,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.carswaddle.carswaddleandroid.services.serviceModels.Weekday
+import java.text.SimpleDateFormat
+import java.util.*
 
 @Entity
 data class TemplateTimeSpan(
@@ -22,6 +24,17 @@ data class TemplateTimeSpan(
     
     fun weekday(): Weekday {
         return Weekday.fromInt(weekDayInt)
+    }
+    
+    fun localizedStartTime(): String {
+        var startTimeCal = Calendar.getInstance()
+        val hourOfDay = startTime / 60 / 60 
+        val minuteInHour = startTime / 60 % 60
+        val secondInMinute = startTime % 60
+        startTimeCal.set(Calendar.HOUR_OF_DAY, hourOfDay)
+        startTimeCal.set(Calendar.SECOND, secondInMinute)
+        startTimeCal.set(Calendar.MINUTE, minuteInHour)
+        return SimpleDateFormat("H:mm a").format(startTimeCal.getTime())
     }
     
 }
