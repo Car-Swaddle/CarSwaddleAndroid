@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import com.carswaddle.carswaddleandroid.Extensions.addDays
+import com.carswaddle.carswaddleandroid.Extensions.toJavaCalendar
 import com.carswaddle.carswaddleandroid.Extensions.today
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.data.mechanic.MechanicListElements
@@ -26,6 +27,7 @@ import com.haibin.calendarview.Calendar
 import com.haibin.calendarview.CalendarView
 import java.text.DateFormatSymbols
 import java.util.Locale
+import kotlin.math.max
 import java.util.Calendar as KotlinCalendar
 
 
@@ -41,6 +43,8 @@ class MechanicFragment(val point: Point) : Fragment() {
     private lateinit var mechanicViewModel: SelectMechanicViewModel
     
     private lateinit var mechanicViewAdapter: MyMechanicRecyclerViewAdapter
+
+    private lateinit var timeSlotViewAdapter: TimePickerRecyclerViewAdapter
 
     private lateinit var calendarView: CalendarView
 
@@ -74,46 +78,30 @@ class MechanicFragment(val point: Point) : Fragment() {
         monthYearTextView = view.findViewById<TextView>(R.id.month_year_text_view)
         updateMonthYear(java.util.Calendar.getInstance().get(java.util.Calendar.MONTH), java.util.Calendar.getInstance().get(java.util.Calendar.YEAR))
         calendarView = view.findViewById<CalendarView>(R.id.calendar_view)
-//        calendarView.setSelectRangeMode()
-//        calendarView.setSelectStartCalendar()
-        calendarView.setRange(2020, 10, 30, 2020, 11, 5)
+
+        val minCalendar = Calendar().today().addDays(1)
+        val maxCalendar = Calendar().today().addDays(7)
+        calendarView.setRange(minCalendar.year, minCalendar.month, minCalendar.day, maxCalendar.year, maxCalendar.month, maxCalendar.day)
         calendarView.setSelectStartCalendar(Calendar().today().addDays(1))
-//        resetSelectedDay()
+        calendarView.scrollToCurrent()
 
-        calendarView.setOnWeekChangeListener(object: CalendarView.OnWeekChangeListener {
-            override fun onWeekChange(weekCalendars: List<Calendar?>?) {
-                // Probably reset the day? Use the previous one?
-                Log.i("", "")
-            }
-        })
-        calendarView.setOnCalendarInterceptListener(object :
-            CalendarView.OnCalendarInterceptListener {
-            override fun onCalendarIntercept(calendar: Calendar?): Boolean {
-                Log.i("", "")
-                return true
-            }
-
-            override fun onCalendarInterceptClick(calendar: Calendar?, isClick: Boolean) {
-                Log.i("", "")
-            }
-
-        })
         calendarView.setOnCalendarSelectListener(object : CalendarView.OnCalendarSelectListener {
             override fun onCalendarSelect(calendar: Calendar?, isClick: Boolean) {
-                return
+                if (calendar == null) {
+                    return
+                }
+                updateTimeSlots(calendar.toJavaCalendar())
             }
 
             override fun onCalendarOutOfRange(calendar: Calendar?) {
                 return
             }
-
         })
 
+        timeSlotViewAdapter = TimePickerRecyclerViewAdapter(emptyList())
         val timeRecycler = view.findViewById<RecyclerView>(R.id.time_slot)
         with(timeRecycler) {
-            this.adapter = TimePickerRecyclerViewAdapter(
-                times
-            )
+            this.adapter = timeSlotViewAdapter
             val gridLayoutManager = GridLayoutManager(context, spanCount)
 //            gridLayoutManager.spanSizeLookup = MySizeLookup(rawSpanCount, spanCount, times.size)
             this.layoutManager = gridLayoutManager
@@ -127,7 +115,9 @@ class MechanicFragment(val point: Point) : Fragment() {
             if (firstMechanicId != null) {
                 mechanicViewModel.loadTimeSlots(firstMechanicId) {
                     activity?.runOnUiThread {
-                        updateTimeSlots()
+                        var tomorrow = KotlinCalendar.getInstance()
+                        tomorrow.add(KotlinCalendar.DAY_OF_YEAR, 1)
+                        updateTimeSlots(tomorrow)
                     }
                     
                 }
@@ -137,16 +127,14 @@ class MechanicFragment(val point: Point) : Fragment() {
         return view
     }
 
-    private fun updateTimeSlots() {
+    private fun updateTimeSlots(calendar: java.util.Calendar) {
         val mechanicId = mechanicViewModel.mechanics.value?.first()?.mechanic?.id 
         if (mechanicId == null) {
             return
         }
-        var tomorrow = KotlinCalendar.getInstance()
-//        tomorrow.add(Calendar.DAY_OF_)
-//        tomorrow.add(Calendar.DAY_OF_YEAR, 1)
-        tomorrow.add(KotlinCalendar.DAY_OF_YEAR, 1)
-        val slots = mechanicViewModel.timeSlots(mechanicId, tomorrow)
+        val slots = mechanicViewModel.timeSlots(mechanicId, calendar)
+        timeSlotViewAdapter = TimePickerRecyclerViewAdapter(slots)
+        // TODO - update
         Log.w("slots", "slots: $slots")
     }
 

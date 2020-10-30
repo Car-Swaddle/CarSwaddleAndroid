@@ -7,9 +7,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatRatingBar
 import com.carswaddle.carswaddleandroid.R
+import com.carswaddle.carswaddleandroid.data.mechanic.TemplateTimeSpan
 
 class TimePickerRecyclerViewAdapter(
-    private val times: List<String>
+    private val times: List<TemplateTimeSpan>
 ) : RecyclerView.Adapter<TimePickerRecyclerViewAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
