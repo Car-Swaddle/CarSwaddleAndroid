@@ -1,5 +1,6 @@
 package com.carswaddle.carswaddleandroid.services.serviceModels
 
+import android.util.Log
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -18,21 +19,16 @@ data class TemplateTimeSpan(
 
     val weekDayEnum: Weekday = Weekday.fromInt(weekDay)
 
+    /// Start time of the time span in seconds since midnight
     var startTimeInt: Int = 0
     get() {
         val cal = Calendar.getInstance()
-        val sdf = SimpleDateFormat("HH:mm", Locale.ENGLISH)
-        cal.time = sdf.parse(startTime)
+        val sdf = SimpleDateFormat("HH:mm:ss", Locale.ENGLISH)
         
-        val midnight: Calendar = Calendar.getInstance()
+        cal.time = sdf.parse(startTime)
 
-        midnight.set(Calendar.HOUR_OF_DAY, 0)
-        midnight.set(Calendar.MINUTE, 0)
-        midnight.set(Calendar.SECOND, 0)
-        midnight.set(Calendar.MILLISECOND, 0)
-
-        val difference: Long = cal.getTimeInMillis() - midnight.getTimeInMillis()
-        return difference.toInt()
+        val appointmentTimeOfDay = cal.getTimeInMillis()
+        return (appointmentTimeOfDay / 60 / 60).toInt()
     }
     
 }

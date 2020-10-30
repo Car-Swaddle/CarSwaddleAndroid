@@ -2,21 +2,25 @@ package com.carswaddle.carswaddleandroid.ui.activities.schedule
 
 import android.app.Application
 import android.util.Log
+import retrofit2.Call
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.carswaddle.carswaddleandroid.data.AppDatabase
+import com.carswaddle.carswaddleandroid.data.autoservice.AutoService
 import com.carswaddle.carswaddleandroid.data.autoservice.AutoServiceRepository
 import com.carswaddle.carswaddleandroid.data.location.AutoServiceLocationRepository
 import com.carswaddle.carswaddleandroid.data.mechanic.MechanicListElements
 import com.carswaddle.carswaddleandroid.data.mechanic.MechanicRepository
 import com.carswaddle.carswaddleandroid.data.mechanic.TemplateTimeSpan
+import com.carswaddle.carswaddleandroid.services.serviceModels.TemplateTimeSpan as TemplateTimeSpanModel
 import com.carswaddle.carswaddleandroid.data.mechanic.TemplateTimeSpanRepository
 import com.carswaddle.carswaddleandroid.data.oilChange.OilChangeRepository
 import com.carswaddle.carswaddleandroid.data.serviceEntity.ServiceEntityRepository
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
 import com.carswaddle.carswaddleandroid.data.vehicle.VehicleRepository
+import com.carswaddle.carswaddleandroid.generic.DispatchGroup
 import com.carswaddle.carswaddleandroid.services.serviceModels.AutoServiceLocation
 import com.carswaddle.carswaddleandroid.services.serviceModels.AutoServiceStatus
 import com.carswaddle.carswaddleandroid.services.serviceModels.Point
@@ -24,7 +28,9 @@ import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServic
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import okhttp3.Dispatcher
 import java.lang.Exception
+import java.time.DayOfWeek
 import java.util.*
 
 
@@ -54,11 +60,34 @@ class SelectMechanicViewModel(application: Application) : AndroidViewModel(appli
         get() = _mechanics
 
     private val _mechanics = MutableLiveData<List<MechanicListElements>>()
-    
-    val mechanicTimeSlots: LiveData<Map<String,Map<Calendar, Int>>>
+
+    /// Mechanic: {Weekday: [Slot]}
+    val mechanicTimeSlots: LiveData<Map<String,Map<Int, List<TemplateTimeSpan>>>>
         get() = _mechanicTimeSlots
 
-    private val _mechanicTimeSlots = MutableLiveData<Map<String,Map<Calendar, Int>>>()
+    /// Mechanic: {Weekday: [Slot]}
+    private val _mechanicTimeSlots = MutableLiveData<Map<String,Map<Int, List<TemplateTimeSpan>>>>()
+    
+    /// Map of mechanic ids to list of tempalte time spans
+    private var mechanicSlots: MutableMap<String, List<TemplateTimeSpan>> = mutableMapOf()
+    
+    /// This must be called after the closure for load time slots is called
+    fun timeSlots(mechanicId: String, dayOfWeek: Int): List<TemplateTimeSpan> {
+        var spans: MutableList<TemplateTimeSpan> = mutableListOf()
+        
+        val allSpans = mechanicSlots[mechanicId] ?: listOf()
+        
+        for (s in allSpans) {
+            if (s.weekDayInt == dayOfWeek) {
+                spans.add(s)
+            }
+        }
+        return spans.sortedBy { it.startTime }
+    }
+    
+    
+    private var spanIds: MutableMap<String,List<String>> = mutableMapOf()
+    private var autoServiceIds: MutableMap<String, List<String>> = mutableMapOf()
     
     fun loadNearestMechanics() {
 
@@ -104,32 +133,14 @@ class SelectMechanicViewModel(application: Application) : AndroidViewModel(appli
 
         }
 
-//        autoServiceRepo.getAutoServices(
-//            100,
-//            0,
-//            getApplication(),
-//            listOf<String>(),
-//            listOf("scheduled", "canceled", "inProgress")
-//        ) { error, autoServiceIds ->
-//            viewModelScope.launch {
-//                if (autoServiceIds != null) {
-//                    var autoServiceElements: MutableList<AutoServiceListElements> = ArrayList()
-//                    for (id in autoServiceIds) {
-//                        fetchAutoServiceListElements(id)?.let {
-//                            autoServiceElements.add(it)
-//                        }
-//                    }
-//                    _autoServices.value = autoServiceElements
-//                } else {
-//
-//                }
-//            }
-//        }
     }
     
-    fun loadTimeSlots(mechanicId: String) {
+    private var getAutoServicesCall: Call<List<Map<String,Any>>>? = null
+    private var getTimeSlotsCall: Call<List<TemplateTimeSpanModel>>? = null
+    
+    fun loadTimeSlots(mechanicId: String, completion: () -> Unit) {
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val startDate = Calendar.getInstance()
             startDate.add(Calendar.DAY_OF_YEAR, 1)
             startDate.set(Calendar.HOUR_OF_DAY, 0)
@@ -143,26 +154,82 @@ class SelectMechanicViewModel(application: Application) : AndroidViewModel(appli
             endDate.set(Calendar.MINUTE, 0)
             endDate.set(Calendar.SECOND, 0)
             endDate.set(Calendar.MILLISECOND, 0)
-            
-    
+             
             val filterAutoServiceStatus = listOf<AutoServiceStatus>(
                 AutoServiceStatus.scheduled,
                 AutoServiceStatus.inProgress,
                 AutoServiceStatus.completed
             )
-            autoServiceRepo.getAutoServicesDate(
+            
+            getAutoServicesCall?.cancel()
+            getTimeSlotsCall?.cancel()
+            
+            val group = DispatchGroup()
+            
+            group.enter()
+            getAutoServicesCall = autoServiceRepo.getAutoServicesDate(
                 mechanicId,
                 startDate,
                 endDate,
                 filterAutoServiceStatus,
                 getApplication()
-            ) { error, autoServiceIds ->
-                Log.w("autoservices date", "autoservice ids $autoServiceIds")
+            ) { error, newAutoServiceIds ->
+                Log.w("autoservices date", "autoservice ids $newAutoServiceIds")
+                if (newAutoServiceIds != null) {
+                    autoServiceIds[mechanicId] = newAutoServiceIds
+                }
+                group.leave()
             }
-    
-    
-            mechanicRepo.getTimeSlots(mechanicId, getApplication()) { error, spanIds ->
+            
+            group.enter()
+            getTimeSlotsCall = mechanicRepo.getTimeSlots(mechanicId, getApplication()) { error, newSpanIds ->
                 Log.w("time spans", "got time spans $spanIds")
+                if (newSpanIds != null) {
+                    spanIds[mechanicId] = newSpanIds
+                }
+                group.leave()
+            }
+            
+            group.notify {
+                viewModelScope.launch(Dispatchers.IO) {
+                    val allSpans = timeSpanRepo.getTimeSpans(spanIds[mechanicId] ?: listOf()) ?: listOf()
+                    var availableSpans: MutableList<TemplateTimeSpan> = mutableListOf()
+                    val allAutoServices: List<AutoService> = autoServiceRepo.getAutoServices(autoServiceIds[mechanicId] ?: listOf())
+                    for (span in allSpans) {
+                        // loop through all spans for the next 7 days
+                        // if an autoservice already exists with the same weekday and start time, remove it
+                        
+                        for (autoservice in allAutoServices) {
+                            val serviceDayOfWeek = autoservice.scheduledDate?.get(Calendar.DAY_OF_WEEK) ?: 0
+                            val serviceSecondOfDay = autoservice.startTimeSecondsSinceMidnight() ?: 0
+                            if (span.weekDayInt != serviceDayOfWeek && span.startTime != serviceSecondOfDay) {
+                                availableSpans.add(span)
+                            }
+                        }
+                    }
+                    
+                    mechanicSlots[mechanicId] = availableSpans.toList()
+                    
+                    completion()
+                    
+//                    var slots = _mechanicTimeSlots.value?.toMutableMap() ?: mutableMapOf()
+//                    
+//                    var mutableCalSpan: MutableMap<Int, MutableList<TemplateTimeSpan>> = mutableMapOf()
+//                    for (span in availableSpans) {
+//                        var spans = mutableCalSpan[span.weekDayInt] ?: mutableListOf()
+//                        spans.add(span)
+//                        mutableCalSpan[span.weekDayInt] = spans
+//                    }
+//                    
+//                    
+//                    
+//                    val calSpan: Map<Int, List<TemplateTimeSpan>> = Map<Int, List<TemplateTimeSpan>>
+//                    
+//                    slots[mechanicId] = calSpan
+//
+//                    _mechanicTimeSlots.postValue(slots)
+                    
+                }
             }
         }
     }

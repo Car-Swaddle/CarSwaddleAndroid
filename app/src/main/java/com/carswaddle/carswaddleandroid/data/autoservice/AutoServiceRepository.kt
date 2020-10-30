@@ -159,15 +159,15 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
         })
     }
 
-    fun getAutoServicesDate(mechanicId: String, startDate: Calendar, endDate: Calendar, filterStatus: List<AutoServiceStatus>, context: Context, completion: (exception: Exception?, autoServiceIds: List<String>?) -> Unit) {
+    fun getAutoServicesDate(mechanicId: String, startDate: Calendar, endDate: Calendar, filterStatus: List<AutoServiceStatus>, context: Context, completion: (exception: Exception?, autoServiceIds: List<String>?) -> Unit): Call<List<Map<String, Any>>>? {
         val autoServiceService = ServiceGenerator.authenticated(context)?.retrofit?.create(AutoServiceService::class.java)
         if (autoServiceService == null) {
             // TODO: call with error
             completion(null, null)
-            return
+            return null
         }
         
-        val call = autoServiceService.autoServiceDate(mechanicId, startDate, endDate, filterStatus) // .map { it.name }
+        val call = autoServiceService.autoServiceDate(mechanicId, startDate, endDate, filterStatus.map { it.name })
         call.enqueue(object : Callback<List<Map<String, Any>>> {
             override fun onFailure(call: Call<List<Map<String, Any>>>, t: Throwable) {
                 Log.d("retrofit ", "call failed")
@@ -197,6 +197,8 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
                 }
             }
         })
+        
+        return call
     }
 
     suspend private fun insertNestedAutoService(autoService: com.carswaddle.carswaddleandroid.services.serviceModels.AutoService): com.carswaddle.carswaddleandroid.data.autoservice.AutoService {

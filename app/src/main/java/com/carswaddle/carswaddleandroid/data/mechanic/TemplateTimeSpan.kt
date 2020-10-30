@@ -9,6 +9,7 @@ import com.carswaddle.carswaddleandroid.services.serviceModels.Weekday
 data class TemplateTimeSpan(
     @PrimaryKey val id: String,
     @ColumnInfo val weekDayInt: Int,
+    /// The number of seconds since midnight. The time the time slot starts
     @ColumnInfo val startTime: Int,
     @ColumnInfo val duration: Int) {
 

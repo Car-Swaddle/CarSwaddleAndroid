@@ -132,17 +132,18 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
         })
     }
 
-    fun getTimeSlots(mechanicId: String, context: Context, completion: (error: Throwable?, timeSpanIds: List<String>?) -> Unit) {
-        val mechanicService = ServiceGenerator.authenticated(context)?.retrofit?.create(MechanicService::class.java)
+    fun getTimeSlots(mechanicId: String, context: Context, completion: (error: Throwable?, timeSpanIds: List<String>?) -> Unit): Call<List<TemplateTimeSpanModel>>? {
+        val mechanicService =
+            ServiceGenerator.authenticated(context)?.retrofit?.create(MechanicService::class.java)
         if (mechanicService == null) {
             // TODO: call with error
             completion(ServiceNotAvailable("No able to make service to make network call"), null)
-            return
+            return null
         }
 
         val call = mechanicService.getAvailability(mechanicId)
-        call.enqueue(object : Callback<List<TemplateTimeSpanModel>> { 
-            
+        call.enqueue(object : Callback<List<TemplateTimeSpanModel>> {
+
             override fun onFailure(call: Call<List<TemplateTimeSpanModel>>, t: Throwable) {
                 completion(t, null)
             }
@@ -157,17 +158,17 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
                     completion(Throwable("The result was empty or got invalid response code"), null)
                 } else {
                     CoroutineScope(Dispatchers.IO).launch {
-                        
+
                         var spanIds = mutableListOf<String>()
-                        
+
                         for (s in result) {
                             val newSpan = TemplateTimeSpan(s)
                             mechanicDao.insertTimeSpan(newSpan)
                             spanIds.add(newSpan.id)
                         }
-                        
+
                         completion(null, spanIds)
-                        
+
 //                        var mechanic = mechanicDao.getMechanic(mechanicId)
 //                        if (mechanic == null) {
 //                            return@launch
@@ -185,12 +186,15 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
 //
 //                        mechanicDao.insertMechanic(mechanic)
 //                        completion(null, mechanicId)
-                        
+
                     }
                 }
             }
-
+            
         })
+
+        return call
+        
     }
 
 

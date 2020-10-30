@@ -29,6 +29,7 @@ import com.carswaddle.carswaddleandroid.Extensions.isWithinDaysOfToday
 import com.carswaddle.carswaddleandroid.Extensions.today
 import com.haibin.calendarview.Calendar
 import com.haibin.calendarview.CalendarView
+import kotlinx.coroutines.coroutineScope
 import java.text.DateFormatSymbols
 import java.util.*
 
@@ -121,19 +122,28 @@ class MechanicFragment(val point: Point) : Fragment() {
 
 
         mechanicViewModel.mechanics.observe(viewLifecycleOwner, Observer<List<MechanicListElements>> { mechanicElements ->
-            updateMechanicList()
             this.mechanicViewAdapter.mechanicElements = mechanicElements
             val firstMechanicId = mechanicElements.first()?.mechanic.id
             if (firstMechanicId != null) {
-                mechanicViewModel.loadTimeSlots(firstMechanicId)
+                mechanicViewModel.loadTimeSlots(firstMechanicId) {
+                    activity?.runOnUiThread {
+                        updateTimeSlots()
+                    }
+                    
+                }
             }
         })
         
         return view
     }
 
-    private fun updateMechanicList() {
-        
+    private fun updateTimeSlots() {
+        val mechanicId = mechanicViewModel.mechanics.value?.first()?.mechanic?.id 
+        if (mechanicId == null) {
+            return
+        }
+        val slots = mechanicViewModel.timeSlots(mechanicId, 0)
+        Log.w("slots", "slots: $slots")
     }
 
     private fun updateMonthYear(month: Int, year: Int) {

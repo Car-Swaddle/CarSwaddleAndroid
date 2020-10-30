@@ -4,7 +4,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.carswaddle.carswaddleandroid.Extensions.toCalendar
-import com.carswaddle.carswaddleandroid.data.mechanic.Mechanic
 import com.carswaddle.carswaddleandroid.services.serviceModels.AutoServiceStatus
 import java.util.*
 
@@ -23,10 +22,12 @@ data class AutoService(
     @ColumnInfo(name = "creator_id") val creatorId: String?,
     @ColumnInfo(name = "mechanic_id") val mechanicId: String,
     @ColumnInfo(name = "location_id") val locationId: String,
-    @ColumnInfo(name = "vehicle_id") val vehicleId: String?) {
+    @ColumnInfo(name = "vehicle_id") val vehicleId: String?
+) {
 
     constructor(autoService: com.carswaddle.carswaddleandroid.services.serviceModels.AutoService) :
-            this(autoService.id,
+            this(
+                autoService.id,
                 autoService.balanceTransactionID,
                 autoService.chargeID,
                 autoService.couponID,
@@ -39,6 +40,21 @@ data class AutoService(
                 autoService.userID,
                 autoService.mechanicID,
                 autoService.location.id,
-                autoService.vehicleID)
+                autoService.vehicleID
+            )
+    
+    fun startTimeSecondsSinceMidnight(): Int? {
+        var c = scheduledDate
+        if (c == null) {
+            return null
+        }
+        val date = c.timeInMillis
+        c[Calendar.HOUR_OF_DAY] = 0
+        c[Calendar.MINUTE] = 0
+        c[Calendar.SECOND] = 0
+        c[Calendar.MILLISECOND] = 0
+        val passed = date - c.timeInMillis
+        return (passed / 1000).toInt()
+    }
 
 }
