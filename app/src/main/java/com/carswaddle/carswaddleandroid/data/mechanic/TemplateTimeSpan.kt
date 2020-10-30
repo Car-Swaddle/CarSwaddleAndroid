@@ -35,7 +35,12 @@ data class TemplateTimeSpan(
         startTimeCal.set(Calendar.HOUR_OF_DAY, hourOfDay)
         startTimeCal.set(Calendar.SECOND, secondInMinute)
         startTimeCal.set(Calendar.MINUTE, minuteInHour)
-        return SimpleDateFormat("H:mm a").format(startTimeCal.getTime())
+        return SimpleDateFormat("h:mm a").format(startTimeCal.getTime())
     }
     
+}
+
+
+private fun Int.secondsToMilliseconds(): Int {
+    return this * 1000
 }
