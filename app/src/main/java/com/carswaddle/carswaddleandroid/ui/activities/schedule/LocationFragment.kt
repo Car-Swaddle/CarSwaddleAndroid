@@ -58,7 +58,7 @@ class LocationFragment : Fragment(), OnMapReadyCallback, ActivityCompat.OnReques
         val view = inflater.inflate(R.layout.fragment_location, container, false)
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity!!)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
         val confirmLocationButton = view.findViewById<ExtendedFloatingActionButton>(R.id.confirm_location)
         confirmLocationButton.setOnClickListener { v ->
@@ -109,7 +109,7 @@ class LocationFragment : Fragment(), OnMapReadyCallback, ActivityCompat.OnReques
     }
 
     private fun enableMyLocation() {
-        if (ContextCompat.checkSelfPermission(activity!!, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             map.isMyLocationEnabled = true
             fusedLocationClient.lastLocation.addOnSuccessListener { location ->
                 if (location == null) {

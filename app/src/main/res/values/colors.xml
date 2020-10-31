@@ -7,4 +7,6 @@
     <color name="stroke">#AAAAAA</color>
     <color name="background">#FFFFFF</color>
     <color name="background2">#CCCCCC</color>
+    <color name="primaryContrast">#FFFFFF</color>
+    <color name="backgroundContrast">#000</color>
 </resources>

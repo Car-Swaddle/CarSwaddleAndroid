@@ -4,9 +4,9 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.carswaddle.carswaddleandroid.services.serviceModels.Weekday
+import java.text.DateFormatSymbols
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.time.ExperimentalTime
 
 @Entity
 data class TemplateTimeSpan(
@@ -14,13 +14,16 @@ data class TemplateTimeSpan(
     @ColumnInfo val weekDayInt: Int,
     /// The number of seconds since midnight. The time the time slot starts
     @ColumnInfo val startTime: Int,
-    @ColumnInfo val duration: Int) {
+    @ColumnInfo val duration: Int
+) {
 
     constructor(span: com.carswaddle.carswaddleandroid.services.serviceModels.TemplateTimeSpan) :
-            this(span.id,
+            this(
+                span.id,
                 span.weekDay,
                 span.startTimeInt,
-                span.duration)
+                span.duration
+            )
     
     
     fun weekday(): Weekday {
@@ -35,7 +38,14 @@ data class TemplateTimeSpan(
         startTimeCal.set(Calendar.HOUR_OF_DAY, hourOfDay)
         startTimeCal.set(Calendar.SECOND, secondInMinute)
         startTimeCal.set(Calendar.MINUTE, minuteInHour)
-        return SimpleDateFormat("h:mm a").format(startTimeCal.getTime())
+        
+        val sdf = SimpleDateFormat("h:mm a")
+        
+        val symbols = DateFormatSymbols(Locale.getDefault())
+        symbols.setAmPmStrings(arrayOf("am", "pm"))
+        sdf.setDateFormatSymbols(symbols)
+        
+        return sdf.format(startTimeCal.getTime())
     }
     
 }

@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatRatingBar
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.data.mechanic.TemplateTimeSpan
 
@@ -15,9 +17,15 @@ class TimePickerRecyclerViewAdapter(
     var timeSlots: List<TemplateTimeSpan> = listOf()
         set(newValue) {
             field = newValue
+            selectedIndex = null
             notifyDataSetChanged()
         }
     
+    var selectedIndex: Int? = null
+    set(newValue) {
+        field = newValue
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -36,6 +44,13 @@ class TimePickerRecyclerViewAdapter(
 //        holder.servicesCompletedTextView.text = "${item.servicesCompleted} services completed"
         val slot = timeSlots[position]
         holder.timeTextView.text = slot.localizedStartTime()
+        holder.isSelectedView = selectedIndex == position
+//        holder.itemView.isSelected = selectedIndex == position
+
+        holder.itemView.setOnClickListener() {
+            selectedIndex = position
+            notifyItemChanged(position)
+        }
     }
     
     override fun getItemCount(): Int = timeSlots.size
@@ -46,6 +61,26 @@ class TimePickerRecyclerViewAdapter(
 //        override fun toString(): String {
 //            return super.toString() + " '" + contentView.text + "'"
 //        }
+        
+        var isSelectedView: Boolean = false
+        set(newValue) {
+            field = newValue
+            if (isSelectedView) {
+                timeTextView.setBackgroundColor(ResourcesCompat.getColor(itemView.resources, R.color.colorPrimary, null))
+            } else {
+                timeTextView.setBackgroundColor(ResourcesCompat.getColor(itemView.resources, R.color.background, null))
+            }
+            timeTextView.setTextColor(textColor())
+        }
+        
+        private fun textColor(): Int {
+            if (isSelectedView) {
+                return ResourcesCompat.getColor(itemView.resources, R.color.primaryContrast, null)
+            } else {
+                return ResourcesCompat.getColor(itemView.resources, R.color.backgroundContrast, null)
+            }
+        }
+        
     }
 
 }

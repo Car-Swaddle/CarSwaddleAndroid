@@ -17,7 +17,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:text="Tap to select a Mechanic"/>
+            android:text="Tap to select a Mechanic"
+            android:textStyle="bold"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/mechanic_list_container"
@@ -29,7 +30,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:text="Select a Date"/>
+            android:text="Select a Date"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/month_year_text_view"
@@ -76,7 +78,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:text="Select a Time Slot"/>
+            android:text="Select a Time Slot"
+            android:textStyle="bold"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/time_slot"
