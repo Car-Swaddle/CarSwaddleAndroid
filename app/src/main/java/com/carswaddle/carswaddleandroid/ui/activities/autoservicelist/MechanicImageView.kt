@@ -12,6 +12,7 @@ import com.bumptech.glide.load.model.LazyHeaders
 import com.bumptech.glide.request.target.ViewTarget
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.data.Authentication
+import com.carswaddle.carswaddleandroid.retrofit.serverUrl
 
 private const val mechanicProfileImage = "/api/data/mechanic/profile-picture/{mechanicId}"
 
@@ -27,6 +28,7 @@ class MechanicImageView @JvmOverloads constructor(
 
     var mechanicId: String? = null 
     set(newValue) {
+        field = newValue
         updateImage()
     }
 
@@ -36,20 +38,16 @@ class MechanicImageView @JvmOverloads constructor(
     }
     
     private fun updateImage() {
-
-        Glide.with(context).pauseAllRequests()
-        
-        val url = glidUrl()
+        val url = glideUrl()
         if (url == null) {
             return
         }
          Glide.with(context)
             .load(url)
-            .centerCrop()
             .into(imageView)
     }
     
-    private fun glidUrl(): GlideUrl? {
+    private fun glideUrl(): GlideUrl? {
         val id = mechanicId
         val token = auth.getAuthToken()
         if (id == null || token == null) {
@@ -57,7 +55,8 @@ class MechanicImageView @JvmOverloads constructor(
         }
 
         var url = mechanicProfileImage
-        url.replace("{mechanicId}", id)
+        url = url.replace("{mechanicId}", id)
+        url = serverUrl() + url
 
         return GlideUrl(url,
             LazyHeaders.Builder()

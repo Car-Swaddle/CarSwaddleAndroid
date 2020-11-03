@@ -28,8 +28,8 @@
 
         <com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.MechanicImageView
             android:id="@+id/mechanicImageView"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="188dp"
+            android:layout_height="188dp"
             android:scaleType="centerCrop"
             android:src="@drawable/car_swaddle_logo"/>
 

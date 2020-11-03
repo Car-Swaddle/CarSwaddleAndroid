@@ -9,10 +9,20 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 private val okHttpClient = OkHttpClient()
 
-private val production = "https://api.carswaddle.com"
-private val staging = "https://api.staging.carswaddle.com"
+private val productionUrl = "https://api.carswaddle.com"
+private val stagingUrl = "https://api.staging.carswaddle.com"
 
-val serviceGenerator = ServiceGenerator(staging, okHttpClient)
+private val useProduction: Boolean = false
+
+fun serverUrl(): String {
+    if (useProduction) {
+        return productionUrl
+    } else {
+        return stagingUrl
+    }
+}
+
+val serviceGenerator = ServiceGenerator(serverUrl(), okHttpClient)
 
 class ServiceGenerator(baseURL: String, okHttpClient: OkHttpClient) {
 
@@ -39,7 +49,7 @@ class ServiceGenerator(baseURL: String, okHttpClient: OkHttpClient) {
                     val builder = OkHttpClient.Builder()
                     builder.addInterceptor(AuthenticationInterceptor(authToken))
                     val authenticatedOkHttpClient = builder.build()
-                    val s = ServiceGenerator(staging, authenticatedOkHttpClient)
+                    val s = ServiceGenerator(serverUrl(), authenticatedOkHttpClient)
                     this.authenticated = s
                     return s
                 } else {
