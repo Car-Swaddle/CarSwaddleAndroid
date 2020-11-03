@@ -33,7 +33,12 @@ class ProgressFragment : Fragment() {
         set(value) {
             _stepNumber = value
             bubble1.state = if (value == 1) ProgressBubble.ProgressState.Active else ProgressBubble.ProgressState.Complete
-            bubble2.state = if (value == 2) ProgressBubble.ProgressState.Active else ProgressBubble.ProgressState.Inactive
+            bubble2.state = when (value) {
+                1 -> ProgressBubble.ProgressState.Inactive
+                2 -> ProgressBubble.ProgressState.Active
+                else -> ProgressBubble.ProgressState.Complete
+            }
+            bubble3.state = if (value == 3) ProgressBubble.ProgressState.Active else ProgressBubble.ProgressState.Inactive
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {

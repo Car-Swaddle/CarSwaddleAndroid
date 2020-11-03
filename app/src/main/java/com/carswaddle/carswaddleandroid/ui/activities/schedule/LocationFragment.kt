@@ -25,6 +25,7 @@ import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import java.util.*
 
@@ -60,7 +61,7 @@ class LocationFragment : Fragment(), OnMapReadyCallback, ActivityCompat.OnReques
         mapFragment.getMapAsync(this)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
-        val confirmLocationButton = view.findViewById<ExtendedFloatingActionButton>(R.id.confirm_location)
+        val confirmLocationButton = view.findViewById<MaterialButton>(R.id.confirm_location)
         confirmLocationButton.setOnClickListener { v ->
             callback.onLocationSelected(map.cameraPosition.target)
         }

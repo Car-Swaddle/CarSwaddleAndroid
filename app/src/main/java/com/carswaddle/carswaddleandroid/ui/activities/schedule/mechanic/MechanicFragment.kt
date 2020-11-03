@@ -19,6 +19,9 @@ import com.carswaddle.carswaddleandroid.Extensions.today
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.data.mechanic.MechanicListElements
 import com.carswaddle.carswaddleandroid.services.serviceModels.Point
+import com.carswaddle.carswaddleandroid.ui.common.CenteredLinearLayoutManager
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.haibin.calendarview.Calendar
 import com.haibin.calendarview.CalendarView
 import java.text.DateFormatSymbols
@@ -32,9 +35,14 @@ class MechanicFragment(val point: Point) : Fragment() {
     private var spanCount = 4
 
     private lateinit var monthYearTextView: TextView
+    private lateinit var callback: OnConfirmListener
+
+    fun setOnConfirmCallbackListener(callback: OnConfirmListener) {
+        this.callback = callback
+    }
 
     private lateinit var mechanicViewModel: SelectMechanicViewModel
-    
+
     private lateinit var mechanicViewAdapter: MyMechanicRecyclerViewAdapter
 
     private lateinit var timeSlotViewAdapter: TimePickerRecyclerViewAdapter
@@ -79,6 +87,11 @@ class MechanicFragment(val point: Point) : Fragment() {
         )
         calendarView.scrollToCalendar(minCalendar.year, minCalendar.month, minCalendar.day)
 
+        val confirmButton = view.findViewById<MaterialButton>(R.id.confirm_mechanic)
+        confirmButton.setOnClickListener { v ->
+            callback.onConfirm()
+        }
+
         calendarView.setOnCalendarSelectListener(object : CalendarView.OnCalendarSelectListener {
             override fun onCalendarSelect(calendar: Calendar?, isClick: Boolean) {
                 if (calendar == null) {
@@ -119,7 +132,7 @@ class MechanicFragment(val point: Point) : Fragment() {
                     }
                 }
             })
-        
+
         return view
     }
 
@@ -139,6 +152,10 @@ class MechanicFragment(val point: Point) : Fragment() {
     private fun updateMonthYear(month: Int, year: Int) {
         val monthStr = DateFormatSymbols(Locale.getDefault()).months[month];
         monthYearTextView.text = monthStr + " " + year
+    }
+
+    interface OnConfirmListener {
+        fun onConfirm()
     }
 
 }
