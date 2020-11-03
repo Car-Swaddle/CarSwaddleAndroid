@@ -9,6 +9,7 @@ import android.widget.LinearLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
+import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.ViewTarget
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.data.Authentication

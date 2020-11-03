@@ -60,7 +60,7 @@ class MyMechanicRecyclerViewAdapter(
         // TODO - set image
         holder.nameTextView.text = item.user.displayName()
         holder.ratingBar.rating = item.mechanic.averageRating?.toFloat() ?: 0.0F
-        val roundedValue = Math.round(item.mechanic.averageRating?.toFloat() ?: 0.0F * 10) / 10.0
+        val roundedValue = Math.round((item.mechanic.averageRating?.toFloat() ?: 0.0F) * 10) / 10.0
 
         val ssb = SpannableStringBuilder().append(roundedValue.toString(), StyleSpan(Typeface.BOLD), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             .append(" avg from ")
@@ -71,6 +71,7 @@ class MyMechanicRecyclerViewAdapter(
         val ssb2 = SpannableStringBuilder().append(item.mechanic.autoServicesProvided.toString(), StyleSpan(Typeface.BOLD), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             .append(" services completed")
         holder.servicesCompletedTextView.text = ssb2
+        holder.mechanicImageView.mechanicId = item.mechanic.id
     }
 
     override fun getItemCount(): Int = mechanicElements.size + 2 // Padding at start and end
