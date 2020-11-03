@@ -8,6 +8,7 @@ import androidx.appcompat.widget.AppCompatRatingBar
 import androidx.recyclerview.widget.RecyclerView
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.data.mechanic.MechanicListElements
+import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.MechanicImageView
 
 
 /**
@@ -59,6 +60,7 @@ class MyMechanicRecyclerViewAdapter(
         ).toFloat()
         holder.ratingTextView.text = "$roundedValue avg from ${item.mechanic.numberOfRatings} ratings"
         holder.servicesCompletedTextView.text = "${item.mechanic.autoServicesProvided} services completed"
+        holder.mechanicImageView.mechanicId = item.mechanic.id
     }
 
     override fun getItemCount(): Int = mechanicElements.size + 2 // Padding at start and end
@@ -75,6 +77,7 @@ class MyMechanicRecyclerViewAdapter(
         val ratingBar: AppCompatRatingBar = view.findViewById(R.id.ratingBar)
         val ratingTextView: TextView = view.findViewById(R.id.ratings)
         val servicesCompletedTextView: TextView = view.findViewById(R.id.services_completed)
+        val mechanicImageView: MechanicImageView = view.findViewById(R.id.mechanicImageView)
 
 //        override fun toString(): String {
 //            return super.toString() + " '" + contentView.text + "'"

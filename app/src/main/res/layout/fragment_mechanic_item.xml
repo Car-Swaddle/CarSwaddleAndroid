@@ -26,8 +26,8 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp">
 
-        <ImageView
-            android:id="@+id/image"
+        <com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.MechanicImageView
+            android:id="@+id/mechanicImageView"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:scaleType="centerCrop"
