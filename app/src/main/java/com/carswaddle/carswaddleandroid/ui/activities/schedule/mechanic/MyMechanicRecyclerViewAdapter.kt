@@ -1,5 +1,9 @@
 package com.carswaddle.carswaddleandroid.ui.activities.schedule
 
+import android.graphics.Typeface
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +14,7 @@ import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.data.mechanic.MechanicListElements
 import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.MechanicImageView
 
+import kotlin.math.round
 
 /**
  * [RecyclerView.Adapter] that can display a [DummyItem].
@@ -17,17 +22,17 @@ import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.MechanicIm
  */
 class MyMechanicRecyclerViewAdapter(
 ) : RecyclerView.Adapter<MyMechanicRecyclerViewAdapter.ViewHolder>() {
-    
+
     var mechanicElements: List<MechanicListElements> = arrayListOf()
     set(newValue) {
         field = newValue
         notifyDataSetChanged()
     }
-    
+
     init {
         this.mechanicElements = mechanicElements
     }
-    
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
 //        return if (viewType == VIEW_TYPE_ITEM) {
@@ -55,12 +60,17 @@ class MyMechanicRecyclerViewAdapter(
         // TODO - set image
         holder.nameTextView.text = item.user.displayName()
         holder.ratingBar.rating = item.mechanic.averageRating?.toFloat() ?: 0.0F
-        val roundedValue = Math.round(item.mechanic.averageRating?.toFloat() ?: 0.0F).times(10).div(
-            10
-        ).toFloat()
-        holder.ratingTextView.text = "$roundedValue avg from ${item.mechanic.numberOfRatings} ratings"
-        holder.servicesCompletedTextView.text = "${item.mechanic.autoServicesProvided} services completed"
-        holder.mechanicImageView.mechanicId = item.mechanic.id
+        val roundedValue = Math.round(item.mechanic.averageRating?.toFloat() ?: 0.0F * 10) / 10.0
+
+        val ssb = SpannableStringBuilder().append(roundedValue.toString(), StyleSpan(Typeface.BOLD), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            .append(" avg from ")
+            .append(item.mechanic.numberOfRatings.toString(), StyleSpan(Typeface.BOLD), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            .append(" ratings")
+        holder.ratingTextView.text = ssb
+
+        val ssb2 = SpannableStringBuilder().append(item.mechanic.autoServicesProvided.toString(), StyleSpan(Typeface.BOLD), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            .append(" services completed")
+        holder.servicesCompletedTextView.text = ssb2
     }
 
     override fun getItemCount(): Int = mechanicElements.size + 2 // Padding at start and end

@@ -1,11 +1,11 @@
-package com.carswaddle.carswaddleandroid.ui.activities.schedule
+package com.carswaddle.carswaddleandroid.ui.common
 
 import android.content.Context
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlin.math.roundToInt
 
-class MechanicLinearLayoutManager(
+class CenteredLinearLayoutManager(
     context: Context?,
     private val parentWidth: Int,
     private val itemWidth: Int
