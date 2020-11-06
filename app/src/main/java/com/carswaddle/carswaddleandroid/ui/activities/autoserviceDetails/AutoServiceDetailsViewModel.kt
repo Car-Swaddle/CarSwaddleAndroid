@@ -144,7 +144,7 @@ class AutoServiceDetailsViewModel(application: Application) : AndroidViewModel(a
 //        }
 //    }
 
-    fun updateNotes(notes: String, completion: (error: Error?, autoServiceId: String?) -> Unit) {
+    fun updateNotes(notes: String, completion: (error: Throwable?, autoServiceId: String?) -> Unit) {
         val id = autoServiceId
         if (id == null) {
             return
