@@ -14,8 +14,6 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.data.vehicle.Vehicle
-import com.carswaddle.carswaddleandroid.ui.activities.autoserviceDetails.AutoServiceDetailsViewModel
-import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServiceListElements
 import com.carswaddle.carswaddleandroid.ui.common.CenteredLinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_autoservices_list.*
 import java.util.*
@@ -23,7 +21,6 @@ import java.util.*
 class SelectDetailsFragment : Fragment() {
 
     private var vehicleItemWidth: Int = 0
-    private var oilTypeItemWidth: Int = 0
 
     private lateinit var selectDetailsViewModel: SelectDetailsViewModel
     
@@ -38,10 +35,29 @@ class SelectDetailsFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_select_details, container, false)
 
         selectDetailsViewModel = ViewModelProviders.of(this).get(SelectDetailsViewModel::class.java)
+//<<<<<<< HEAD
         
         val vehicleRecyclerView = view.findViewById<RecyclerView>(R.id.vehicle_container)
         with (vehicleRecyclerView) {
             this.adapter = vehicleAdapter
+//=======
+//
+//        selectDetailsViewModel.vehicles.observe(
+//            viewLifecycleOwner,
+//            Observer<List<Vehicle>> { vehicles ->
+//                Log.w("vehicles", "vehicles listed")
+//            })
+//        
+//        val vehicleRecyclerView = view.findViewById<RecyclerView>(R.id.vehicle_container)
+//        with(vehicleRecyclerView) {
+//            this.adapter =
+//                    // TODO - make these actual values
+//                VehicleRecyclerViewAdapter(
+//                    listOf(
+//                        "Conventional", "Blend", "Synthetic", "High Mileage"
+//                    )
+//                )
+//>>>>>>> df7be24de9617c90445151e1b6374aa9121fbfbf
             this.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
             val snapHelper = PagerSnapHelper()
             snapHelper.attachToRecyclerView(this)
@@ -70,35 +86,64 @@ class SelectDetailsFragment : Fragment() {
 //        })
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.oil_type_container)
-        with (recyclerView) {
-            this.adapter =
+        val oilTypeSnapHelper = PagerSnapHelper()
+        with(recyclerView) {
+            val oilTypeAdapter =
                     // TODO - make these enums
                 OilTypeRecyclerViewAdapter(
                     listOf(
                         "Conventional", "Blend", "Synthetic", "High Mileage"
-                    )
+                    ), requireActivity()
                 )
-            activity?.runOnUiThread {
-//                this.adapter.vehicles = vehicles
-                vehicleRecyclerView.scrollToPosition(1) // 0 is padding, 1 is first item
-            }
-            this.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-            val snapHelper = PagerSnapHelper()
-            snapHelper.attachToRecyclerView(this)
-            this.onFlingListener = snapHelper
-        }
-//        runJustBeforeBeingDrawn(recyclerView, Runnable {
-//            if (oilTypeItemWidth > 0 || recyclerView.layoutManager!!.itemCount < 1) {
-//                return@Runnable
+//<<<<<<< HEAD
+//            activity?.runOnUiThread {
+////                this.adapter.vehicles = vehicles
+//                vehicleRecyclerView.scrollToPosition(1) // 0 is padding, 1 is first item
 //            }
-//            oilTypeItemWidth = recyclerView.layoutManager!!.findViewByPosition(0)!!.width
-//            recyclerView.layoutManager =
-//                CenteredLinearLayoutManager(
-//                    context,
-//                    requireActivity().window.decorView.width,
-//                    oilTypeItemWidth
-//                )
-//        })
+//            this.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+//            val snapHelper = PagerSnapHelper()
+//            snapHelper.attachToRecyclerView(this)
+//            this.onFlingListener = snapHelper
+//        }
+////        runJustBeforeBeingDrawn(recyclerView, Runnable {
+////            if (oilTypeItemWidth > 0 || recyclerView.layoutManager!!.itemCount < 1) {
+////                return@Runnable
+////            }
+////            oilTypeItemWidth = recyclerView.layoutManager!!.findViewByPosition(0)!!.width
+////            recyclerView.layoutManager =
+////                CenteredLinearLayoutManager(
+////                    context,
+////                    requireActivity().window.decorView.width,
+////                    oilTypeItemWidth
+////                )
+////        })
+//=======
+            this.adapter = oilTypeAdapter
+            this.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+            oilTypeSnapHelper.attachToRecyclerView(recyclerView)
+            this.onFlingListener = oilTypeSnapHelper
+            smoothScrollToPosition(1)
+            recyclerView
+                .addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                    override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                        super.onScrollStateChanged(recyclerView, newState)
+                        if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                            val snapView = oilTypeSnapHelper.findSnapView(layoutManager)
+                            if (snapView == null) {
+                                return
+                            }
+                            val snapPosition = layoutManager!!.getPosition(snapView)
+                            oilTypeAdapter.selectedPosition = snapPosition
+                            oilTypeAdapter.notifyDataSetChanged()
+                        }
+                    }
+
+//                    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                        super.onScrolled(recyclerView, dx, dy)
+//                    }
+                })
+        }
+//>>>>>>> df7be24de9617c90445151e1b6374aa9121fbfbf
 
         return view
     }
