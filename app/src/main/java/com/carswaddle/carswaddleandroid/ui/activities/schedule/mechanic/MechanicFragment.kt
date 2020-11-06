@@ -19,9 +19,7 @@ import com.carswaddle.carswaddleandroid.Extensions.today
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.data.mechanic.MechanicListElements
 import com.carswaddle.carswaddleandroid.services.serviceModels.Point
-import com.carswaddle.carswaddleandroid.ui.common.CenteredLinearLayoutManager
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.haibin.calendarview.Calendar
 import com.haibin.calendarview.CalendarView
 import java.text.DateFormatSymbols
@@ -118,17 +116,17 @@ class MechanicFragment(val point: Point) : Fragment() {
             Observer<List<MechanicListElements>> { mechanicElements ->
                 this.mechanicViewAdapter.mechanicElements =
                     mechanicElements
-                val firstMechanicId = mechanicElements.first()?.mechanic.id
-                if (firstMechanicId != null) {
-                    mechanicViewModel.loadTimeSlots(firstMechanicId) {
-                        activity?.runOnUiThread {
-                            // TODO - not working
-                            recyclerView.scrollToPosition(1) // 0 is padding, 1 is first item
-                            var tomorrow = KotlinCalendar.getInstance()
-                            tomorrow.add(KotlinCalendar.DAY_OF_YEAR, 1)
-                            updateTimeSlots(tomorrow)
-                        }
-
+                val firstMechanicId = mechanicElements.first().mechanic.id
+                activity?.runOnUiThread {
+                    recyclerView.adapter?.notifyDataSetChanged()
+                    // 0 is padding, 1 will be position of first item (always at least two with padding items)
+                    recyclerView.smoothScrollToPosition(1)
+                }
+                mechanicViewModel.loadTimeSlots(firstMechanicId) {
+                    activity?.runOnUiThread {
+                        var tomorrow = KotlinCalendar.getInstance()
+                        tomorrow.add(KotlinCalendar.DAY_OF_YEAR, 1)
+                        updateTimeSlots(tomorrow)
                     }
                 }
             })

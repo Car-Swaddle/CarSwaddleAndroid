@@ -26,7 +26,6 @@ class MyMechanicRecyclerViewAdapter(
     var mechanicElements: List<MechanicListElements> = arrayListOf()
     set(newValue) {
         field = newValue
-        notifyDataSetChanged()
     }
 
     init {
