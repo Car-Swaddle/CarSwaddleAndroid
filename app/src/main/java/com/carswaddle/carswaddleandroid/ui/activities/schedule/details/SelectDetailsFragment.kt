@@ -1,21 +1,29 @@
 package com.carswaddle.carswaddleandroid.ui.activities.schedule.details
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.carswaddle.carswaddleandroid.R
+import com.carswaddle.carswaddleandroid.data.vehicle.Vehicle
+import com.carswaddle.carswaddleandroid.ui.activities.autoserviceDetails.AutoServiceDetailsViewModel
+import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServiceListElements
 import com.carswaddle.carswaddleandroid.ui.common.CenteredLinearLayoutManager
 
 class SelectDetailsFragment : Fragment() {
 
     private var vehicleItemWidth: Int = 0
     private var oilTypeItemWidth: Int = 0
+
+    private lateinit var selectDetailsViewModel: SelectDetailsViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -25,6 +33,12 @@ class SelectDetailsFragment : Fragment() {
 
         val view = inflater.inflate(R.layout.fragment_select_details, container, false)
 
+        selectDetailsViewModel = ViewModelProviders.of(this).get(SelectDetailsViewModel::class.java)
+
+        selectDetailsViewModel.vehicles.observe(viewLifecycleOwner, Observer<List<Vehicle>> { vehicles ->
+            Log.w("vehicles", "vehicles listed")
+        })
+        
         val vehicleRecyclerView = view.findViewById<RecyclerView>(R.id.vehicle_container)
         with (vehicleRecyclerView) {
             this.adapter =
