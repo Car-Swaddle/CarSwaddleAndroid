@@ -33,16 +33,6 @@ class MyMechanicRecyclerViewAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-
-//        return if (viewType == VIEW_TYPE_ITEM) {
-//            val v: View = LayoutInflater.from(parent.context)
-//                .inflate(R.layout.list_item, parent, false)
-//            ViewHolder(v)
-//        } else {
-//            val v: View = LayoutInflater.from(parent.context)
-//                .inflate(R.layout.list_item_padding, parent, false)
-//            ViewHolder(v)
-//        }
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.fragment_mechanic_item, parent, false)
         return ViewHolder(view)
@@ -88,10 +78,6 @@ class MyMechanicRecyclerViewAdapter(
         val ratingTextView: TextView = view.findViewById(R.id.ratings)
         val servicesCompletedTextView: TextView = view.findViewById(R.id.services_completed)
         val mechanicImageView: MechanicImageView = view.findViewById(R.id.mechanicImageView)
-
-//        override fun toString(): String {
-//            return super.toString() + " '" + contentView.text + "'"
-//        }
     }
 
     companion object {

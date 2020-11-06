@@ -35,29 +35,10 @@ class SelectDetailsFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_select_details, container, false)
 
         selectDetailsViewModel = ViewModelProviders.of(this).get(SelectDetailsViewModel::class.java)
-//<<<<<<< HEAD
         
         val vehicleRecyclerView = view.findViewById<RecyclerView>(R.id.vehicle_container)
         with (vehicleRecyclerView) {
             this.adapter = vehicleAdapter
-//=======
-//
-//        selectDetailsViewModel.vehicles.observe(
-//            viewLifecycleOwner,
-//            Observer<List<Vehicle>> { vehicles ->
-//                Log.w("vehicles", "vehicles listed")
-//            })
-//        
-//        val vehicleRecyclerView = view.findViewById<RecyclerView>(R.id.vehicle_container)
-//        with(vehicleRecyclerView) {
-//            this.adapter =
-//                    // TODO - make these actual values
-//                VehicleRecyclerViewAdapter(
-//                    listOf(
-//                        "Conventional", "Blend", "Synthetic", "High Mileage"
-//                    )
-//                )
-//>>>>>>> df7be24de9617c90445151e1b6374aa9121fbfbf
             this.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
             val snapHelper = PagerSnapHelper()
             snapHelper.attachToRecyclerView(this)
@@ -71,19 +52,6 @@ class SelectDetailsFragment : Fragment() {
                 vehicleRecyclerView.scrollToPosition(1) // 0 is padding, 1 is first item
             }
         })
-        
-//        runJustBeforeBeingDrawn(vehicleRecyclerView, Runnable {
-//            if (vehicleItemWidth > 0 || vehicleRecyclerView.layoutManager!!.itemCount < 1) {
-//                return@Runnable
-//            }
-//            vehicleItemWidth = vehicleRecyclerView.layoutManager!!.findViewByPosition(0)!!.width
-//            vehicleRecyclerView.layoutManager =
-//                CenteredLinearLayoutManager(
-//                    context,
-//                    requireActivity().window.decorView.width,
-//                    vehicleItemWidth
-//                )
-//        })
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.oil_type_container)
         val oilTypeSnapHelper = PagerSnapHelper()
@@ -95,29 +63,7 @@ class SelectDetailsFragment : Fragment() {
                         "Conventional", "Blend", "Synthetic", "High Mileage"
                     ), requireActivity()
                 )
-//<<<<<<< HEAD
-//            activity?.runOnUiThread {
-////                this.adapter.vehicles = vehicles
-//                vehicleRecyclerView.scrollToPosition(1) // 0 is padding, 1 is first item
-//            }
-//            this.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-//            val snapHelper = PagerSnapHelper()
-//            snapHelper.attachToRecyclerView(this)
-//            this.onFlingListener = snapHelper
-//        }
-////        runJustBeforeBeingDrawn(recyclerView, Runnable {
-////            if (oilTypeItemWidth > 0 || recyclerView.layoutManager!!.itemCount < 1) {
-////                return@Runnable
-////            }
-////            oilTypeItemWidth = recyclerView.layoutManager!!.findViewByPosition(0)!!.width
-////            recyclerView.layoutManager =
-////                CenteredLinearLayoutManager(
-////                    context,
-////                    requireActivity().window.decorView.width,
-////                    oilTypeItemWidth
-////                )
-////        })
-//=======
+            
             this.adapter = oilTypeAdapter
             this.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
             oilTypeSnapHelper.attachToRecyclerView(recyclerView)
@@ -137,13 +83,8 @@ class SelectDetailsFragment : Fragment() {
                             oilTypeAdapter.notifyDataSetChanged()
                         }
                     }
-
-//                    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-//                        super.onScrolled(recyclerView, dx, dy)
-//                    }
                 })
         }
-//>>>>>>> df7be24de9617c90445151e1b6374aa9121fbfbf
 
         return view
     }
