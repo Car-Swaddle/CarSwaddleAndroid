@@ -50,11 +50,11 @@ class MyMechanicRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if (getItemViewType(position) != VIEW_TYPE_ITEM) {
-            // TOOD - reset everything or set alpha to 0
             holder.itemView.alpha = 0f
             return
         }
         holder.itemView.alpha = 1f
+
         val item = mechanicElements[position - 1] // Offset for initial padding
         // TODO - set image
         holder.nameTextView.text = item.user.displayName()
