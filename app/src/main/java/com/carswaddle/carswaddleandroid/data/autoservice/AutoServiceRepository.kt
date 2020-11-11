@@ -11,9 +11,11 @@ import com.carswaddle.carswaddleandroid.data.vehicle.Vehicle
 import com.carswaddle.carswaddleandroid.retrofit.ServiceGenerator
 import com.carswaddle.carswaddleandroid.retrofit.ServiceNotAvailable
 import com.carswaddle.carswaddleandroid.services.AutoServiceService
+import com.carswaddle.carswaddleandroid.services.LocationJSON
+import com.carswaddle.carswaddleandroid.services.PriceRequest
+import com.carswaddle.carswaddleandroid.services.PriceService
+import com.carswaddle.carswaddleandroid.services.serviceModels.*
 import com.carswaddle.carswaddleandroid.services.serviceModels.AutoService
-import com.carswaddle.carswaddleandroid.services.serviceModels.AutoServiceStatus
-import com.carswaddle.carswaddleandroid.services.serviceModels.UpdateAutoService
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import retrofit2.Call
@@ -35,6 +37,28 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
 
     suspend fun getAutoService(autoServiceId: String): com.carswaddle.carswaddleandroid.data.autoservice.AutoService? {
         return autoServiceDao.getAutoService(autoServiceId)
+    }
+    
+    fun getPrice(location: LocationJSON, mechanicId: String, oiltype: OilType, coupon: String?, context: Context, completion: (error: Throwable?, price: Price?) -> Unit) {
+        val priceService = ServiceGenerator.authenticated(context)?.retrofit?.create(PriceService::class.java)
+        if (priceService == null) {
+            completion(ServiceNotAvailable(), null)
+            return
+        }
+        
+        val priceRequest = PriceRequest(location, mechanicId, oiltype.toString(), coupon)
+        val call = priceService.getPrice(priceRequest)
+        call.enqueue(object : Callback<PriceResponse> {
+
+            override fun onFailure(call: Call<PriceResponse>, t: Throwable) {
+                completion(t, null)
+            }
+
+            override fun onResponse(call: Call<PriceResponse>, response: Response<PriceResponse>) {
+                completion(null, response.body()?.prices)
+            }
+            
+        })
     }
 
     fun updateNotes(autoServiceId: String, notes: String, context: Context, completion: (error: Throwable?, autoServiceId: String?) -> Unit) {

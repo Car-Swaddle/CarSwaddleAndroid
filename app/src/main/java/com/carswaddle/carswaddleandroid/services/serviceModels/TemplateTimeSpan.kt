@@ -16,7 +16,7 @@ data class TemplateTimeSpan(
     /// The second of the day, provided as HH:mm format string
     val startTime: String,
     /// The number of seconds
-    val duration: Int,
+    val duration: Float,
     val mechanicID: String
 ) {
 

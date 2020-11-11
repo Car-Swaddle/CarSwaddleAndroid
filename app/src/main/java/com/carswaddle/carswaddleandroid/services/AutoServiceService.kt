@@ -27,7 +27,7 @@ interface AutoServiceService {
     @Headers(ContentType.headerPrefix + ContentType.applicationJSON)
     @PATCH(autoServiceEndpoint)
     fun updateAutoService(@Query("autoServiceID") autoServiceId: String, @Body updateAutoService: UpdateAutoService): Call<AutoService>
-
+    
 }
 
 

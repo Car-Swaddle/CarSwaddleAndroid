@@ -14,11 +14,13 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.data.vehicle.Vehicle
+import com.carswaddle.carswaddleandroid.services.serviceModels.OilType
+import com.carswaddle.carswaddleandroid.services.serviceModels.Point
 import com.carswaddle.carswaddleandroid.ui.common.CenteredLinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_autoservices_list.*
 import java.util.*
 
-class SelectDetailsFragment : Fragment() {
+class SelectDetailsFragment(val point: Point, val mechanicId: String) : Fragment() {
 
     private var vehicleItemWidth: Int = 0
 
@@ -35,6 +37,8 @@ class SelectDetailsFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_select_details, container, false)
 
         selectDetailsViewModel = ViewModelProviders.of(this).get(SelectDetailsViewModel::class.java)
+        
+        selectDetailsViewModel.loadPrice(point.latitude(), point.longitude(), mechanicId, OilType.synthetic, null)
         
         val vehicleRecyclerView = view.findViewById<RecyclerView>(R.id.vehicle_container)
         with (vehicleRecyclerView) {

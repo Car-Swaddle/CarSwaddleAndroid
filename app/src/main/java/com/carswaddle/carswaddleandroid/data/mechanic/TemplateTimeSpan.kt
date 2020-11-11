@@ -14,7 +14,7 @@ data class TemplateTimeSpan(
     @ColumnInfo val weekDayInt: Int,
     /// The number of seconds since midnight. The time the time slot starts
     @ColumnInfo val startTime: Int,
-    @ColumnInfo val duration: Int
+    @ColumnInfo val duration: Float
 ) {
 
     constructor(span: com.carswaddle.carswaddleandroid.services.serviceModels.TemplateTimeSpan) :

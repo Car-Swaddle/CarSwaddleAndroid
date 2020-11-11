@@ -14,10 +14,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.carswaddle.carswaddleandroid.Extensions.addDays
+import com.carswaddle.carswaddleandroid.Extensions.safeFirst
 import com.carswaddle.carswaddleandroid.Extensions.toJavaCalendar
 import com.carswaddle.carswaddleandroid.Extensions.today
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.data.mechanic.MechanicListElements
+import com.carswaddle.carswaddleandroid.data.mechanic.TemplateTimeSpan
 import com.carswaddle.carswaddleandroid.services.serviceModels.Point
 import com.google.android.material.button.MaterialButton
 import com.haibin.calendarview.Calendar
@@ -40,12 +42,11 @@ class MechanicFragment(val point: Point) : Fragment() {
     }
 
     private lateinit var mechanicViewModel: SelectMechanicViewModel
-
     private lateinit var mechanicViewAdapter: MyMechanicRecyclerViewAdapter
-
     private lateinit var timeSlotViewAdapter: TimePickerRecyclerViewAdapter
-
     private lateinit var calendarView: CalendarView
+    private var selectedMechanicId: String? = null
+    private var selectedTimeSlot: TemplateTimeSpan? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -87,7 +88,11 @@ class MechanicFragment(val point: Point) : Fragment() {
 
         val confirmButton = view.findViewById<MaterialButton>(R.id.confirm_mechanic)
         confirmButton.setOnClickListener { v ->
-            callback.onConfirm()
+            val m = selectedMechanicId
+            val t = selectedTimeSlot
+            if (m != null && t != null) {
+                callback.onConfirm(m, t)
+            }
         }
 
         calendarView.setOnCalendarSelectListener(object : CalendarView.OnCalendarSelectListener {
@@ -116,18 +121,24 @@ class MechanicFragment(val point: Point) : Fragment() {
             Observer<List<MechanicListElements>> { mechanicElements ->
                 this.mechanicViewAdapter.mechanicElements =
                     mechanicElements
-                val firstMechanicId = mechanicElements.first().mechanic.id
+                val firstMechanicId = mechanicElements.safeFirst()?.mechanic?.id
                 activity?.runOnUiThread {
                     recyclerView.adapter?.notifyDataSetChanged()
                     // 0 is padding, 1 will be position of first item (always at least two with padding items)
                     recyclerView.smoothScrollToPosition(1)
                 }
-                mechanicViewModel.loadTimeSlots(firstMechanicId) {
-                    activity?.runOnUiThread {
-                        var tomorrow = KotlinCalendar.getInstance()
-                        tomorrow.add(KotlinCalendar.DAY_OF_YEAR, 1)
-                        updateTimeSlots(tomorrow)
+                if (firstMechanicId != null) {
+                    mechanicViewModel.loadTimeSlots(firstMechanicId) {
+                        activity?.runOnUiThread {
+                            var tomorrow = KotlinCalendar.getInstance()
+                            tomorrow.add(KotlinCalendar.DAY_OF_YEAR, 1)
+                            updateTimeSlots(tomorrow)
+                        }
                     }
+                }
+                
+                if (selectedMechanicId == null) {
+                    selectedMechanicId = firstMechanicId
                 }
             })
 
@@ -135,7 +146,7 @@ class MechanicFragment(val point: Point) : Fragment() {
     }
 
     private fun updateTimeSlots(calendar: java.util.Calendar) {
-        val mechanicId = mechanicViewModel.mechanics.value?.first()?.mechanic?.id
+        val mechanicId = mechanicViewModel.mechanics.value?.safeFirst()?.mechanic?.id
         updateMonthYear(calendar.get(MONTH), calendar.get(YEAR))
         if (mechanicId == null) {
             return
@@ -143,7 +154,9 @@ class MechanicFragment(val point: Point) : Fragment() {
         val slots = mechanicViewModel.timeSlots(mechanicId, calendar)
         timeSlotViewAdapter.timeSlots = slots
 //        timeSlotViewAdapter = TimePickerRecyclerViewAdapter(slots)
-        // TODO - update
+//        if (slots.size > 0) {
+            selectedTimeSlot = slots.safeFirst() // TODO - Fix this!
+//        }
         Log.w("slots", "slots: $slots")
     }
 
@@ -153,7 +166,7 @@ class MechanicFragment(val point: Point) : Fragment() {
     }
 
     interface OnConfirmListener {
-        fun onConfirm()
+        fun onConfirm(mechanicId: String, timeSlot: TemplateTimeSpan)
     }
 
 }

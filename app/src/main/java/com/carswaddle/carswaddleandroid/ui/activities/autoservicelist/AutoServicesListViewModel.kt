@@ -45,7 +45,7 @@ class AutoServicesListViewModel(application: Application) : AndroidViewModel(app
             0,
             getApplication(),
             listOf<String>(),
-            listOf("scheduled", "canceled", "inProgress")
+            listOf<String>() // listOf("scheduled", "canceled", "inProgress")
         ) { error, autoServiceIds ->
 
             viewModelScope.launch {

@@ -3,7 +3,9 @@ package com.carswaddle.carswaddleandroid.ui.activities.schedule
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.carswaddle.carswaddleandroid.R
+import com.carswaddle.carswaddleandroid.data.mechanic.TemplateTimeSpan
 import com.carswaddle.carswaddleandroid.services.serviceModels.Point
+//import com.carswaddle.carswaddleandroid.services.serviceModels.TemplateTimeSpan as TimeSlot
 import com.carswaddle.carswaddleandroid.util.PermissionUtils
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -19,7 +21,7 @@ class MapsActivity : AppCompatActivity(), LocationFragment.OnLocationSelectedLis
     private var location: LatLng? = null
     private lateinit var progressFragment: ProgressFragment
     private lateinit var mechanicFragment: MechanicFragment
-    private lateinit var selectDetailsFragment: SelectDetailsFragment
+    private var selectDetailsFragment: SelectDetailsFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +34,7 @@ class MapsActivity : AppCompatActivity(), LocationFragment.OnLocationSelectedLis
 
         progressFragment = ProgressFragment()
 
-        selectDetailsFragment = SelectDetailsFragment()
+//        selectDetailsFragment = SelectDetailsFragment()
 
         supportFragmentManager.beginTransaction()
             .add(R.id.fragment_container, locationFragment)
@@ -53,10 +55,19 @@ class MapsActivity : AppCompatActivity(), LocationFragment.OnLocationSelectedLis
             .commit()
     }
 
-    override fun onConfirm() {
+    override fun onConfirm(mechanicId: String, timeSlot: TemplateTimeSpan) {
         progressFragment.stepNumber = 3
+
+        val l = location
+        if (l == null) {
+            return 
+        }
+        
+        val point = Point(l.latitude, l.longitude)
+        val details = SelectDetailsFragment(point, mechanicId)
+        
         supportFragmentManager.beginTransaction()
-            .add(R.id.fragment_container, selectDetailsFragment)
+            .add(R.id.fragment_container, details)
             .addToBackStack("Details")
             .commit();
     }
