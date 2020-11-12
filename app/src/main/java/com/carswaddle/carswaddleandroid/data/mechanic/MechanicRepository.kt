@@ -114,6 +114,7 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
                     CoroutineScope(Dispatchers.IO).launch {
                         var mechanic = mechanicDao.getMechanic(mechanicId)
                         if (mechanic == null) {
+                            completion(null, null)
                             return@launch
                         }
                         
@@ -172,25 +173,6 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
                         }
 
                         completion(null, spanIds)
-
-//                        var mechanic = mechanicDao.getMechanic(mechanicId)
-//                        if (mechanic == null) {
-//                            return@launch
-//                        }
-//
-//                        val gson = Gson()
-//                        val json = gson.toJsonTree(result[mechanicId])
-//                        val stats = gson.fromJson<Stats>(json, Stats::class.java)
-//
-//                        Log.w("logging stuff", "map: $result")
-//
-//                        mechanic.averageRating = stats.averageRating
-//                        mechanic.numberOfRatings = stats.numberOfRatings
-//                        mechanic.autoServicesProvided = stats.autoServicesProvided
-//
-//                        mechanicDao.insertMechanic(mechanic)
-//                        completion(null, mechanicId)
-
                     }
                 }
             }

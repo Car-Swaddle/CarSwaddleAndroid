@@ -19,6 +19,8 @@ class VehicleRecyclerViewAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolde
             fun fromInt(value: Int) = ViewType.values().first { it.value == value }
         }
     }
+
+    var addVehicleClick: (() -> Unit) = {}
     
     var vehicles: List<Vehicle> = listOf()
     set(newValue) {
@@ -47,6 +49,12 @@ class VehicleRecyclerViewAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolde
         } else if (viewType == VIEW_TYPE_ADD_VEHICLE) {
             val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.add_vehicle_item, parent, false)
+            
+            view.setOnClickListener(object : View.OnClickListener {
+                override fun onClick(v: View?) {
+                    addVehicleClick()
+                }
+            })
             return AddVehicleViewHolder(view)
         } else {
             val view = LayoutInflater.from(parent.context)

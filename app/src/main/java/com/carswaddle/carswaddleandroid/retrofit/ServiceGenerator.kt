@@ -12,7 +12,7 @@ private val okHttpClient = OkHttpClient()
 private val productionUrl = "https://api.carswaddle.com"
 private val stagingUrl = "https://api.staging.carswaddle.com"
 
-private val useProduction: Boolean = true
+private val useProduction: Boolean = false
 
 fun serverUrl(): String {
     if (useProduction) {

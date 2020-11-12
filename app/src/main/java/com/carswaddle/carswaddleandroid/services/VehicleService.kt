@@ -6,6 +6,7 @@ import retrofit2.Call
 import retrofit2.http.*
 
 private const val vehicles = "/api/vehicles"
+private const val vehicle = "/api/vehicle"
 
 interface VehicleService {
     
@@ -14,10 +15,14 @@ interface VehicleService {
     fun getVehicles(@Query("limit") limit: Int, @Query("offset") offset: Int): Call<List<Vehicle>>
     
     @Headers(ContentType.headerPrefix + ContentType.applicationJSON)
-    @POST(vehicles)
-    fun createVehicle(@Field("name") name: String, 
-                      @Field("licensePlate") licensePlate: String,
-                      @Field("vin") vin: String,
-                      @Field("state") state: String): Call<Vehicle>
+    @POST(vehicle)
+    fun createVehicle(@Body vehicleCreate: VehicleCreate): Call<Vehicle>
     
 }
+
+data class VehicleCreate(
+    val name: String,
+    val licensePlate: String?,
+    val vin: String?,
+    val state: String
+)

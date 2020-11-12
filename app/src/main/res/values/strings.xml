@@ -149,4 +149,7 @@
     <string name="notes">Notes:</string>
     <string name="action_done">Done</string>
     <string name="add_vehicle">Add vehicle</string>
+    <string name="save_vehicle">Save vehicle</string>
+    <string name="vehicle_name">Vehicle name</string>
+    <string name="license_plate">License plate</string>
 </resources>

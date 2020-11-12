@@ -3,12 +3,12 @@ package com.carswaddle.carswaddleandroid.services.serviceModels
 data class Price (
     var identifier: String,
     val autoServiceId: String, 
-    var oilChangeCost: Double,
-    var distanceCost: Double,
-    var bookingFee: Double,
-    var processingFee: Double,
-    var subtotal: Double,
-    var taxes: Double,
-    var total: Double
+    var oilChangeCost: Int,
+    var distanceCost: Int,
+    var bookingFee: Int,
+    var processingFee: Int,
+    var subtotal: Int,
+    var taxes: Int,
+    var total: Int
 )
     

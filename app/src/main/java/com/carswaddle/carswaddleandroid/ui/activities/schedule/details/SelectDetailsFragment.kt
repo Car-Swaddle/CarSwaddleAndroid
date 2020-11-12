@@ -16,6 +16,7 @@ import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.data.vehicle.Vehicle
 import com.carswaddle.carswaddleandroid.services.serviceModels.OilType
 import com.carswaddle.carswaddleandroid.services.serviceModels.Point
+import com.carswaddle.carswaddleandroid.ui.activities.autoserviceDetails.AutoServiceDetailsFragment
 import com.carswaddle.carswaddleandroid.ui.common.CenteredLinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_autoservices_list.*
 import java.util.*
@@ -25,7 +26,7 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String) : Fragment
     private var vehicleItemWidth: Int = 0
 
     private lateinit var selectDetailsViewModel: SelectDetailsViewModel
-    
+
     private val vehicleAdapter: VehicleRecyclerViewAdapter = VehicleRecyclerViewAdapter()
 
     override fun onCreateView(
@@ -37,11 +38,17 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String) : Fragment
         val view = inflater.inflate(R.layout.fragment_select_details, container, false)
 
         selectDetailsViewModel = ViewModelProviders.of(this).get(SelectDetailsViewModel::class.java)
-        
-        selectDetailsViewModel.loadPrice(point.latitude(), point.longitude(), mechanicId, OilType.synthetic, null)
-        
+
+        selectDetailsViewModel.loadPrice(
+            point.latitude(),
+            point.longitude(),
+            mechanicId,
+            OilType.synthetic,
+            null
+        )
+
         val vehicleRecyclerView = view.findViewById<RecyclerView>(R.id.vehicle_container)
-        with (vehicleRecyclerView) {
+        with(vehicleRecyclerView) {
             this.adapter = vehicleAdapter
             this.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
             val snapHelper = PagerSnapHelper()
@@ -49,25 +56,39 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String) : Fragment
             this.onFlingListener = snapHelper
         }
 
-        selectDetailsViewModel.vehicles.observe(viewLifecycleOwner, Observer<List<Vehicle>> { vehicles ->
-            Log.w("vehicles", "vehicles listed")
-            activity?.runOnUiThread {
-                this.vehicleAdapter.vehicles = vehicles
-                vehicleRecyclerView.scrollToPosition(1) // 0 is padding, 1 is first item
+        vehicleAdapter.addVehicleClick = {
+            val manager = activity?.supportFragmentManager
+            if (manager != null) {
+                val details = AddVehicleFragment()
+
+                manager.beginTransaction()
+                    .add(R.id.fragment_container, details)
+                    .addToBackStack("Add vehicle")
+                    .commit()
             }
-        })
+        }
+
+        selectDetailsViewModel.vehicles.observe(
+            viewLifecycleOwner,
+            Observer<List<Vehicle>> { vehicles ->
+                Log.w("vehicles", "vehicles listed")
+                activity?.runOnUiThread {
+                    this.vehicleAdapter.vehicles = vehicles
+                    vehicleRecyclerView.scrollToPosition(1) // 0 is padding, 1 is first item
+                }
+            })
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.oil_type_container)
         val oilTypeSnapHelper = PagerSnapHelper()
         with(recyclerView) {
             val oilTypeAdapter =
-                    // TODO - make these enums
+                // TODO - make these enums
                 OilTypeRecyclerViewAdapter(
                     listOf(
                         "Conventional", "Blend", "Synthetic", "High Mileage"
                     ), requireActivity()
                 )
-            
+
             this.adapter = oilTypeAdapter
             this.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
             oilTypeSnapHelper.attachToRecyclerView(recyclerView)

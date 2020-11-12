@@ -30,18 +30,21 @@ class AutoServicesListFragment : Fragment() {
     private lateinit var scheduleButton: Button
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
-        autoServicesListViewModel = ViewModelProviders.of(this).get(AutoServicesListViewModel::class.java)
+        autoServicesListViewModel =
+            ViewModelProviders.of(this).get(AutoServicesListViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_autoservices_list, container, false)
 
         scheduleButton = root.findViewById(R.id.scheduleButton)
 
-        autoServicesListViewModel.autoServices.observe(viewLifecycleOwner, Observer<List<AutoServiceListElements>> { autoServices ->
-            viewAdapter.notifyDataSetChanged()
-        })
+        autoServicesListViewModel.autoServices.observe(
+            viewLifecycleOwner,
+            Observer<List<AutoServiceListElements>> { autoServices ->
+                viewAdapter.notifyDataSetChanged()
+            })
 
         viewManager = LinearLayoutManager(activity?.applicationContext)
 

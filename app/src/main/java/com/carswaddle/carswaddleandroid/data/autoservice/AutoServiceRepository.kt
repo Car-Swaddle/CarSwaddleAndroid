@@ -53,7 +53,7 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
             override fun onFailure(call: Call<PriceResponse>, t: Throwable) {
                 completion(t, null)
             }
-
+ 
             override fun onResponse(call: Call<PriceResponse>, response: Response<PriceResponse>) {
                 completion(null, response.body()?.prices)
             }
@@ -87,8 +87,7 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
                             insertNestedAutoService(autoService)
                             completion(null, autoService.id)
                         } catch (e: Exception) {
-                            print(e)
-                            completion(null, null)
+                            completion(e, null)
                         }
                     }
                 }
@@ -128,8 +127,7 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
                             insertNestedAutoService(autoService)
                             completion(null, autoService.id)
                         } catch (e: Exception) {
-                            print(e)
-                            completion(null, null)
+                            completion(e, null)
                         }
                     }
                 }

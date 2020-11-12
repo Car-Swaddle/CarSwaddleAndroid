@@ -8,6 +8,7 @@ import com.carswaddle.carswaddleandroid.retrofit.ServiceGenerator
 import com.carswaddle.carswaddleandroid.retrofit.ServiceNotAvailable
 import com.carswaddle.carswaddleandroid.retrofit.serviceGenerator
 import com.carswaddle.carswaddleandroid.services.AuthenticationService
+import com.carswaddle.carswaddleandroid.services.VehicleCreate
 import com.carswaddle.carswaddleandroid.services.VehicleService
 import com.carswaddle.carswaddleandroid.services.serviceModels.AuthResponse
 import com.carswaddle.carswaddleandroid.services.serviceModels.Vehicle as VehicleModel
@@ -69,13 +70,13 @@ class VehicleRepository(private val vehicleDao: VehicleDao) {
         })
     }
 
-    fun createVehicle(name: String, field: String, vin: String, state: String, context: Context, completion: (error: Throwable?, vehicleId: String?) -> Unit) {
+    fun createVehicle(name: String, licencePlate: String?, vin: String?, state: String, context: Context, completion: (error: Throwable?, vehicleId: String?) -> Unit) {
         val vehicleService = ServiceGenerator.authenticated(context)?.retrofit?.create(VehicleService::class.java)
         if (vehicleService == null) {
             completion(ServiceNotAvailable(), null)
             return
         }
-        val call = vehicleService.createVehicle(name, field, vin, state)
+        val call = vehicleService.createVehicle(VehicleCreate(name, licencePlate, vin, state))
         
         call.enqueue(object : Callback<VehicleModel> {
             override fun onFailure(call: Call<VehicleModel>?, t: Throwable?) {
