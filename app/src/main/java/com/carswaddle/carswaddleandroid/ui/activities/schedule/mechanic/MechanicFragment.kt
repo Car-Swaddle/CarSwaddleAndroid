@@ -9,10 +9,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.PagerSnapHelper
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.*
 import com.carswaddle.carswaddleandroid.Extensions.addDays
 import com.carswaddle.carswaddleandroid.Extensions.safeFirst
 import com.carswaddle.carswaddleandroid.Extensions.toJavaCalendar
@@ -65,7 +62,7 @@ class MechanicFragment(val point: Point) : Fragment() {
         with(recyclerView) {
             this.adapter = mechanicViewAdapter
             this.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-            val snapHelper = PagerSnapHelper()
+            val snapHelper = LinearSnapHelper()
             snapHelper.attachToRecyclerView(recyclerView)
             this.onFlingListener = snapHelper
         }

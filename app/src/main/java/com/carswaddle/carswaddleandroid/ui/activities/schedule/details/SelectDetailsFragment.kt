@@ -1,6 +1,7 @@
 package com.carswaddle.carswaddleandroid.ui.activities.schedule.details
 
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,16 +11,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.PagerSnapHelper
+import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.data.vehicle.Vehicle
 import com.carswaddle.carswaddleandroid.services.serviceModels.OilType
 import com.carswaddle.carswaddleandroid.services.serviceModels.Point
-import com.carswaddle.carswaddleandroid.ui.activities.autoserviceDetails.AutoServiceDetailsFragment
-import com.carswaddle.carswaddleandroid.ui.common.CenteredLinearLayoutManager
-import kotlinx.android.synthetic.main.fragment_autoservices_list.*
-import java.util.*
 
 class SelectDetailsFragment(val point: Point, val mechanicId: String) : Fragment() {
 
@@ -51,7 +48,7 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String) : Fragment
         with(vehicleRecyclerView) {
             this.adapter = vehicleAdapter
             this.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-            val snapHelper = PagerSnapHelper()
+            val snapHelper = LinearSnapHelper()
             snapHelper.attachToRecyclerView(this)
             this.onFlingListener = snapHelper
         }
@@ -79,7 +76,7 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String) : Fragment
             })
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.oil_type_container)
-        val oilTypeSnapHelper = PagerSnapHelper()
+        val oilTypeSnapHelper = LinearSnapHelper()
         with(recyclerView) {
             val oilTypeAdapter =
                 // TODO - make these enums
@@ -93,7 +90,7 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String) : Fragment
             this.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
             oilTypeSnapHelper.attachToRecyclerView(recyclerView)
             this.onFlingListener = oilTypeSnapHelper
-            smoothScrollToPosition(1)
+//            smoothScrollToPosition(1)
             recyclerView
                 .addOnScrollListener(object : RecyclerView.OnScrollListener() {
                     override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -110,6 +107,7 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String) : Fragment
                     }
                 })
         }
+        recyclerView.smoothScrollToPosition(2)
 
         return view
     }
