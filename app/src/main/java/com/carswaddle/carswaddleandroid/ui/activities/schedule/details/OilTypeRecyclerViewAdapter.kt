@@ -15,7 +15,7 @@ class OilTypeRecyclerViewAdapter(
     private val context: Context
 ) : RecyclerView.Adapter<OilTypeRecyclerViewAdapter.ViewHolder>() {
 
-    var selectedPosition: Int = 0
+    var selectedPosition: Int = 1
 
     var selectedIndex: Int
     get() {
