@@ -25,6 +25,9 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String) : Fragment
     private lateinit var selectDetailsViewModel: SelectDetailsViewModel
 
     private val vehicleAdapter: VehicleRecyclerViewAdapter = VehicleRecyclerViewAdapter()
+    
+    private var newVehicleId: String? = null
+    private var hasScrolledToFirstVehicleIndex: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,6 +60,11 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String) : Fragment
             val manager = activity?.supportFragmentManager
             if (manager != null) {
                 val details = AddVehicleFragment()
+                
+                details.didAddVehicle = {
+                    newVehicleId = it
+                    selectDetailsViewModel.loadVehicles()
+                }
 
                 manager.beginTransaction()
                     .add(R.id.fragment_container, details)
@@ -71,7 +79,17 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String) : Fragment
                 Log.w("vehicles", "vehicles listed")
                 activity?.runOnUiThread {
                     this.vehicleAdapter.vehicles = vehicles
-                    vehicleRecyclerView.scrollToPosition(1) // 0 is padding, 1 is first item
+                    val id = newVehicleId
+                    if (id != null) {
+                        val newVehicleIndex = vehicles.indexOfFirst { 
+                            it.id == id
+                        }
+                        vehicleRecyclerView.scrollToPosition(newVehicleIndex+1)
+                    } else if(hasScrolledToFirstVehicleIndex == false) {
+                        vehicleRecyclerView.scrollToPosition(1) // 0 is padding, 1 is first item
+                        hasScrolledToFirstVehicleIndex = true
+                    }
+                    
                 }
             })
 

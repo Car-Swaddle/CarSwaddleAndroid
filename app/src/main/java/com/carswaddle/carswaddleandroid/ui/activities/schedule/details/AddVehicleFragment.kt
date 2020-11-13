@@ -18,6 +18,8 @@ class AddVehicleFragment() : Fragment() {
     private lateinit var saveButton: Button
 
     private lateinit var addVehicleViewModel: AddVehicleViewModel
+    
+    var didAddVehicle: (vehicleId: String) -> Unit = { v -> }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -65,12 +67,15 @@ class AddVehicleFragment() : Fragment() {
                 return@setOnClickListener
             }
             addVehicleViewModel.createVehicle(name, licensePlate, state) {
-                if (it) {
-//                    getActivity().getFragmentManager().popBackStack()
-                    activity?.supportFragmentManager?.popBackStack()
-                } else {
-                    
+                activity?.runOnUiThread {
+                    if (it != null) {
+                        activity?.supportFragmentManager?.popBackStack()
+                        didAddVehicle(it)
+                    } else {
+                        // TODO: Show error 
+                    }
                 }
+                
             }
         }
         

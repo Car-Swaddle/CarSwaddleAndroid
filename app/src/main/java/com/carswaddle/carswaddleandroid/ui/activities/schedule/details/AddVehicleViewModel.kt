@@ -24,9 +24,9 @@ class AddVehicleViewModel(application: Application) : AndroidViewModel(applicati
         vehicleRepo = VehicleRepository(db.vehicleDao())
     }
     
-    fun createVehicle(name: String, licensePlate: String, state: String, completion: (success: Boolean) -> Unit) {
+    fun createVehicle(name: String, licensePlate: String, state: String, completion: (vehicleId: String?) -> Unit) {
         vehicleRepo.createVehicle(name, licensePlate, null, state, getApplication()) { error, vehicleId ->
-            completion(error == null && vehicleId != null)
+            completion(vehicleId)
         }
     }
 

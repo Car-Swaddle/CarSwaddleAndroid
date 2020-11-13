@@ -44,9 +44,9 @@ class SelectDetailsViewModel(application: Application) : AndroidViewModel(applic
         get() = _vehicles
 
     private val _vehicles = MutableLiveData<List<Vehicle>>()
-
-    private fun loadVehicles() {
-        vehicleRepo.getVehicles(10, 0, getApplication()) { error, vehicleIds ->
+    
+    fun loadVehicles() {
+        vehicleRepo.getVehicles(30, 0, getApplication()) { error, vehicleIds ->
             viewModelScope.launch {
                 val vs = vehicleRepo.getVehicles(vehicleIds ?: listOf())
                 _vehicles.postValue(vs)
@@ -66,4 +66,3 @@ class SelectDetailsViewModel(application: Application) : AndroidViewModel(applic
     }
 
 }
-
