@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_margin="8dp"
+        android:minWidth="32dp"
         android:text="Conventional"
         android:background="@drawable/large_unselected_border"
         android:elevation="4dp"

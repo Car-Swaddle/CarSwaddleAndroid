@@ -3,7 +3,6 @@ package com.carswaddle.carswaddleandroid.ui.activities.schedule.details
 import android.app.ActionBar
 import android.opengl.Visibility
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -36,6 +35,7 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String) : Fragment
     private var vehicleItemWidth: Int = 0
 
     private lateinit var selectDetailsViewModel: SelectDetailsViewModel
+    private lateinit var oilTypeRecyclerView: RecyclerView
 
     private val vehicleAdapter: VehicleRecyclerViewAdapter = VehicleRecyclerViewAdapter()
     
@@ -139,18 +139,17 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String) : Fragment
                         val newVehicleIndex = vehicles.indexOfFirst { 
                             it.id == id
                         }
-                        vehicleRecyclerView.scrollToPosition(newVehicleIndex+1)
+                        vehicleRecyclerView.smoothScrollToPosition(newVehicleIndex+1)
                     } else if(hasScrolledToFirstVehicleIndex == false) {
-                        vehicleRecyclerView.scrollToPosition(1) // 0 is padding, 1 is first item
+                        vehicleRecyclerView.smoothScrollToPosition(1) // 0 is padding, 1 is first item
                         hasScrolledToFirstVehicleIndex = true
                     }
-                    
                 }
             })
 
-        val recyclerView = view.findViewById<RecyclerView>(R.id.oil_type_container)
+        oilTypeRecyclerView = view.findViewById<RecyclerView>(R.id.oil_type_container)
         val oilTypeSnapHelper = LinearSnapHelper()
-        with(recyclerView) {
+        with(oilTypeRecyclerView) {
             val oilTypeAdapter =
                 // TODO - make these enums
                 OilTypeRecyclerViewAdapter(
@@ -161,9 +160,10 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String) : Fragment
 
             this.adapter = oilTypeAdapter
             this.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-            oilTypeSnapHelper.attachToRecyclerView(recyclerView)
+            oilTypeSnapHelper.attachToRecyclerView(this)
             this.onFlingListener = oilTypeSnapHelper
-            recyclerView
+
+            oilTypeRecyclerView
                 .addOnScrollListener(object : RecyclerView.OnScrollListener() {
                     override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                         super.onScrollStateChanged(recyclerView, newState)
@@ -173,13 +173,17 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String) : Fragment
                                 return
                             }
                             val snapPosition = layoutManager!!.getPosition(snapView)
+                            val oldPosition = oilTypeAdapter.selectedPosition
                             oilTypeAdapter.selectedPosition = snapPosition
-                            oilTypeAdapter.notifyDataSetChanged()
+                            oilTypeAdapter.notifyItemChanged(snapPosition)
+                            oilTypeAdapter.notifyItemChanged(oldPosition)
                         }
                     }
                 })
         }
-        recyclerView.smoothScrollToPosition(2)
+        oilTypeRecyclerView.smoothScrollToPosition(2)
+//        runAfterDraw(oilTypeRecyclerView, Runnable {
+//        })
 
         return view
     }
@@ -194,16 +198,14 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String) : Fragment
         )
     }
 
-
-    private fun runJustBeforeBeingDrawn(view: View, runnable: Runnable) {
-        val preDrawListener: ViewTreeObserver.OnPreDrawListener =
-            object : ViewTreeObserver.OnPreDrawListener {
-                override fun onPreDraw(): Boolean {
-                    view.viewTreeObserver.removeOnPreDrawListener(this)
+    private fun runAfterDraw(view: View, runnable: Runnable) {
+        val drawListener: ViewTreeObserver.OnGlobalLayoutListener =
+            object : ViewTreeObserver.OnGlobalLayoutListener {
+                override fun onGlobalLayout() {
+                    view.viewTreeObserver.removeOnGlobalLayoutListener(this)
                     runnable.run()
-                    return true
                 }
             }
-        view.viewTreeObserver.addOnPreDrawListener(preDrawListener)
+        view.viewTreeObserver.addOnGlobalLayoutListener(drawListener)
     }
 }
