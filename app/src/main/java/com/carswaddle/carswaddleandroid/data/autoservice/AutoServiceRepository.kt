@@ -2,6 +2,7 @@ package com.carswaddle.carswaddleandroid.data.autoservice
 
 import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import com.carswaddle.carswaddleandroid.data.location.AutoServiceLocation
 import com.carswaddle.carswaddleandroid.data.mechanic.Mechanic
 import com.carswaddle.carswaddleandroid.data.oilChange.OilChange
@@ -10,18 +11,20 @@ import com.carswaddle.carswaddleandroid.data.user.User
 import com.carswaddle.carswaddleandroid.data.vehicle.Vehicle
 import com.carswaddle.carswaddleandroid.retrofit.ServiceGenerator
 import com.carswaddle.carswaddleandroid.retrofit.ServiceNotAvailable
-import com.carswaddle.carswaddleandroid.services.AutoServiceService
-import com.carswaddle.carswaddleandroid.services.LocationJSON
-import com.carswaddle.carswaddleandroid.services.PriceRequest
-import com.carswaddle.carswaddleandroid.services.PriceService
+import com.carswaddle.carswaddleandroid.services.*
 import com.carswaddle.carswaddleandroid.services.serviceModels.*
 import com.carswaddle.carswaddleandroid.services.serviceModels.AutoService
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
+import okhttp3.ResponseBody
+import org.json.JSONArray
+import org.json.JSONException
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.lang.Exception
 import java.util.*
 
 
@@ -39,7 +42,14 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
         return autoServiceDao.getAutoService(autoServiceId)
     }
     
-    fun getPrice(location: LocationJSON, mechanicId: String, oiltype: OilType, coupon: String?, context: Context, completion: (error: Throwable?, price: Price?) -> Unit) {
+    fun getPrice(
+        location: LocationJSON,
+        mechanicId: String,
+        oiltype: OilType,
+        coupon: String?,
+        context: Context,
+        completion: (error: Throwable?, price: Price?) -> Unit
+    ) {
         val priceService = ServiceGenerator.authenticated(context)?.retrofit?.create(PriceService::class.java)
         if (priceService == null) {
             completion(ServiceNotAvailable(), null)
@@ -53,16 +63,41 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
             override fun onFailure(call: Call<PriceResponse>, t: Throwable) {
                 completion(t, null)
             }
- 
+
             override fun onResponse(call: Call<PriceResponse>, response: Response<PriceResponse>) {
-                completion(null, response.body()?.prices)
+                val error = response.errorBody()
+                if (error != null) {
+                    val errorString = error.string()
+                    try {
+                        val errorJSON = JSONObject(errorString)
+                        val errorCode = errorJSON["code"] as String?
+                        if (errorCode != null) {
+                            val codeType = CouponErrorType.valueOf(errorCode)
+                            val couponError = CouponError(codeType)
+                            completion(couponError, null)
+                        } else {
+                            completion(CouponError(CouponErrorType.OTHER), null)
+                        }
+                    } catch (e: JSONException) {
+                        completion(e, null)
+                    }
+                } else {
+                    completion(null, response.body()?.prices)
+                }
             }
-            
+
         })
     }
 
-    fun updateNotes(autoServiceId: String, notes: String, context: Context, completion: (error: Throwable?, autoServiceId: String?) -> Unit) {
-        val autoServiceService = ServiceGenerator.authenticated(context)?.retrofit?.create(AutoServiceService::class.java)
+    fun updateNotes(
+        autoServiceId: String,
+        notes: String,
+        context: Context,
+        completion: (error: Throwable?, autoServiceId: String?) -> Unit
+    ) {
+        val autoServiceService = ServiceGenerator.authenticated(context)?.retrofit?.create(
+            AutoServiceService::class.java
+        )
         if (autoServiceService == null) {
             completion(ServiceNotAvailable(), null)
             return
@@ -71,7 +106,8 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
         val updateAutoService = UpdateAutoService(null, notes, null, null, null, null, null)
 
         val call = autoServiceService.updateAutoService(autoServiceId, updateAutoService)
-        call.enqueue(object : Callback<com.carswaddle.carswaddleandroid.services.serviceModels.AutoService> {
+        call.enqueue(object :
+            Callback<com.carswaddle.carswaddleandroid.services.serviceModels.AutoService> {
             override fun onFailure(call: Call<AutoService>, t: Throwable) {
                 completion(t, null)
             }
@@ -95,8 +131,15 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
         })
     }
 
-    fun getAutoService(autoServiceId: String, context: Context, cacheCompletion: (autoServiceId: String) -> Unit, completion: (error: Throwable?, autoServiceId: String?) -> Unit) {
-        val autoServiceService = ServiceGenerator.authenticated(context)?.retrofit?.create(AutoServiceService::class.java)
+    fun getAutoService(
+        autoServiceId: String,
+        context: Context,
+        cacheCompletion: (autoServiceId: String) -> Unit,
+        completion: (error: Throwable?, autoServiceId: String?) -> Unit
+    ) {
+        val autoServiceService = ServiceGenerator.authenticated(context)?.retrofit?.create(
+            AutoServiceService::class.java
+        )
         if (autoServiceService == null) {
             // TODO: call with error
             completion(ServiceNotAvailable(), null)
@@ -111,7 +154,8 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
         }
 
         val call = autoServiceService.autoServiceDetails(autoServiceId)
-        call.enqueue(object : Callback<com.carswaddle.carswaddleandroid.services.serviceModels.AutoService> {
+        call.enqueue(object :
+            Callback<com.carswaddle.carswaddleandroid.services.serviceModels.AutoService> {
             override fun onFailure(call: Call<AutoService>, t: Throwable) {
                 completion(t, null)
             }
@@ -141,8 +185,17 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
     case inProgress
     case completed
      */
-    fun getAutoServices(limit: Int, offset: Int, context: Context, sortStatus: List<String>, filterStatus: List<String>, completion: (error: Throwable?, autoServiceIds: List<String>?) -> Unit) {
-        val autoServiceService = ServiceGenerator.authenticated(context)?.retrofit?.create(AutoServiceService::class.java)
+    fun getAutoServices(
+        limit: Int,
+        offset: Int,
+        context: Context,
+        sortStatus: List<String>,
+        filterStatus: List<String>,
+        completion: (error: Throwable?, autoServiceIds: List<String>?) -> Unit
+    ) {
+        val autoServiceService = ServiceGenerator.authenticated(context)?.retrofit?.create(
+            AutoServiceService::class.java
+        )
         if (autoServiceService == null) {
             // TODO: call with error
             completion(ServiceNotAvailable(), null)
@@ -150,13 +203,17 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
         }
 
         val call = autoServiceService.autoServices(limit, offset, sortStatus, filterStatus)
-        call.enqueue(object : Callback<List<com.carswaddle.carswaddleandroid.services.serviceModels.AutoService>> {
+        call.enqueue(object :
+            Callback<List<com.carswaddle.carswaddleandroid.services.serviceModels.AutoService>> {
             override fun onFailure(call: Call<List<AutoService>>, t: Throwable) {
                 Log.d("retrofit ", "call failed")
                 completion(t, null)
             }
 
-            override fun onResponse(call: Call<List<com.carswaddle.carswaddleandroid.services.serviceModels.AutoService>>, response: Response<List<AutoService>>) {
+            override fun onResponse(
+                call: Call<List<com.carswaddle.carswaddleandroid.services.serviceModels.AutoService>>,
+                response: Response<List<AutoService>>
+            ) {
                 Log.d("retrofit ", "call succeeded")
                 val result = response.body()
                 if (result == null) {
@@ -171,7 +228,7 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
                                 ids.add(autoService.id)
                             }
                             completion(null, ids.toList())
-                        } catch(e: Exception) {
+                        } catch (e: Exception) {
                             print(e)
                             Log.d("retrofit ", "error persisting auto service" + e)
                         }
@@ -181,22 +238,38 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
         })
     }
 
-    fun getAutoServicesDate(mechanicId: String, startDate: Calendar, endDate: Calendar, filterStatus: List<AutoServiceStatus>, context: Context, completion: (exception: Throwable?, autoServiceIds: List<String>?) -> Unit): Call<List<Map<String, Any>>>? {
-        val autoServiceService = ServiceGenerator.authenticated(context)?.retrofit?.create(AutoServiceService::class.java)
+    fun getAutoServicesDate(
+        mechanicId: String,
+        startDate: Calendar,
+        endDate: Calendar,
+        filterStatus: List<AutoServiceStatus>,
+        context: Context,
+        completion: (exception: Throwable?, autoServiceIds: List<String>?) -> Unit
+    ): Call<List<Map<String, Any>>>? {
+        val autoServiceService = ServiceGenerator.authenticated(context)?.retrofit?.create(
+            AutoServiceService::class.java
+        )
         if (autoServiceService == null) {
             // TODO: call with error
             completion(ServiceNotAvailable(), null)
             return null
         }
         
-        val call = autoServiceService.autoServiceDate(mechanicId, startDate, endDate, filterStatus.map { it.name })
+        val call = autoServiceService.autoServiceDate(
+            mechanicId,
+            startDate,
+            endDate,
+            filterStatus.map { it.name })
         call.enqueue(object : Callback<List<Map<String, Any>>> {
             override fun onFailure(call: Call<List<Map<String, Any>>>, t: Throwable) {
                 Log.d("retrofit ", "call failed")
                 completion(t, null)
             }
 
-            override fun onResponse(call: Call<List<Map<String, Any>>>, response: Response<List<Map<String, Any>>>) {
+            override fun onResponse(
+                call: Call<List<Map<String, Any>>>,
+                response: Response<List<Map<String, Any>>>
+            ) {
                 Log.d("retrofit ", "call succeeded")
                 val result = response.body()
                 if (result == null) {
@@ -211,7 +284,7 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
 //                                ids.add(autoService.id)
                             }
                             completion(null, ids.toList())
-                        } catch(e: Exception) {
+                        } catch (e: Exception) {
                             print(e)
                             Log.d("retrofit ", "error persisting auto service" + e)
                         }
@@ -246,8 +319,3 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
     }
 
 }
-
-
-
-
-

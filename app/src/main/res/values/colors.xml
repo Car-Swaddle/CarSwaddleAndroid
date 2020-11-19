@@ -9,4 +9,6 @@
     <color name="background2">#CCCCCC</color>
     <color name="primaryContrast">#FFFFFF</color>
     <color name="backgroundContrast">#000</color>
+    <color name="error">#FC2302</color>
+    <color name="success">#009F02</color>
 </resources>

@@ -5,6 +5,7 @@ import com.carswaddle.carswaddleandroid.services.serviceModels.Price
 import com.carswaddle.carswaddleandroid.services.serviceModels.PriceResponse
 import retrofit2.Call
 import retrofit2.http.*
+import java.lang.Error
 
 private const val priceEndpoint = "/api/price"
 
@@ -27,3 +28,13 @@ data class LocationJSON (
     val longitude: Double,
     val latitude: Double
 )
+
+enum class CouponErrorType {
+    INCORRECT_CODE,
+    EXPIRED,
+    INCORRECT_MECHANIC,
+    DEPLETED_REDEMPTIONS,
+    OTHER
+}
+
+class CouponError(val couponErrorType: CouponErrorType): Throwable()

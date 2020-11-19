@@ -1,8 +1,10 @@
 package com.carswaddle.carswaddleandroid.ui.activities.schedule.details
 
 import android.app.Application
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.*
+import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.data.AppDatabase
 import com.carswaddle.carswaddleandroid.data.autoservice.AutoServiceRepository
 import com.carswaddle.carswaddleandroid.data.location.AutoServiceLocationRepository
@@ -13,6 +15,8 @@ import com.carswaddle.carswaddleandroid.data.serviceEntity.ServiceEntityReposito
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
 import com.carswaddle.carswaddleandroid.data.vehicle.Vehicle
 import com.carswaddle.carswaddleandroid.data.vehicle.VehicleRepository
+import com.carswaddle.carswaddleandroid.services.CouponError
+import com.carswaddle.carswaddleandroid.services.CouponErrorType
 import com.carswaddle.carswaddleandroid.services.LocationJSON
 import com.carswaddle.carswaddleandroid.services.serviceModels.OilType
 import com.carswaddle.carswaddleandroid.services.serviceModels.Price
@@ -36,13 +40,18 @@ class SelectDetailsViewModel(application: Application) : AndroidViewModel(applic
     }
     
     val price: LiveData<Price>
-    get() = _price
+        get() = _price
     
     private val _price = MutableLiveData<Price>()
 
     val vehicles: LiveData<List<Vehicle>>
         get() = _vehicles
+    
+    val couponError: LiveData<CouponErrorType?>
+        get() = _couponError
 
+    private val _couponError = MutableLiveData<CouponErrorType?>()
+    
     private val _vehicles = MutableLiveData<List<Vehicle>>()
     
     fun loadVehicles() {
@@ -62,7 +71,24 @@ class SelectDetailsViewModel(application: Application) : AndroidViewModel(applic
             if (p != null) {
                 _price.postValue(p)
             }
+            if (error != null && error is CouponError) {
+                _couponError.postValue(error.couponErrorType)
+            } else {
+                _couponError.postValue(null)
+            }
         }
     }
 
 }
+
+fun CouponErrorType.localizedString(context: Context): String {
+    return when(this) {
+        CouponErrorType.DEPLETED_REDEMPTIONS -> context.getString(R.string.depleted_redemptions)
+        CouponErrorType.EXPIRED -> context.getString(R.string.expired_code)
+        CouponErrorType.INCORRECT_CODE -> context.getString(R.string.incorrect_code)
+        CouponErrorType.INCORRECT_MECHANIC -> context.getString(R.string.incorrect_mechanic)
+        CouponErrorType.OTHER -> context.getString(R.string.other_coupon_error)
+    }
+}
+
+

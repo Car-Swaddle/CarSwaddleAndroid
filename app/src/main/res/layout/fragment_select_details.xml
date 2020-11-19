@@ -60,27 +60,46 @@
                 android:text="Redeem Coupon"/>
 
             <LinearLayout
+                android:id="@+id/codeLinearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:layout_marginHorizontal="16dp">
 
-                <androidx.appcompat.widget.AppCompatEditText
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textSize="16sp"
-                    android:hint="Coupon Code"/>
+                    android:orientation="vertical">
 
-                <androidx.appcompat.widget.AppCompatTextView
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/couponEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Coupon Code"
+                        android:textCursorDrawable="@drawable/cursor_color"
+                        app:backgroundTint="@color/colorPrimary"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/couponStatusTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:text="Successful Coupon"
+                        android:visibility="invisible" />
+
+                </LinearLayout>
+                
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/redeemButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:textSize="16sp"
+                    android:layout_gravity="right"
+                    android:layout_marginStart="8dp"
                     android:clickable="true"
                     android:text="Redeem"
-                    android:layout_marginStart="8dp"
-                    android:layout_gravity="center"
-                    android:textColor="#387DFF"/>
+                    android:textColor="#387DFF"
+                    android:textSize="16sp" />
 
             </LinearLayout>
 

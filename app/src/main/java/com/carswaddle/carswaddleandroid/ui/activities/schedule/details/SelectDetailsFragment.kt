@@ -1,5 +1,7 @@
 package com.carswaddle.carswaddleandroid.ui.activities.schedule.details
 
+import android.app.ActionBar
+import android.opengl.Visibility
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -7,16 +9,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import android.widget.Button
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.carswaddle.carswaddleandroid.Extensions.onTextChanged
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.data.vehicle.Vehicle
+import com.carswaddle.carswaddleandroid.services.ContentType
+import com.carswaddle.carswaddleandroid.services.CouponErrorType
 import com.carswaddle.carswaddleandroid.services.serviceModels.OilType
 import com.carswaddle.carswaddleandroid.services.serviceModels.Point
+import com.carswaddle.carswaddleandroid.services.serviceModels.Price
 
 class SelectDetailsFragment(val point: Point, val mechanicId: String) : Fragment() {
 
@@ -28,7 +41,17 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String) : Fragment
     
     private var newVehicleId: String? = null
     private var hasScrolledToFirstVehicleIndex: Boolean = false
+    
+    private var coupon: String? = null
+    
+    private var price: Price? = null
+    
+    private lateinit var couponEditText: EditText
 
+    private lateinit var redeemButton: Button
+
+    private lateinit var couponStatusTextView: TextView
+    
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -39,14 +62,46 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String) : Fragment
 
         selectDetailsViewModel = ViewModelProviders.of(this).get(SelectDetailsViewModel::class.java)
 
-        selectDetailsViewModel.loadPrice(
-            point.latitude(),
-            point.longitude(),
-            mechanicId,
-            OilType.synthetic,
-            null
+        couponEditText = view.findViewById(R.id.couponEditText)
+        couponStatusTextView = view.findViewById(R.id.couponStatusTextView)
+        
+        selectDetailsViewModel.couponError.observe(
+            viewLifecycleOwner,
+            Observer<CouponErrorType?> { errorType ->
+                if (errorType != null) {
+                    couponStatusTextView.visibility = View.VISIBLE
+                    couponStatusTextView.text = context?.let { errorType.localizedString(it) }
+                    val c = context
+                    if (c != null) {
+                        couponStatusTextView.setTextColor(ContextCompat.getColor(c, R.color.error))
+                    }
+                    couponStatusTextView.setLayoutParams(LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT))
+                } else if (couponEditText.text.isEmpty() == false && errorType == null) {
+                    couponStatusTextView.visibility = View.VISIBLE
+                    couponStatusTextView.text = getString(R.string.coupon_code_success)
+                    val c = context
+                    if (c != null) {
+                        couponStatusTextView.setTextColor(ContextCompat.getColor(c, R.color.success))
+                    }
+                    couponStatusTextView.setLayoutParams(LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT))
+                } else {
+                    couponStatusTextView.visibility = View.INVISIBLE
+                    couponStatusTextView.setLayoutParams(LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,0))
+                }
+            }
         )
-
+        
+        couponEditText.addTextChangedListener {
+            coupon = it.toString()
+        }
+        
+        redeemButton = view.findViewById(R.id.redeemButton)
+        redeemButton.setOnClickListener { 
+            updatePrice()
+        }
+        
         val vehicleRecyclerView = view.findViewById<RecyclerView>(R.id.vehicle_container)
         with(vehicleRecyclerView) {
             this.adapter = vehicleAdapter
@@ -108,7 +163,6 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String) : Fragment
             this.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
             oilTypeSnapHelper.attachToRecyclerView(recyclerView)
             this.onFlingListener = oilTypeSnapHelper
-//            smoothScrollToPosition(1)
             recyclerView
                 .addOnScrollListener(object : RecyclerView.OnScrollListener() {
                     override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -128,6 +182,16 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String) : Fragment
         recyclerView.smoothScrollToPosition(2)
 
         return view
+    }
+    
+    private fun updatePrice() {
+        selectDetailsViewModel.loadPrice(
+            point.latitude(),
+            point.longitude(),
+            mechanicId,
+            OilType.synthetic,
+            coupon
+        )
     }
 
 
