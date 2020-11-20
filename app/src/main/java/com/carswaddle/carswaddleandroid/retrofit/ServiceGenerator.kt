@@ -11,14 +11,21 @@ private val okHttpClient = OkHttpClient()
 
 private val productionUrl = "https://api.carswaddle.com"
 private val stagingUrl = "https://api.staging.carswaddle.com"
+private val localUrl = "Kyles-MacBook-Pro.local"
 
-private val useProduction: Boolean = false
+val server: Server = Server.staging
+
+enum class Server() {
+    staging,
+    production,
+    local
+}
 
 fun serverUrl(): String {
-    if (useProduction) {
-        return productionUrl
-    } else {
-        return stagingUrl
+    return when(server) {
+        Server.staging -> stagingUrl
+        Server.production -> productionUrl
+        Server.local -> localUrl
     }
 }
 

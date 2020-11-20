@@ -15,12 +15,14 @@ import com.carswaddle.carswaddleandroid.Extensions.safeFirst
 import com.carswaddle.carswaddleandroid.Extensions.toJavaCalendar
 import com.carswaddle.carswaddleandroid.Extensions.today
 import com.carswaddle.carswaddleandroid.R
+import com.carswaddle.carswaddleandroid.stripe.StripeKeyProvider
 import com.carswaddle.carswaddleandroid.data.mechanic.MechanicListElements
 import com.carswaddle.carswaddleandroid.data.mechanic.TemplateTimeSpan
 import com.carswaddle.carswaddleandroid.services.serviceModels.Point
 import com.google.android.material.button.MaterialButton
 import com.haibin.calendarview.Calendar
 import com.haibin.calendarview.CalendarView
+import com.stripe.android.CustomerSession
 import java.text.DateFormatSymbols
 import java.util.*
 import java.util.Calendar.*
@@ -133,13 +135,23 @@ class MechanicFragment(val point: Point) : Fragment() {
                         }
                     }
                 }
-                
+
                 if (selectedMechanicId == null) {
                     selectedMechanicId = firstMechanicId
                 }
             })
 
+        setEphemeralKey()
+
         return view
+    }
+
+    private fun setEphemeralKey() {
+        val c = context
+        if (c == null) {
+            return
+        }
+        CustomerSession.initCustomerSession(c, StripeKeyProvider(c))
     }
 
     private fun updateTimeSlots(calendar: java.util.Calendar) {
@@ -152,7 +164,7 @@ class MechanicFragment(val point: Point) : Fragment() {
         timeSlotViewAdapter.timeSlots = slots
 //        timeSlotViewAdapter = TimePickerRecyclerViewAdapter(slots)
 //        if (slots.size > 0) {
-            selectedTimeSlot = slots.safeFirst() // TODO - Fix this!
+        selectedTimeSlot = slots.safeFirst() // TODO - Fix this!
 //        }
         Log.w("slots", "slots: $slots")
     }
