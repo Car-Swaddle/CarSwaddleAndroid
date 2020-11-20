@@ -21,7 +21,10 @@ class PriceFragment : Fragment() {
     var price: Price? = null
         set(value) {
             field = value
-            row1.value = "" + price?.total
+            if (value == null) {
+                return
+            }
+            updatePrice(value)
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,6 +51,13 @@ class PriceFragment : Fragment() {
         row3.visibility = GONE // hide discount by default
         row4 = view.findViewById(R.id.row4)
         row4.label = "Total"
+    }
+
+    private fun updatePrice(price: Price) {
+        row1.value = String.format("%.2f", price.oilChangeTotal / 100.0)
+        row2.value = String.format("%.2f", price.salesTaxTotal / 100.0)
+        row3.value = String.format("%.2f", price.discountTotal / 100.0)
+        row4.value = String.format("$%.2f", price.total / 100.0)
     }
 
     companion object {

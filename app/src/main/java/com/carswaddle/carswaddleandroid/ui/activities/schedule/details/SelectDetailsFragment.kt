@@ -28,10 +28,9 @@ import com.stripe.android.PaymentSessionConfig
 import com.stripe.android.PaymentSessionData
 import com.stripe.android.model.PaymentMethod
 
-
 class SelectDetailsFragment(val point: Point, val mechanicId: String) : Fragment() {
 
-    private var vehicleItemWidth: Int = 0
+    var listener: OnPriceUpdatedListener? = null
 
     private lateinit var selectDetailsViewModel: SelectDetailsViewModel
     private lateinit var oilTypeRecyclerView: RecyclerView
@@ -42,8 +41,6 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String) : Fragment
     private var hasScrolledToFirstVehicleIndex: Boolean = false
 
     private var coupon: String? = null
-
-    private var price: Price? = null
 
     private lateinit var couponEditText: EditText
 
@@ -128,6 +125,19 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String) : Fragment
             }
         )
 
+        selectDetailsViewModel.price.observe(
+            viewLifecycleOwner,
+            Observer { errorType ->
+                val p = selectDetailsViewModel.price.value
+                if (errorType != null || p == null) {
+                    // TODO - error handling
+                    return@Observer
+                }
+                listener?.onPriceUpdated(p)
+            }
+
+        )
+
         couponEditText.addTextChangedListener {
             coupon = it.toString()
         }
@@ -204,7 +214,7 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String) : Fragment
                         super.onScrollStateChanged(recyclerView, newState)
                         if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                             val snapView = oilTypeSnapHelper.findSnapView(layoutManager)
-                            if (snapView == null) {
+                            if (snapView == null || layoutManager == null) {
                                 return
                             }
                             val snapPosition = layoutManager!!.getPosition(snapView)
@@ -303,14 +313,8 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String) : Fragment
         )
     }
 
-    private fun runAfterDraw(view: View, runnable: Runnable) {
-        val drawListener: ViewTreeObserver.OnGlobalLayoutListener =
-            object : ViewTreeObserver.OnGlobalLayoutListener {
-                override fun onGlobalLayout() {
-                    view.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                    runnable.run()
-                }
-            }
-        view.viewTreeObserver.addOnGlobalLayoutListener(drawListener)
+    interface OnPriceUpdatedListener {
+        fun onPriceUpdated(price: Price)
     }
+
 }

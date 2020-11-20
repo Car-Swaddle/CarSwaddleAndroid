@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.data.mechanic.TemplateTimeSpan
 import com.carswaddle.carswaddleandroid.services.serviceModels.Point
+import com.carswaddle.carswaddleandroid.services.serviceModels.Price
 //import com.carswaddle.carswaddleandroid.services.serviceModels.TemplateTimeSpan as TimeSlot
 import com.carswaddle.carswaddleandroid.util.PermissionUtils
 import com.google.android.gms.common.api.Status
@@ -16,7 +17,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.Places
 
 
-class MapsActivity : AppCompatActivity(), LocationFragment.OnLocationSelectedListener, MechanicFragment.OnConfirmListener {
+class MapsActivity : AppCompatActivity(), LocationFragment.OnLocationSelectedListener, MechanicFragment.OnConfirmListener,
+    SelectDetailsFragment.OnPriceUpdatedListener {
 
     private var location: LatLng? = null
     private lateinit var progressFragment: ProgressFragment
@@ -72,12 +74,17 @@ class MapsActivity : AppCompatActivity(), LocationFragment.OnLocationSelectedLis
         
         val point = Point(l.latitude, l.longitude)
         val details = SelectDetailsFragment(point, mechanicId)
+        details.listener = this
         
         supportFragmentManager.beginTransaction()
             .add(R.id.fragment_container, details)
             .replace(R.id.bottom_fragment_container, priceFragment)
             .addToBackStack("Details")
             .commit();
+    }
+
+    override fun onPriceUpdated(price: Price) {
+        priceFragment.price = price
     }
 
 

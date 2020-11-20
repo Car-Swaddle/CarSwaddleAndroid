@@ -105,6 +105,7 @@
                         android:layout_height="wrap_content"
                         android:hint="Coupon Code"
                         android:textCursorDrawable="@drawable/cursor_color"
+                        android:singleLine="true"
                         app:backgroundTint="@color/colorPrimary"
                         android:textSize="16sp" />
 
