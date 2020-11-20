@@ -15,11 +15,8 @@
             android:text="Oil change"
             android:textAlignment="viewEnd"
             android:textColor="#aaa"
-            android:textSize="16sp" />
-
-<!--        <Space-->
-<!--            android:layout_width="8dp"-->
-<!--            android:layout_height="wrap_content"/>-->
+            android:textSize="14sp"
+            android:paddingEnd="8dp"/>
 
         <TextView
             android:id="@+id/priceValue"
@@ -27,8 +24,9 @@
             android:layout_height="match_parent"
             android:text="0.00"
             android:textAlignment="viewStart"
-            android:textColor="#ccc"
-            android:textSize="16sp" />
+            android:textStyle="bold"
+            android:textColor="#000"
+            android:textSize="14sp" />
 
     </LinearLayout>
 
