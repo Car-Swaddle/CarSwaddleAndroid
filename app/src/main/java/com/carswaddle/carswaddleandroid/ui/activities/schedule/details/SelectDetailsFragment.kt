@@ -1,34 +1,33 @@
 package com.carswaddle.carswaddleandroid.ui.activities.schedule.details
 
-import android.app.ActionBar
-import android.opengl.Visibility
+import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
-import android.widget.Button
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.carswaddle.carswaddleandroid.Extensions.onTextChanged
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.data.vehicle.Vehicle
-import com.carswaddle.carswaddleandroid.services.ContentType
 import com.carswaddle.carswaddleandroid.services.CouponErrorType
 import com.carswaddle.carswaddleandroid.services.serviceModels.OilType
 import com.carswaddle.carswaddleandroid.services.serviceModels.Point
 import com.carswaddle.carswaddleandroid.services.serviceModels.Price
+import com.stripe.android.PaymentSession
+import com.stripe.android.PaymentSessionConfig
+import com.stripe.android.PaymentSessionData
+import com.stripe.android.model.PaymentMethod
+
 
 class SelectDetailsFragment(val point: Point, val mechanicId: String) : Fragment() {
 
@@ -38,20 +37,25 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String) : Fragment
     private lateinit var oilTypeRecyclerView: RecyclerView
 
     private val vehicleAdapter: VehicleRecyclerViewAdapter = VehicleRecyclerViewAdapter()
-    
+
     private var newVehicleId: String? = null
     private var hasScrolledToFirstVehicleIndex: Boolean = false
-    
+
     private var coupon: String? = null
-    
+
     private var price: Price? = null
-    
+
     private lateinit var couponEditText: EditText
 
     private lateinit var redeemButton: Button
 
     private lateinit var couponStatusTextView: TextView
-    
+
+    private lateinit var paymentMethodImageView: ImageView
+    private lateinit var paymentMethodTextView: TextView
+    private lateinit var paymentLayout: LinearLayout
+    private lateinit var paymentSession: PaymentSession
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -64,7 +68,20 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String) : Fragment
 
         couponEditText = view.findViewById(R.id.couponEditText)
         couponStatusTextView = view.findViewById(R.id.couponStatusTextView)
-        
+        paymentMethodImageView = view.findViewById(R.id.paymentMethodImageView)
+        paymentMethodTextView = view.findViewById(R.id.paymentMethodTextView)
+        paymentMethodTextView = view.findViewById(R.id.paymentMethodTextView)
+        paymentLayout = view.findViewById(R.id.paymentLayout)
+
+        paymentSession = PaymentSession(
+            this,
+            paymentSessionConfig()
+        )
+
+        paymentLayout.setOnClickListener {
+            paymentSession.presentPaymentMethodSelection()
+        }
+
         selectDetailsViewModel.couponError.observe(
             viewLifecycleOwner,
             Observer<CouponErrorType?> { errorType ->
@@ -75,33 +92,51 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String) : Fragment
                     if (c != null) {
                         couponStatusTextView.setTextColor(ContextCompat.getColor(c, R.color.error))
                     }
-                    couponStatusTextView.setLayoutParams(LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT))
+                    couponStatusTextView.setLayoutParams(
+                        LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                        )
+                    )
                 } else if (couponEditText.text.isEmpty() == false && errorType == null) {
                     couponStatusTextView.visibility = View.VISIBLE
                     couponStatusTextView.text = getString(R.string.coupon_code_success)
                     val c = context
                     if (c != null) {
-                        couponStatusTextView.setTextColor(ContextCompat.getColor(c, R.color.success))
+                        couponStatusTextView.setTextColor(
+                            ContextCompat.getColor(
+                                c,
+                                R.color.success
+                            )
+                        )
                     }
-                    couponStatusTextView.setLayoutParams(LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT))
+                    couponStatusTextView.setLayoutParams(
+                        LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                        )
+                    )
                 } else {
                     couponStatusTextView.visibility = View.INVISIBLE
-                    couponStatusTextView.setLayoutParams(LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,0))
+                    couponStatusTextView.setLayoutParams(
+                        LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            0
+                        )
+                    )
                 }
             }
         )
-        
+
         couponEditText.addTextChangedListener {
             coupon = it.toString()
         }
-        
+
         redeemButton = view.findViewById(R.id.redeemButton)
-        redeemButton.setOnClickListener { 
+        redeemButton.setOnClickListener {
             updatePrice()
         }
-        
+
         val vehicleRecyclerView = view.findViewById<RecyclerView>(R.id.vehicle_container)
         with(vehicleRecyclerView) {
             this.adapter = vehicleAdapter
@@ -115,7 +150,7 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String) : Fragment
             val manager = activity?.supportFragmentManager
             if (manager != null) {
                 val details = AddVehicleFragment()
-                
+
                 details.didAddVehicle = {
                     newVehicleId = it
                     selectDetailsViewModel.loadVehicles()
@@ -136,11 +171,11 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String) : Fragment
                     this.vehicleAdapter.vehicles = vehicles
                     val id = newVehicleId
                     if (id != null) {
-                        val newVehicleIndex = vehicles.indexOfFirst { 
+                        val newVehicleIndex = vehicles.indexOfFirst {
                             it.id == id
                         }
-                        vehicleRecyclerView.smoothScrollToPosition(newVehicleIndex+1)
-                    } else if(hasScrolledToFirstVehicleIndex == false) {
+                        vehicleRecyclerView.smoothScrollToPosition(newVehicleIndex + 1)
+                    } else if (hasScrolledToFirstVehicleIndex == false) {
                         vehicleRecyclerView.smoothScrollToPosition(1) // 0 is padding, 1 is first item
                         hasScrolledToFirstVehicleIndex = true
                     }
@@ -182,12 +217,82 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String) : Fragment
                 })
         }
         oilTypeRecyclerView.smoothScrollToPosition(2)
-//        runAfterDraw(oilTypeRecyclerView, Runnable {
-//        })
+
+        setupPaymentSession()
 
         return view
     }
+
+    private fun paymentSessionConfig(): PaymentSessionConfig {
+        return PaymentSessionConfig.Builder()
+            .setShippingMethodsRequired(false)
+            .setShippingInfoRequired(false)
+            .setPaymentMethodTypes(
+                listOf(PaymentMethod.Type.Card)
+            )
+            .setShouldShowGooglePay(false)
+            .build()
+    }
+
+    private fun setupPaymentSession() {
+        paymentSession.init(
+            object : PaymentSession.PaymentSessionListener {
+                override fun onCommunicatingStateChanged(isCommunicating: Boolean) {
+                    // update UI, such as hiding or showing a progress bar
+                    Log.w("pay", "isCommunicating")
+                }
+
+                override fun onError(errorCode: Int, errorMessage: String) {
+                    // handle error
+                    Log.w("pay", "error" + errorMessage)
+                }
+
+                override fun onPaymentSessionDataChanged(data: PaymentSessionData) {
+                    paymentMethodImageView.setImageDrawable(paymentMethodImage(data))
+                    paymentMethodTextView.text = paymentMethodText(data)
+                }
+            }
+        )
+    }
     
+    private fun paymentMethodImage(data: PaymentSessionData): Drawable? {
+        val paymentMethod = data.paymentMethod
+        if (paymentMethod == null) {
+            return null
+        }
+        val c = context
+        val cardResource = paymentMethod.card?.brand?.icon
+        if (c != null && cardResource != null) {
+            val icon = ContextCompat.getDrawable(c, cardResource)
+            return icon
+        } else {
+            return null
+        }
+    }
+    
+    private fun paymentMethodText(data: PaymentSessionData): String {
+        val paymentMethod = data.paymentMethod
+        if (paymentMethod == null) {
+            return getString(R.string.select_payment_method)
+        }
+        
+        if (data.useGooglePay) {
+            // TODO: 11/20/20 Not currently supported. Support it! 
+            return getString(R.string.google_play) 
+        } else {
+            val card = paymentMethod.card ?: return getString(R.string.default_card_copy)
+            return card.brand.displayName + " " + card.last4
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (data != null) {
+            paymentSession.handlePaymentData(requestCode, resultCode, data)
+        }
+    }
+
     private fun updatePrice() {
         selectDetailsViewModel.loadPrice(
             point.latitude(),

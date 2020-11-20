@@ -53,6 +53,7 @@
                 android:text="Payment Method"/>
 
             <LinearLayout
+                android:id="@+id/paymentLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="16dp"
@@ -61,21 +62,20 @@
 
                 <ImageView
                     android:id="@+id/paymentMethodImageView"
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
-                    android:layout_weight="0"
+                    android:layout_width="32dp"
+                    android:layout_height="20dp"
                     android:layout_gravity="center"
                     android:layout_marginEnd="8dp"
-                    android:src="@drawable/car" />
+                    android:layout_weight="0" />
 
                 <TextView
                     android:id="@+id/paymentMethodTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_gravity="center"
-                    android:text="TextView" />
-                
+                    android:layout_weight="1"
+                    android:text="@string/select_payment_method" />
+
             </LinearLayout>
 
             <TextView
