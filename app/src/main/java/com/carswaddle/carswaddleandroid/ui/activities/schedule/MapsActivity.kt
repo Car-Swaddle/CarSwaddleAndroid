@@ -22,6 +22,7 @@ class MapsActivity : AppCompatActivity(), LocationFragment.OnLocationSelectedLis
     private lateinit var progressFragment: ProgressFragment
     private lateinit var mechanicFragment: MechanicFragment
     private var selectDetailsFragment: SelectDetailsFragment? = null
+    private lateinit var priceFragment: PriceFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +34,7 @@ class MapsActivity : AppCompatActivity(), LocationFragment.OnLocationSelectedLis
         locationFragment.setOnLocationSelectedListener(this)
 
         progressFragment = ProgressFragment()
+        priceFragment = PriceFragment()
 
 //        selectDetailsFragment = SelectDetailsFragment()
 
@@ -68,6 +70,7 @@ class MapsActivity : AppCompatActivity(), LocationFragment.OnLocationSelectedLis
         
         supportFragmentManager.beginTransaction()
             .add(R.id.fragment_container, details)
+            .replace(R.id.bottom_fragment_container, priceFragment)
             .addToBackStack("Details")
             .commit();
     }

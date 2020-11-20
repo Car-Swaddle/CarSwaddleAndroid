@@ -11,4 +11,3 @@ data class Price (
     var taxes: Int,
     var total: Int
 )
-    
