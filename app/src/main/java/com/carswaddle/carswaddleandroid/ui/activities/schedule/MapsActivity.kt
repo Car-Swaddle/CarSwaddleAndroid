@@ -36,12 +36,19 @@ class MapsActivity : AppCompatActivity(), LocationFragment.OnLocationSelectedLis
         progressFragment = ProgressFragment()
         priceFragment = PriceFragment()
 
-//        selectDetailsFragment = SelectDetailsFragment()
-
         supportFragmentManager.beginTransaction()
             .add(R.id.fragment_container, locationFragment)
             .add(R.id.bottom_fragment_container, progressFragment)
             .commit();
+
+        // Update progress when back button pressed
+        supportFragmentManager.addOnBackStackChangedListener {
+            if (supportFragmentManager.fragments.stream().anyMatch { f -> f is MechanicFragment }) {
+                progressFragment.stepNumber = 2
+            } else {
+                progressFragment.stepNumber = 1
+            }
+        }
     }
 
     override fun onLocationSelected(latLng: LatLng) {
@@ -58,8 +65,6 @@ class MapsActivity : AppCompatActivity(), LocationFragment.OnLocationSelectedLis
     }
 
     override fun onConfirm(mechanicId: String, timeSlot: TemplateTimeSpan) {
-        progressFragment.stepNumber = 3
-
         val l = location
         if (l == null) {
             return 
