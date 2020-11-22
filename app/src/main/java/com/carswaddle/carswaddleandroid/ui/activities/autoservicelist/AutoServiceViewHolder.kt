@@ -28,7 +28,7 @@ class AutoServiceViewHolder (view: View) : RecyclerView.ViewHolder(view) {
         }
 
         mechanicImageLabel.text = autoServiceElements.mechanicUser.firstName ?: ""
-        locationImageLabel.text = autoServiceElements.location.streetAddress
+        locationImageLabel.text = autoServiceElements.location.streetAddress ?: ""
         vehicleImageLabel.text = autoServiceElements.vehicle.name ?: ""
 
         itemView.context

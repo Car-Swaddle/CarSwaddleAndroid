@@ -138,7 +138,7 @@ class AutoServiceDetailsFragment(val autoServiceId: String) : Fragment(), OnMapR
             statusPillButton.text = autoService.autoService.status?.localizedString()
 
             vehicleImageLabel.text = autoService.vehicle.displayValue()
-            streetAddressImageLabel.text = autoService.location.streetAddress
+            streetAddressImageLabel.text = autoService.location.streetAddress ?: ""
             val location = autoService.location.latLong
             this.autoServiceLocation = autoService.location.location
             updateDistanceToService()

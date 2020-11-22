@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.lifecycle.*
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.data.AppDatabase
+import com.carswaddle.carswaddleandroid.data.autoservice.AutoService
 import com.carswaddle.carswaddleandroid.data.autoservice.AutoServiceRepository
 import com.carswaddle.carswaddleandroid.data.location.AutoServiceLocationRepository
 import com.carswaddle.carswaddleandroid.data.mechanic.MechanicRepository
@@ -18,6 +19,7 @@ import com.carswaddle.carswaddleandroid.data.vehicle.VehicleRepository
 import com.carswaddle.carswaddleandroid.services.CouponError
 import com.carswaddle.carswaddleandroid.services.CouponErrorType
 import com.carswaddle.carswaddleandroid.services.LocationJSON
+import com.carswaddle.carswaddleandroid.services.serviceModels.CreateAutoService
 import com.carswaddle.carswaddleandroid.services.serviceModels.OilType
 import com.carswaddle.carswaddleandroid.services.serviceModels.Price
 import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServiceListElements
@@ -77,6 +79,10 @@ class SelectDetailsViewModel(application: Application) : AndroidViewModel(applic
                 _couponError.postValue(null)
             }
         }
+    }
+    
+    fun createAndPayForAutoService(createAutoService: CreateAutoService, completion: (error: Throwable?, newAutoService: AutoService?) -> Unit) {
+        autoServiceRepo.createAndPayForAutoService(createAutoService, getApplication(), completion)
     }
 
 }

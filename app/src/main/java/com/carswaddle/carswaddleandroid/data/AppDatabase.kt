@@ -26,7 +26,7 @@ import com.carswaddle.carswaddleandroid.data.serviceEntity.ServiceEntity
 import com.carswaddle.carswaddleandroid.data.serviceEntity.ServiceEntityDao
 
 
-@Database(entities = arrayOf(User::class, AutoService::class, Vehicle::class, AutoServiceLocation::class, VehicleDescription::class, Mechanic::class, ServiceEntity::class, OilChange::class, TemplateTimeSpan::class), version = 12)
+@Database(entities = arrayOf(User::class, AutoService::class, Vehicle::class, AutoServiceLocation::class, VehicleDescription::class, Mechanic::class, ServiceEntity::class, OilChange::class, TemplateTimeSpan::class), version = 13)
 @TypeConverters(DateConverter::class, CalendarConverter::class, ArrayListConverter::class, AutoServiceStatusConverter::class, OilTypeConverter::class)
 abstract class AppDatabase : RoomDatabase() {
 

@@ -321,7 +321,11 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String, val schedu
         
         val loc = ServerLocation(point.longitude(), point.latitude())
         val serviceEntities = listOf(CreateServiceEntity.init(OilType.synthetic))
-        val uploadService = CreateAutoService(AutoServiceStatus.scheduled, null, vehicleId, mechanicId, scheduledDate, null, loc, serviceEntities, sourceID)
+        val createAutoService = CreateAutoService(AutoServiceStatus.scheduled, null, vehicleId, mechanicId, scheduledDate, null, loc, serviceEntities, sourceID)
+        
+        selectDetailsViewModel.createAndPayForAutoService(createAutoService) { error, autoService ->
+            Log.w("autoservice", "Created new auto service")
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -14,6 +14,8 @@ import com.carswaddle.carswaddleandroid.retrofit.ServiceNotAvailable
 import com.carswaddle.carswaddleandroid.services.*
 import com.carswaddle.carswaddleandroid.services.serviceModels.*
 import com.carswaddle.carswaddleandroid.services.serviceModels.AutoService
+import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServiceListElements
+import com.carswaddle.carswaddleandroid.data.autoservice.AutoService as DataAutoService
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.GlobalScope
@@ -34,12 +36,34 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
         autoServiceDao.insertAutoService(autoService)
     }
 
-    suspend fun getAutoServices(autoServiceIds: List<String>): List<com.carswaddle.carswaddleandroid.data.autoservice.AutoService> {
+    suspend fun getAutoServices(autoServiceIds: List<String>): List<DataAutoService> {
         return autoServiceDao.getAutoServicesWithIds(autoServiceIds)
     }
 
-    suspend fun getAutoService(autoServiceId: String): com.carswaddle.carswaddleandroid.data.autoservice.AutoService? {
+    suspend fun getAutoService(autoServiceId: String): DataAutoService? {
         return autoServiceDao.getAutoService(autoServiceId)
+    }
+    
+    fun createAndPayForAutoService(createAutoService: CreateAutoService, context: Context, completion: (error: Throwable?, newAutoService: DataAutoService?) -> Unit) {
+        val autoServiceService = ServiceGenerator.authenticated(context)?.retrofit?.create(AutoServiceService::class.java)
+        if (autoServiceService == null) {
+            completion(ServiceNotAvailable(), null)
+            return
+        }
+        
+        val call = autoServiceService.createAutoService(createAutoService)
+        call.enqueue(object :
+            Callback<AutoService> {
+
+            override fun onFailure(call: Call<AutoService>, t: Throwable) {
+                completion(t, null)
+            }
+
+            override fun onResponse(call: Call<AutoService>, response: Response<AutoService>) {
+                Log.w("new auto service", "new autoservice")
+            }
+            
+        })
     }
     
     fun getPrice(
@@ -221,17 +245,19 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
                     completion(null, null) // something
                 } else {
                     GlobalScope.async {
-                        try {
+//                        try {
                             var ids = arrayListOf<String>()
                             for (autoService in result) {
-                                insertNestedAutoService(autoService)
-                                ids.add(autoService.id)
+                                try {
+                                    insertNestedAutoService(autoService)
+                                    ids.add(autoService.id)
+                                } catch(e: Exception) { }
                             }
                             completion(null, ids.toList())
-                        } catch (e: Exception) {
-                            print(e)
-                            Log.d("retrofit ", "error persisting auto service" + e)
-                        }
+//                        } catch (e: Exception) {
+//                            print(e)
+//                            Log.d("retrofit ", "error persisting auto service" + e)
+//                        }
                     }
                 }
             }
@@ -279,10 +305,10 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
                     GlobalScope.async {
                         try {
                             var ids = arrayListOf<String>()
-                            for (autoService in result) {
+//                            for (autoService in result) {
 //                                insertNestedAutoService(autoService)
 //                                ids.add(autoService.id)
-                            }
+//                            }
                             completion(null, ids.toList())
                         } catch (e: Exception) {
                             print(e)
@@ -296,8 +322,8 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
         return call
     }
 
-    suspend private fun insertNestedAutoService(autoService: com.carswaddle.carswaddleandroid.services.serviceModels.AutoService): com.carswaddle.carswaddleandroid.data.autoservice.AutoService {
-        val storedAutoService = AutoService(autoService)
+    suspend private fun insertNestedAutoService(autoService: AutoService): DataAutoService {
+        val storedAutoService = DataAutoService(autoService)
         val location = AutoServiceLocation(autoService.location)
         autoServiceDao.insertLocation(location)
         val vehicle = Vehicle(autoService.vehicle)

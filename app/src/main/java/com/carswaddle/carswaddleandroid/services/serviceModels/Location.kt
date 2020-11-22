@@ -6,7 +6,7 @@ import java.util.*
 data class AutoServiceLocation(
     val id: String,
     val point: Point,
-    val streetAddress: String,
+    val streetAddress: String?,
     val createdAt: Date,
     val updatedAt: Date,
     val autoServiceID: String,
