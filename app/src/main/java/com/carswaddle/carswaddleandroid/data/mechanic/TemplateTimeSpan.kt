@@ -31,13 +31,15 @@ data class TemplateTimeSpan(
     }
     
     fun localizedStartTime(): String {
-        var startTimeCal = Calendar.getInstance()
-        val hourOfDay = startTime / 60 / 60 
-        val minuteInHour = startTime / 60 % 60
-        val secondInMinute = startTime % 60
-        startTimeCal.set(Calendar.HOUR_OF_DAY, hourOfDay)
-        startTimeCal.set(Calendar.SECOND, secondInMinute)
-        startTimeCal.set(Calendar.MINUTE, minuteInHour)
+//        var startTimeCal = Calendar.getInstance()
+//        val hourOfDay = startTime / 60 / 60 
+//        val minuteInHour = startTime / 60 % 60
+//        val secondInMinute = startTime % 60
+//        startTimeCal.set(Calendar.HOUR_OF_DAY, hourOfDay)
+//        startTimeCal.set(Calendar.SECOND, secondInMinute)
+//        startTimeCal.set(Calendar.MINUTE, minuteInHour)
+        
+        val startTimeCal = calendar
         
         val sdf = SimpleDateFormat("h:mm a")
         
@@ -46,6 +48,19 @@ data class TemplateTimeSpan(
         sdf.setDateFormatSymbols(symbols)
         
         return sdf.format(startTimeCal.getTime())
+    }
+    
+    val calendar: Calendar
+    get() {
+        var startTimeCal = Calendar.getInstance()
+        val hourOfDay = startTime / 60 / 60
+        val minuteInHour = startTime / 60 % 60
+        val secondInMinute = startTime % 60
+        startTimeCal.set(Calendar.HOUR_OF_DAY, hourOfDay)
+        startTimeCal.set(Calendar.SECOND, secondInMinute)
+        startTimeCal.set(Calendar.MINUTE, minuteInHour)
+        
+        return startTimeCal
     }
     
 }

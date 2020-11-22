@@ -56,7 +56,15 @@ class PriceFragment : Fragment() {
     private fun updatePrice(price: Price) {
         row1.value = String.format("%.2f", price.oilChangeTotal / 100.0)
         row2.value = String.format("%.2f", price.salesTaxTotal / 100.0)
-        row3.value = String.format("%.2f", price.discountTotal / 100.0)
+        val discount = price.discountTotal
+        if (discount == null || discount == 0) {
+            row3.visibility = View.GONE
+            row3.value = ""
+        } else {
+            row3.visibility = View.VISIBLE
+            row3.value = String.format("%.2f", discount / 100.0)
+        }
+        
         row4.value = String.format("$%.2f", price.total / 100.0)
     }
 

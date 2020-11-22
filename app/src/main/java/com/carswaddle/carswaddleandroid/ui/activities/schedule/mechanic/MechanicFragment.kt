@@ -26,6 +26,7 @@ import com.stripe.android.CustomerSession
 import java.text.DateFormatSymbols
 import java.util.*
 import java.util.Calendar.*
+import kotlin.jvm.internal.Intrinsics
 import java.util.Calendar as KotlinCalendar
 
 
@@ -46,6 +47,8 @@ class MechanicFragment(val point: Point) : Fragment() {
     private lateinit var calendarView: CalendarView
     private var selectedMechanicId: String? = null
     private var selectedTimeSlot: TemplateTimeSpan? = null
+    
+    private var selectedDate: Date? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -89,8 +92,9 @@ class MechanicFragment(val point: Point) : Fragment() {
         confirmButton.setOnClickListener { v ->
             val m = selectedMechanicId
             val t = selectedTimeSlot
-            if (m != null && t != null) {
-                callback.onConfirm(m, t)
+            val date = selectedDate
+            if (m != null && date != null) {
+                callback.onConfirm(m, date)
             }
         }
 
@@ -162,10 +166,18 @@ class MechanicFragment(val point: Point) : Fragment() {
         }
         val slots = mechanicViewModel.timeSlots(mechanicId, calendar)
         timeSlotViewAdapter.timeSlots = slots
-//        timeSlotViewAdapter = TimePickerRecyclerViewAdapter(slots)
-//        if (slots.size > 0) {
-        selectedTimeSlot = slots.safeFirst() // TODO - Fix this!
-//        }
+        timeSlotViewAdapter.didChangeSelectedTimeSlot = { newTimeSlot ->
+            if (newTimeSlot != null) {
+                val selectedCal = getInstance()
+                val timeCal = newTimeSlot.calendar
+                selectedCal.set(calendar.get(YEAR), calendar.get(MONTH), calendar.get(DATE), timeCal.get(HOUR_OF_DAY), timeCal.get(MINUTE), timeCal.get(SECOND))
+                
+                this.selectedDate = selectedCal.time
+            } else {
+                // clear
+            }
+        }
+        
         Log.w("slots", "slots: $slots")
     }
 
@@ -175,7 +187,7 @@ class MechanicFragment(val point: Point) : Fragment() {
     }
 
     interface OnConfirmListener {
-        fun onConfirm(mechanicId: String, timeSlot: TemplateTimeSpan)
+        fun onConfirm(mechanicId: String, date: Date)
     }
 
 }

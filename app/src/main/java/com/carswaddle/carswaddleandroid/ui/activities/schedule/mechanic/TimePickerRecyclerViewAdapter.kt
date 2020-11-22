@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.appcompat.widget.AppCompatRatingBar
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import com.carswaddle.carswaddleandroid.Extensions.safeFirst
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.data.mechanic.TemplateTimeSpan
 
@@ -21,10 +22,22 @@ class TimePickerRecyclerViewAdapter(
             notifyDataSetChanged()
         }
     
+    var didChangeSelectedTimeSlot:  (selectedTimeSlot: TemplateTimeSpan?) -> Unit = { _ -> }
+    
+    val selectedTimeSlot: TemplateTimeSpan?
+    get() {
+        val i = selectedIndex
+        if (i == null) {
+            return null
+        }
+        return timeSlots.safeFirst()
+    }
+    
     var selectedIndex: Int? = null
     set(newValue) {
         field = newValue
         notifyDataSetChanged()
+        didChangeSelectedTimeSlot(selectedTimeSlot)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -34,19 +47,10 @@ class TimePickerRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-//        holder
-//        val item = values[position]
-//        // TODO - set image
-//        holder.nameTextView.text = item.name
-//        holder.ratingBar.rating = item.averageRating
-//        val roundedValue = Math.round(item.averageRating * 10) / 10.0
-//        holder.ratingTextView.text = "$roundedValue avg from ${item.ratingCount} ratings"
-//        holder.servicesCompletedTextView.text = "${item.servicesCompleted} services completed"
         val slot = timeSlots[position]
         holder.timeTextView.text = slot.localizedStartTime()
         holder.isSelectedView = selectedIndex == position
-//        holder.itemView.isSelected = selectedIndex == position
-
+        
         holder.itemView.setOnClickListener() {
             selectedIndex = position
             notifyItemChanged(position)
@@ -57,10 +61,6 @@ class TimePickerRecyclerViewAdapter(
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val timeTextView: TextView = view.findViewById(R.id.timeTextView)
-        
-//        override fun toString(): String {
-//            return super.toString() + " '" + contentView.text + "'"
-//        }
         
         var isSelectedView: Boolean = false
         set(newValue) {

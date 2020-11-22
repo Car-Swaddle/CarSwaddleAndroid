@@ -6,11 +6,13 @@ import java.util.*
 data class OilChange(
     val id: String,
     val oilType: OilType,
-    val createdAt: Date,
-    val updatedAt: Date
+    val createdAt: Date?,
+    val updatedAt: Date?
 )
 
-
+data class UploadOilChange(
+    val oilType: OilType
+)
 
 enum class OilType {
     @SerializedName("CONVENTIONAL") conventional,

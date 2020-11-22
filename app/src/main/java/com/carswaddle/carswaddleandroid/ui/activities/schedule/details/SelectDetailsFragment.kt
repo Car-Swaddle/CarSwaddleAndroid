@@ -17,18 +17,21 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.carswaddle.carswaddleandroid.Extensions.safeFirst
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.data.vehicle.Vehicle
 import com.carswaddle.carswaddleandroid.services.CouponErrorType
-import com.carswaddle.carswaddleandroid.services.serviceModels.OilType
-import com.carswaddle.carswaddleandroid.services.serviceModels.Point
-import com.carswaddle.carswaddleandroid.services.serviceModels.Price
+import com.carswaddle.carswaddleandroid.services.serviceModels.*
+import com.google.android.material.button.MaterialButton
 import com.stripe.android.PaymentSession
 import com.stripe.android.PaymentSessionConfig
 import com.stripe.android.PaymentSessionData
 import com.stripe.android.model.PaymentMethod
+import kotlinx.android.synthetic.main.fragment_select_details.*
+import org.bouncycastle.asn1.ocsp.ServiceLocator
+import java.util.*
 
-class SelectDetailsFragment(val point: Point, val mechanicId: String) : Fragment() {
+class SelectDetailsFragment(val point: Point, val mechanicId: String, val scheduledDate: Date) : Fragment() {
 
     var listener: OnPriceUpdatedListener? = null
 
@@ -41,6 +44,8 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String) : Fragment
     private var hasScrolledToFirstVehicleIndex: Boolean = false
 
     private var coupon: String? = null
+    
+    private var selectedVehicleId: String? = null
 
     private lateinit var couponEditText: EditText
 
@@ -52,7 +57,10 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String) : Fragment
     private lateinit var paymentMethodTextView: TextView
     private lateinit var paymentLayout: LinearLayout
     private lateinit var paymentSession: PaymentSession
+    private lateinit var payButton: MaterialButton
 
+    private var paymentSourceId: String? = null
+    
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -69,6 +77,11 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String) : Fragment
         paymentMethodTextView = view.findViewById(R.id.paymentMethodTextView)
         paymentMethodTextView = view.findViewById(R.id.paymentMethodTextView)
         paymentLayout = view.findViewById(R.id.paymentLayout)
+        payButton = view.findViewById(R.id.payButton)
+        
+        payButton.setOnClickListener { 
+            payForService()
+        }
 
         paymentSession = PaymentSession(
             this,
@@ -127,9 +140,9 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String) : Fragment
 
         selectDetailsViewModel.price.observe(
             viewLifecycleOwner,
-            Observer { errorType ->
+            Observer { price ->
                 val p = selectDetailsViewModel.price.value
-                if (errorType != null || p == null) {
+                if (p == null) {
                     // TODO - error handling
                     return@Observer
                 }
@@ -180,6 +193,7 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String) : Fragment
                 activity?.runOnUiThread {
                     this.vehicleAdapter.vehicles = vehicles
                     val id = newVehicleId
+                    selectedVehicleId = vehicles.safeFirst()?.id
                     if (id != null) {
                         val newVehicleIndex = vehicles.indexOfFirst {
                             it.id == id
@@ -229,6 +243,8 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String) : Fragment
         oilTypeRecyclerView.smoothScrollToPosition(2)
 
         setupPaymentSession()
+        
+        updatePrice()
 
         return view
     }
@@ -260,6 +276,7 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String) : Fragment
                 override fun onPaymentSessionDataChanged(data: PaymentSessionData) {
                     paymentMethodImageView.setImageDrawable(paymentMethodImage(data))
                     paymentMethodTextView.text = paymentMethodText(data)
+                    paymentSourceId = data.paymentMethod?.id
                 }
             }
         )
@@ -293,6 +310,18 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String) : Fragment
             val card = paymentMethod.card ?: return getString(R.string.default_card_copy)
             return card.brand.displayName + " " + card.last4
         }
+    }
+    
+    private fun payForService() {
+        val vehicleId = selectedVehicleId
+        val sourceID = paymentSourceId
+        if (vehicleId == null || sourceID == null) {
+            return
+        }
+        
+        val loc = ServerLocation(point.longitude(), point.latitude())
+        val serviceEntities = listOf(CreateServiceEntity.init(OilType.synthetic))
+        val uploadService = CreateAutoService(AutoServiceStatus.scheduled, null, vehicleId, mechanicId, scheduledDate, null, loc, serviceEntities, sourceID)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

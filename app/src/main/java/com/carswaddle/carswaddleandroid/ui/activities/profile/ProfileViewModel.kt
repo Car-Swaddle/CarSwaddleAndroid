@@ -21,30 +21,29 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
     private val userRepo: UserRepository
 
+    val currentUser: LiveData<User>
+        get() = _currentUser
+    
+    private val _currentUser = MutableLiveData<User>()
 
     init {
         val db = AppDatabase.getDatabase(application)
         userRepo = UserRepository(db.userDao())
-
+        
         loadCurrentUser()
     }
-
-    val currentUser: LiveData<User>
-        get() = _currentUser
-
-    private val _currentUser = MutableLiveData<User>()
 
     private fun loadCurrentUser() {
 
         viewModelScope.launch {
-            _currentUser.value = userRepo.getCurrentUser(getApplication())
+            _currentUser.postValue(userRepo.getCurrentUser(getApplication()))
         }
 
         userRepo.updateCurrentUser(getApplication()) { error ->
             viewModelScope.launch {
                 val currentUser = userRepo.getCurrentUser(getApplication())
                 if (currentUser != null) {
-                    _currentUser.value = currentUser
+                    _currentUser.postValue(currentUser)
                 } else {
                     // TODO: fail better man
                 }

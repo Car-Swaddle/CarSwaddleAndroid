@@ -15,6 +15,7 @@ import com.google.android.gms.maps.*
 import com.carswaddle.carswaddleandroid.ui.activities.schedule.details.SelectDetailsFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.Places
+import java.util.*
 
 
 class MapsActivity : AppCompatActivity(), LocationFragment.OnLocationSelectedListener, MechanicFragment.OnConfirmListener,
@@ -66,25 +67,42 @@ class MapsActivity : AppCompatActivity(), LocationFragment.OnLocationSelectedLis
             .commit()
     }
 
-    override fun onConfirm(mechanicId: String, timeSlot: TemplateTimeSpan) {
-        val l = location
-        if (l == null) {
-            return 
-        }
-        
-        val point = Point(l.latitude, l.longitude)
-        val details = SelectDetailsFragment(point, mechanicId)
-        details.listener = this
-        
-        supportFragmentManager.beginTransaction()
-            .add(R.id.fragment_container, details)
-            .replace(R.id.bottom_fragment_container, priceFragment)
-            .addToBackStack("Details")
-            .commit();
+    fun onConfirm(mechanicId: String, timeSlot: TemplateTimeSpan) {
+//        val l = location
+//        if (l == null) {
+//            return 
+//        }
+//        
+//        val point = Point(l.latitude, l.longitude)
+//        val details = SelectDetailsFragment(point, mechanicId)
+//        details.listener = this
+//        
+//        supportFragmentManager.beginTransaction()
+//            .add(R.id.fragment_container, details)
+//            .replace(R.id.bottom_fragment_container, priceFragment)
+//            .addToBackStack("Details")
+//            .commit();
     }
 
     override fun onPriceUpdated(price: Price) {
         priceFragment.price = price
+    }
+
+    override fun onConfirm(mechanicId: String, date: Date) {
+        val l = location
+        if (l == null) {
+            return
+        }
+
+        val point = Point(l.latitude, l.longitude)
+        val details = SelectDetailsFragment(point, mechanicId, date)
+        details.listener = this
+
+        supportFragmentManager.beginTransaction()
+            .add(R.id.fragment_container, details)
+            .replace(R.id.bottom_fragment_container, priceFragment)
+            .addToBackStack("Details")
+            .commit()
     }
 
 

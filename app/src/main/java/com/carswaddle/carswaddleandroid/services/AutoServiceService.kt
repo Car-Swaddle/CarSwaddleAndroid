@@ -1,9 +1,7 @@
 package com.carswaddle.carswaddleandroid.services
 
+import com.carswaddle.carswaddleandroid.services.serviceModels.*
 import retrofit2.Call
-import com.carswaddle.carswaddleandroid.services.serviceModels.AutoService
-import com.carswaddle.carswaddleandroid.services.serviceModels.AutoServiceStatus
-import com.carswaddle.carswaddleandroid.services.serviceModels.UpdateAutoService
 import retrofit2.http.*
 import java.util.*
 
@@ -27,6 +25,11 @@ interface AutoServiceService {
     @Headers(ContentType.headerPrefix + ContentType.applicationJSON)
     @PATCH(autoServiceEndpoint)
     fun updateAutoService(@Query("autoServiceID") autoServiceId: String, @Body updateAutoService: UpdateAutoService): Call<AutoService>
+
+
+    @Headers(ContentType.headerPrefix + ContentType.applicationJSON)
+    @POST(autoServiceEndpoint)
+    fun createAutoService(@Body uploadServiceEntity: CreateAutoService): Call<AutoService>
     
 }
 

@@ -10,8 +10,8 @@ import java.util.*
 data class OilChange (
     @PrimaryKey val id: String,
     @ColumnInfo(name = "oil_type") val oilType: OilType,
-    @ColumnInfo(name = "created_at") val createdAt: Date,
-    @ColumnInfo(name = "updated_at") val updatedAt: Date) {
+    @ColumnInfo(name = "created_at") val createdAt: Date?,
+    @ColumnInfo(name = "updated_at") val updatedAt: Date?) {
 
     constructor(oilChange: com.carswaddle.carswaddleandroid.services.serviceModels.OilChange) :
             this(oilChange.id,

@@ -37,18 +37,8 @@ class ProfileFragment() : Fragment() {
 
         nameValueTextView = root.findViewById(R.id.nameValueTextView)
         phoneNumberValueTextView = root.findViewById(R.id.phoneNumberValueTextView)
-
-        profileViewModel.currentUser.observeForever {
-            nameValueTextView.text = it.displayName()
-            if (!it.phoneNumber.isNullOrBlank()) {
-                phoneNumberValueTextView.text = PhoneNumberUtils.formatNumber(
-                    it.phoneNumber,
-                    Locale.getDefault().getCountry()
-                )
-            }
-        }
-
-        profileViewModel.currentUser.observe(viewLifecycleOwner, Observer<User> { user ->
+        
+        profileViewModel.currentUser.observe(viewLifecycleOwner, Observer { user -> 
             nameValueTextView.text = user.displayName()
             if (!user.phoneNumber.isNullOrBlank()) {
                 phoneNumberValueTextView.text = PhoneNumberUtils.formatNumber(
