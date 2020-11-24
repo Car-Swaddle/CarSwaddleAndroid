@@ -1,17 +1,15 @@
 package com.carswaddle.carswaddleandroid.ui.activities.schedule
 
+//import com.carswaddle.carswaddleandroid.services.serviceModels.TemplateTimeSpan as TimeSlot
+import android.location.Address
+import android.location.Geocoder
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.carswaddle.carswaddleandroid.Extensions.safeFirst
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.data.mechanic.TemplateTimeSpan
 import com.carswaddle.carswaddleandroid.services.serviceModels.Point
 import com.carswaddle.carswaddleandroid.services.serviceModels.Price
-//import com.carswaddle.carswaddleandroid.services.serviceModels.TemplateTimeSpan as TimeSlot
-import com.carswaddle.carswaddleandroid.util.PermissionUtils
-import com.google.android.gms.common.api.Status
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.*
 import com.carswaddle.carswaddleandroid.ui.activities.schedule.details.SelectDetailsFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.Places
@@ -26,6 +24,8 @@ class MapsActivity : AppCompatActivity(), LocationFragment.OnLocationSelectedLis
     private lateinit var mechanicFragment: MechanicFragment
     private var selectDetailsFragment: SelectDetailsFragment? = null
     private lateinit var priceFragment: PriceFragment
+    
+    private var streetAddress: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,8 +57,11 @@ class MapsActivity : AppCompatActivity(), LocationFragment.OnLocationSelectedLis
     override fun onLocationSelected(latLng: LatLng) {
         location = latLng
         progressFragment.stepNumber = 2
+        
+        val streetAddress = this.streetAddress(latLng)
+        this.streetAddress = streetAddress
 
-        val mechanicFragment = MechanicFragment(Point(latLng))
+        val mechanicFragment = MechanicFragment(Point(latLng, streetAddress))
         mechanicFragment.setOnConfirmCallbackListener(this)
 
         supportFragmentManager.beginTransaction()
@@ -66,22 +69,15 @@ class MapsActivity : AppCompatActivity(), LocationFragment.OnLocationSelectedLis
             .addToBackStack("Mechanic")
             .commit()
     }
-
-    fun onConfirm(mechanicId: String, timeSlot: TemplateTimeSpan) {
-//        val l = location
-//        if (l == null) {
-//            return 
-//        }
-//        
-//        val point = Point(l.latitude, l.longitude)
-//        val details = SelectDetailsFragment(point, mechanicId)
-//        details.listener = this
-//        
-//        supportFragmentManager.beginTransaction()
-//            .add(R.id.fragment_container, details)
-//            .replace(R.id.bottom_fragment_container, priceFragment)
-//            .addToBackStack("Details")
-//            .commit();
+    
+    fun streetAddress(latLng: LatLng): String? {
+        var geocoder = Geocoder(this, Locale.getDefault())
+        val addresses = geocoder.getFromLocation(
+            latLng.latitude,
+            latLng.longitude,
+            1
+        )
+        return addresses.safeFirst()?.getAddressLine(0)
     }
 
     override fun onPriceUpdated(price: Price) {
@@ -90,11 +86,12 @@ class MapsActivity : AppCompatActivity(), LocationFragment.OnLocationSelectedLis
 
     override fun onConfirm(mechanicId: String, date: Date) {
         val l = location
-        if (l == null) {
+        val s = streetAddress
+        if (l == null || s == null) {
             return
         }
 
-        val point = Point(l.latitude, l.longitude)
+        val point = Point(l.latitude, l.longitude, s)
         val details = SelectDetailsFragment(point, mechanicId, date)
         details.listener = this
 

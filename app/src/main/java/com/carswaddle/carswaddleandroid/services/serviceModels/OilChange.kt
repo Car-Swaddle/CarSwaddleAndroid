@@ -15,17 +15,17 @@ data class UploadOilChange(
 )
 
 enum class OilType {
-    @SerializedName("CONVENTIONAL") conventional,
-    @SerializedName("BLEND") blend,
-    @SerializedName("SYNTHETIC") synthetic,
-    @SerializedName("HIGH_MILEAGE") highMileage;
+    CONVENTIONAL,
+    BLEND,
+    SYNTHETIC,
+    HIGH_MILEAGE;
 
     fun localizedString(): String {
         when (this) {
-            conventional -> return "Conventional oil type"
-            blend -> return "Blend oil type"
-            synthetic -> return "Synthetic oil type"
-            highMileage -> return "High mileage oil type"
+            CONVENTIONAL -> return "Conventional oil type"
+            BLEND -> return "Blend oil type"
+            SYNTHETIC -> return "Synthetic oil type"
+            HIGH_MILEAGE -> return "High mileage oil type"
             else -> return ""
         }
     }

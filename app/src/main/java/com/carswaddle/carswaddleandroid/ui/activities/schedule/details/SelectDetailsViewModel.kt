@@ -6,14 +6,7 @@ import android.util.Log
 import androidx.lifecycle.*
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.data.AppDatabase
-import com.carswaddle.carswaddleandroid.data.autoservice.AutoService
 import com.carswaddle.carswaddleandroid.data.autoservice.AutoServiceRepository
-import com.carswaddle.carswaddleandroid.data.location.AutoServiceLocationRepository
-import com.carswaddle.carswaddleandroid.data.mechanic.MechanicRepository
-import com.carswaddle.carswaddleandroid.data.oilChange.OilChange
-import com.carswaddle.carswaddleandroid.data.oilChange.OilChangeRepository
-import com.carswaddle.carswaddleandroid.data.serviceEntity.ServiceEntityRepository
-import com.carswaddle.carswaddleandroid.data.user.UserRepository
 import com.carswaddle.carswaddleandroid.data.vehicle.Vehicle
 import com.carswaddle.carswaddleandroid.data.vehicle.VehicleRepository
 import com.carswaddle.carswaddleandroid.services.CouponError
@@ -22,10 +15,7 @@ import com.carswaddle.carswaddleandroid.services.LocationJSON
 import com.carswaddle.carswaddleandroid.services.serviceModels.CreateAutoService
 import com.carswaddle.carswaddleandroid.services.serviceModels.OilType
 import com.carswaddle.carswaddleandroid.services.serviceModels.Price
-import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServiceListElements
 import kotlinx.coroutines.launch
-import java.lang.Exception
-import java.security.PrivateKey
 
 
 class SelectDetailsViewModel(application: Application) : AndroidViewModel(application) {
@@ -81,7 +71,7 @@ class SelectDetailsViewModel(application: Application) : AndroidViewModel(applic
         }
     }
     
-    fun createAndPayForAutoService(createAutoService: CreateAutoService, completion: (error: Throwable?, newAutoService: AutoService?) -> Unit) {
+    fun createAndPayForAutoService(createAutoService: CreateAutoService, completion: (error: Throwable?) -> Unit) {
         autoServiceRepo.createAndPayForAutoService(createAutoService, getApplication(), completion)
     }
 

@@ -2,7 +2,6 @@ package com.carswaddle.carswaddleandroid.data.autoservice
 
 import android.content.Context
 import android.util.Log
-import android.widget.Toast
 import com.carswaddle.carswaddleandroid.data.location.AutoServiceLocation
 import com.carswaddle.carswaddleandroid.data.mechanic.Mechanic
 import com.carswaddle.carswaddleandroid.data.oilChange.OilChange
@@ -14,14 +13,8 @@ import com.carswaddle.carswaddleandroid.retrofit.ServiceNotAvailable
 import com.carswaddle.carswaddleandroid.services.*
 import com.carswaddle.carswaddleandroid.services.serviceModels.*
 import com.carswaddle.carswaddleandroid.services.serviceModels.AutoService
-import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServiceListElements
 import com.carswaddle.carswaddleandroid.data.autoservice.AutoService as DataAutoService
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import okhttp3.ResponseBody
-import org.json.JSONArray
+import kotlinx.coroutines.*
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
@@ -44,10 +37,10 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
         return autoServiceDao.getAutoService(autoServiceId)
     }
     
-    fun createAndPayForAutoService(createAutoService: CreateAutoService, context: Context, completion: (error: Throwable?, newAutoService: DataAutoService?) -> Unit) {
+    fun createAndPayForAutoService(createAutoService: CreateAutoService, context: Context, completion: (error: Throwable?) -> Unit) {
         val autoServiceService = ServiceGenerator.authenticated(context)?.retrofit?.create(AutoServiceService::class.java)
         if (autoServiceService == null) {
-            completion(ServiceNotAvailable(), null)
+            completion(ServiceNotAvailable())
             return
         }
         
@@ -56,11 +49,19 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
             Callback<AutoService> {
 
             override fun onFailure(call: Call<AutoService>, t: Throwable) {
-                completion(t, null)
+                completion(t)
             }
 
             override fun onResponse(call: Call<AutoService>, response: Response<AutoService>) {
                 Log.w("new auto service", "new autoservice")
+                val body = response.body()
+                if (body != null) {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        completion(null)
+                    }
+                } else {
+                    completion(EmptyBodyError())
+                }
             }
             
         })
@@ -345,3 +346,5 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
     }
 
 }
+
+class EmptyBodyError(message: String = "The body of the response was empty") : Throwable(message) {}

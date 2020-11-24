@@ -161,4 +161,5 @@
     <string name="select_payment_method">Select payment method</string>
     <string name="default_card_copy">Card</string>
     <string name="google_play">Google Pay</string>
+    <string name="oil_change_event_title">Car Swaddle oil change</string>
 </resources>

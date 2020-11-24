@@ -1,12 +1,14 @@
 package com.carswaddle.carswaddleandroid.services.serviceModels
 
-import com.google.gson.Gson
-import com.google.gson.annotations.SerializedName
+import com.google.gson.*
 import org.json.JSONException
 import org.json.JSONObject
+import java.lang.reflect.Type
 import java.util.*
+import kotlin.collections.HashMap
 
-data class ServiceEntity (
+
+data class ServiceEntity(
     val id: String,
     val entityType: ServiceEntityType,
     val createdAt: Date,
@@ -31,7 +33,7 @@ data class CreateServiceEntity(
         
         fun init(oilChange: UploadOilChange): CreateServiceEntity {
             val oilChangeJSONString = Gson().toJson(oilChange)
-            var oilChangeJSON = JSONObject()
+            var oilChangeJSON: JSONObject = JSONObject()
             try {
                 oilChangeJSON = JSONObject(oilChangeJSONString)
             } finally { }
@@ -41,6 +43,46 @@ data class CreateServiceEntity(
     }
     
 }
+
+
+
+class CreateServiceEntitySerializer : JsonSerializer<CreateServiceEntity?> {
+    
+    override fun serialize(
+        src: CreateServiceEntity?,
+        typeOfSrc: Type?,
+        context: JsonSerializationContext?
+    ): JsonElement {
+        
+        if (src == null) {
+            return JsonObject()
+        }
+
+        val obj = JsonObject()
+
+        obj.addProperty("entityType", src.entityType.toString())
+
+        val map: MutableMap<String, Any> = mutableMapOf()
+        
+        val iter: Iterator<String> = src.specificService.keys()
+        while (iter.hasNext()) {
+            val key = iter.next()
+            try {
+                val value: Any = src.specificService.get(key)
+                map.set(key, value)
+            } catch (e: JSONException) {
+                print("something went wrong")
+            }
+        }
+        
+        val gson = Gson()
+        val jsonElement = gson.toJsonTree(map)
+        obj.add("specificService", jsonElement)
+        
+        return obj
+    }
+}
+
 
 enum class ServiceEntityType {
     OIL_CHANGE

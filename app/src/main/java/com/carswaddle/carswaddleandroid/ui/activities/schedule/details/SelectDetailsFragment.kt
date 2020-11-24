@@ -1,13 +1,14 @@
 package com.carswaddle.carswaddleandroid.ui.activities.schedule.details
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.provider.CalendarContract
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
@@ -18,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.carswaddle.carswaddleandroid.Extensions.safeFirst
+import com.carswaddle.carswaddleandroid.Extensions.toCalendar
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.data.vehicle.Vehicle
 import com.carswaddle.carswaddleandroid.services.CouponErrorType
@@ -27,8 +29,6 @@ import com.stripe.android.PaymentSession
 import com.stripe.android.PaymentSessionConfig
 import com.stripe.android.PaymentSessionData
 import com.stripe.android.model.PaymentMethod
-import kotlinx.android.synthetic.main.fragment_select_details.*
-import org.bouncycastle.asn1.ocsp.ServiceLocator
 import java.util.*
 
 class SelectDetailsFragment(val point: Point, val mechanicId: String, val scheduledDate: Date) : Fragment() {
@@ -319,13 +319,58 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String, val schedu
             return
         }
         
-        val loc = ServerLocation(point.longitude(), point.latitude())
-        val serviceEntities = listOf(CreateServiceEntity.init(OilType.synthetic))
-        val createAutoService = CreateAutoService(AutoServiceStatus.scheduled, null, vehicleId, mechanicId, scheduledDate, null, loc, serviceEntities, sourceID)
+        val loc = ServerLocation(point.longitude(), point.latitude(), point.streetAddress)
+        val serviceEntities = listOf(CreateServiceEntity.init(OilType.SYNTHETIC))
+        val createAutoService = CreateAutoService(
+            AutoServiceStatus.scheduled,
+            null,
+            vehicleId,
+            mechanicId,
+            scheduledDate,
+            null,
+            loc,
+            serviceEntities,
+            sourceID
+        )
         
-        selectDetailsViewModel.createAndPayForAutoService(createAutoService) { error, autoService ->
+        selectDetailsViewModel.createAndPayForAutoService(createAutoService) { error ->
             Log.w("autoservice", "Created new auto service")
+            if (error == null) {
+                activity?.runOnUiThread {
+                    showAlertToAddToCalendar(scheduledDate)
+                }
+            }
         }
+    }
+    
+    private fun showAlertToAddToCalendar(scheduledDate: Date) {
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle("Congratulations on scheduling your oil change! Would you like to add it to your calendar?")
+        builder.setMessage("Add it to your calendar to receive reminders.")
+        builder.setPositiveButton("Add event") { dialog, which ->
+            openIntentForCalendarEvent(scheduledDate)
+            activity?.finish()
+        }
+        builder.setNegativeButton("Dismiss") { dialog, which ->
+            activity?.finish()
+        }
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
+    }
+    
+    private fun openIntentForCalendarEvent(scheduledDate: Date) {
+        val cal = scheduledDate.toCalendar()
+        if (cal == null) {
+            return 
+        }
+        val intent = Intent(Intent.ACTION_EDIT)
+        intent.setData(CalendarContract.Events.CONTENT_URI)
+        intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, cal.timeInMillis)
+        intent.putExtra(CalendarContract.CalendarAlerts.ALARM_TIME, cal.timeInMillis - 30 * 60 * 1000)
+        intent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, false)
+        intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, cal.timeInMillis + 45 * 60 * 1000)
+        intent.putExtra(CalendarContract.Events.TITLE, getString(R.string.oil_change_event_title))
+        startActivity(intent)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -341,7 +386,7 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String, val schedu
             point.latitude(),
             point.longitude(),
             mechanicId,
-            OilType.synthetic,
+            OilType.SYNTHETIC,
             coupon
         )
     }
