@@ -14,14 +14,7 @@ import com.carswaddle.carswaddleandroid.data.AppDatabase
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
 
 class MainActivity : AppCompatActivity() {
-
-//    private val userRepo: UserRepository
-
-//    init {
-//        val userDao = AppDatabase.getDatabase(this).userDao()
-//        userRepo = UserRepository(userDao)
-//    }
-
+    
     private val userRepo: UserRepository by lazy {
          val userDao = AppDatabase.getDatabase(this).userDao()
          UserRepository(userDao)
@@ -37,7 +30,6 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(setOf(
             R.id.navigation_home,
-            R.id.navigation_dashboard,
             R.id.navigation_profile
         ))
 
