@@ -162,4 +162,10 @@
     <string name="default_card_copy">Card</string>
     <string name="google_play">Google Pay</string>
     <string name="oil_change_event_title">Car Swaddle oil change</string>
+    <string name="pay">Pay</string>
+    <string name="confirm_mechanic">Confirm mechanic and time</string>
+    <string name="add_event_calendar">Add event</string>
+    <string name="add_event_calendar_title">Would you like to add the oil change to your calendar?</string>
+    <string name="add_event_calendar_message">Congratulations on scheduling your oil change! Add it to your calendar to receive reminders.</string>
+    <string name="dismiss_dialog">Dismiss</string>
 </resources>

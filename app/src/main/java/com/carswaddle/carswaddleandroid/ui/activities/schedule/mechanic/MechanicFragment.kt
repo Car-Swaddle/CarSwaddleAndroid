@@ -19,6 +19,7 @@ import com.carswaddle.carswaddleandroid.stripe.StripeKeyProvider
 import com.carswaddle.carswaddleandroid.data.mechanic.MechanicListElements
 import com.carswaddle.carswaddleandroid.data.mechanic.TemplateTimeSpan
 import com.carswaddle.carswaddleandroid.services.serviceModels.Point
+import com.carswaddle.carswaddleandroid.ui.view.ProgressButton
 import com.google.android.material.button.MaterialButton
 import com.haibin.calendarview.Calendar
 import com.haibin.calendarview.CalendarView
@@ -48,7 +49,13 @@ class MechanicFragment(val point: Point) : Fragment() {
     private var selectedMechanicId: String? = null
     private var selectedTimeSlot: TemplateTimeSpan? = null
     
+    private lateinit var confirmButton: ProgressButton
+    
     private var selectedDate: Date? = null
+    set(newValue) {
+        field = newValue
+        confirmButton.isButtonEnabled = selectedDate != null
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -88,8 +95,8 @@ class MechanicFragment(val point: Point) : Fragment() {
         )
         calendarView.scrollToCalendar(minCalendar.year, minCalendar.month, minCalendar.day)
 
-        val confirmButton = view.findViewById<MaterialButton>(R.id.confirm_mechanic)
-        confirmButton.setOnClickListener { v ->
+        confirmButton = view.findViewById(R.id.confirm_mechanic)
+        confirmButton.button.setOnClickListener { v ->
             val m = selectedMechanicId
             val t = selectedTimeSlot
             val date = selectedDate
@@ -98,12 +105,15 @@ class MechanicFragment(val point: Point) : Fragment() {
             }
         }
 
+        confirmButton.isButtonEnabled = false
+        
         calendarView.setOnCalendarSelectListener(object : CalendarView.OnCalendarSelectListener {
             override fun onCalendarSelect(calendar: Calendar?, isClick: Boolean) {
                 if (calendar == null) {
                     return
                 }
                 updateTimeSlots(calendar.toJavaCalendar())
+                selectedTimeSlot = null
             }
 
             override fun onCalendarOutOfRange(calendar: Calendar?) {
@@ -122,13 +132,13 @@ class MechanicFragment(val point: Point) : Fragment() {
         mechanicViewModel.mechanics.observe(
             viewLifecycleOwner,
             Observer<List<MechanicListElements>> { mechanicElements ->
-                this.mechanicViewAdapter.mechanicElements =
-                    mechanicElements
+                this.mechanicViewAdapter.mechanicElements = mechanicElements
                 val firstMechanicId = mechanicElements.safeFirst()?.mechanic?.id
                 activity?.runOnUiThread {
                     recyclerView.adapter?.notifyDataSetChanged()
                     // 0 is padding, 1 will be position of first item (always at least two with padding items)
                     recyclerView.smoothScrollToPosition(1)
+                    selectedTimeSlot = null
                 }
                 if (firstMechanicId != null) {
                     mechanicViewModel.loadTimeSlots(firstMechanicId) {
@@ -164,17 +174,27 @@ class MechanicFragment(val point: Point) : Fragment() {
         if (mechanicId == null) {
             return
         }
+        selectedTimeSlot = null
         val slots = mechanicViewModel.timeSlots(mechanicId, calendar)
         timeSlotViewAdapter.timeSlots = slots
         timeSlotViewAdapter.didChangeSelectedTimeSlot = { newTimeSlot ->
-            if (newTimeSlot != null) {
-                val selectedCal = getInstance()
-                val timeCal = newTimeSlot.calendar
-                selectedCal.set(calendar.get(YEAR), calendar.get(MONTH), calendar.get(DATE), timeCal.get(HOUR_OF_DAY), timeCal.get(MINUTE), timeCal.get(SECOND))
-                
-                this.selectedDate = selectedCal.time
-            } else {
-                // clear
+            activity?.runOnUiThread {
+                if (newTimeSlot != null) {
+                    val selectedCal = getInstance()
+                    val timeCal = newTimeSlot.calendar
+                    selectedCal.set(
+                        calendar.get(YEAR),
+                        calendar.get(MONTH),
+                        calendar.get(DATE),
+                        timeCal.get(HOUR_OF_DAY),
+                        timeCal.get(MINUTE),
+                        timeCal.get(SECOND)
+                    )
+
+                    this.selectedDate = selectedCal.time
+                } else {
+                    // clear
+                }
             }
         }
         

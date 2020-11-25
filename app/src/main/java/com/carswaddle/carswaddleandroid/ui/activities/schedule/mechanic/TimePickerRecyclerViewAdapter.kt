@@ -5,8 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.appcompat.widget.AppCompatRatingBar
-import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import com.carswaddle.carswaddleandroid.Extensions.safeFirst
 import com.carswaddle.carswaddleandroid.R
@@ -66,7 +64,7 @@ class TimePickerRecyclerViewAdapter(
         set(newValue) {
             field = newValue
             if (isSelectedView) {
-                timeTextView.setBackgroundColor(ResourcesCompat.getColor(itemView.resources, R.color.colorPrimary, null))
+                timeTextView.setBackgroundColor(ResourcesCompat.getColor(itemView.resources, R.color.brand, null))
             } else {
                 timeTextView.setBackgroundColor(ResourcesCompat.getColor(itemView.resources, R.color.background, null))
             }
@@ -75,7 +73,7 @@ class TimePickerRecyclerViewAdapter(
         
         private fun textColor(): Int {
             if (isSelectedView) {
-                return ResourcesCompat.getColor(itemView.resources, R.color.primaryContrast, null)
+                return ResourcesCompat.getColor(itemView.resources, R.color.brandContrast, null)
             } else {
                 return ResourcesCompat.getColor(itemView.resources, R.color.backgroundContrast, null)
             }

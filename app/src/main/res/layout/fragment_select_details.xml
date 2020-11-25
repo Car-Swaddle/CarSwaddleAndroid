@@ -106,7 +106,7 @@
                         android:hint="Coupon Code"
                         android:textCursorDrawable="@drawable/cursor_color"
                         android:singleLine="true"
-                        app:backgroundTint="@color/colorPrimary"
+                        app:backgroundTint="@color/brand"
                         android:textSize="16sp" />
 
                     <TextView
@@ -135,15 +135,12 @@
 
     </androidx.core.widget.NestedScrollView>
 
-    <com.google.android.material.button.MaterialButton
+    <com.carswaddle.carswaddleandroid.ui.view.ProgressButton
         android:id="@+id/payButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:text="Pay"
-        android:textColor="#fff"
-        app:shapeAppearanceOverlay="@style/CarSwaddle.ConfirmButton"
-        app:backgroundTint="#387DFF"
+        app:displayText="@string/pay"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

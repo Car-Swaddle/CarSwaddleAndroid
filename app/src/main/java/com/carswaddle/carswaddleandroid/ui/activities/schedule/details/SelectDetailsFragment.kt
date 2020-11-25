@@ -24,6 +24,7 @@ import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.data.vehicle.Vehicle
 import com.carswaddle.carswaddleandroid.services.CouponErrorType
 import com.carswaddle.carswaddleandroid.services.serviceModels.*
+import com.carswaddle.carswaddleandroid.ui.view.ProgressButton
 import com.google.android.material.button.MaterialButton
 import com.stripe.android.PaymentSession
 import com.stripe.android.PaymentSessionConfig
@@ -57,7 +58,7 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String, val schedu
     private lateinit var paymentMethodTextView: TextView
     private lateinit var paymentLayout: LinearLayout
     private lateinit var paymentSession: PaymentSession
-    private lateinit var payButton: MaterialButton
+    private lateinit var payButton: ProgressButton
 
     private var paymentSourceId: String? = null
     
@@ -79,7 +80,7 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String, val schedu
         paymentLayout = view.findViewById(R.id.paymentLayout)
         payButton = view.findViewById(R.id.payButton)
         
-        payButton.setOnClickListener { 
+        payButton.button.setOnClickListener { 
             payForService()
         }
 
@@ -211,11 +212,7 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String, val schedu
         with(oilTypeRecyclerView) {
             val oilTypeAdapter =
                 // TODO - make these enums
-                OilTypeRecyclerViewAdapter(
-                    listOf(
-                        "Conventional", "Blend", "Synthetic", "High Mileage"
-                    ), requireActivity()
-                )
+                OilTypeRecyclerViewAdapter(requireActivity())
 
             this.adapter = oilTypeAdapter
             this.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
@@ -333,10 +330,13 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String, val schedu
             sourceID
         )
         
+        payButton.isLoading = true
+        
         selectDetailsViewModel.createAndPayForAutoService(createAutoService) { error ->
             Log.w("autoservice", "Created new auto service")
             if (error == null) {
                 activity?.runOnUiThread {
+                    payButton.isLoading = false
                     showAlertToAddToCalendar(scheduledDate)
                 }
             }
@@ -345,13 +345,13 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String, val schedu
     
     private fun showAlertToAddToCalendar(scheduledDate: Date) {
         val builder = AlertDialog.Builder(context)
-        builder.setTitle("Congratulations on scheduling your oil change! Would you like to add it to your calendar?")
-        builder.setMessage("Add it to your calendar to receive reminders.")
-        builder.setPositiveButton("Add event") { dialog, which ->
+        builder.setTitle(getString(R.string.add_event_calendar_title))
+        builder.setMessage(getString(R.string.add_event_calendar_message))
+        builder.setPositiveButton(getString(R.string.add_event_calendar)) { dialog, which ->
             openIntentForCalendarEvent(scheduledDate)
             activity?.finish()
         }
-        builder.setNegativeButton("Dismiss") { dialog, which ->
+        builder.setNegativeButton(getString(R.string.dismiss_dialog)) { dialog, which ->
             activity?.finish()
         }
         val dialog: AlertDialog = builder.create()

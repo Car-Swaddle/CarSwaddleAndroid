@@ -22,10 +22,10 @@ enum class OilType {
 
     fun localizedString(): String {
         when (this) {
-            CONVENTIONAL -> return "Conventional oil type"
-            BLEND -> return "Blend oil type"
-            SYNTHETIC -> return "Synthetic oil type"
-            HIGH_MILEAGE -> return "High mileage oil type"
+            CONVENTIONAL -> return "Conventional"
+            BLEND -> return "Blend"
+            SYNTHETIC -> return "Synthetic"
+            HIGH_MILEAGE -> return "High mileage"
             else -> return ""
         }
     }

@@ -3,10 +3,15 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <item name="android:fontFamily">@font/montserrat</item>
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/brand</item>
+        <item name="colorPrimaryDark">@color/brandVivid</item>
+        <item name="colorAccent">@color/brand2</item>
         <item name="otpViewStyle">@style/OtpWidget.OtpView</item>
+    </style>
+
+    <style name="MaterialButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="backgroundTint">@color/background_color_materialbutton</item>
+        <item name="android:textColor">@color/text_color_materialbutton</item>
     </style>
 
     <style name="CarSwaddle.ConfirmButton" parent="@style/Widget.MaterialComponents.Button">

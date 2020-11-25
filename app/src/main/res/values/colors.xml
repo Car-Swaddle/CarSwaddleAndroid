@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3B7DFF</color>
-    <color name="colorPrimaryDark">#0852BF</color>
-    <color name="colorAccent">#EC2322</color>
-    <color name="content2">#F9F9F9</color>
+    <color name="brand">#3B7DFF</color>
+    <color name="brandDisabled">#084ACC</color>
+    <color name="brandVivid">#0852BF</color>
+    <color name="brand2">#EC2322</color>
+    <color name="content">#F9F9F9</color>
     <color name="stroke">#AAAAAA</color>
     <color name="background">#FFFFFF</color>
     <color name="background2">#CCCCCC</color>
-    <color name="primaryContrast">#FFFFFF</color>
+    <color name="brandContrast">#FFFFFF</color>
+    <color name="brandContrastDisabled">#EEEEEE</color>
     <color name="backgroundContrast">#000</color>
     <color name="error">#FC2302</color>
     <color name="success">#009F02</color>
+    <color name="text">#000</color>
 </resources>

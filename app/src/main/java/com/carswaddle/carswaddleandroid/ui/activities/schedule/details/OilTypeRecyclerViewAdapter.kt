@@ -8,15 +8,18 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.carswaddle.carswaddleandroid.R
+import com.carswaddle.carswaddleandroid.services.serviceModels.OilType
+import com.carswaddle.carswaddleandroid.services.serviceModels.OilType.*
 import com.carswaddle.carswaddleandroid.ui.activities.schedule.MyMechanicRecyclerViewAdapter
 
 class OilTypeRecyclerViewAdapter(
-    private val values: List<String>,
     private val context: Context
 ) : RecyclerView.Adapter<OilTypeRecyclerViewAdapter.ViewHolder>() {
 
+    private val values: List<OilType> = listOf(CONVENTIONAL, BLEND, SYNTHETIC, HIGH_MILEAGE)
+    
     var selectedPosition: Int = 1
-
+    
     var selectedIndex: Int
     get() {
         return selectedPosition - 1
@@ -24,6 +27,8 @@ class OilTypeRecyclerViewAdapter(
     set(newValue) {
         selectedPosition = newValue + 1
     }
+    
+    
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -40,7 +45,7 @@ class OilTypeRecyclerViewAdapter(
 
         val index = position - 1
         val item = values[index]
-        holder.textView.text = item
+        holder.textView.text = item.localizedString()
         if (index == selectedIndex) {
             holder.textView.background = ContextCompat.getDrawable(context, R.drawable.large_selected_border)
         } else {

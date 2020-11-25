@@ -92,7 +92,7 @@
         android:layout_margin="16dp"
         android:text="@string/save_vehicle"
         android:textColor="#fff"
-        app:backgroundTint="@color/colorPrimary"
+        app:backgroundTint="@color/brand"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

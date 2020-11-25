@@ -29,7 +29,7 @@
         android:layout_marginBottom="16dp"
         android:inputType="textMultiLine"
         android:layout_alignParentBottom="true"
-        app:backgroundTint="@color/colorPrimary"
+        app:backgroundTint="@color/brand"
         android:layout_below="@id/notesTitle"/>
 
 </RelativeLayout>
