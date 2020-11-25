@@ -201,7 +201,7 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String, val schedu
                         }
                         vehicleRecyclerView.smoothScrollToPosition(newVehicleIndex + 1)
                     } else if (hasScrolledToFirstVehicleIndex == false) {
-                        vehicleRecyclerView.smoothScrollToPosition(1) // 0 is padding, 1 is first item
+                        vehicleRecyclerView.smoothScrollToPosition(2) // 0 is padding, 1 is first item
                         hasScrolledToFirstVehicleIndex = true
                     }
                 }

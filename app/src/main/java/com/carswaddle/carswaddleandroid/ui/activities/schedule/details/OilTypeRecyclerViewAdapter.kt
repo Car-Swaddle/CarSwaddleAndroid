@@ -3,6 +3,7 @@ package com.carswaddle.carswaddleandroid.ui.activities.schedule.details
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.*
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -38,10 +39,10 @@ class OilTypeRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if (getItemViewType(position) != VIEW_TYPE_ITEM) {
-            holder.itemView.alpha = 0f
+            holder.rootView.visibility = INVISIBLE
             return
         }
-        holder.itemView.alpha = 1f
+        holder.rootView.visibility = VISIBLE
 
         val index = position - 1
         val item = values[index]
@@ -56,6 +57,7 @@ class OilTypeRecyclerViewAdapter(
     override fun getItemCount(): Int = values.size + 2
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val rootView: View = view
         val textView: TextView = view.findViewById(R.id.text_view)
     }
 
