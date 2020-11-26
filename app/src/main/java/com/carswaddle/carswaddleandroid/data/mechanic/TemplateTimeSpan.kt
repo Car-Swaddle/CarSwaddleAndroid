@@ -6,6 +6,10 @@ import androidx.room.PrimaryKey
 import com.carswaddle.carswaddleandroid.services.serviceModels.Weekday
 import java.text.DateFormatSymbols
 import java.text.SimpleDateFormat
+import java.time.LocalTime
+import java.time.Year
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatterBuilder
 import java.util.*
 
 @Entity
@@ -31,36 +35,21 @@ data class TemplateTimeSpan(
     }
     
     fun localizedStartTime(): String {
-//        var startTimeCal = Calendar.getInstance()
-//        val hourOfDay = startTime / 60 / 60 
-//        val minuteInHour = startTime / 60 % 60
-//        val secondInMinute = startTime % 60
-//        startTimeCal.set(Calendar.HOUR_OF_DAY, hourOfDay)
-//        startTimeCal.set(Calendar.SECOND, secondInMinute)
-//        startTimeCal.set(Calendar.MINUTE, minuteInHour)
-        
-        val startTimeCal = calendar
-        
-        val sdf = SimpleDateFormat("h:mm a")
-        
-        val symbols = DateFormatSymbols(Locale.getDefault())
-        symbols.setAmPmStrings(arrayOf("am", "pm"))
-        sdf.setDateFormatSymbols(symbols)
-        
-        return sdf.format(startTimeCal.getTime())
+        return dateTimeFormatter.format(localTime)
     }
-    
-    val calendar: Calendar
-    get() {
-        var startTimeCal = Calendar.getInstance()
+
+    val localTime: LocalTime get() {
         val hourOfDay = startTime / 60 / 60
         val minuteInHour = startTime / 60 % 60
         val secondInMinute = startTime % 60
-        startTimeCal.set(Calendar.HOUR_OF_DAY, hourOfDay)
-        startTimeCal.set(Calendar.SECOND, secondInMinute)
-        startTimeCal.set(Calendar.MINUTE, minuteInHour)
-        
-        return startTimeCal
+        return LocalTime.of(hourOfDay, minuteInHour, secondInMinute)
+    }
+
+    companion object {
+        val dateTimeFormatter: DateTimeFormatter = DateTimeFormatterBuilder()
+            .parseCaseInsensitive()
+            .appendPattern("hh:mm a")
+            .toFormatter(Locale.US)
     }
     
 }

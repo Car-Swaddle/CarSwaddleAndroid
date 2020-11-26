@@ -181,14 +181,14 @@ class MechanicFragment(val point: Point) : Fragment() {
             activity?.runOnUiThread {
                 if (newTimeSlot != null) {
                     val selectedCal = getInstance()
-                    val timeCal = newTimeSlot.calendar
+                    val localTime = newTimeSlot.localTime
                     selectedCal.set(
                         calendar.get(YEAR),
                         calendar.get(MONTH),
                         calendar.get(DATE),
-                        timeCal.get(HOUR_OF_DAY),
-                        timeCal.get(MINUTE),
-                        timeCal.get(SECOND)
+                        localTime.hour,
+                        localTime.minute,
+                        localTime.second
                     )
 
                     this.selectedDate = selectedCal.time
