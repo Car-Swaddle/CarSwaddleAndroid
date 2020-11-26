@@ -23,8 +23,8 @@
             android:layout_height="wrap_content"
             android:padding="16dp" >
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
@@ -94,7 +94,7 @@
 
                 </LinearLayout>
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
 
 
         </TableRow>
@@ -110,7 +110,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dip"
                 android:layout_weight="1"
-                android:background="#FF909090"
+                android:background="@color/contentDivider"
                 android:padding="2dip" />
         </TableRow>
 
@@ -134,8 +134,8 @@
                 <com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.ImageLabel
                     android:id="@+id/oil_type_image_label"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" />
+                    android:layout_height="wrap_content"/>
+                
             </LinearLayout>
 
         </TableRow>
@@ -151,7 +151,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dip"
                 android:layout_weight="1"
-                android:background="#FF909090"
+                android:background="@color/contentDivider"
                 android:padding="2dip" />
 
         </TableRow>
@@ -187,6 +187,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
+                        android:maxLines="1"
                         android:text="0 mi" />
 
                 </LinearLayout>
@@ -220,7 +221,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dip"
                 android:layout_weight="1"
-                android:background="#FF909090"
+                android:background="@color/contentDivider"
                 android:padding="2dip" />
 
         </TableRow>
@@ -236,6 +237,7 @@
                 android:layout_height="196dp" />
 
         </TableRow>
+        
     </TableLayout>
 
 </ScrollView>

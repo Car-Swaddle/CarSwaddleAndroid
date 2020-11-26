@@ -355,6 +355,7 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String, val schedu
             activity?.finish()
         }
         val dialog: AlertDialog = builder.create()
+        dialog.setCancelable(false)
         dialog.show()
     }
     
