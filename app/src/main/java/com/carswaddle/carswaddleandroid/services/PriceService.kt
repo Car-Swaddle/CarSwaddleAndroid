@@ -25,8 +25,8 @@ data class PriceRequest(
 )
 
 data class LocationJSON (
-    val longitude: Double,
-    val latitude: Double
+    val latitude: Double,
+    val longitude: Double
 )
 
 enum class CouponErrorType {
