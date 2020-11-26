@@ -2,12 +2,16 @@ package com.carswaddle.carswaddleandroid.ui.activities.autoservicelist
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.carswaddle.carswaddleandroid.R
-import java.text.DateFormatSymbols
-import java.text.SimpleDateFormat
+import java.time.DateTimeException
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatterBuilder
+import java.time.temporal.ChronoField
 import java.util.*
 
 class DateDisplayView @JvmOverloads constructor(
@@ -29,15 +33,28 @@ class DateDisplayView @JvmOverloads constructor(
     }
 
     fun configure(calendar: Calendar) {
-        dayOfMonthTextView.text = SimpleDateFormat("dd").format(calendar.getTime())
-        monthTextView.text = SimpleDateFormat("MMM").format(calendar.getTime())
-        dayOfWeekAndTimeTextView.text = dayOfWeekAndTime(calendar)
+        try {
+            val localDateTime = LocalDateTime.ofInstant(calendar.toInstant(), calendar.timeZone.toZoneId())
+            dayOfMonthTextView.text = dayFormatter.format(localDateTime)
+            monthTextView.text = monthFormatter.format(localDateTime)
+            dayOfWeekAndTimeTextView.text = dayOfWeekAndTimeFormatter.format(localDateTime)
+        } catch (e: DateTimeException) {
+            Log.e(this.javaClass.simpleName, "Failed to format dates for date display view", e)
+        }
     }
 
-    private fun dayOfWeekAndTime(calendar: Calendar): String {
-        val symbols = DateFormatSymbols(Locale.getDefault())
-        symbols.setAmPmStrings(arrayOf("am", "pm"))
-        return SimpleDateFormat("EEE hh:mm aa", symbols).format(calendar.getTime())
+    companion object {
+        val dayFormatter: DateTimeFormatter = DateTimeFormatterBuilder()
+            .appendPattern("dd")
+            .toFormatter(Locale.US)
+        val monthFormatter: DateTimeFormatter = DateTimeFormatterBuilder()
+            .appendPattern("MMM")
+            .toFormatter(Locale.US)
+        val dayOfWeekAndTimeFormatter: DateTimeFormatter = DateTimeFormatterBuilder()
+            .appendPattern("EEE hh:mm ")
+            .appendText(ChronoField.AMPM_OF_DAY, mapOf(0L to "am", 1L to "pm"))
+            .toFormatter(Locale.US)
+
     }
 
 }

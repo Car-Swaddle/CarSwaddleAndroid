@@ -4,10 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.carswaddle.carswaddleandroid.services.serviceModels.Weekday
-import java.text.DateFormatSymbols
-import java.text.SimpleDateFormat
 import java.time.LocalTime
-import java.time.Year
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatterBuilder
 import java.util.*
