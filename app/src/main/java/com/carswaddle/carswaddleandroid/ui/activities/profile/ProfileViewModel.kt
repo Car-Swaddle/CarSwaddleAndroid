@@ -39,7 +39,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
             _currentUser.postValue(userRepo.getCurrentUser(getApplication()))
         }
 
-        userRepo.updateCurrentUser(getApplication()) { error ->
+        userRepo.importCurrentUser(getApplication()) { error ->
             viewModelScope.launch {
                 val currentUser = userRepo.getCurrentUser(getApplication())
                 if (currentUser != null) {

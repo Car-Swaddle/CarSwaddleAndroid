@@ -2,6 +2,7 @@ package com.carswaddle.carswaddleandroid.CarSwaddleApp
 
 import android.app.Activity
 import android.app.Application
+import android.content.Context
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import com.carswaddle.carswaddleandroid.stripe.stripePublishableKey
@@ -12,6 +13,8 @@ class CarSwaddleApp: Application() {
     
     override fun onCreate() {
         super.onCreate()
+        
+        CarSwaddleApp.applicationContext = applicationContext
         
         PaymentConfiguration.init(
             applicationContext,
@@ -29,8 +32,11 @@ class CarSwaddleApp: Application() {
             override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
             override fun onActivityDestroyed(activity: Activity) {}
         })
-        
-        
+    }
+    
+    
+    companion object {
+        lateinit var applicationContext: Context
     }
     
 }

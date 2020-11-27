@@ -12,7 +12,7 @@ import com.carswaddle.carswaddleandroid.services.serviceModels.Stats
 import com.carswaddle.carswaddleandroid.services.serviceModels.TemplateTimeSpan as TemplateTimeSpanModel
 import com.google.gson.Gson
 import com.google.gson.JsonObject
-import com.google.protobuf.Parser
+//import com.google.protobuf.Parser
 import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Callback

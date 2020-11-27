@@ -1,7 +1,9 @@
 package com.carswaddle.carswaddleandroid.data.user
 
 import android.content.Context
+import android.content.Intent
 import android.util.Log
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.carswaddle.carswaddleandroid.Extensions.carSwaddlePreferences
 import com.carswaddle.carswaddleandroid.data.Authentication
 import com.carswaddle.carswaddleandroid.retrofit.ServiceGenerator
@@ -21,15 +23,7 @@ private val currentUserIdKey: String = "com.carswaddle.carswaddleandroid.user.cu
 // Declares the DAO as a private property in the constructor. Pass in the DAO
 // instead of the whole database, because you only need access to the DAO
 class UserRepository(private val userDao: UserDao) {
-
-    // Room executes all queries on a separate thread.
-    // Observed LiveData will notify the observer when the data has changed.
-//    val allWords: LiveData<List<Word>> = wordDao.getAlphabetizedWords()
-//
-//    suspend fun insert(word: Word) {
-//        wordDao.insert(word)
-//    }
-
+    
     suspend fun insert(user: User) = withContext(Dispatchers.IO + NonCancellable) {
         userDao.insertUser(user)
     }
@@ -60,13 +54,56 @@ class UserRepository(private val userDao: UserDao) {
                         insert(User(user))
                         setCurrentUserId(user.id, context)
                         completion(null, result)
+                        CoroutineScope(Dispatchers.Default).launch {
+                            val intent = Intent(USER_DID_LOGIN)
+                            intent.putExtra(IS_SIGN_UP, false)
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
+                        }
                     }
                 } else {
                     completion(null, result)
                 }
             }
-
         })
+    }
+
+    fun logout(deviceToken: String, context: Context, completion: (error: Throwable?, response: AuthResponse?) -> Unit) {
+//        val auth = serviceGenerator.retrofit.create(AuthenticationService::class.java)
+//        val call = auth.logout(deviceToken, PUSH_TOKEN_TYPE)
+//        call.enqueue(object : Callback<AuthResponse> {
+//            override fun onFailure(call: Call<AuthResponse>?, t: Throwable?) {
+//                Log.d("retrofit ", "call failed")
+//                completion(t, null)
+//            }
+//
+//            override fun onResponse(call: Call<AuthResponse>?, response: Response<AuthResponse>?) {
+//                Log.d("retrofit ", "call succeeded")
+//                val result = response?.body()
+//                if (result?.token != null) {
+//                    val auth = Authentication(context)
+//                    auth.setLoginToken(result.token)
+//                }
+//                val user = result?.user
+//                if (user != null) {
+//                    CoroutineScope(Dispatchers.IO).launch {
+//                        insert(User(user))
+//                        setCurrentUserId(user.id, context)
+//                        completion(null, result)
+//                        CoroutineScope(Dispatchers.Default).launch {
+//                            val intent = Intent(USER_DID_LOGIN)
+//                            intent.putExtra(IS_SIGN_UP, false)
+//                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
+//                        }
+//                    }
+//                } else {
+//                    completion(null, result)
+//                }
+//            }
+//        })
+
+        // TODO("Remove below and uncomment above when server implements android push")
+
+        completion(null, null)
     }
 
     fun signUp(email: String, password: String, context: Context, completion: (error: Throwable?, response: AuthResponse?) -> Unit) {
@@ -91,6 +128,11 @@ class UserRepository(private val userDao: UserDao) {
                         insert(User(user))
                         setCurrentUserId(user.id, context)
                         completion(null, result)
+                        CoroutineScope(Dispatchers.Default).launch {
+                            val intent = Intent(USER_DID_LOGIN)
+                            intent.putExtra(IS_SIGN_UP, true)
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
+                        }
                     }
                 } else {
                     completion(null, result)
@@ -192,7 +234,7 @@ class UserRepository(private val userDao: UserDao) {
         })
     }
 
-    fun updateCurrentUser(context: Context, completion: (error: Error?) -> Unit) {
+    fun importCurrentUser(context: Context, completion: (error: Error?) -> Unit) {
         val userService = ServiceGenerator.authenticated(context)?.retrofit?.create(UserService::class.java)
         if (userService == null) {
             // TODO: call with error
@@ -231,6 +273,13 @@ class UserRepository(private val userDao: UserDao) {
 
     fun updatePhoneNumber(phoneNumber: String, context: Context, cacheCompletion: () -> Unit = {}, completion: (error: Error?) -> Unit) {
         update(null, null, phoneNumber, null, null, null, cacheCompletion, context, completion)
+    }
+
+    fun updatePushToken(token: String, context: Context, cacheCompletion: () -> Unit = {}, completion: (error: Error?) -> Unit) {
+//        update(null, null, null, token, null, null, cacheCompletion, context, completion)
+        //  TODO("Remove below and uncomment above when server implements android push")
+        cacheCompletion()
+        completion(null)
     }
 
     private fun update(updateUser: UpdateUser, context: Context, cacheCompletion: () -> Unit = {}, completion: (error: Error?) -> Unit) {
@@ -276,7 +325,7 @@ class UserRepository(private val userDao: UserDao) {
     }
 
     private fun update(firstName: String?, lastName: String?, phoneNumber: String?, token: String?, timeZone: String?, adminKey: String?, cacheCompletion: () -> Unit, context: Context, completion: (error: Error?) -> Unit) {
-        val updateUser = UpdateUser(firstName, lastName, phoneNumber, token, timeZone, adminKey)
+        val updateUser = UpdateUser(firstName, lastName, phoneNumber, token, PUSH_TOKEN_TYPE, timeZone, adminKey)
         update(updateUser, context, cacheCompletion, completion)
     }
 
@@ -298,6 +347,15 @@ class UserRepository(private val userDao: UserDao) {
         val editContext = context.carSwaddlePreferences().edit()
         editContext.putString(currentUserIdKey, userId)
         editContext.apply()
+    }
+    
+    companion object {
+        
+        const val USER_DID_LOGIN = "UserRepository.USER_DID_LOGIN"
+        const val IS_SIGN_UP = "UserRepository.IS_SIGN_UP"
+        
+        const val PUSH_TOKEN_TYPE = "FCM"
+        
     }
 
 }

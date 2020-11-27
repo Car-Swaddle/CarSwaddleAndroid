@@ -37,17 +37,6 @@ class AutoServiceViewHolder (view: View) : RecyclerView.ViewHolder(view) {
 
         itemView.setOnClickListener {
             listener(autoServiceElements)
-
-            // Navigation.createNavigationOnClickListener(R.id.action_searchFragment)
-
-//            delegate.didSelectItem(autoServiceElements)
-
-//            val details = AutoServiceDetailsFragment(it.autoService.id)
-//            val transaction = manager.beginTransaction()
-//            transaction.add(R.id.autoservices_fragment, details)
-//            transaction.addToBackStack(null)
-//            transaction.commit()
-
         }
     }
 

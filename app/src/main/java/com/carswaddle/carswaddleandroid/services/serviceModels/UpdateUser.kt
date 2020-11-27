@@ -6,6 +6,7 @@ data class UpdateUser (
     val lastName: String?,
     val phoneNumber: String?,
     val token: String?,
+    val pushTokenType: String?,
     val timeZone: String?,
     val adminKey: String?
 )

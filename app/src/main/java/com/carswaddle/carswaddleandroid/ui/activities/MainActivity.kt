@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        userRepo.updateCurrentUser(this) {
+        userRepo.importCurrentUser(this) {
             val user = userRepo.getCurrentUser(this)
             Log.d("got user", "user: " + user?.firstName)
         }
