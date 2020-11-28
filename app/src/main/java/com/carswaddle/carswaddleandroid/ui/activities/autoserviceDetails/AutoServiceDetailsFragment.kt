@@ -104,6 +104,12 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
         notesView = root.findViewById(R.id.notesView)
         cancelAutoServiceButton = root.findViewById(R.id.cancelAutoService)
 
+        vehicleImageLabel.text = "--"
+        oilTypeImageLabel.text = "--"
+        streetAddressImageLabel.text = "--"
+        mechanicNameTextView.text = "--"
+        statusPillTextView.backgroundTintList = ColorStateList.valueOf(defaultStatusColor())
+
         notesView.notesDidChange = {
             autoServiceDetailsViewModel.updateNotes(it ?: "") { error, autoServiceId ->
                 Log.w("car swaddle android", "returned")
@@ -147,12 +153,8 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
             mechanicNameTextView.text = autoService.mechanicUser.displayName()
             statusPillTextView.text = autoService.autoService.status?.localizedString()
             
-            
-            
-            
             val status = autoService.autoService.status
             if (status != null) {
-//                statusPillTextView.setBackgroundColor(statusColor(status))
                 statusPillTextView.backgroundTintList = ColorStateList.valueOf(statusColor(status))
                 if (status == AutoServiceStatus.scheduled) {
                     cancelAutoServiceButton.visibility = View.VISIBLE
@@ -253,12 +255,13 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
             AutoServiceStatus.inProgress ->  R.color.statusColorInProgress
             AutoServiceStatus.completed -> R.color.statusColorCompleted
         }
-        val t = context?.theme
-        if (t == null) {
-            return 0
-        } else {
-            return resources.getColor(colorId, t)
-        }
+        val t = context?.theme ?: return 0
+        return resources.getColor(colorId, t)
+    }
+    
+    private fun defaultStatusColor(): Int {
+        val t = context?.theme ?: return 0
+        return resources.getColor(R.color.icon, t)
     }
 
     private fun enableMyLocation() {

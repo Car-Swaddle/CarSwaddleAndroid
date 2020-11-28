@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:maxLines="10000"
-        android:text="Image LabelImage LabelImage LabelImage LabelImage LabelImage LabelImage Label"
+        android:text="Image label"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/image_label_imageView"
         app:layout_constraintEnd_toEndOf="parent"

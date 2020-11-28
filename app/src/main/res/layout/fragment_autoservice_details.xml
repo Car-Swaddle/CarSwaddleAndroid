@@ -90,8 +90,7 @@
                         android:scaleType="fitXY"
                         android:layout_marginBottom="8dp"
                         android:padding="16dp"
-                        android:src="@drawable/ic_sms_bubble"
-                        app:tint="@color/icon2" />
+                        android:src="@drawable/ic_sms_bubble"/>
                     
                     <ImageView
                         android:id="@+id/phoneImageView"
@@ -103,8 +102,7 @@
                         android:scaleType="fitXY"
                         android:layout_marginBottom="8dp"
                         android:padding="16dp"
-                        android:src="@drawable/phone"
-                        app:tint="@color/icon2" />
+                        android:src="@drawable/phone" />
 
                 </LinearLayout>
 
