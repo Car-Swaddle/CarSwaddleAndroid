@@ -18,7 +18,7 @@ interface AuthenticationService {
 
     @Headers(headerPrefix + applicationJSON)
     @POST("/api/logout")
-    fun logout(@Body deviceToken: String, pushTokenType: String): Call<AuthResponse>
+    fun logout(@Body deviceTokenMap: Map<String, String>): Call<String>
 
     @Headers(headerPrefix + applicationFormURLEncoded)
     @FormUrlEncoded

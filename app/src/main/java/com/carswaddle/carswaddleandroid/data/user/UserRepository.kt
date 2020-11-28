@@ -68,42 +68,19 @@ class UserRepository(private val userDao: UserDao) {
     }
 
     fun logout(deviceToken: String, context: Context, completion: (error: Throwable?, response: AuthResponse?) -> Unit) {
-//        val auth = serviceGenerator.retrofit.create(AuthenticationService::class.java)
-//        val call = auth.logout(deviceToken, PUSH_TOKEN_TYPE)
-//        call.enqueue(object : Callback<AuthResponse> {
-//            override fun onFailure(call: Call<AuthResponse>?, t: Throwable?) {
-//                Log.d("retrofit ", "call failed")
-//                completion(t, null)
-//            }
-//
-//            override fun onResponse(call: Call<AuthResponse>?, response: Response<AuthResponse>?) {
-//                Log.d("retrofit ", "call succeeded")
-//                val result = response?.body()
-//                if (result?.token != null) {
-//                    val auth = Authentication(context)
-//                    auth.setLoginToken(result.token)
-//                }
-//                val user = result?.user
-//                if (user != null) {
-//                    CoroutineScope(Dispatchers.IO).launch {
-//                        insert(User(user))
-//                        setCurrentUserId(user.id, context)
-//                        completion(null, result)
-//                        CoroutineScope(Dispatchers.Default).launch {
-//                            val intent = Intent(USER_DID_LOGIN)
-//                            intent.putExtra(IS_SIGN_UP, false)
-//                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
-//                        }
-//                    }
-//                } else {
-//                    completion(null, result)
-//                }
-//            }
-//        })
+        val auth = serviceGenerator.retrofit.create(AuthenticationService::class.java)
+        val call = auth.logout(mapOf("deviceToken" to deviceToken))
+        call.enqueue(object : Callback<String> {
+            override fun onFailure(call: Call<String>?, t: Throwable?) {
+                Log.d("retrofit ", "call failed")
+                completion(t, null)
+            }
 
-        // TODO("Remove below and uncomment above when server implements android push")
-
-        completion(null, null)
+            override fun onResponse(call: Call<String>?, response: Response<String>?) {
+                Log.d("retrofit ", "call succeeded")
+                completion(null, null)
+            }
+        })
     }
 
     fun signUp(email: String, password: String, context: Context, completion: (error: Throwable?, response: AuthResponse?) -> Unit) {
