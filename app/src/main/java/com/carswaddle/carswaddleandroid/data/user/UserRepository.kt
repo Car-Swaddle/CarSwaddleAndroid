@@ -276,10 +276,7 @@ class UserRepository(private val userDao: UserDao) {
     }
 
     fun updatePushToken(token: String, context: Context, cacheCompletion: () -> Unit = {}, completion: (error: Error?) -> Unit) {
-//        update(null, null, null, token, null, null, cacheCompletion, context, completion)
-        //  TODO("Remove below and uncomment above when server implements android push")
-        cacheCompletion()
-        completion(null)
+        update(null, null, null, token, null, null, cacheCompletion, context, completion)
     }
 
     private fun update(updateUser: UpdateUser, context: Context, cacheCompletion: () -> Unit = {}, completion: (error: Error?) -> Unit) {
