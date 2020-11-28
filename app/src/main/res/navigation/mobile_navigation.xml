@@ -3,13 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_autoservices_list">
+    app:startDestination="@+id/navigation_home">
 
     <fragment
         android:id="@+id/navigation_autoservices_list"
         android:name="com.carswaddle.carswaddleandroid.activities.ui.home.AutoServicesListFragment"
         android:label="@string/your_services"
         tools:layout="@layout/fragment_autoservices_list" >
+        <action
+            android:id="@+id/action_navigation_autoservices_list_to_navigation_autoservice_details"
+            app:destination="@id/navigation_autoservice_details" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.carswaddle.carswaddleandroid.activities.ui.home.AutoServicesListFragment"
+        android:label="@string/your_services"
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_navigation_autoservices_list_to_navigation_autoservice_details"
             app:destination="@id/navigation_autoservice_details" />
