@@ -27,11 +27,11 @@
     <fragment
         android:id="@+id/navigation_edit_name"
         android:name="com.carswaddle.carswaddleandroid.ui.activities.profile.EditNameFragment"
-        android:label="@string/title_profile"
+        android:label="@string/edit_name"
         tools:layout="@layout/fragment_edit_name" />
     <fragment
         android:id="@+id/editPhoneNumberFragment"
         android:name="com.carswaddle.carswaddleandroid.ui.activities.profile.EditPhoneNumberFragment"
-        android:label="EditPhoneNumberFragment" />
+        android:label="@string/edit_phone_number" />
 
 </navigation>

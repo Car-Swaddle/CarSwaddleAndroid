@@ -169,4 +169,6 @@
     <string name="add_event_calendar_message">Congratulations on scheduling your oil change! Add it to your calendar to receive reminders.</string>
     <string name="dismiss_dialog">Dismiss</string>
     <string name="title_services">Services</string>
+    <string name="edit_phone_number">Edit phone number</string>
+    <string name="edit_name">Edit name</string>
 </resources>
