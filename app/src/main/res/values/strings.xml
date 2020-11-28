@@ -171,4 +171,11 @@
     <string name="title_services">Services</string>
     <string name="edit_phone_number">Edit phone number</string>
     <string name="edit_name">Edit name</string>
+    <string name="schedule_oil_change">Schedule oil change</string>
+    <string name="cancel_auto_service">Cancel auto service</string>
+    <string name="cancel_service_sure">Are you sure you want to cancel this auto service?</string>
+    <string name="ok">OK</string>
+    <string name="your_services">Your Services</string>
+    <string name="title_oil_change">Oil change</string>
+    <string name="dismiss">Dismiss</string>
 </resources>

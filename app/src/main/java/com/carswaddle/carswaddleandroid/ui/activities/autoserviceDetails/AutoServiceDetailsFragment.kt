@@ -1,10 +1,13 @@
 package com.carswaddle.carswaddleandroid.ui.activities.autoserviceDetails
 
 import android.Manifest
+import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
 import android.icu.text.MeasureFormat
+import java.util.Calendar
 import android.icu.util.Measure
 import android.icu.util.MeasureUnit
 import android.location.Location
@@ -15,17 +18,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.carswaddle.carswaddleandroid.Extensions.openSettingsToAppActions
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.data.oilChange.OilChange
+import com.carswaddle.carswaddleandroid.services.serviceModels.AutoServiceStatus
+import com.carswaddle.carswaddleandroid.ui.activities.SetPhoneNumberActivity
 import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServiceListElements
 import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.DateDisplayView
 import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.ImageLabel
@@ -42,18 +45,22 @@ import com.google.android.gms.maps.model.MarkerOptions
 import java.math.RoundingMode
 
 
-class AutoServiceDetailsFragment(val autoServiceId: String) : Fragment(), OnMapReadyCallback {
+class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
 
     private lateinit var dateDisplay: DateDisplayView
     private lateinit var mechanicNameTextView: TextView
-    private lateinit var statusPillButton: Button
+    private lateinit var statusPillTextView: TextView
     private lateinit var vehicleImageLabel: ImageLabel
     private lateinit var oilTypeImageLabel: ImageLabel
     private lateinit var streetAddressImageLabel: ImageLabel
     private lateinit var locationMapView: MapView
     private lateinit var distanceBetweenTextView: TextView
-    private lateinit var chatButton: Button
-    private lateinit var phoneButton: Button
+    private lateinit var chatImageView: ImageView
+    private lateinit var phoneImageView: ImageView
+
+    private lateinit var autoServiceId: String
+    
+    private lateinit var cancelAutoServiceButton: Button
 
     private lateinit var notesView: NotesView
 
@@ -78,21 +85,24 @@ class AutoServiceDetailsFragment(val autoServiceId: String) : Fragment(), OnMapR
     ): View? {
         val root = inflater.inflate(R.layout.fragment_autoservice_details, container, false)
 
+        this.autoServiceId = arguments?.getString("autoServiceId") ?: ""
+
         activity?.let {
             fusedLocationClient = LocationServices.getFusedLocationProviderClient(it)
         }
 
         dateDisplay = root.findViewById(R.id.date_display)
         mechanicNameTextView = root.findViewById(R.id.mechanic_name_text_view)
-        statusPillButton = root.findViewById(R.id.status_pill)
+        statusPillTextView = root.findViewById(R.id.status_pill)
         vehicleImageLabel = root.findViewById(R.id.vehicle_image_label)
         oilTypeImageLabel = root.findViewById(R.id.oil_type_image_label)
         locationMapView = root.findViewById(R.id.preview_location_map_view)
         streetAddressImageLabel = root.findViewById(R.id.location_image_label)
         distanceBetweenTextView = root.findViewById(R.id.distance_text_view)
-        chatButton = root.findViewById(R.id.chatButton)
-        phoneButton = root.findViewById(R.id.phoneButton)
+        chatImageView = root.findViewById(R.id.chatImageView)
+        phoneImageView = root.findViewById(R.id.phoneImageView)
         notesView = root.findViewById(R.id.notesView)
+        cancelAutoServiceButton = root.findViewById(R.id.cancelAutoService)
 
         notesView.notesDidChange = {
             autoServiceDetailsViewModel.updateNotes(it ?: "") { error, autoServiceId ->
@@ -100,7 +110,7 @@ class AutoServiceDetailsFragment(val autoServiceId: String) : Fragment(), OnMapR
             }
         }
 
-        chatButton.setOnClickListener(object : View.OnClickListener {
+        chatImageView.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
                 val phoneNumber = autoServiceDetailsViewModel.autoServiceElement.value?.mechanicUser?.phoneNumber ?: return
                 val intent = Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", phoneNumber, null))
@@ -108,7 +118,7 @@ class AutoServiceDetailsFragment(val autoServiceId: String) : Fragment(), OnMapR
             }
         })
 
-        phoneButton.setOnClickListener(object : View.OnClickListener {
+        phoneImageView.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
                 val phoneNumber = autoServiceDetailsViewModel.autoServiceElement.value?.mechanicUser?.phoneNumber ?: return
                 val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber))
@@ -135,7 +145,21 @@ class AutoServiceDetailsFragment(val autoServiceId: String) : Fragment(), OnMapR
                 dateDisplay.configure(date)
             }
             mechanicNameTextView.text = autoService.mechanicUser.displayName()
-            statusPillButton.text = autoService.autoService.status?.localizedString()
+            statusPillTextView.text = autoService.autoService.status?.localizedString()
+            
+            
+            
+            
+            val status = autoService.autoService.status
+            if (status != null) {
+//                statusPillTextView.setBackgroundColor(statusColor(status))
+                statusPillTextView.backgroundTintList = ColorStateList.valueOf(statusColor(status))
+                if (status == AutoServiceStatus.scheduled) {
+                    cancelAutoServiceButton.visibility = View.VISIBLE
+                } else {
+                    cancelAutoServiceButton.visibility = View.GONE
+                }
+            }
 
             vehicleImageLabel.text = autoService.vehicle.displayValue()
             streetAddressImageLabel.text = autoService.location.streetAddress ?: ""
@@ -155,7 +179,47 @@ class AutoServiceDetailsFragment(val autoServiceId: String) : Fragment(), OnMapR
             oilTypeImageLabel.text = oilChange.oilType.localizedString()
         })
 
+        cancelAutoServiceButton.setOnClickListener {
+            val dialogBuilder = AlertDialog.Builder(requireContext())
+            val autoService = autoServiceDetailsViewModel.autoServiceElement.value
+            val d = autoService?.autoService?.scheduledDate
+            if (d == null) {
+                return@setOnClickListener
+            }
+            val message = dialogMessage(d)
+            val title = getString(R.string.cancel_service_sure)
+            dialogBuilder.setMessage(message)
+                .setCancelable(false)
+                .setNegativeButton(getString(R.string.cancel_auto_service), { dialog, id ->
+                    autoServiceDetailsViewModel.cancelAutoService { error, autoServiceId ->  
+                        
+                    }
+                })
+                .setNeutralButton(getString(R.string.dismiss)) { dialog, id -> }
+            val alert = dialogBuilder.create()
+            alert.setTitle(title)
+            alert.show()
+        }
+        
         return root
+    }
+    
+    private fun dialogMessage(scheduledDate: Calendar): String {
+        if (userWillReceiveRefund(scheduledDate)) {
+            return "If you cancel this auto service your funds will be refunded and your mechanic will be notified."
+        } else {
+            return "Because the auto service is less than 24 hours away, your funds will not be refunded to you, should you cancel this auto service. Your mechanic will be notified of the cancellation."
+        }
+    }
+    
+    private fun userWillReceiveRefund(date: Calendar): Boolean {
+        val now = Calendar.getInstance()
+        val diff: Long = date.timeInMillis - now.timeInMillis
+        val seconds = diff / 1000
+        val minutes = seconds / 60
+        val hours = minutes / 60
+
+        return hours > 24
     }
 
     private fun updateDistanceToService() {
@@ -180,6 +244,21 @@ class AutoServiceDetailsFragment(val autoServiceId: String) : Fragment(), OnMapR
         // Centered on lehi showing slc + provo
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(saltLakeAndProvo, 10f))
         enableMyLocation()
+    }
+    
+    private fun statusColor(status: AutoServiceStatus): Int {
+        val colorId = when (status) {
+            AutoServiceStatus.scheduled -> R.color.statusColorScheduled
+            AutoServiceStatus.canceled -> R.color.statusColorCanceled
+            AutoServiceStatus.inProgress ->  R.color.statusColorInProgress
+            AutoServiceStatus.completed -> R.color.statusColorCompleted
+        }
+        val t = context?.theme
+        if (t == null) {
+            return 0
+        } else {
+            return resources.getColor(colorId, t)
+        }
     }
 
     private fun enableMyLocation() {

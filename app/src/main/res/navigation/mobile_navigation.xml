@@ -3,13 +3,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_autoservices_list">
 
     <fragment
-        android:id="@+id/navigation_home"
+        android:id="@+id/navigation_autoservices_list"
         android:name="com.carswaddle.carswaddleandroid.activities.ui.home.AutoServicesListFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        android:label="@string/your_services"
+        tools:layout="@layout/fragment_autoservices_list" >
+        <action
+            android:id="@+id/action_navigation_autoservices_list_to_navigation_autoservice_details"
+            app:destination="@id/navigation_autoservice_details" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_autoservice_details"
+        android:name="com.carswaddle.carswaddleandroid.ui.activities.autoserviceDetails.AutoServiceDetailsFragment"
+        android:label="@string/title_oil_change"
+        tools:layout="@layout/fragment_autoservice_details" 
+        >
+        <argument
+            android:name="autoServiceId"
+            app:argType="string" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_profile"
@@ -29,6 +44,7 @@
         android:name="com.carswaddle.carswaddleandroid.ui.activities.profile.EditNameFragment"
         android:label="@string/edit_name"
         tools:layout="@layout/fragment_edit_name" />
+    
     <fragment
         android:id="@+id/editPhoneNumberFragment"
         android:name="com.carswaddle.carswaddleandroid.ui.activities.profile.EditPhoneNumberFragment"

@@ -156,6 +156,47 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
         })
     }
 
+    fun cancelAutoService(
+        autoServiceId: String,
+        context: Context,
+        completion: (error: Throwable?, autoServiceId: String?) -> Unit
+    ) {
+        val autoServiceService = ServiceGenerator.authenticated(context)?.retrofit?.create(
+            AutoServiceService::class.java
+        )
+        if (autoServiceService == null) {
+            completion(ServiceNotAvailable(), null)
+            return
+        }
+
+        val updateAutoService = UpdateAutoService(AutoServiceStatus.canceled.toString(), null, null, null, null, null, null)
+
+        val call = autoServiceService.updateAutoService(autoServiceId, updateAutoService)
+        call.enqueue(object :
+            Callback<com.carswaddle.carswaddleandroid.services.serviceModels.AutoService> {
+            override fun onFailure(call: Call<AutoService>, t: Throwable) {
+                completion(t, null)
+            }
+
+            override fun onResponse(call: Call<AutoService>, response: Response<AutoService>) {
+                val autoService = response.body()
+                if (autoService == null) {
+                    print("no auto service")
+                    completion(null, null)
+                } else {
+                    GlobalScope.async {
+                        try {
+                            insertNestedAutoService(autoService)
+                            completion(null, autoService.id)
+                        } catch (e: Exception) {
+                            completion(e, null)
+                        }
+                    }
+                }
+            }
+        })
+    }
+
     fun getAutoService(
         autoServiceId: String,
         context: Context,
@@ -322,7 +363,7 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
         
         return call
     }
-
+    
     suspend private fun insertNestedAutoService(autoService: AutoService): DataAutoService {
         val storedAutoService = DataAutoService(autoService)
         val location = AutoServiceLocation(autoService.location)

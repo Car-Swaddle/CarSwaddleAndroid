@@ -6,16 +6,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.Navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.carswaddle.carswaddleandroid.R
-import com.carswaddle.carswaddleandroid.ui.activities.autoserviceDetails.AutoServiceDetailsFragment
 import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServiceListAdapter
 import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServiceListElements
+import com.carswaddle.carswaddleandroid.ui.activities.autoserviceDetails.AutoServiceDetailsFragmentArgs
 import com.carswaddle.carswaddleandroid.ui.activities.schedule.MapsActivity
 
 
@@ -51,11 +53,18 @@ class AutoServicesListFragment : Fragment() {
         viewAdapter = AutoServiceListAdapter(autoServicesListViewModel.autoServices) {
             val manager = childFragmentManager
             if (manager != null) {
-                val details = AutoServiceDetailsFragment(it.autoService.id)
-                val transaction = manager.beginTransaction()
-                transaction.add(R.id.autoservices_fragment, details)
-                transaction.addToBackStack(null)
-                transaction.commit()
+//                val details = AutoServiceDetailsFragment(it.autoService.id)
+//                val transaction = manager.beginTransaction()
+//                transaction.add(R.id.autoservices_fragment, details)
+//                transaction.addToBackStack(null)
+//                transaction.commit()
+
+//                AutoServiceDetailsFragmentArgs
+//                val action = AutoServiceDetailsFragmentDirections.actionNavigationAutoServicesListToNavigationAutoServiceDetails()
+                val bundle = bundleOf("autoServiceId" to it.autoService.id)
+                findNavController().navigate(R.id.action_navigation_autoservices_list_to_navigation_autoservice_details, bundle)
+//                findNavController().navigate(action)
+                
             }
         }
 
