@@ -51,7 +51,7 @@ class DateDisplayView @JvmOverloads constructor(
             .appendPattern("MMM")
             .toFormatter(Locale.US)
         val dayOfWeekAndTimeFormatter: DateTimeFormatter = DateTimeFormatterBuilder()
-            .appendPattern("EEE hh:mm ")
+            .appendPattern("EEE h:mm ")
             .appendText(ChronoField.AMPM_OF_DAY, mapOf(0L to "am", 1L to "pm"))
             .toFormatter(Locale.US)
 

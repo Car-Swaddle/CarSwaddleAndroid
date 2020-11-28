@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -13,7 +12,7 @@
         android:layout_gravity="center"
         android:background="@color/background2"
         app:cardBackgroundColor="@color/background"
-        app:cardCornerRadius="8dp"
+        app:cardCornerRadius="@dimen/corner_radius"
         app:cardElevation="8dp"
         app:cardUseCompatPadding="true">
 
@@ -27,56 +26,41 @@
                 android:id="@+id/date_display"
                 android:layout_width="110dp"
                 android:layout_height="110dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginTop="@dimen/content_margin"
+                android:layout_marginBottom="@dimen/content_margin"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0" />
             
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-            <com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.ImageLabel
-                android:id="@+id/mechanicImageLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintBottom_toTopOf="@+id/addressImageLabel"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/date_display"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.ImageLabel
-                android:id="@+id/addressImageLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                app:layout_constraintBottom_toTopOf="@+id/vehicleImageLabel"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/date_display"
-                app:layout_constraintTop_toBottomOf="@+id/mechanicImageLabel" />
-
-            <com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.ImageLabel
-                android:id="@+id/vehicleImageLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginBottom="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/date_display"
-                app:layout_constraintTop_toBottomOf="@+id/addressImageLabel" />
-
-            </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="@dimen/content_margin">
+    
+                    <com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.ImageLabel
+                        android:id="@+id/mechanicImageLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/content_margin" />
+        
+                    <com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.ImageLabel
+                        android:id="@+id/addressImageLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/content_margin"
+                        android:layout_marginTop="@dimen/text_margin"
+                        android:layout_marginBottom="@dimen/text_margin"/>
+        
+                    <com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.ImageLabel
+                        android:id="@+id/vehicleImageLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/content_margin"
+                        android:layout_marginBottom="@dimen/content_margin" />
+    
+                </LinearLayout>
 
         </LinearLayout>
 

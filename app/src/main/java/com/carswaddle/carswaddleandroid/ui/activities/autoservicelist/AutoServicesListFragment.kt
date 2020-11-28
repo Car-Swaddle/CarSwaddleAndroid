@@ -26,7 +26,7 @@ class AutoServicesListFragment : Fragment() {
     private lateinit var autoServicesListViewModel: AutoServicesListViewModel
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var viewAdapter: RecyclerView.Adapter<*>
+    private lateinit var viewAdapter: AutoServiceListAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
 
     private lateinit var scheduleButton: Button
@@ -37,7 +37,7 @@ class AutoServicesListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         autoServicesListViewModel =
-            ViewModelProviders.of(this).get(AutoServicesListViewModel::class.java)
+            ViewModelProviders.of(requireActivity()).get(AutoServicesListViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_autoservices_list, container, false)
 
         scheduleButton = root.findViewById(R.id.scheduleButton)
@@ -47,24 +47,14 @@ class AutoServicesListFragment : Fragment() {
             Observer<List<AutoServiceListElements>> { autoServices ->
                 viewAdapter.notifyDataSetChanged()
             })
-
+        
         viewManager = LinearLayoutManager(activity?.applicationContext)
 
         viewAdapter = AutoServiceListAdapter(autoServicesListViewModel.autoServices) {
             val manager = childFragmentManager
             if (manager != null) {
-//                val details = AutoServiceDetailsFragment(it.autoService.id)
-//                val transaction = manager.beginTransaction()
-//                transaction.add(R.id.autoservices_fragment, details)
-//                transaction.addToBackStack(null)
-//                transaction.commit()
-
-//                AutoServiceDetailsFragmentArgs
-//                val action = AutoServiceDetailsFragmentDirections.actionNavigationAutoServicesListToNavigationAutoServiceDetails()
                 val bundle = bundleOf("autoServiceId" to it.autoService.id)
                 findNavController().navigate(R.id.action_navigation_autoservices_list_to_navigation_autoservice_details, bundle)
-//                findNavController().navigate(action)
-                
             }
         }
 

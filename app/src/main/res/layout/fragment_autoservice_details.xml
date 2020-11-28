@@ -56,6 +56,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="TextView" 
+                        android:textSize="@dimen/large_text"
                         android:layout_marginBottom="16dp"/>
 
                     <TextView
@@ -65,6 +66,7 @@
                         android:text="Completed"
                         android:textColor="@color/brandContrast"
                         android:padding="8dp"
+                        android:textSize="@dimen/small_text"
                         android:background="@drawable/pill_bg"
                         android:backgroundTint="@color/brand"
                         android:textAllCaps="false" />
@@ -142,7 +144,7 @@
                     android:id="@+id/vehicle_image_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"/>
+                    android:layout_marginBottom="@dimen/text_margin"/>
 
                 <com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.ImageLabel
                     android:id="@+id/oil_type_image_label"
@@ -192,8 +194,7 @@
                         android:id="@+id/location_image_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:paddingRight="16dp" />
+                        android:layout_marginEnd="@dimen/text_margin"/>
 
                     <TextView
                         android:id="@+id/distance_text_view"
@@ -201,12 +202,13 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:maxLines="1"
+                        android:textSize="@dimen/small_text"
                         android:text="0 mi" />
 
                 </LinearLayout>
 
                 <androidx.cardview.widget.CardView
-                    app:cardCornerRadius="16dp"
+                    app:cardCornerRadius="@dimen/corner_radius"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border">
@@ -282,6 +284,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/cancel_auto_service"
+                    android:textSize="@dimen/title"
                     android:backgroundTint="@color/content"
                     android:textColor="@color/important"
                     android:shadowColor="@color/content" />

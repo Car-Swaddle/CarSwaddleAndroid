@@ -48,7 +48,7 @@ class AutoServiceDetailsViewModel(application: Application) : AndroidViewModel(a
         vehicleRepo = VehicleRepository(db.vehicleDao())
         serviceEntityRepo = ServiceEntityRepository(db.serviceEntityDao())
         oilChangeRepo = OilChangeRepository(db.oilChangeDao())
-
+        
         loadAutoService()
     }
 

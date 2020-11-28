@@ -1,7 +1,13 @@
 package com.carswaddle.carswaddleandroid.activities.ui.home
 
 import android.app.Application
-import androidx.lifecycle.*
+import android.content.Context
+import android.content.SharedPreferences
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import com.carswaddle.carswaddleandroid.Extensions.carSwaddlePreferences
 import com.carswaddle.carswaddleandroid.data.AppDatabase
 import com.carswaddle.carswaddleandroid.data.autoservice.AutoServiceRepository
 import com.carswaddle.carswaddleandroid.data.location.AutoServiceLocationRepository
@@ -11,11 +17,17 @@ import com.carswaddle.carswaddleandroid.data.serviceEntity.ServiceEntityReposito
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
 import com.carswaddle.carswaddleandroid.data.vehicle.VehicleRepository
 import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServiceListElements
-import kotlinx.coroutines.*
-import java.lang.Exception
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
+private val AUTOSERVICE_IDS_KEY = "AUTOSERVICE_IDS_KEY"
 
 class AutoServicesListViewModel(application: Application) : AndroidViewModel(application) {
 
+    val autoServices: LiveData<List<AutoServiceListElements>>
+        get() = _autoServices
+    
     private val autoServiceRepo: AutoServiceRepository
     private val locationRepo: AutoServiceLocationRepository
     private val mechanicRepo: MechanicRepository
@@ -23,6 +35,8 @@ class AutoServicesListViewModel(application: Application) : AndroidViewModel(app
     private val vehicleRepo: VehicleRepository
     private val serviceEntityRepo: ServiceEntityRepository
     private val oilChangeRepo: OilChangeRepository
+
+    private val _autoServices = MutableLiveData<List<AutoServiceListElements>>()
 
     init {
         val db = AppDatabase.getDatabase(application)
@@ -33,11 +47,14 @@ class AutoServicesListViewModel(application: Application) : AndroidViewModel(app
         vehicleRepo = VehicleRepository(db.vehicleDao())
         serviceEntityRepo = ServiceEntityRepository(db.serviceEntityDao())
         oilChangeRepo = OilChangeRepository(db.oilChangeDao())
-
+        
         loadAutoServices()
-    }
 
-    private val _autoServices = MutableLiveData<List<AutoServiceListElements>>()
+        CoroutineScope(Dispatchers.IO).launch {
+            val ids = getAutoServiceIds()
+            updateAutoServices(ids)
+        }
+    }
 
     private fun loadAutoServices() {
         autoServiceRepo.getAutoServices(
@@ -47,25 +64,26 @@ class AutoServicesListViewModel(application: Application) : AndroidViewModel(app
             listOf<String>(),
             listOf<String>() // listOf("scheduled", "canceled", "inProgress")
         ) { error, autoServiceIds ->
-
-            viewModelScope.launch {
+            CoroutineScope(Dispatchers.IO).launch {
                 if (autoServiceIds != null) {
-                    var autoServiceElements: MutableList<AutoServiceListElements> = ArrayList()
-                    for (id in autoServiceIds) {
-                        fetchAutoServiceListElements(id)?.let {
-                            autoServiceElements.add(it)
-                        }
-                    }
-                    _autoServices.value = autoServiceElements
+                    setAutoServiceIds(autoServiceIds)
+                    updateAutoServices(autoServiceIds)
                 } else {
 
                 }
             }
         }
     }
-
-    val autoServices: LiveData<List<AutoServiceListElements>>
-        get() = _autoServices
+    
+    suspend private fun updateAutoServices(autoServiceIds: List<String>) {
+        var autoServiceElements: MutableList<AutoServiceListElements> = ArrayList()
+        for (id in autoServiceIds) {
+            fetchAutoServiceListElements(id)?.let {
+                autoServiceElements.add(it)
+            }
+        }
+        _autoServices.postValue(autoServiceElements) 
+    }
 
     suspend private fun fetchAutoServiceListElements(autoServiceId: String): AutoServiceListElements? {
         try {
@@ -98,5 +116,21 @@ class AutoServicesListViewModel(application: Application) : AndroidViewModel(app
             return null
         }
     }
+    
+    private fun preferences(): SharedPreferences {
+        val c: Context = getApplication()
+        return c.carSwaddlePreferences()
+    }
 
+    fun setAutoServiceIds(autoServiceIds: List<String>) {
+        val editContext = preferences().edit()
+        editContext.putString(AUTOSERVICE_IDS_KEY, autoServiceIds.joinToString(","))
+        editContext.apply()
+    }
+
+    private fun getAutoServiceIds(): List<String> {
+        val ids = preferences().getString(AUTOSERVICE_IDS_KEY, null) ?: return listOf()
+        return ids.split(",")
+    }
+    
 }

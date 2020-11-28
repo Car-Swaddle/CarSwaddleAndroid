@@ -140,7 +140,7 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
 
         locationMapView.getMapAsync(this)
 
-        autoServiceDetailsViewModel = ViewModelProviders.of(this).get(AutoServiceDetailsViewModel::class.java)
+        autoServiceDetailsViewModel = ViewModelProviders.of(requireActivity()).get(AutoServiceDetailsViewModel::class.java)
 
         autoServiceDetailsViewModel.autoServiceId = autoServiceId
 
@@ -193,9 +193,7 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
             dialogBuilder.setMessage(message)
                 .setCancelable(false)
                 .setNegativeButton(getString(R.string.cancel_auto_service), { dialog, id ->
-                    autoServiceDetailsViewModel.cancelAutoService { error, autoServiceId ->  
-                        
-                    }
+                    autoServiceDetailsViewModel.cancelAutoService { error, autoServiceId -> }
                 })
                 .setNeutralButton(getString(R.string.dismiss)) { dialog, id -> }
             val alert = dialogBuilder.create()

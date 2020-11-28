@@ -27,7 +27,7 @@ class EditNameFragment() : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        editNameViewModel = ViewModelProviders.of(this).get(EditNameViewModel::class.java)
+        editNameViewModel = ViewModelProviders.of(requireActivity()).get(EditNameViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_edit_name, container, false)
 
         firstNameLabeledEditText = root.findViewById(R.id.firstNameLabeledEditText)

@@ -6,10 +6,6 @@ import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.ui.activities.autoserviceDetails.AutoServiceDetailsFragment
 import java.util.*
 
-//interface AutoServiceViewHolderDelegate {
-//    fun didSelectItem(autoServiceElements: AutoServiceListElements)
-//}
-
 
 class AutoServiceViewHolder (view: View) : RecyclerView.ViewHolder(view) {
 
