@@ -76,7 +76,7 @@ class UserRepository(private val userDao: UserDao) {
                 Log.d("retrofit ", "call failed")
                 completion(t, null)
             }
-
+            
             override fun onResponse(call: Call<AuthResponse>?, response: Response<AuthResponse>?) {
                 Log.d("retrofit ", "call succeeded")
                 val result = response?.body()
