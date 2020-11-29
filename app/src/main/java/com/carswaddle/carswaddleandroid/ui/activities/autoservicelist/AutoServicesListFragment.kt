@@ -39,25 +39,34 @@ class AutoServicesListFragment : Fragment() {
         autoServicesListViewModel =
             ViewModelProviders.of(requireActivity()).get(AutoServicesListViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_autoservices_list, container, false)
-
+        
         scheduleButton = root.findViewById(R.id.scheduleButton)
 
-        autoServicesListViewModel.autoServices.observe(
+        autoServicesListViewModel.upcomingAutoServices.observe(
             viewLifecycleOwner,
             Observer<List<AutoServiceListElements>> { autoServices ->
                 viewAdapter.notifyDataSetChanged()
-            })
+            }
+        )
+
+        autoServicesListViewModel.pastAutoServices.observe(
+            viewLifecycleOwner,
+            Observer<List<AutoServiceListElements>> { autoServices ->
+                viewAdapter.notifyDataSetChanged()
+            }
+        )
         
         viewManager = LinearLayoutManager(activity?.applicationContext)
 
-        viewAdapter = AutoServiceListAdapter(autoServicesListViewModel.autoServices) {
+        viewAdapter = AutoServiceListAdapter(autoServicesListViewModel.upcomingAutoServices, autoServicesListViewModel.pastAutoServices) {
             val manager = childFragmentManager
             if (manager != null) {
                 val bundle = bundleOf("autoServiceId" to it.autoService.id)
                 findNavController().navigate(R.id.action_navigation_autoservices_list_to_navigation_autoservice_details, bundle)
             }
         }
-
+        viewAdapter?.currentUser = autoServicesListViewModel.currentUser
+        
         recyclerView = root.findViewById<RecyclerView>(R.id.autoservice_recycler_view).apply {
             // use this setting to improve performance if you know that changes
             // in content do not change the layout size of the RecyclerView

@@ -178,4 +178,5 @@
     <string name="your_services">Your Services</string>
     <string name="title_oil_change">Oil change</string>
     <string name="dismiss">Dismiss</string>
+    <string name="completed_appointments">Completed appointments</string>
 </resources>

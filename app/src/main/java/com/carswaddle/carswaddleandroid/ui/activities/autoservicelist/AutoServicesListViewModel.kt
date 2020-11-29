@@ -9,24 +9,34 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.carswaddle.carswaddleandroid.Extensions.carSwaddlePreferences
 import com.carswaddle.carswaddleandroid.data.AppDatabase
+import com.carswaddle.carswaddleandroid.data.CalendarConverter
 import com.carswaddle.carswaddleandroid.data.autoservice.AutoServiceRepository
 import com.carswaddle.carswaddleandroid.data.location.AutoServiceLocationRepository
 import com.carswaddle.carswaddleandroid.data.mechanic.MechanicRepository
 import com.carswaddle.carswaddleandroid.data.oilChange.OilChangeRepository
 import com.carswaddle.carswaddleandroid.data.serviceEntity.ServiceEntityRepository
+import com.carswaddle.carswaddleandroid.data.user.User
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
 import com.carswaddle.carswaddleandroid.data.vehicle.VehicleRepository
+import com.carswaddle.carswaddleandroid.services.serviceModels.AutoServiceStatus
 import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServiceListElements
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.*
+import kotlin.collections.ArrayList
 
 private val AUTOSERVICE_IDS_KEY = "AUTOSERVICE_IDS_KEY"
 
 class AutoServicesListViewModel(application: Application) : AndroidViewModel(application) {
 
-    val autoServices: LiveData<List<AutoServiceListElements>>
-        get() = _autoServices
+    val upcomingAutoServices: LiveData<List<AutoServiceListElements>>
+        get() = _upcomingAutoServices
+
+    val pastAutoServices: LiveData<List<AutoServiceListElements>>
+        get() = _pastAutoServices
+    
+    val currentUser: User?
     
     private val autoServiceRepo: AutoServiceRepository
     private val locationRepo: AutoServiceLocationRepository
@@ -36,8 +46,10 @@ class AutoServicesListViewModel(application: Application) : AndroidViewModel(app
     private val serviceEntityRepo: ServiceEntityRepository
     private val oilChangeRepo: OilChangeRepository
 
-    private val _autoServices = MutableLiveData<List<AutoServiceListElements>>()
+    private val _upcomingAutoServices = MutableLiveData<List<AutoServiceListElements>>()
 
+    private val _pastAutoServices = MutableLiveData<List<AutoServiceListElements>>()
+    
     init {
         val db = AppDatabase.getDatabase(application)
         autoServiceRepo = AutoServiceRepository(db.autoServiceDao())
@@ -54,6 +66,8 @@ class AutoServicesListViewModel(application: Application) : AndroidViewModel(app
             val ids = getAutoServiceIds()
             updateAutoServices(ids)
         }
+        
+        currentUser = userRepo.getCurrentUser(application)
     }
 
     private fun loadAutoServices() {
@@ -76,13 +90,20 @@ class AutoServicesListViewModel(application: Application) : AndroidViewModel(app
     }
     
     suspend private fun updateAutoServices(autoServiceIds: List<String>) {
-        var autoServiceElements: MutableList<AutoServiceListElements> = ArrayList()
+        var upcomingElements: MutableList<AutoServiceListElements> = ArrayList()
+        var pastElements: MutableList<AutoServiceListElements> = ArrayList()
+        val now = Calendar.getInstance()
         for (id in autoServiceIds) {
             fetchAutoServiceListElements(id)?.let {
-                autoServiceElements.add(it)
+                if (it.autoService.status != AutoServiceStatus.canceled && it.autoService.scheduledDate?.after(now) == true) {
+                    upcomingElements.add(it)
+                } else {
+                    pastElements.add(it)
+                }
             }
         }
-        _autoServices.postValue(autoServiceElements) 
+        _pastAutoServices.postValue(pastElements)
+        _upcomingAutoServices.postValue(upcomingElements)
     }
 
     suspend private fun fetchAutoServiceListElements(autoServiceId: String): AutoServiceListElements? {
