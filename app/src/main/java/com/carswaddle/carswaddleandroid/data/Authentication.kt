@@ -43,6 +43,10 @@ class Authentication(private val context: Context) {
     }
 
     fun logout(completion: (error: Throwable?, response: AuthResponse?) -> Unit) {
+
+        val intent = Intent(USER_WILL_LOGOUT)
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
+        
         removeToken()
         // TODO: make network request to remove push tokens and auth token from server
 
@@ -61,6 +65,7 @@ class Authentication(private val context: Context) {
     companion object {
         
         const val USER_DID_LOGOUT = "Authentication.USER_DID_LOGOUT"
+        const val USER_WILL_LOGOUT = "Authentication.USER_WILL_LOGOUT"
         
     }
 

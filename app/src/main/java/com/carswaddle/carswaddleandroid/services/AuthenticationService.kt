@@ -18,7 +18,7 @@ interface AuthenticationService {
 
     @Headers(headerPrefix + applicationJSON)
     @POST("/api/logout")
-    fun logout(@Body deviceToken: String, pushTokenType: String): Call<AuthResponse>
+    fun logout(@Body logoutBody: LogoutBody): Call<AuthResponse>
 
     @Headers(headerPrefix + applicationFormURLEncoded)
     @FormUrlEncoded
@@ -44,3 +44,9 @@ interface AuthenticationService {
     fun requestResetPasswordLink(@Field("email") email: String, @Field("appName") appName: String): Call<Void>
 
 }
+
+
+data class LogoutBody(
+    val deviceToken: String,
+    val pushTokenType: String
+)

@@ -12,7 +12,6 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.nimbusds.jose.shaded.json.parser.ContentHandlerDumy
 
 
 private val DEVICE_TOKEN_KEY = "DEVICE_TOKEN_KEY"
@@ -34,7 +33,7 @@ class MessagingController: FirebaseMessagingService() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 deletePushToken()
             }
-        }, IntentFilter(Authentication.USER_DID_LOGOUT))
+        }, IntentFilter(Authentication.USER_WILL_LOGOUT))
         
         val db = AppDatabase.getDatabase(CarSwaddleApp.applicationContext)
         userRepo = UserRepository(db.userDao())
