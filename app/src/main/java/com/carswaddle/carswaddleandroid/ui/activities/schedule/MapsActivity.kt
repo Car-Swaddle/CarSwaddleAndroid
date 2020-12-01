@@ -97,7 +97,7 @@ class MapsActivity : AppCompatActivity(), LocationFragment.OnLocationSelectedLis
 
         supportFragmentManager.beginTransaction()
             .add(R.id.fragment_container, details)
-            .replace(R.id.bottom_fragment_container, priceFragment)
+            .replace(R.id.bottom_fragment_container, priceFragment, "price")
             .addToBackStack("Details")
             .commit()
     }

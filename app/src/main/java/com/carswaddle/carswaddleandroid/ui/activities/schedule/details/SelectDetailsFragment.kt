@@ -180,9 +180,12 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String, val schedu
                     selectDetailsViewModel.loadVehicles()
                 }
 
-                manager.beginTransaction()
+                val transaction = manager.beginTransaction()
                     .add(R.id.fragment_container, details)
-                    .addToBackStack("Add vehicle")
+                if (manager.findFragmentByTag("price") != null) {
+                    transaction.hide(manager.findFragmentByTag("price")!!)
+                }
+                transaction.addToBackStack("Add vehicle")
                     .commit()
             }
         }
