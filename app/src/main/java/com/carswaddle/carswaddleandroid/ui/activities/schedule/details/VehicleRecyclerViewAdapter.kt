@@ -78,8 +78,7 @@ class VehicleRecyclerViewAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     override fun getItemCount(): Int {
-        val s = vehicles.size
-        return if (s == 0) { 0 } else { s + 1 + 2}
+        return vehicles.size + 1 + 2
     } // 1 for Add vehicle, 2 for padding left and right.
 
     inner class VehicleViewHolder(view: View) : RecyclerView.ViewHolder(view) {

@@ -61,7 +61,8 @@ class MapsActivity : AppCompatActivity(), LocationFragment.OnLocationSelectedLis
         val streetAddress = this.streetAddress(latLng)
         this.streetAddress = streetAddress
 
-        val mechanicFragment = MechanicFragment(Point(latLng, streetAddress))
+        val mechanicFragment = MechanicFragment()
+        mechanicFragment.point = Point(latLng, streetAddress)
         mechanicFragment.setOnConfirmCallbackListener(this)
 
         supportFragmentManager.beginTransaction()

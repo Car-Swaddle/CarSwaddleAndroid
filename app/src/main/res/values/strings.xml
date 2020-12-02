@@ -179,4 +179,8 @@
     <string name="title_oil_change">Oil change</string>
     <string name="dismiss">Dismiss</string>
     <string name="completed_appointments">Completed appointments</string>
+    <string name="no_mechanics">Bummer! There are no mechanics in your area.</string>
+    <string name="message_no_mechanics">We are working on getting mechanics to your area and we have been alerted of this.</string>
+    <string name="tap_to_select_a_mechanic">Tap to select a Mechanic</string>
+    <string name="select_a_date">Select a Date</string>
 </resources>

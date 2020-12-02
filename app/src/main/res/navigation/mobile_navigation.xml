@@ -59,5 +59,18 @@
         android:id="@+id/editPhoneNumberFragment"
         android:name="com.carswaddle.carswaddleandroid.ui.activities.profile.EditPhoneNumberFragment"
         android:label="@string/edit_phone_number" />
+    <fragment
+        android:id="@+id/addVehicleFragment"
+        android:name="com.carswaddle.carswaddleandroid.ui.activities.schedule.details.AddVehicleFragment"
+        android:label="AddVehicleFragment" />
+    <fragment
+        android:id="@+id/selectDetailsFragment"
+        android:name="com.carswaddle.carswaddleandroid.ui.activities.schedule.details.SelectDetailsFragment"
+        android:label="fragment_select_details"
+        tools:layout="@layout/fragment_select_details" >
+        <action
+            android:id="@+id/action_selectDetailsFragment_to_addVehicleFragment"
+            app:destination="@id/addVehicleFragment" />
+    </fragment>
 
 </navigation>

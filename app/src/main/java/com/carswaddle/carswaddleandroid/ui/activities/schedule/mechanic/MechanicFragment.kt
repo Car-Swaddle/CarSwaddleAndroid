@@ -19,11 +19,15 @@ import com.carswaddle.carswaddleandroid.stripe.StripeKeyProvider
 import com.carswaddle.carswaddleandroid.data.mechanic.MechanicListElements
 import com.carswaddle.carswaddleandroid.data.mechanic.TemplateTimeSpan
 import com.carswaddle.carswaddleandroid.services.serviceModels.Point
+import com.carswaddle.carswaddleandroid.ui.activities.schedule.mechanic.MechanicEmptyStateView
+import com.carswaddle.carswaddleandroid.ui.activities.schedule.mechanic.TimeSlotsEmptyStateView
 import com.carswaddle.carswaddleandroid.ui.view.ProgressButton
 import com.google.android.material.button.MaterialButton
 import com.haibin.calendarview.Calendar
 import com.haibin.calendarview.CalendarView
 import com.stripe.android.CustomerSession
+import kotlinx.android.synthetic.main.fragment_mechanic.*
+import org.w3c.dom.Text
 import java.text.DateFormatSymbols
 import java.util.*
 import java.util.Calendar.*
@@ -31,12 +35,14 @@ import kotlin.jvm.internal.Intrinsics
 import java.util.Calendar as KotlinCalendar
 
 
-class MechanicFragment(val point: Point) : Fragment() {
+class MechanicFragment() : Fragment() {
 
     private var spanCount = 4
 
     private lateinit var monthYearTextView: TextView
     private lateinit var callback: OnConfirmListener
+
+    lateinit var point: Point
 
     fun setOnConfirmCallbackListener(callback: OnConfirmListener) {
         this.callback = callback
@@ -47,7 +53,13 @@ class MechanicFragment(val point: Point) : Fragment() {
     private lateinit var timeSlotViewAdapter: TimePickerRecyclerViewAdapter
     private lateinit var calendarView: CalendarView
     private var selectedMechanicId: String? = null
-    private var selectedTimeSlot: TemplateTimeSpan? = null
+    private lateinit var mechanicEmptyView: MechanicEmptyStateView
+//    private var selectedTimeSlot: TemplateTimeSpan? = null
+    
+    private lateinit var mechanicRecycler: RecyclerView
+    
+    private lateinit var emptySlotsView: TimeSlotsEmptyStateView
+    private lateinit var timeRecycler: RecyclerView
     
     private lateinit var confirmButton: ProgressButton
     
@@ -70,14 +82,17 @@ class MechanicFragment(val point: Point) : Fragment() {
 
         mechanicViewAdapter = MyMechanicRecyclerViewAdapter()
 
-        val recyclerView = view.findViewById<RecyclerView>(R.id.mechanic_list_container)
-        with(recyclerView) {
+        mechanicRecycler = view.findViewById<RecyclerView>(R.id.mechanic_list_container)
+        with(mechanicRecycler) {
             this.adapter = mechanicViewAdapter
             this.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
             val snapHelper = LinearSnapHelper()
-            snapHelper.attachToRecyclerView(recyclerView)
+            snapHelper.attachToRecyclerView(mechanicRecycler)
             this.onFlingListener = snapHelper
         }
+        
+        emptySlotsView = view.findViewById(R.id.time_slot_empty_state)
+        mechanicEmptyView = view.findViewById(R.id.mechanicEmptyView)
 
         monthYearTextView = view.findViewById(R.id.month_year_text_view)
         updateMonthYear(getInstance().get(MONTH), getInstance().get(YEAR))
@@ -98,7 +113,6 @@ class MechanicFragment(val point: Point) : Fragment() {
         confirmButton = view.findViewById(R.id.confirm_mechanic)
         confirmButton.button.setOnClickListener { v ->
             val m = selectedMechanicId
-            val t = selectedTimeSlot
             val date = selectedDate
             if (m != null && date != null) {
                 callback.onConfirm(m, date)
@@ -113,7 +127,7 @@ class MechanicFragment(val point: Point) : Fragment() {
                     return
                 }
                 updateTimeSlots(calendar.toJavaCalendar())
-                selectedTimeSlot = null
+                selectedDate = null
             }
 
             override fun onCalendarOutOfRange(calendar: Calendar?) {
@@ -122,7 +136,7 @@ class MechanicFragment(val point: Point) : Fragment() {
         })
 
         timeSlotViewAdapter = TimePickerRecyclerViewAdapter()
-        val timeRecycler = view.findViewById<RecyclerView>(R.id.time_slot)
+        timeRecycler = view.findViewById<RecyclerView>(R.id.time_slot)
         with(timeRecycler) {
             this.adapter = timeSlotViewAdapter
             val gridLayoutManager = GridLayoutManager(context, spanCount)
@@ -135,10 +149,10 @@ class MechanicFragment(val point: Point) : Fragment() {
                 this.mechanicViewAdapter.mechanicElements = mechanicElements
                 val firstMechanicId = mechanicElements.safeFirst()?.mechanic?.id
                 activity?.runOnUiThread {
-                    recyclerView.adapter?.notifyDataSetChanged()
+                    mechanicRecycler.adapter?.notifyDataSetChanged()
                     // 0 is padding, 1 will be position of first item (always at least two with padding items)
-                    recyclerView.smoothScrollToPosition(1)
-                    selectedTimeSlot = null
+                    mechanicRecycler.smoothScrollToPosition(1)
+                    selectedDate = null
                 }
                 if (firstMechanicId != null) {
                     mechanicViewModel.loadTimeSlots(firstMechanicId) {
@@ -153,6 +167,8 @@ class MechanicFragment(val point: Point) : Fragment() {
                 if (selectedMechanicId == null) {
                     selectedMechanicId = firstMechanicId
                 }
+                updateMechanciViewDisplayState(mechanicElements.count())
+                updateTimeSlotDisplayState()
             })
 
         setEphemeralKey()
@@ -174,9 +190,10 @@ class MechanicFragment(val point: Point) : Fragment() {
         if (mechanicId == null) {
             return
         }
-        selectedTimeSlot = null
+        selectedDate = null
         val slots = mechanicViewModel.timeSlots(mechanicId, calendar)
         timeSlotViewAdapter.timeSlots = slots
+        updateTimeSlotDisplayState()
         timeSlotViewAdapter.didChangeSelectedTimeSlot = { newTimeSlot ->
             activity?.runOnUiThread {
                 if (newTimeSlot != null) {
@@ -199,6 +216,26 @@ class MechanicFragment(val point: Point) : Fragment() {
         }
         
         Log.w("slots", "slots: $slots")
+    }
+    
+    private fun updateTimeSlotDisplayState() {
+        if (timeSlotViewAdapter.timeSlots.count() > 0) {
+            emptySlotsView.visibility = View.GONE
+            timeRecycler.visibility = View.VISIBLE
+        } else {
+            emptySlotsView.visibility = View.VISIBLE
+            timeRecycler.visibility = View.GONE
+        }
+    }
+
+    private fun updateMechanciViewDisplayState(mechanicCount: Int) {
+        if (mechanicCount > 0) {
+            mechanicEmptyView.visibility = View.GONE
+            mechanicRecycler.visibility = View.VISIBLE
+        } else {
+            mechanicEmptyView.visibility = View.VISIBLE
+            mechanicRecycler.visibility = View.GONE
+        }
     }
 
     private fun updateMonthYear(month: Int, year: Int) {

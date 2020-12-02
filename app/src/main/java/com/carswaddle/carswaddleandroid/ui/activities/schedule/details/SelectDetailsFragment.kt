@@ -15,6 +15,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -174,7 +175,7 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String, val schedu
             val manager = activity?.supportFragmentManager
             if (manager != null) {
                 val details = AddVehicleFragment()
-
+                
                 details.didAddVehicle = {
                     newVehicleId = it
                     selectDetailsViewModel.loadVehicles()

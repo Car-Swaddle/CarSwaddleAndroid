@@ -66,7 +66,7 @@ class TimePickerRecyclerViewAdapter(
             if (isSelectedView) {
                 timeTextView.setBackgroundColor(ResourcesCompat.getColor(itemView.resources, R.color.brand, null))
             } else {
-                timeTextView.setBackgroundColor(ResourcesCompat.getColor(itemView.resources, R.color.background, null))
+                timeTextView.setBackgroundColor(ResourcesCompat.getColor(itemView.resources, R.color.content, null))
             }
             timeTextView.setTextColor(textColor())
         }
@@ -75,7 +75,7 @@ class TimePickerRecyclerViewAdapter(
             if (isSelectedView) {
                 return ResourcesCompat.getColor(itemView.resources, R.color.brandContrast, null)
             } else {
-                return ResourcesCompat.getColor(itemView.resources, R.color.backgroundContrast, null)
+                return ResourcesCompat.getColor(itemView.resources, R.color.text, null)
             }
         }
         

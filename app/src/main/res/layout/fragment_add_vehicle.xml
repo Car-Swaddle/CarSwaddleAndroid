@@ -15,11 +15,7 @@
 
         <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="wrap_content">
 
             <TableRow
                 android:id="@+id/row_1"
@@ -28,20 +24,11 @@
                 android:paddingHorizontal="16dp"
                 android:paddingTop="16dp">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <com.carswaddle.carswaddleandroid.ui.activities.profile.LabeledEditText
+                    android:id="@+id/vehicleNameLabeledTextView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <com.carswaddle.carswaddleandroid.ui.activities.profile.LabeledEditText
-                        android:id="@+id/vehicleNameLabeledTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="86dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                    android:layout_height="86dp"
+                    android:layout_weight="1"/>
 
             </TableRow>
 
@@ -51,17 +38,11 @@
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="16dp">
 
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <com.carswaddle.carswaddleandroid.ui.activities.profile.LabeledEditText
-                        android:id="@+id/licensePlateLabeledTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="86dp" />
-
-                </androidx.appcompat.widget.LinearLayoutCompat>
+                <com.carswaddle.carswaddleandroid.ui.activities.profile.LabeledEditText
+                    android:id="@+id/licensePlateLabeledTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="86dp"
+                    android:layout_weight="1"/>
 
             </TableRow>
 

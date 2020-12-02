@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:text="Tap to select a Mechanic"
+            android:text="@string/tap_to_select_a_mechanic"
             android:textStyle="bold"/>
 
             <androidx.recyclerview.widget.RecyclerView
@@ -30,12 +30,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center" />
+            
+            <com.carswaddle.carswaddleandroid.ui.activities.schedule.mechanic.MechanicEmptyStateView
+                android:id="@+id/mechanicEmptyView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:text="Select a Date"
+            android:text="@string/select_a_date"
             android:textStyle="bold"/>
 
             <TextView
@@ -79,6 +86,7 @@
                     app:year_view_month_text_color="#ff0000"
                     app:year_view_month_text_size="20sp"
                     app:year_view_scheme_color="#f17706"/>
+                
             </com.haibin.calendarview.CalendarLayout>
 
         <TextView
@@ -93,6 +101,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:clipChildren="false"/>
+
+            <com.carswaddle.carswaddleandroid.ui.activities.schedule.mechanic.TimeSlotsEmptyStateView
+                android:id="@+id/time_slot_empty_state"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
                 android:clipChildren="false"/>
 
         </LinearLayout>
