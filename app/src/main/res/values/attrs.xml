@@ -3,4 +3,7 @@
 <declare-styleable name="view_progress_button">
     <attr name="displayText" format="string" localization="suggested" />
 </declare-styleable>
+<declare-styleable name="progress_text_view">
+    <attr name="text_view_display_text" format="string" localization="suggested" />
+</declare-styleable>
 </resources>

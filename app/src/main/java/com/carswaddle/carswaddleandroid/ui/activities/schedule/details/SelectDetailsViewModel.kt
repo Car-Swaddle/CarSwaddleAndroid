@@ -55,7 +55,7 @@ class SelectDetailsViewModel(application: Application) : AndroidViewModel(applic
         }
     }
     
-    fun loadPrice(latitude: Double, longitude: Double, mechanicId: String, oilType: OilType, coupon: String?) {
+    fun loadPrice(latitude: Double, longitude: Double, mechanicId: String, oilType: OilType, coupon: String?, completion: (error: Throwable?) -> Unit) {
         val location = LocationJSON(latitude, longitude)
         autoServiceRepo.getPrice(location, mechanicId, oilType, coupon, getApplication()) { error, price ->
             Log.w("price", "Got price back")
@@ -68,6 +68,7 @@ class SelectDetailsViewModel(application: Application) : AndroidViewModel(applic
             } else {
                 _couponError.postValue(null)
             }
+            completion(error)
         }
     }
     

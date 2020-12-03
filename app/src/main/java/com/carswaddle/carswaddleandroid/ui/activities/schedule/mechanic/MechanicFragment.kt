@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -15,23 +16,19 @@ import com.carswaddle.carswaddleandroid.Extensions.safeFirst
 import com.carswaddle.carswaddleandroid.Extensions.toJavaCalendar
 import com.carswaddle.carswaddleandroid.Extensions.today
 import com.carswaddle.carswaddleandroid.R
-import com.carswaddle.carswaddleandroid.stripe.StripeKeyProvider
 import com.carswaddle.carswaddleandroid.data.mechanic.MechanicListElements
-import com.carswaddle.carswaddleandroid.data.mechanic.TemplateTimeSpan
 import com.carswaddle.carswaddleandroid.services.serviceModels.Point
+import com.carswaddle.carswaddleandroid.stripe.StripeKeyProvider
 import com.carswaddle.carswaddleandroid.ui.activities.schedule.mechanic.MechanicEmptyStateView
 import com.carswaddle.carswaddleandroid.ui.activities.schedule.mechanic.TimeSlotsEmptyStateView
 import com.carswaddle.carswaddleandroid.ui.view.ProgressButton
-import com.google.android.material.button.MaterialButton
 import com.haibin.calendarview.Calendar
 import com.haibin.calendarview.CalendarView
 import com.stripe.android.CustomerSession
 import kotlinx.android.synthetic.main.fragment_mechanic.*
-import org.w3c.dom.Text
 import java.text.DateFormatSymbols
 import java.util.*
 import java.util.Calendar.*
-import kotlin.jvm.internal.Intrinsics
 import java.util.Calendar as KotlinCalendar
 
 
@@ -53,12 +50,28 @@ class MechanicFragment() : Fragment() {
     private lateinit var timeSlotViewAdapter: TimePickerRecyclerViewAdapter
     private lateinit var calendarView: CalendarView
     private var selectedMechanicId: String? = null
+    set(newValue) {
+        field = newValue
+        currentTimeSlotCount = null
+    }
     private lateinit var mechanicEmptyView: MechanicEmptyStateView
 //    private var selectedTimeSlot: TemplateTimeSpan? = null
+    
+   private var currentTimeSlotCount: Int? = null 
+    set(newValue) {
+        field = newValue
+        updateTimeSlotDisplayState()
+    }
     
     private lateinit var mechanicRecycler: RecyclerView
     
     private lateinit var emptySlotsView: TimeSlotsEmptyStateView
+    private var hasFetchedTimeSlots: Boolean = false
+        set(newValue) {
+            field = newValue
+            updateTimeSlotDisplayState()
+        }
+    
     private lateinit var timeRecycler: RecyclerView
     
     private lateinit var confirmButton: ProgressButton
@@ -93,6 +106,7 @@ class MechanicFragment() : Fragment() {
         
         emptySlotsView = view.findViewById(R.id.time_slot_empty_state)
         mechanicEmptyView = view.findViewById(R.id.mechanicEmptyView)
+        mechanicEmptyView.visibility = View.GONE
 
         monthYearTextView = view.findViewById(R.id.month_year_text_view)
         updateMonthYear(getInstance().get(MONTH), getInstance().get(YEAR))
@@ -137,12 +151,11 @@ class MechanicFragment() : Fragment() {
 
         timeSlotViewAdapter = TimePickerRecyclerViewAdapter()
         timeRecycler = view.findViewById<RecyclerView>(R.id.time_slot)
-        with(timeRecycler) {
-            this.adapter = timeSlotViewAdapter
-            val gridLayoutManager = GridLayoutManager(context, spanCount)
-            this.layoutManager = gridLayoutManager
-        }
-
+        timeRecycler.adapter = timeSlotViewAdapter
+        timeRecycler.setLayoutManager(object: GridLayoutManager(context, spanCount) {
+            // override methods here
+        })
+        
         mechanicViewModel.mechanics.observe(
             viewLifecycleOwner,
             Observer<List<MechanicListElements>> { mechanicElements ->
@@ -155,20 +168,22 @@ class MechanicFragment() : Fragment() {
                     selectedDate = null
                 }
                 if (firstMechanicId != null) {
+                    currentTimeSlotCount = null
                     mechanicViewModel.loadTimeSlots(firstMechanicId) {
                         activity?.runOnUiThread {
-                            var tomorrow = KotlinCalendar.getInstance()
-                            tomorrow.add(KotlinCalendar.DAY_OF_YEAR, 1)
-                            updateTimeSlots(tomorrow)
+                            if (it == null) {
+                                var tomorrow = KotlinCalendar.getInstance()
+                                tomorrow.add(KotlinCalendar.DAY_OF_YEAR, 1)
+                                updateTimeSlots(tomorrow)
+                            }
                         }
                     }
                 }
-
+                
                 if (selectedMechanicId == null) {
                     selectedMechanicId = firstMechanicId
                 }
                 updateMechanciViewDisplayState(mechanicElements.count())
-                updateTimeSlotDisplayState()
             })
 
         setEphemeralKey()
@@ -192,6 +207,7 @@ class MechanicFragment() : Fragment() {
         }
         selectedDate = null
         val slots = mechanicViewModel.timeSlots(mechanicId, calendar)
+        currentTimeSlotCount = slots.count()
         timeSlotViewAdapter.timeSlots = slots
         updateTimeSlotDisplayState()
         timeSlotViewAdapter.didChangeSelectedTimeSlot = { newTimeSlot ->
@@ -214,27 +230,27 @@ class MechanicFragment() : Fragment() {
                 }
             }
         }
-        
+
         Log.w("slots", "slots: $slots")
     }
     
     private fun updateTimeSlotDisplayState() {
-        if (timeSlotViewAdapter.timeSlots.count() > 0) {
-            emptySlotsView.visibility = View.GONE
-            timeRecycler.visibility = View.VISIBLE
-        } else {
+        if (currentTimeSlotCount == 0) {
             emptySlotsView.visibility = View.VISIBLE
             timeRecycler.visibility = View.GONE
+        } else {
+            emptySlotsView.visibility = View.GONE
+            timeRecycler.visibility = View.VISIBLE
         }
     }
 
     private fun updateMechanciViewDisplayState(mechanicCount: Int) {
-        if (mechanicCount > 0) {
-            mechanicEmptyView.visibility = View.GONE
-            mechanicRecycler.visibility = View.VISIBLE
-        } else {
+        if (mechanicCount == 0) {
             mechanicEmptyView.visibility = View.VISIBLE
             mechanicRecycler.visibility = View.GONE
+        } else {
+            mechanicEmptyView.visibility = View.GONE
+            mechanicRecycler.visibility = View.VISIBLE
         }
     }
 

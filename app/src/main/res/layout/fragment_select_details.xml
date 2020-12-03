@@ -118,14 +118,14 @@
 
                 </LinearLayout>
                 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/redeemButton"
+                <com.carswaddle.carswaddleandroid.ui.view.ProgressTextView
+                    android:id="@+id/redeemTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="right"
+                    android:layout_gravity="end"
                     android:layout_marginStart="8dp"
                     android:clickable="true"
-                    android:text="Redeem"
+                    app:text_view_display_text="@string/redeem"
                     android:textColor="#387DFF"
                     android:textSize="16sp" />
 

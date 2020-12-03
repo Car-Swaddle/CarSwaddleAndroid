@@ -15,7 +15,6 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -26,7 +25,7 @@ import com.carswaddle.carswaddleandroid.data.vehicle.Vehicle
 import com.carswaddle.carswaddleandroid.services.CouponErrorType
 import com.carswaddle.carswaddleandroid.services.serviceModels.*
 import com.carswaddle.carswaddleandroid.ui.view.ProgressButton
-import com.google.android.material.button.MaterialButton
+import com.carswaddle.carswaddleandroid.ui.view.ProgressTextView
 import com.stripe.android.PaymentSession
 import com.stripe.android.PaymentSessionConfig
 import com.stripe.android.PaymentSessionData
@@ -51,7 +50,7 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String, val schedu
 
     private lateinit var couponEditText: EditText
 
-    private lateinit var redeemButton: Button
+    private lateinit var redeemTextView: ProgressTextView
 
     private lateinit var couponStatusTextView: TextView
 
@@ -155,12 +154,19 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String, val schedu
 
         couponEditText.addTextChangedListener {
             coupon = it.toString()
+            if (coupon?.isEmpty() == true || coupon == null) {
+                redeemTextView.isTextViewEnabled = false
+            } else {
+                redeemTextView.isTextViewEnabled = true
+            }
         }
 
-        redeemButton = view.findViewById(R.id.redeemButton)
-        redeemButton.setOnClickListener {
+        redeemTextView = view.findViewById(R.id.redeemTextView)
+        redeemTextView.textView.setOnClickListener {
             updatePrice()
         }
+
+        redeemTextView.isTextViewEnabled = false
 
         val vehicleRecyclerView = view.findViewById<RecyclerView>(R.id.vehicle_container)
         with(vehicleRecyclerView) {
@@ -379,7 +385,7 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String, val schedu
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
+        super.onActivityResult(requestCode, resultCode, data) 
 
         if (data != null) {
             paymentSession.handlePaymentData(requestCode, resultCode, data)
@@ -387,13 +393,21 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String, val schedu
     }
 
     private fun updatePrice() {
+        if (coupon != null && coupon?.isEmpty() == false) {
+            redeemTextView.isLoading = true
+        }
+        
         selectDetailsViewModel.loadPrice(
             point.latitude(),
             point.longitude(),
             mechanicId,
             OilType.SYNTHETIC,
             coupon
-        )
+        ) {
+            activity?.runOnUiThread {
+                redeemTextView.isLoading = false
+            }
+        }
     }
 
     interface OnPriceUpdatedListener {

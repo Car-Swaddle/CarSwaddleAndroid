@@ -165,7 +165,7 @@ class SelectMechanicViewModel(application: Application) : AndroidViewModel(appli
     private var getAutoServicesCall: Call<List<Map<String,Any>>>? = null
     private var getTimeSlotsCall: Call<List<TemplateTimeSpanModel>>? = null
     
-    fun loadTimeSlots(mechanicId: String, completion: () -> Unit) {
+    fun loadTimeSlots(mechanicId: String, completion: (error: Throwable?) -> Unit) {
 
         viewModelScope.launch(Dispatchers.IO) {
             val startDate = Calendar.getInstance()
@@ -193,6 +193,8 @@ class SelectMechanicViewModel(application: Application) : AndroidViewModel(appli
             
             val group = DispatchGroup()
             
+            var groupError: Throwable? = null
+            
             group.enter()
             getAutoServicesCall = autoServiceRepo.getAutoServicesDate(
                 mechanicId,
@@ -205,6 +207,7 @@ class SelectMechanicViewModel(application: Application) : AndroidViewModel(appli
                 if (newAutoServiceIds != null) {
                     autoServiceIds[mechanicId] = newAutoServiceIds
                 }
+                groupError = error
                 group.leave()
             }
             
@@ -214,6 +217,7 @@ class SelectMechanicViewModel(application: Application) : AndroidViewModel(appli
                 if (newSpanIds != null) {
                     spanIds[mechanicId] = newSpanIds
                 }
+                groupError = error
                 group.leave()
             }
             
@@ -222,7 +226,7 @@ class SelectMechanicViewModel(application: Application) : AndroidViewModel(appli
                     val allSpans = timeSpanRepo.getTimeSpans(spanIds[mechanicId] ?: listOf()) ?: listOf()
                     autoServices = autoServiceRepo.getAutoServices(autoServiceIds[mechanicId] ?: listOf())
                     mechanicSlots[mechanicId] = allSpans.toList()
-                    completion()
+                    completion(groupError)
                 }
             }
         }
