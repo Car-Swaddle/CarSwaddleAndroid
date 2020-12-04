@@ -5,3 +5,9 @@ public fun <T> List<T>.safeFirst(): T? {
         return null
     return this[0]
 }
+
+public fun <T> List<T>.safeObject(index: Int): T? {
+    if (index >= count())
+        return null
+    return this[index]
+}

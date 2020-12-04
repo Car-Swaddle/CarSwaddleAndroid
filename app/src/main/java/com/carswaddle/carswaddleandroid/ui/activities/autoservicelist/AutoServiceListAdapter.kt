@@ -5,6 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
+import com.carswaddle.carswaddleandroid.Extensions.safeFirst
+import com.carswaddle.carswaddleandroid.Extensions.safeObject
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.data.user.User
 import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServiceListSectionViewHolder.*
@@ -48,7 +50,7 @@ class AutoServiceListAdapter(private val upcomingServices: LiveData<List<AutoSer
     private fun autoService(position: Int): AutoServiceListElements {
         val upcomingCount = upcomingServices.value?.count() ?: 0
         val autoService: AutoServiceListElements
-        if (upcomingCount > 0 && position <= upcomingCount) {
+        if (upcomingCount > 0 && position < upcomingCount+1) {
             val l = upcomingServices.value ?: listOf()
             autoService = l[position-1]
         } else {
@@ -57,8 +59,8 @@ class AutoServiceListAdapter(private val upcomingServices: LiveData<List<AutoSer
                 return l[position-1]
             } else {
                 val l = pastServices.value ?: listOf()
-                val adjustedPosition = position - upcomingCount
-                return l[adjustedPosition-1]
+                val adjustedPosition = position - (upcomingCount+2)
+                return l[adjustedPosition]
             }
         }
         return autoService
@@ -70,7 +72,7 @@ class AutoServiceListAdapter(private val upcomingServices: LiveData<List<AutoSer
         if (upcomingCount > 0) {
             if (position == 0) {
                 return VIEW_TYPE_UPCOMING_HEADER
-            } else if (position > 0 && position <= upcomingCount) {
+            } else if (position > 0 && position < upcomingCount+1) {
                 return VIEW_TYPE_UPCOMING_SERVICE
             } else if (position == upcomingCount+1) {
                 return VIEW_TYPE_PAST_HEADER
