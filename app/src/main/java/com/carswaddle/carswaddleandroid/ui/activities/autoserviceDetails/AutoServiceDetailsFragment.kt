@@ -162,18 +162,20 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
                     cancelAutoServiceButton.visibility = View.GONE
                 }
             }
-
+            
             vehicleImageLabel.text = autoService.vehicle.displayValue()
             streetAddressImageLabel.text = autoService.location.streetAddress ?: ""
             val location = autoService.location.latLong
             this.autoServiceLocation = autoService.location.location
             updateDistanceToService()
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 14f))
-            map.addMarker(
-                MarkerOptions()
-                    .position(location)
-                    .title("Service location")
-            )
+            if (this::map.isInitialized) {
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 14f))
+                map.addMarker(
+                    MarkerOptions()
+                        .position(location)
+                        .title("Service location")
+                )
+            }
             notesView.notesText = autoService.autoService.notes
         })
 
