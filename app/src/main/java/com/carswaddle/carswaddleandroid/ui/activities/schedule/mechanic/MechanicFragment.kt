@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -25,7 +24,6 @@ import com.carswaddle.carswaddleandroid.ui.view.ProgressButton
 import com.haibin.calendarview.Calendar
 import com.haibin.calendarview.CalendarView
 import com.stripe.android.CustomerSession
-import kotlinx.android.synthetic.main.fragment_mechanic.*
 import java.text.DateFormatSymbols
 import java.util.*
 import java.util.Calendar.*
@@ -179,10 +177,7 @@ class MechanicFragment() : Fragment() {
                         }
                     }
                 }
-                
-                if (selectedMechanicId == null) {
-                    selectedMechanicId = firstMechanicId
-                }
+
                 updateMechanciViewDisplayState(mechanicElements.count())
             })
 
@@ -219,9 +214,9 @@ class MechanicFragment() : Fragment() {
                         calendar.get(YEAR),
                         calendar.get(MONTH),
                         calendar.get(DATE),
-                        localTime.hour,
-                        localTime.minute,
-                        localTime.second
+                        localTime.hourOfDay,
+                        localTime.minuteOfHour,
+                        localTime.secondOfMinute
                     )
 
                     this.selectedDate = selectedCal.time

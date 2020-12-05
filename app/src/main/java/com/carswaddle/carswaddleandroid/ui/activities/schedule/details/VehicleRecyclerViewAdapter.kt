@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.data.vehicle.Vehicle
@@ -18,6 +19,16 @@ class VehicleRecyclerViewAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolde
         companion object {
             fun fromInt(value: Int) = ViewType.values().first { it.value == value }
         }
+    }
+
+    var selectedPosition: Int = 1
+
+    val selectedVehicle: Vehicle? get() {
+        val index = selectedPosition - 1
+        if (index < 0 || index >= vehicles.size) {
+            return null
+        }
+        return vehicles[index]
     }
 
     var addVehicleClick: (() -> Unit) = {}
@@ -68,6 +79,11 @@ class VehicleRecyclerViewAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolde
             val vehicle = vehicles[position-1]
             holder.vehicleNameTextView.text = vehicle.name
             holder.licensePlateTextView.text = vehicle.licensePlate
+            if (position == selectedPosition) {
+                holder.rootView.setBackgroundResource(R.drawable.large_selected_border)
+            } else if (position != selectedPosition) {
+                holder.rootView.setBackgroundResource(R.drawable.large_unselected_border)
+            }
         } else if (holder is AddVehicleViewHolder) {
             // Do nothing already localized in the xml
             Log.w("vehicle", "add vehicle")
@@ -84,6 +100,7 @@ class VehicleRecyclerViewAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolde
     inner class VehicleViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val vehicleNameTextView: TextView = view.findViewById(R.id.vehicleName)
         val licensePlateTextView: TextView = view.findViewById(R.id.licensePlate)
+        val rootView: View = view.findViewById(R.id.rootView)
     }
 
     inner class AddVehicleViewHolder(view: View) : RecyclerView.ViewHolder(view) {}
