@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import com.carswaddle.carswaddleandroid.Extensions.safeFirst
+import com.carswaddle.carswaddleandroid.Extensions.safeObject
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.data.mechanic.TemplateTimeSpan
 
@@ -28,7 +29,7 @@ class TimePickerRecyclerViewAdapter(
         if (i == null) {
             return null
         }
-        return timeSlots.safeFirst()
+        return timeSlots.safeObject(i)
     }
     
     var selectedIndex: Int? = null

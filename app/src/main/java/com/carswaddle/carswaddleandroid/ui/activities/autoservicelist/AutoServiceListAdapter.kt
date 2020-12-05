@@ -59,7 +59,13 @@ class AutoServiceListAdapter(private val upcomingServices: LiveData<List<AutoSer
                 return l[position-1]
             } else {
                 val l = pastServices.value ?: listOf()
-                val adjustedPosition = position - (upcomingCount+2)
+                val add: Int
+                if (upcomingCount > 0) {
+                    add = 2
+                } else {
+                    add = 1
+                }
+                val adjustedPosition = position - (upcomingCount+add)
                 return l[adjustedPosition]
             }
         }

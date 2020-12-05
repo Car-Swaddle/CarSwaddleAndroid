@@ -76,11 +76,11 @@ class SelectMechanicViewModel(application: Application) : AndroidViewModel(appli
         var autoServicesOnDay: MutableList<AutoService> = mutableListOf()
         for (a in autoServices) {
             
-            var zerodScheduledDate = a.scheduledDate
+            var zerodScheduledDate = a.scheduledDate?.clone() as? Calendar
             if (zerodScheduledDate == null) {
                 continue
             }
-
+            
             zerodScheduledDate.set(Calendar.HOUR_OF_DAY, 0)
             zerodScheduledDate.set(Calendar.MINUTE, 0)
             zerodScheduledDate.set(Calendar.SECOND, 0)
@@ -162,7 +162,7 @@ class SelectMechanicViewModel(application: Application) : AndroidViewModel(appli
 
     }
     
-    private var getAutoServicesCall: Call<List<Map<String,Any>>>? = null
+    private var getAutoServicesCall: Call<List<com.carswaddle.carswaddleandroid.services.serviceModels.AutoService>>? = null
     private var getTimeSlotsCall: Call<List<TemplateTimeSpanModel>>? = null
     
     fun loadTimeSlots(mechanicId: String, completion: (error: Throwable?) -> Unit) {

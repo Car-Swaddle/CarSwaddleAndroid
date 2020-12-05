@@ -313,7 +313,7 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
         filterStatus: List<AutoServiceStatus>,
         context: Context,
         completion: (exception: Throwable?, autoServiceIds: List<String>?) -> Unit
-    ): Call<List<Map<String, Any>>>? {
+    ): Call<List<AutoService>>? {
         val autoServiceService = ServiceGenerator.authenticated(context)?.retrofit?.create(
             AutoServiceService::class.java
         )
@@ -325,18 +325,18 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
         
         val call = autoServiceService.autoServiceDate(
             mechanicId,
-            startDate,
-            endDate,
+            startDate.time,
+            endDate.time,
             filterStatus.map { it.name })
-        call.enqueue(object : Callback<List<Map<String, Any>>> {
-            override fun onFailure(call: Call<List<Map<String, Any>>>, t: Throwable) {
+        call.enqueue(object : Callback<List<AutoService>> {
+            override fun onFailure(call: Call<List<AutoService>>, t: Throwable) {
                 Log.d("retrofit ", "call failed")
                 completion(t, null)
             }
 
             override fun onResponse(
-                call: Call<List<Map<String, Any>>>,
-                response: Response<List<Map<String, Any>>>
+                call: Call<List<AutoService>>,
+                response: Response<List<AutoService>>
             ) {
                 Log.d("retrofit ", "call succeeded")
                 val result = response.body()
@@ -344,13 +344,13 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
                     // TODO: make an error here
                     completion(null, null) // something
                 } else {
-                    GlobalScope.async {
+                    CoroutineScope(Dispatchers.IO).launch {
                         try {
                             var ids = arrayListOf<String>()
-//                            for (autoService in result) {
-//                                insertNestedAutoService(autoService)
-//                                ids.add(autoService.id)
-//                            }
+                            for (autoService in result) {
+                                val autoService = insertNestedAutoService(autoService)
+                                ids.add(autoService.id)
+                            }
                             completion(null, ids.toList())
                         } catch (e: Exception) {
                             print(e)

@@ -16,7 +16,7 @@ interface AutoServiceService {
 
     @Headers(ContentType.headerPrefix + ContentType.applicationJSON)
     @GET(autoServiceEndpoint)
-    fun autoServiceDate(@Query("mechanicID") mechanicId: String, @Query("startDate") startDate: Calendar, @Query("endDate") endDate: Calendar, @Query("filterStatus") filterStatus: List<String>): Call<List<Map<String, Any>>>
+    fun autoServiceDate(@Query("mechanicID") mechanicId: String, @Query("startDate") startDate: Date, @Query("endDate") endDate: Date, @Query("filterStatus") filterStatus: List<String>): Call<List<AutoService>>
 
     @Headers(ContentType.headerPrefix + ContentType.applicationJSON)
     @GET(autoServiceSingleEndpoint)

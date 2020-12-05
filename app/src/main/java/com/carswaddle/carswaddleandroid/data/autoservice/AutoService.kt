@@ -44,7 +44,7 @@ data class AutoService(
             )
     
     fun startTimeSecondsSinceMidnight(): Int? {
-        var c = scheduledDate
+        var c = scheduledDate?.clone() as? Calendar
         if (c == null) {
             return null
         }
