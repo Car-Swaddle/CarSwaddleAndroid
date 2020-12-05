@@ -1,6 +1,7 @@
 package com.carswaddle.carswaddleandroid.ui.activities.schedule.details
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.*
@@ -13,23 +14,20 @@ import com.carswaddle.carswaddleandroid.services.serviceModels.OilType
 import com.carswaddle.carswaddleandroid.services.serviceModels.OilType.*
 import com.carswaddle.carswaddleandroid.ui.activities.schedule.MyMechanicRecyclerViewAdapter
 
-class OilTypeRecyclerViewAdapter(
-    private val context: Context
-) : RecyclerView.Adapter<OilTypeRecyclerViewAdapter.ViewHolder>() {
+class OilTypeRecyclerViewAdapter() : RecyclerView.Adapter<OilTypeRecyclerViewAdapter.ViewHolder>() {
 
-    private val values: List<OilType> = listOf(CONVENTIONAL, BLEND, SYNTHETIC, HIGH_MILEAGE)
+    private val values: List<OilType> = listOf(SYNTHETIC, BLEND, CONVENTIONAL, HIGH_MILEAGE)
     
     var selectedPosition: Int = 1
     
-    var selectedIndex: Int
-    get() {
-        return selectedPosition - 1
+    val selectedOilType: OilType get() {
+        val index = selectedPosition - 1
+        if (index < 0 || index >= values.size) {
+            Log.e(this.javaClass.simpleName, "Invalid selected position")
+            return SYNTHETIC
+        }
+        return values[index]
     }
-    set(newValue) {
-        selectedPosition = newValue + 1
-    }
-    
-    
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -47,10 +45,10 @@ class OilTypeRecyclerViewAdapter(
         val index = position - 1
         val item = values[index]
         holder.textView.text = item.localizedString()
-        if (index == selectedIndex) {
-            holder.textView.background = ContextCompat.getDrawable(context, R.drawable.large_selected_border)
+        if (position == selectedPosition) {
+            holder.textView.setBackgroundResource(R.drawable.large_selected_border)
         } else {
-            holder.textView.background = ContextCompat.getDrawable(context, R.drawable.large_unselected_border)
+            holder.textView.setBackgroundResource(R.drawable.large_unselected_border)
         }
     }
 

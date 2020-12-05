@@ -18,7 +18,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.carswaddle.carswaddleandroid.Extensions.safeFirst
 import com.carswaddle.carswaddleandroid.Extensions.toCalendar
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.data.vehicle.Vehicle
@@ -40,13 +39,12 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String, val schedu
     private lateinit var oilTypeRecyclerView: RecyclerView
 
     private val vehicleAdapter: VehicleRecyclerViewAdapter = VehicleRecyclerViewAdapter()
+    private val oilTypeAdapter: OilTypeRecyclerViewAdapter = OilTypeRecyclerViewAdapter()
 
     private var newVehicleId: String? = null
     private var hasScrolledToFirstVehicleIndex: Boolean = false
 
     private var coupon: String? = null
-    
-    private var selectedVehicleId: String? = null
 
     private lateinit var couponEditText: EditText
 
@@ -175,6 +173,24 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String, val schedu
             val snapHelper = LinearSnapHelper()
             snapHelper.attachToRecyclerView(this)
             this.onFlingListener = snapHelper
+
+            vehicleRecyclerView
+                .addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                    override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                        super.onScrollStateChanged(recyclerView, newState)
+                        if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                            val snapView = snapHelper.findSnapView(layoutManager)
+                            if (snapView == null || layoutManager == null) {
+                                return
+                            }
+                            val snapPosition = layoutManager!!.getPosition(snapView)
+                            val oldPosition = vehicleAdapter.selectedPosition
+                            vehicleAdapter.selectedPosition = snapPosition
+                            vehicleAdapter.notifyItemChanged(snapPosition)
+                            vehicleAdapter.notifyItemChanged(oldPosition)
+                        }
+                    }
+                })
         }
 
         vehicleAdapter.addVehicleClick = {
@@ -204,7 +220,6 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String, val schedu
                 activity?.runOnUiThread {
                     this.vehicleAdapter.vehicles = vehicles
                     val id = newVehicleId
-                    selectedVehicleId = vehicles.safeFirst()?.id
                     if (id != null) {
                         val newVehicleIndex = vehicles.indexOfFirst {
                             it.id == id
@@ -220,10 +235,6 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String, val schedu
         oilTypeRecyclerView = view.findViewById<RecyclerView>(R.id.oil_type_container)
         val oilTypeSnapHelper = LinearSnapHelper()
         with(oilTypeRecyclerView) {
-            val oilTypeAdapter =
-                // TODO - make these enums
-                OilTypeRecyclerViewAdapter(requireActivity())
-
             this.adapter = oilTypeAdapter
             this.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
             oilTypeSnapHelper.attachToRecyclerView(this)
@@ -320,7 +331,7 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String, val schedu
     }
     
     private fun payForService() {
-        val vehicleId = selectedVehicleId
+        val vehicleId = vehicleAdapter.selectedVehicle?.id
         val sourceID = paymentSourceId
         if (vehicleId == null || sourceID == null) {
             return
@@ -401,7 +412,7 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String, val schedu
             point.latitude(),
             point.longitude(),
             mechanicId,
-            OilType.SYNTHETIC,
+            oilTypeAdapter.selectedOilType,
             coupon
         ) {
             activity?.runOnUiThread {
