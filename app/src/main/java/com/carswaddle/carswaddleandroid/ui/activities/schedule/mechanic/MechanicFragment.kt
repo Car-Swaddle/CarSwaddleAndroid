@@ -145,7 +145,7 @@ class MechanicFragment() : Fragment() {
             override fun onCalendarOutOfRange(calendar: Calendar?) {
                 return
             }
-        })
+        }) 
 
         timeSlotViewAdapter = TimePickerRecyclerViewAdapter()
         timeRecycler = view.findViewById<RecyclerView>(R.id.time_slot)

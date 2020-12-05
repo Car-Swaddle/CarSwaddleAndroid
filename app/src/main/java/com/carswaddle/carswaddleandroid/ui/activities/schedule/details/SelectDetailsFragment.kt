@@ -15,11 +15,14 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.carswaddle.carswaddleandroid.Extensions.toCalendar
 import com.carswaddle.carswaddleandroid.R
+import com.carswaddle.carswaddleandroid.activities.ui.home.AutoServicesListFragment
+import com.carswaddle.carswaddleandroid.data.user.UserRepository
 import com.carswaddle.carswaddleandroid.data.vehicle.Vehicle
 import com.carswaddle.carswaddleandroid.services.CouponErrorType
 import com.carswaddle.carswaddleandroid.services.serviceModels.*
@@ -373,6 +376,8 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String, val schedu
             activity?.finish()
         }
         builder.setNegativeButton(getString(R.string.dismiss_dialog)) { dialog, which ->
+            val intent = Intent(AutoServicesListFragment.UPDATE_AUTOSERVICE_LIST)
+            LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(intent)
             activity?.finish()
         }
         val dialog: AlertDialog = builder.create()

@@ -1,6 +1,9 @@
 package com.carswaddle.carswaddleandroid.activities.ui.home
 
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,11 +13,14 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.carswaddle.carswaddleandroid.CarSwaddleApp.CarSwaddleApp
 import com.carswaddle.carswaddleandroid.R
+import com.carswaddle.carswaddleandroid.data.user.UserRepository
 import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServiceListAdapter
 import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServiceListElements
 import com.carswaddle.carswaddleandroid.ui.activities.autoserviceDetails.AutoServiceDetailsFragmentArgs
@@ -39,6 +45,12 @@ class AutoServicesListFragment : Fragment() {
         autoServicesListViewModel =
             ViewModelProviders.of(requireActivity()).get(AutoServicesListViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_autoservices_list, container, false)
+
+        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(object: BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                reloadList()
+            }
+        }, IntentFilter(AutoServicesListFragment.UPDATE_AUTOSERVICE_LIST))
         
         scheduleButton = root.findViewById(R.id.scheduleButton)
 
@@ -88,6 +100,14 @@ class AutoServicesListFragment : Fragment() {
 
     private fun didTapSchedule() {
         startActivity(Intent(activity, MapsActivity::class.java))
+    }
+    
+    private fun reloadList() {
+        autoServicesListViewModel.loadAutoServices()
+    }
+    
+    companion object {
+        const val UPDATE_AUTOSERVICE_LIST = "AutoServicesListFragment.UPDATE_AUTOSERVICE_LIST"
     }
 
 }

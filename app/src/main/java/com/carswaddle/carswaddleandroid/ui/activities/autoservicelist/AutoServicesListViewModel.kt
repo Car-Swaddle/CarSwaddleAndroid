@@ -70,7 +70,7 @@ class AutoServicesListViewModel(application: Application) : AndroidViewModel(app
         currentUser = userRepo.getCurrentUser(application)
     }
 
-    private fun loadAutoServices() {
+    fun loadAutoServices() {
         autoServiceRepo.getAutoServices(
             100,
             0,
