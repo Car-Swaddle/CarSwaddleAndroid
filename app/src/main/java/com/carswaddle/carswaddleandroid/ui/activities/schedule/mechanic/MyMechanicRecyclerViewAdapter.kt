@@ -49,15 +49,32 @@ class MyMechanicRecyclerViewAdapter(
         // TODO - set image
         holder.nameTextView.text = item.user.displayName()
         holder.ratingBar.rating = item.mechanic.averageRating?.toFloat() ?: 0.0F
-        val roundedValue = Math.round((item.mechanic.averageRating?.toFloat() ?: 0.0F) * 10) / 10.0
 
-        val ssb = SpannableStringBuilder().append(roundedValue.toString(), StyleSpan(Typeface.BOLD), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        var roundedValue = "-"
+        if (item.mechanic.averageRating != null) {
+            roundedValue = (Math.round(
+                (item.mechanic.averageRating?.toFloat() ?: 0.0F) * 10
+            ) / 10.0).toString()
+        }
+        val ssb = SpannableStringBuilder().append(
+            roundedValue,
+            StyleSpan(Typeface.BOLD),
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
             .append(" avg from ")
-            .append(item.mechanic.numberOfRatings.toString(), StyleSpan(Typeface.BOLD), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            .append(
+                item.mechanic.numberOfRatings?.toString() ?: "0",
+                StyleSpan(Typeface.BOLD),
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
             .append(" ratings")
         holder.ratingTextView.text = ssb
 
-        val ssb2 = SpannableStringBuilder().append(item.mechanic.autoServicesProvided.toString(), StyleSpan(Typeface.BOLD), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        val ssb2 = SpannableStringBuilder().append(
+            item.mechanic.autoServicesProvided?.toString() ?: "0",
+            StyleSpan(Typeface.BOLD),
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
             .append(" services completed")
         holder.servicesCompletedTextView.text = ssb2
         holder.mechanicImageView.mechanicId = item.mechanic.id
