@@ -166,6 +166,7 @@ class MechanicFragment() : Fragment() {
                     selectedDate = null
                 }
                 if (firstMechanicId != null) {
+                    selectedMechanicId = firstMechanicId
                     currentTimeSlotCount = null
                     mechanicViewModel.loadTimeSlots(firstMechanicId) {
                         activity?.runOnUiThread {
