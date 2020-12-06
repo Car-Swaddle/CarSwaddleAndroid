@@ -31,6 +31,9 @@ android {
 
 
     compileOptions {
+        // Flag to enable support for the new language APIs (remove when min version natively supports java 8)
+        coreLibraryDesugaringEnabled true
+
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -96,8 +99,6 @@ dependencies {
 
     implementation 'com.stripe:stripe-android:16.1.0'
 
-    implementation 'joda-time:joda-time:2.10.8' // Remove this once we have sdk 26 as a min
-
     implementation platform('com.google.firebase:firebase-bom:26.1.0')
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-messaging-ktx'
@@ -108,4 +109,5 @@ dependencies {
     implementation "androidx.room:room-ktx:$room_version"
     testImplementation "androidx.room:room-testing:$room_version"
 
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.1'
 }

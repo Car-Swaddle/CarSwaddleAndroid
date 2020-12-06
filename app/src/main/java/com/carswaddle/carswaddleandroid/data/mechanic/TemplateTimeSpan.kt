@@ -4,9 +4,10 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.carswaddle.carswaddleandroid.services.serviceModels.Weekday
-import org.joda.time.LocalTime
-import org.joda.time.format.DateTimeFormatter
-import org.joda.time.format.DateTimeFormatterBuilder
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatterBuilder
+import java.util.*
 
 @Entity
 data class TemplateTimeSpan(
@@ -24,25 +25,30 @@ data class TemplateTimeSpan(
                 span.startTimeInt,
                 span.duration
             )
-    
+
+
     fun weekday(): Weekday {
         return Weekday.fromInt(weekDayInt)
     }
 
     fun localizedStartTime(): String {
-        return dateTimeFormatter.print(localTime)
+        return dateTimeFormatter.format(localTime)
     }
 
     val localTime: LocalTime get() {
-        return LocalTime.fromMillisOfDay(startTime.secondsToMilliseconds().toLong())
+        val hourOfDay = startTime / 60 / 60
+        val minuteInHour = startTime / 60 % 60
+        val secondInMinute = startTime % 60
+        return LocalTime.of(hourOfDay, minuteInHour, secondInMinute)
     }
 
     companion object {
         val dateTimeFormatter: DateTimeFormatter = DateTimeFormatterBuilder()
+            .parseCaseInsensitive()
             .appendPattern("hh:mm a")
-            .toFormatter()
+            .toFormatter(Locale.US)
     }
-    
+
 }
 
 

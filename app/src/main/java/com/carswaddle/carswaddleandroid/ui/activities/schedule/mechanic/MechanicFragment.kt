@@ -215,9 +215,9 @@ class MechanicFragment() : Fragment() {
                         calendar.get(YEAR),
                         calendar.get(MONTH),
                         calendar.get(DATE),
-                        localTime.hourOfDay,
-                        localTime.minuteOfHour,
-                        localTime.secondOfMinute
+                        localTime.hour,
+                        localTime.minute,
+                        localTime.second
                     )
 
                     this.selectedDate = selectedCal.time
