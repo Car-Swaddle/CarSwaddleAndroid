@@ -28,7 +28,6 @@
             android:id="@+id/mechanicImageView"
             android:layout_width="145dp"
             android:layout_height="145dp"
-            android:scaleType="centerCrop"
             android:src="@drawable/car_swaddle_logo"/>
 
     </com.google.android.material.card.MaterialCardView>
