@@ -287,4 +287,36 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
         return meters / 1609.34f
     }
 
+    // See https://github.com/googlemaps/android-samples/blob/main/ApiDemos/kotlin/app/src/gms/java/com/example/kotlindemos/RawMapViewDemoActivity.kt
+    // Need to forward all lifecycle events to map view
+    override fun onResume() {
+        super.onResume()
+        locationMapView.onResume()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        locationMapView.onStart()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        locationMapView.onStop()
+    }
+
+    override fun onPause() {
+        locationMapView.onPause()
+        super.onPause()
+    }
+
+    override fun onDestroy() {
+        locationMapView.onDestroy()
+        super.onDestroy()
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        locationMapView.onLowMemory()
+    }
+
 }
