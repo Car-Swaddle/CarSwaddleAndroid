@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/rootView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center"
         android:layout_margin="8dp"
         android:background="@drawable/large_unselected_border"
         android:elevation="4dp"
-        android:paddingVertical="24dp"
-        android:paddingHorizontal="24dp">
-    
-    <TextView
-        android:id="@+id/vehicleName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add vehicle"/>
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingHorizontal="24dp"
+        android:paddingVertical="24dp">
 
-    <TextView
-        android:id="@+id/licensePlate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="+"/>
+        <TextView
+            android:id="@+id/vehicleName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add vehicle" />
 
-    
+        <TextView
+            android:id="@+id/licensePlate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+" />
+
+
     </LinearLayout>
 
 </LinearLayout>

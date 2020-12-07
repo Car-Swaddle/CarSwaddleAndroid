@@ -14,7 +14,6 @@ import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.data.mechanic.MechanicListElements
 import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.MechanicImageView
 
-import kotlin.math.round
 
 /**
  * [RecyclerView.Adapter] that can display a [DummyItem].
@@ -46,10 +45,10 @@ class MyMechanicRecyclerViewAdapter(
         holder.itemView.alpha = 1f
 
         val item = mechanicElements[position - 1] // Offset for initial padding
-        // TODO - set image
         holder.nameTextView.text = item.user.displayName()
         holder.ratingBar.rating = item.mechanic.averageRating?.toFloat() ?: 0.0F
-
+        holder.mechanicImageView.mechanicId = item.mechanic.id
+        
         var roundedValue = "-"
         if (item.mechanic.averageRating != null) {
             roundedValue = (Math.round(
@@ -77,7 +76,6 @@ class MyMechanicRecyclerViewAdapter(
         )
             .append(" services completed")
         holder.servicesCompletedTextView.text = ssb2
-        holder.mechanicImageView.mechanicId = item.mechanic.id
     }
 
     override fun getItemCount(): Int = mechanicElements.size + 2 // Padding at start and end

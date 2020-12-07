@@ -10,10 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.*
-import com.carswaddle.carswaddleandroid.Extensions.addDays
-import com.carswaddle.carswaddleandroid.Extensions.safeFirst
-import com.carswaddle.carswaddleandroid.Extensions.toJavaCalendar
-import com.carswaddle.carswaddleandroid.Extensions.today
+import com.carswaddle.carswaddleandroid.Extensions.*
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.data.mechanic.MechanicListElements
 import com.carswaddle.carswaddleandroid.services.serviceModels.Point
@@ -24,6 +21,7 @@ import com.carswaddle.carswaddleandroid.ui.view.ProgressButton
 import com.haibin.calendarview.Calendar
 import com.haibin.calendarview.CalendarView
 import com.stripe.android.CustomerSession
+import java.lang.Math.abs
 import java.text.DateFormatSymbols
 import java.util.*
 import java.util.Calendar.*
@@ -36,6 +34,8 @@ class MechanicFragment() : Fragment() {
 
     private lateinit var monthYearTextView: TextView
     private lateinit var callback: OnConfirmListener
+    
+    private val mechanicLinearLayoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
 
     lateinit var point: Point
 
@@ -96,11 +96,19 @@ class MechanicFragment() : Fragment() {
         mechanicRecycler = view.findViewById<RecyclerView>(R.id.mechanic_list_container)
         with(mechanicRecycler) {
             this.adapter = mechanicViewAdapter
-            this.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+            this.layoutManager = mechanicLinearLayoutManager
             val snapHelper = LinearSnapHelper()
             snapHelper.attachToRecyclerView(mechanicRecycler)
             this.onFlingListener = snapHelper
         }
+
+        mechanicRecycler
+            .addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    mechanicRecycler.updateTransformForScrollOffset(mechanicViewAdapter)
+                }
+            })
         
         emptySlotsView = view.findViewById(R.id.time_slot_empty_state)
         mechanicEmptyView = view.findViewById(R.id.mechanicEmptyView)

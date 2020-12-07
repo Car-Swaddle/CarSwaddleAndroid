@@ -19,6 +19,11 @@ class OilTypeRecyclerViewAdapter() : RecyclerView.Adapter<OilTypeRecyclerViewAda
     private val values: List<OilType> = listOf(SYNTHETIC, BLEND, CONVENTIONAL, HIGH_MILEAGE)
     
     var selectedPosition: Int = 1
+    set(newValue) {
+        val oldValue = field
+        field = newValue
+        
+    }
     
     val selectedOilType: OilType get() {
         val index = selectedPosition - 1
@@ -45,11 +50,12 @@ class OilTypeRecyclerViewAdapter() : RecyclerView.Adapter<OilTypeRecyclerViewAda
         val index = position - 1
         val item = values[index]
         holder.textView.text = item.localizedString()
-        if (position == selectedPosition) {
-            holder.textView.setBackgroundResource(R.drawable.large_selected_border)
-        } else {
-            holder.textView.setBackgroundResource(R.drawable.large_unselected_border)
-        }
+        holder.isSelectedOiltype = position == selectedPosition
+//        if (position == selectedPosition) {
+//            holder.textView.setBackgroundResource(R.drawable.large_selected_border)
+//        } else {
+//            holder.textView.setBackgroundResource(R.drawable.large_unselected_border)
+//        }
     }
 
     override fun getItemCount(): Int = values.size + 2
@@ -57,6 +63,17 @@ class OilTypeRecyclerViewAdapter() : RecyclerView.Adapter<OilTypeRecyclerViewAda
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val rootView: View = view
         val textView: TextView = view.findViewById(R.id.text_view)
+        
+        var isSelectedOiltype: Boolean = false
+        set(newValue) {
+            field = newValue
+            if (isSelectedOiltype) {
+                textView.setBackgroundResource(R.drawable.large_selected_border)
+            } else {
+                textView.setBackgroundResource(R.drawable.large_unselected_border)
+            }
+        }
+        
     }
 
     //http://www.plattysoft.com/2015/06/16/snapping-items-on-a-horizontal-list/

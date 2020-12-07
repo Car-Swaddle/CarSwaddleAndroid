@@ -19,10 +19,11 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.Recycler
 import com.carswaddle.carswaddleandroid.Extensions.toCalendar
+import com.carswaddle.carswaddleandroid.Extensions.updateTransformForScrollOffset
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.activities.ui.home.AutoServicesListFragment
-import com.carswaddle.carswaddleandroid.data.user.UserRepository
 import com.carswaddle.carswaddleandroid.data.vehicle.Vehicle
 import com.carswaddle.carswaddleandroid.services.CouponErrorType
 import com.carswaddle.carswaddleandroid.services.serviceModels.*
@@ -33,6 +34,8 @@ import com.stripe.android.PaymentSessionConfig
 import com.stripe.android.PaymentSessionData
 import com.stripe.android.model.PaymentMethod
 import java.util.*
+import kotlin.concurrent.schedule
+
 
 class SelectDetailsFragment(val point: Point, val mechanicId: String, val scheduledDate: Date) : Fragment() {
 
@@ -179,18 +182,35 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String, val schedu
 
             vehicleRecyclerView
                 .addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                        super.onScrolled(recyclerView, dx, dy)
+                        vehicleRecyclerView.updateTransformForScrollOffset(vehicleAdapter)
+                    }
+
                     override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                         super.onScrollStateChanged(recyclerView, newState)
                         if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                            vehicleRecyclerView.updateTransformForScrollOffset(vehicleAdapter)
                             val snapView = snapHelper.findSnapView(layoutManager)
                             if (snapView == null || layoutManager == null) {
                                 return
                             }
                             val snapPosition = layoutManager!!.getPosition(snapView)
-                            val oldPosition = vehicleAdapter.selectedPosition
                             vehicleAdapter.selectedPosition = snapPosition
-                            vehicleAdapter.notifyItemChanged(snapPosition)
-                            vehicleAdapter.notifyItemChanged(oldPosition)
+
+                            // Loop through all and mark as not selected. oldPosition wasn't always accurate
+                            for (i in 0..vehicleAdapter.itemCount) {
+                                val view = getChildAt(i)
+                                if (view == null) {
+                                    continue
+                                }
+                                val vh = vehicleRecyclerView.findContainingViewHolder(view) as? VehicleRecyclerViewAdapter.VehicleViewHolder
+                                vh?.isSelectedVehicle = false
+                            }
+                            
+                            // Hack because the index and/or transform on the view are jacked if using `notifyDatasetChanged`
+                            val o = vehicleRecyclerView.findViewHolderForAdapterPosition(snapPosition) as? VehicleRecyclerViewAdapter.VehicleViewHolder
+                            o?.isSelectedVehicle = true
                         }
                     }
                 })
@@ -237,28 +257,54 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String, val schedu
 
         oilTypeRecyclerView = view.findViewById<RecyclerView>(R.id.oil_type_container)
         val oilTypeSnapHelper = LinearSnapHelper()
+        
         with(oilTypeRecyclerView) {
             this.adapter = oilTypeAdapter
-            this.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+            
+            this.layoutManager = object : LinearLayoutManager(context, RecyclerView.HORIZONTAL, false) {
+                override fun onLayoutCompleted(state: RecyclerView.State?) {
+                    super.onLayoutCompleted(state)
+                    
+                }
+            }
             oilTypeSnapHelper.attachToRecyclerView(this)
             this.onFlingListener = oilTypeSnapHelper
 
             oilTypeRecyclerView
                 .addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                    
+                    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                        super.onScrolled(recyclerView, dx, dy)
+                        oilTypeRecyclerView.updateTransformForScrollOffset(oilTypeAdapter)
+                    }
+
                     override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                         super.onScrollStateChanged(recyclerView, newState)
                         if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                             val snapView = oilTypeSnapHelper.findSnapView(layoutManager)
-                            if (snapView == null || layoutManager == null) {
+                            val lm = layoutManager
+                            if (snapView == null || lm == null) {
                                 return
                             }
-                            val snapPosition = layoutManager!!.getPosition(snapView)
-                            val oldPosition = oilTypeAdapter.selectedPosition
+                            val snapPosition = lm.getPosition(snapView)
                             oilTypeAdapter.selectedPosition = snapPosition
-                            oilTypeAdapter.notifyItemChanged(snapPosition)
-                            oilTypeAdapter.notifyItemChanged(oldPosition)
+
+                            // Loop through all and mark as not selected. oldPosition wasn't always accurate
+                            for (i in 0..oilTypeAdapter.itemCount) {
+                                val view = getChildAt(i)
+                                if (view == null) {
+                                    continue
+                                }
+                                val vh = oilTypeRecyclerView.findContainingViewHolder(view) as? OilTypeRecyclerViewAdapter.ViewHolder
+                                vh?.isSelectedOiltype = false
+                            }
+                            
+                            // Hack because the index and/or transform on the view are jacked if using `notifyDatasetChanged`
+                            val o = oilTypeRecyclerView.findViewHolderForAdapterPosition(snapPosition) as? OilTypeRecyclerViewAdapter.ViewHolder
+                            o?.isSelectedOiltype = true
                         }
                     }
+                    
                 })
         }
         oilTypeRecyclerView.smoothScrollToPosition(2)
@@ -393,7 +439,10 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String, val schedu
         val intent = Intent(Intent.ACTION_EDIT)
         intent.setData(CalendarContract.Events.CONTENT_URI)
         intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, cal.timeInMillis)
-        intent.putExtra(CalendarContract.CalendarAlerts.ALARM_TIME, cal.timeInMillis - 30 * 60 * 1000)
+        intent.putExtra(
+            CalendarContract.CalendarAlerts.ALARM_TIME,
+            cal.timeInMillis - 30 * 60 * 1000
+        )
         intent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, false)
         intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, cal.timeInMillis + 45 * 60 * 1000)
         intent.putExtra(CalendarContract.Events.TITLE, getString(R.string.oil_change_event_title))

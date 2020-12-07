@@ -79,11 +79,7 @@ class VehicleRecyclerViewAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolde
             val vehicle = vehicles[position-1]
             holder.vehicleNameTextView.text = vehicle.name
             holder.licensePlateTextView.text = vehicle.licensePlate
-            if (position == selectedPosition) {
-                holder.rootView.setBackgroundResource(R.drawable.large_selected_border)
-            } else if (position != selectedPosition) {
-                holder.rootView.setBackgroundResource(R.drawable.large_unselected_border)
-            }
+            holder.isSelectedVehicle = position == selectedPosition
         } else if (holder is AddVehicleViewHolder) {
             // Do nothing already localized in the xml
             Log.w("vehicle", "add vehicle")
@@ -101,6 +97,15 @@ class VehicleRecyclerViewAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolde
         val vehicleNameTextView: TextView = view.findViewById(R.id.vehicleName)
         val licensePlateTextView: TextView = view.findViewById(R.id.licensePlate)
         val rootView: View = view.findViewById(R.id.rootView)
+        var isSelectedVehicle: Boolean = false
+            set(newValue) {
+                field = newValue
+                if (isSelectedVehicle) {
+                    rootView.setBackgroundResource(R.drawable.large_selected_border)
+                } else  {
+                    rootView.setBackgroundResource(R.drawable.large_unselected_border)
+                }
+            }
     }
 
     inner class AddVehicleViewHolder(view: View) : RecyclerView.ViewHolder(view) {}
