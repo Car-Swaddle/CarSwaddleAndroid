@@ -7,11 +7,11 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.icu.text.MeasureFormat
-import java.util.Calendar
 import android.icu.util.Measure
 import android.icu.util.MeasureUnit
 import android.location.Location
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -43,6 +43,7 @@ import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.MarkerOptions
 import java.math.RoundingMode
+import java.util.*
 
 
 class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
@@ -233,12 +234,18 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
     }
 
     private fun localizedDistance(autoServiceLocation: Location, userLocation: Location): String? {
-        val locale = resources.configuration.locales.get(0) ?: return null
-        val measureFormat = MeasureFormat.getInstance(locale, MeasureFormat.FormatWidth.SHORT)
         var metersBetween = userLocation.distanceTo(autoServiceLocation)
         metersBetween = metersBetween.toBigDecimal().setScale(0, RoundingMode.HALF_DOWN).toFloat()
-        val measure = Measure(metersToMiles(metersBetween), MeasureUnit.MILE)
-        return measureFormat.format(measure)
+        val milesBetween = metersToMiles(metersBetween)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            val locale = resources.configuration.locales.get(0) ?: return null
+            val measureFormat = MeasureFormat.getInstance(locale, MeasureFormat.FormatWidth.SHORT)
+            val measure = Measure(milesBetween, MeasureUnit.MILE)
+            return measureFormat.format(measure)
+        } else {
+            return String.format("%.1f miles", milesBetween)
+        }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -256,12 +263,20 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
             AutoServiceStatus.completed -> R.color.statusColorCompleted
         }
         val t = context?.theme ?: return 0
-        return resources.getColor(colorId, t)
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            resources.getColor(colorId, t)
+        } else {
+            resources.getColor(colorId)
+        }
     }
     
     private fun defaultStatusColor(): Int {
         val t = context?.theme ?: return 0
-        return resources.getColor(R.color.icon, t)
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            resources.getColor(R.color.icon, t)
+        } else {
+            resources.getColor(R.color.icon)
+        }
     }
 
     private fun enableMyLocation() {
