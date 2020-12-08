@@ -15,13 +15,13 @@ import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.data.mechanic.MechanicListElements
 import com.carswaddle.carswaddleandroid.services.serviceModels.Point
 import com.carswaddle.carswaddleandroid.stripe.StripeKeyProvider
+import com.carswaddle.carswaddleandroid.ui.activities.schedule.details.OilTypeRecyclerViewAdapter
 import com.carswaddle.carswaddleandroid.ui.activities.schedule.mechanic.MechanicEmptyStateView
 import com.carswaddle.carswaddleandroid.ui.activities.schedule.mechanic.TimeSlotsEmptyStateView
 import com.carswaddle.carswaddleandroid.ui.view.ProgressButton
 import com.haibin.calendarview.Calendar
 import com.haibin.calendarview.CalendarView
 import com.stripe.android.CustomerSession
-import java.lang.Math.abs
 import java.text.DateFormatSymbols
 import java.util.*
 import java.util.Calendar.*
@@ -47,11 +47,6 @@ class MechanicFragment() : Fragment() {
     private lateinit var mechanicViewAdapter: MyMechanicRecyclerViewAdapter
     private lateinit var timeSlotViewAdapter: TimePickerRecyclerViewAdapter
     private lateinit var calendarView: CalendarView
-    private var selectedMechanicId: String? = null
-    set(newValue) {
-        field = newValue
-        currentTimeSlotCount = null
-    }
     private lateinit var mechanicEmptyView: MechanicEmptyStateView
 //    private var selectedTimeSlot: TemplateTimeSpan? = null
     
@@ -100,15 +95,38 @@ class MechanicFragment() : Fragment() {
             val snapHelper = LinearSnapHelper()
             snapHelper.attachToRecyclerView(mechanicRecycler)
             this.onFlingListener = snapHelper
-        }
-
-        mechanicRecycler
-            .addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
                     mechanicRecycler.updateTransformForScrollOffset(mechanicViewAdapter)
                 }
+
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    super.onScrollStateChanged(recyclerView, newState)
+                    if (newState != RecyclerView.SCROLL_STATE_IDLE) {
+                        return
+                    }
+                    val snapView = snapHelper.findSnapView(layoutManager)
+                    val lm = layoutManager
+                    if (snapView == null || lm == null) {
+                        return
+                    }
+                    val snapPosition = lm.getPosition(snapView)
+                    mechanicViewAdapter.selectedPosition = snapPosition
+
+                    // Loop through all and mark as not selected. oldPosition wasn't always accurate
+                    for (i in 0..mechanicViewAdapter.itemCount) {
+                        val childView = getChildAt(i) ?: continue
+                        val vh = findContainingViewHolder(childView) as? MyMechanicRecyclerViewAdapter.ViewHolder
+                        vh?.isSelected = false
+                    }
+
+                    // Hack because the index and/or transform on the view are jacked if using `notifyDatasetChanged`
+                    val o = findViewHolderForAdapterPosition(snapPosition) as? MyMechanicRecyclerViewAdapter.ViewHolder
+                    o?.isSelected = true
+                }
             })
+        }
         
         emptySlotsView = view.findViewById(R.id.time_slot_empty_state)
         mechanicEmptyView = view.findViewById(R.id.mechanicEmptyView)
@@ -132,7 +150,7 @@ class MechanicFragment() : Fragment() {
 
         confirmButton = view.findViewById(R.id.confirm_mechanic)
         confirmButton.button.setOnClickListener { v ->
-            val m = selectedMechanicId
+            val m = mechanicViewAdapter.selectedMechanicListElements?.mechanic?.id
             val date = selectedDate
             if (m != null && date != null) {
                 callback.onConfirm(m, date)
@@ -174,7 +192,6 @@ class MechanicFragment() : Fragment() {
                     selectedDate = null
                 }
                 if (firstMechanicId != null) {
-                    selectedMechanicId = firstMechanicId
                     currentTimeSlotCount = null
                     mechanicViewModel.loadTimeSlots(firstMechanicId) {
                         activity?.runOnUiThread {

@@ -4,6 +4,7 @@ import android.graphics.Typeface
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import androidx.appcompat.widget.AppCompatRatingBar
 import androidx.recyclerview.widget.RecyclerView
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.data.mechanic.MechanicListElements
+import com.carswaddle.carswaddleandroid.services.serviceModels.OilType
 import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.MechanicImageView
 
 
@@ -25,6 +27,17 @@ class MyMechanicRecyclerViewAdapter(
     var mechanicElements: List<MechanicListElements> = arrayListOf()
     set(newValue) {
         field = newValue
+    }
+
+    var selectedPosition: Int = 1
+
+    val selectedMechanicListElements: MechanicListElements? get() {
+        val index = selectedPosition - 1
+        if (index < 0 || index >= mechanicElements.size) {
+            Log.e(this.javaClass.simpleName, "Invalid selected position")
+            return null
+        }
+        return mechanicElements[index]
     }
 
     init {
@@ -76,6 +89,9 @@ class MyMechanicRecyclerViewAdapter(
         )
             .append(" services completed")
         holder.servicesCompletedTextView.text = ssb2
+
+
+        holder.isSelected = position == selectedPosition
     }
 
     override fun getItemCount(): Int = mechanicElements.size + 2 // Padding at start and end
@@ -93,6 +109,17 @@ class MyMechanicRecyclerViewAdapter(
         val ratingTextView: TextView = view.findViewById(R.id.ratings)
         val servicesCompletedTextView: TextView = view.findViewById(R.id.services_completed)
         val mechanicImageView: MechanicImageView = view.findViewById(R.id.mechanicImageView)
+        val rootView: View = view
+
+        var isSelected: Boolean = false
+            set(newValue) {
+                field = newValue
+                if (isSelected) {
+                    rootView.setBackgroundResource(R.drawable.large_selected_border)
+                } else {
+                    rootView.setBackgroundResource(R.drawable.large_unselected_border)
+                }
+            }
     }
 
     companion object {
