@@ -1,5 +1,8 @@
 package com.carswaddle.carswaddleandroid.ui.activities.schedule
 
+import android.app.Activity
+import android.content.Context
+import android.content.res.Resources
 import android.graphics.Typeface
 import android.text.Spannable
 import android.text.SpannableStringBuilder
@@ -8,6 +11,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatRatingBar
 import androidx.recyclerview.widget.RecyclerView
@@ -25,9 +29,6 @@ class MyMechanicRecyclerViewAdapter(
 ) : RecyclerView.Adapter<MyMechanicRecyclerViewAdapter.ViewHolder>() {
 
     var mechanicElements: List<MechanicListElements> = arrayListOf()
-    set(newValue) {
-        field = newValue
-    }
 
     var selectedPosition: Int = 1
 
@@ -40,10 +41,6 @@ class MyMechanicRecyclerViewAdapter(
         return mechanicElements[index]
     }
 
-    init {
-        this.mechanicElements = mechanicElements
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.fragment_mechanic_item, parent, false)
@@ -53,9 +50,11 @@ class MyMechanicRecyclerViewAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if (getItemViewType(position) != VIEW_TYPE_ITEM) {
             holder.itemView.alpha = 0f
+            holder.itemView.layoutParams.width = Resources.getSystem().displayMetrics.widthPixels / 3
             return
         }
         holder.itemView.alpha = 1f
+        holder.itemView.layoutParams.width = WRAP_CONTENT
 
         val item = mechanicElements[position - 1] // Offset for initial padding
         holder.nameTextView.text = item.user.displayName()
