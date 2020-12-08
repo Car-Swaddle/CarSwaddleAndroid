@@ -130,7 +130,8 @@ class AutoServicesListViewModel(application: Application) : AndroidViewModel(app
                 vehicle,
                 location,
                 mechanicUser,
-                serviceEntities
+                serviceEntities,
+                null
             )
         } catch (e: Exception) {
             print(e)

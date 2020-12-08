@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.carswaddle.carswaddleandroid.data.AppDatabase
+import com.carswaddle.carswaddleandroid.data.Review.ReviewRepository
 import com.carswaddle.carswaddleandroid.data.autoservice.AutoServiceRepository
 import com.carswaddle.carswaddleandroid.data.location.AutoServiceLocation
 import com.carswaddle.carswaddleandroid.data.location.AutoServiceLocationRepository
@@ -17,6 +18,7 @@ import com.carswaddle.carswaddleandroid.data.serviceEntity.ServiceEntity
 import com.carswaddle.carswaddleandroid.data.serviceEntity.ServiceEntityRepository
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
 import com.carswaddle.carswaddleandroid.data.vehicle.VehicleRepository
+import com.carswaddle.carswaddleandroid.services.serviceModels.CreateReview
 import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServiceListElements
 import kotlinx.coroutines.launch
 import java.lang.Exception
@@ -38,6 +40,7 @@ class AutoServiceDetailsViewModel(application: Application) : AndroidViewModel(a
     private val vehicleRepo: VehicleRepository
     private val serviceEntityRepo: ServiceEntityRepository
     private val oilChangeRepo: OilChangeRepository
+    private val reviewRepo: ReviewRepository
 
     init {
         val db = AppDatabase.getDatabase(application)
@@ -48,6 +51,7 @@ class AutoServiceDetailsViewModel(application: Application) : AndroidViewModel(a
         vehicleRepo = VehicleRepository(db.vehicleDao())
         serviceEntityRepo = ServiceEntityRepository(db.serviceEntityDao())
         oilChangeRepo = OilChangeRepository(db.oilChangeDao())
+        reviewRepo = ReviewRepository(db.reviewDao())
         
         loadAutoService()
     }
@@ -92,6 +96,14 @@ class AutoServiceDetailsViewModel(application: Application) : AndroidViewModel(a
             })
         }
     }
+    
+    fun createReview(createReview: CreateReview, completion: (error: Throwable?, autoServiceId: String?) -> Unit) {
+        val id = autoServiceId
+        if (id == null) {
+            return
+        }
+        autoServiceRepo.createReview(id, createReview, getApplication(), completion)
+    }
 
     suspend private fun fetchAutoServiceListElements(autoServiceId: String): AutoServiceListElements? {
         try {
@@ -106,12 +118,13 @@ class AutoServiceDetailsViewModel(application: Application) : AndroidViewModel(a
             val location = locationRepo.getLocation(locationId)
             val mechanicUser = userRepo.getUser(mechanic?.userId ?: "")
             val serviceEntities = serviceEntityRepo.getServiceEntities(autoServiceId)
-
+            
+            val review = reviewRepo.getReview(autoService.reviewFromUserId ?: "")
 
             if (mechanic == null || vehicle == null || location == null || mechanicUser == null) {
                 return null
             }
-            return AutoServiceListElements(autoService, mechanic, vehicle, location, mechanicUser, serviceEntities)
+            return AutoServiceListElements(autoService, mechanic, vehicle, location, mechanicUser, serviceEntities, review)
         } catch (e: Exception) {
             print(e)
             return null

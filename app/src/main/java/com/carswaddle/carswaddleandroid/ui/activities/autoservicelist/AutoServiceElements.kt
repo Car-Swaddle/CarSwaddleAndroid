@@ -1,7 +1,7 @@
 package com.carswaddle.carswaddleandroid.ui.activities.autoservicelist
 
-import android.app.Service
 import com.carswaddle.carswaddleandroid.data.autoservice.AutoService
+import com.carswaddle.carswaddleandroid.data.Review.Review
 import com.carswaddle.carswaddleandroid.data.location.AutoServiceLocation
 import com.carswaddle.carswaddleandroid.data.mechanic.Mechanic
 import com.carswaddle.carswaddleandroid.data.serviceEntity.ServiceEntity
@@ -14,5 +14,6 @@ data class AutoServiceListElements(
     val vehicle: Vehicle,
     val location: AutoServiceLocation,
     val mechanicUser: User,
-    val serviceEntities: List<ServiceEntity>?
+    val serviceEntities: List<ServiceEntity>?,
+    val review: Review?
 )

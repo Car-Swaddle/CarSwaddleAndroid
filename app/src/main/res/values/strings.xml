@@ -184,4 +184,8 @@
     <string name="tap_to_select_a_mechanic">Tap to select a Mechanic</string>
     <string name="select_a_date">Select a Date</string>
     <string name="redeem">REDEEM</string>
+    <string name="funds_refunded">If you cancel this auto service your funds will be refunded and your mechanic will be notified.</string>
+    <string name="no_funds_refund">Because the auto service is less than 24 hours away, your funds will not be refunded to you, should you cancel this auto service. Your mechanic will be notified of the cancellation.</string>
+    <string name="rate">Rate</string>
+    <string name="review_message">Review message</string>
 </resources>

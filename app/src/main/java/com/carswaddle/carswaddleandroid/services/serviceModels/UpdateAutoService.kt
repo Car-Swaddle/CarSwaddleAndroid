@@ -16,7 +16,8 @@ data class UpdateAutoService(
     val mechanicID: String?,
     val locationID: String?,
     val scheduledDate: Date?,
-    val location: ServerLocation?
+    val location: ServerLocation?,
+    val review: CreateReview?
 )
 
 
@@ -44,4 +45,9 @@ data class ServerLocation(
     val longitude: Double,
     val latitude: Double,
     val streetAddress: String?
+)
+
+data class CreateReview(
+    val rating: Float,
+    val text: String 
 )

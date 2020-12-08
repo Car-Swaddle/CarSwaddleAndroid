@@ -22,7 +22,8 @@ data class AutoService(
     @ColumnInfo(name = "creator_id") val creatorId: String?,
     @ColumnInfo(name = "mechanic_id") val mechanicId: String,
     @ColumnInfo(name = "location_id") val locationId: String,
-    @ColumnInfo(name = "vehicle_id") val vehicleId: String?
+    @ColumnInfo(name = "vehicle_id") val vehicleId: String?,
+    @ColumnInfo(name = "review_from_user_id") val reviewFromUserId: String?
 ) {
 
     constructor(autoService: com.carswaddle.carswaddleandroid.services.serviceModels.AutoService) :
@@ -40,7 +41,8 @@ data class AutoService(
                 autoService.userID,
                 autoService.mechanicID,
                 autoService.location.id,
-                autoService.vehicleID
+                autoService.vehicleID,
+                autoService.reviewFromUser?.id
             )
     
     fun startTimeSecondsSinceMidnight(): Int? {

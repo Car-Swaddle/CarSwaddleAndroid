@@ -5,5 +5,7 @@ data class Review(
     val rating: Float,
     val text: String,
     val reviewerID: String,
-    val revieweeID: String
+    val revieweeID: String,
+    val autoServiceIDFromUser: String?,
+    val autoServiceIDFromMechanic: String?
 )

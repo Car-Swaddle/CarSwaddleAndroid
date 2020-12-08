@@ -1,6 +1,7 @@
 package com.carswaddle.carswaddleandroid.data.autoservice
 
 import androidx.room.*
+import com.carswaddle.carswaddleandroid.data.Review.Review
 import com.carswaddle.carswaddleandroid.data.location.AutoServiceLocation
 import com.carswaddle.carswaddleandroid.data.mechanic.Mechanic
 import com.carswaddle.carswaddleandroid.data.oilChange.OilChange
@@ -32,6 +33,9 @@ public abstract class AutoServiceDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertLocation(location: AutoServiceLocation)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract fun insertReview(review: Review)
+
     @Query("SELECT * FROM autoService WHERE creator_id is (:userId) ORDER BY creation_date ASC")
     abstract fun getAutoServicesForUser(userId: String): List<AutoService>
 
@@ -50,6 +54,9 @@ public abstract class AutoServiceDao {
     @Query("SELECT * FROM autoservicelocation WHERE id IN (:locationId)")
     abstract fun getLocation(locationId: String): AutoServiceLocation?
 
+    @Query("SELECT * FROM review WHERE id IN (:reviewId)")
+    abstract fun getReview(reviewId: String): Review?
+    
     @Query("SELECT * FROM user WHERE id IN (:userId)")
     abstract fun getUser(userId: String): User?
 

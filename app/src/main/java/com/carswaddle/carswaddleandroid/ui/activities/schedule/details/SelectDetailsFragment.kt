@@ -302,6 +302,8 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String, val schedu
                             // Hack because the index and/or transform on the view are jacked if using `notifyDatasetChanged`
                             val o = oilTypeRecyclerView.findViewHolderForAdapterPosition(snapPosition) as? OilTypeRecyclerViewAdapter.ViewHolder
                             o?.isSelectedOiltype = true
+
+                            updatePrice()
                         }
                     }
                     
@@ -387,7 +389,7 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String, val schedu
         }
         
         val loc = ServerLocation(point.longitude(), point.latitude(), point.streetAddress)
-        val serviceEntities = listOf(CreateServiceEntity.init(OilType.SYNTHETIC))
+        val serviceEntities = listOf(CreateServiceEntity.init(oilTypeAdapter.selectedOilType))
         val createAutoService = CreateAutoService(
             AutoServiceStatus.scheduled,
             null,
@@ -460,6 +462,8 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String, val schedu
     private fun updatePrice() {
         if (coupon != null && coupon?.isEmpty() == false) {
             redeemTextView.isLoading = true
+        } else {
+            payButton.isLoading = true
         }
         
         selectDetailsViewModel.loadPrice(
@@ -471,6 +475,7 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String, val schedu
         ) {
             activity?.runOnUiThread {
                 redeemTextView.isLoading = false
+                payButton.isLoading = false
             }
         }
     }

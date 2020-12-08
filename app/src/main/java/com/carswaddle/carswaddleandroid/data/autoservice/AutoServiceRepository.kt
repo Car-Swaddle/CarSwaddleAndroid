@@ -2,6 +2,7 @@ package com.carswaddle.carswaddleandroid.data.autoservice
 
 import android.content.Context
 import android.util.Log
+import com.carswaddle.carswaddleandroid.data.Review.Review
 import com.carswaddle.carswaddleandroid.data.location.AutoServiceLocation
 import com.carswaddle.carswaddleandroid.data.mechanic.Mechanic
 import com.carswaddle.carswaddleandroid.data.oilChange.OilChange
@@ -36,14 +37,19 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
     suspend fun getAutoService(autoServiceId: String): DataAutoService? {
         return autoServiceDao.getAutoService(autoServiceId)
     }
-    
-    fun createAndPayForAutoService(createAutoService: CreateAutoService, context: Context, completion: (error: Throwable?) -> Unit) {
-        val autoServiceService = ServiceGenerator.authenticated(context)?.retrofit?.create(AutoServiceService::class.java)
+
+    fun createAndPayForAutoService(
+        createAutoService: CreateAutoService,
+        context: Context,
+        completion: (error: Throwable?) -> Unit
+    ) {
+        val autoServiceService =
+            ServiceGenerator.authenticated(context)?.retrofit?.create(AutoServiceService::class.java)
         if (autoServiceService == null) {
             completion(ServiceNotAvailable())
             return
         }
-        
+
         val call = autoServiceService.createAutoService(createAutoService)
         call.enqueue(object :
             Callback<AutoService> {
@@ -63,10 +69,10 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
                     completion(EmptyBodyError())
                 }
             }
-            
+
         })
     }
-    
+
     fun getPrice(
         location: LocationJSON,
         mechanicId: String,
@@ -75,12 +81,13 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
         context: Context,
         completion: (error: Throwable?, price: Price?) -> Unit
     ) {
-        val priceService = ServiceGenerator.authenticated(context)?.retrofit?.create(PriceService::class.java)
+        val priceService =
+            ServiceGenerator.authenticated(context)?.retrofit?.create(PriceService::class.java)
         if (priceService == null) {
             completion(ServiceNotAvailable(), null)
             return
         }
-        
+
         val priceRequest = PriceRequest(location, mechanicId, oiltype.toString(), coupon)
         val call = priceService.getPrice(priceRequest)
         call.enqueue(object : Callback<PriceResponse> {
@@ -120,44 +127,55 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
         context: Context,
         completion: (error: Throwable?, autoServiceId: String?) -> Unit
     ) {
-        val autoServiceService = ServiceGenerator.authenticated(context)?.retrofit?.create(
-            AutoServiceService::class.java
+        val updateAutoService = UpdateAutoService(
+            null, notes, null, null, null, null, null, null
         )
-        if (autoServiceService == null) {
-            completion(ServiceNotAvailable(), null)
-            return
-        }
 
-        val updateAutoService = UpdateAutoService(null, notes, null, null, null, null, null)
-
-        val call = autoServiceService.updateAutoService(autoServiceId, updateAutoService)
-        call.enqueue(object :
-            Callback<com.carswaddle.carswaddleandroid.services.serviceModels.AutoService> {
-            override fun onFailure(call: Call<AutoService>, t: Throwable) {
-                completion(t, null)
-            }
-
-            override fun onResponse(call: Call<AutoService>, response: Response<AutoService>) {
-                val autoService = response.body()
-                if (autoService == null) {
-                    print("no auto service")
-                    completion(null, null)
-                } else {
-                    GlobalScope.async {
-                        try {
-                            insertNestedAutoService(autoService)
-                            completion(null, autoService.id)
-                        } catch (e: Exception) {
-                            completion(e, null)
-                        }
-                    }
-                }
-            }
-        })
+        updateAutoService(autoServiceId, updateAutoService, context, completion)
     }
 
     fun cancelAutoService(
         autoServiceId: String,
+        context: Context,
+        completion: (error: Throwable?, autoServiceId: String?) -> Unit
+    ) {
+        val updateAutoService = UpdateAutoService(
+            AutoServiceStatus.canceled.toString(),
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        )
+
+        updateAutoService(autoServiceId, updateAutoService, context, completion)
+    }
+
+    fun createReview(
+        autoServiceId: String,
+        createReview: CreateReview,
+        context: Context,
+        completion: (error: Throwable?, autoServiceId: String?) -> Unit
+    ) {
+        val updateAutoService = UpdateAutoService(
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            createReview
+        )
+
+        updateAutoService(autoServiceId, updateAutoService, context, completion)
+    }
+
+    private fun updateAutoService(
+        autoServiceId: String,
+        updateAutoService: UpdateAutoService,
         context: Context,
         completion: (error: Throwable?, autoServiceId: String?) -> Unit
     ) {
@@ -169,11 +187,9 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
             return
         }
 
-        val updateAutoService = UpdateAutoService(AutoServiceStatus.canceled.toString(), null, null, null, null, null, null)
-
         val call = autoServiceService.updateAutoService(autoServiceId, updateAutoService)
         call.enqueue(object :
-            Callback<com.carswaddle.carswaddleandroid.services.serviceModels.AutoService> {
+            Callback<AutoService> {
             override fun onFailure(call: Call<AutoService>, t: Throwable) {
                 completion(t, null)
             }
@@ -221,7 +237,7 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
 
         val call = autoServiceService.autoServiceDetails(autoServiceId)
         call.enqueue(object :
-            Callback<com.carswaddle.carswaddleandroid.services.serviceModels.AutoService> {
+            Callback<AutoService> {
             override fun onFailure(call: Call<AutoService>, t: Throwable) {
                 completion(t, null)
             }
@@ -288,14 +304,15 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
                 } else {
                     GlobalScope.async {
 //                        try {
-                            var ids = arrayListOf<String>()
-                            for (autoService in result) {
-                                try {
-                                    insertNestedAutoService(autoService)
-                                    ids.add(autoService.id)
-                                } catch(e: Exception) { }
+                        var ids = arrayListOf<String>()
+                        for (autoService in result) {
+                            try {
+                                insertNestedAutoService(autoService)
+                                ids.add(autoService.id)
+                            } catch (e: Exception) {
                             }
-                            completion(null, ids.toList())
+                        }
+                        completion(null, ids.toList())
 //                        } catch (e: Exception) {
 //                            print(e)
 //                            Log.d("retrofit ", "error persisting auto service" + e)
@@ -322,7 +339,7 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
             completion(ServiceNotAvailable(), null)
             return null
         }
-        
+
         val call = autoServiceService.autoServiceDate(
             mechanicId,
             startDate.time,
@@ -360,16 +377,23 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
                 }
             }
         })
-        
+
         return call
     }
-    
+
     suspend private fun insertNestedAutoService(autoService: AutoService): DataAutoService {
         val storedAutoService = DataAutoService(autoService)
         val location = AutoServiceLocation(autoService.location)
         autoServiceDao.insertLocation(location)
         val vehicle = Vehicle(autoService.vehicle)
         autoServiceDao.insertVehicle(vehicle)
+
+        val review = autoService.reviewFromUser
+        if (review != null) {
+            val review = Review(review)
+            autoServiceDao.insertReview(review)
+        }
+
         val mechanic = Mechanic(autoService.mechanic)
         autoServiceDao.insertMechanic(mechanic)
         autoService.mechanic.user?.let {
