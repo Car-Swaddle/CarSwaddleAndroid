@@ -113,6 +113,18 @@ class MechanicFragment() : Fragment() {
                     val snapPosition = lm.getPosition(snapView)
                     mechanicViewAdapter.selectedPosition = snapPosition
 
+                    val mechanicId = mechanicViewAdapter.selectedMechanicId
+                    if (mechanicId != null) {
+                        mechanicViewModel.loadTimeSlots(mechanicId) { e ->
+                            activity?.runOnUiThread {
+                                // If error or changed during fetch, don't update
+                                if (e == null && mechanicId == mechanicViewAdapter.selectedMechanicId) {
+                                    updateTimeSlotsToTomorrow()
+                                }
+                            }
+                        }
+                    }
+
                     // Loop through all and mark as not selected. oldPosition wasn't always accurate
                     for (i in 0..mechanicViewAdapter.itemCount) {
                         val childView = getChildAt(i) ?: continue
@@ -149,7 +161,7 @@ class MechanicFragment() : Fragment() {
 
         confirmButton = view.findViewById(R.id.confirm_mechanic)
         confirmButton.button.setOnClickListener { v ->
-            val m = mechanicViewAdapter.selectedMechanicListElements?.mechanic?.id
+            val m = mechanicViewAdapter.selectedMechanicId
             val date = selectedDate
             if (m != null && date != null) {
                 callback.onConfirm(m, date)
@@ -192,12 +204,10 @@ class MechanicFragment() : Fragment() {
                 }
                 if (firstMechanicId != null) {
                     currentTimeSlotCount = null
-                    mechanicViewModel.loadTimeSlots(firstMechanicId) {
+                    mechanicViewModel.loadTimeSlots(firstMechanicId) { e ->
                         activity?.runOnUiThread {
-                            if (it == null) {
-                                var tomorrow = KotlinCalendar.getInstance()
-                                tomorrow.add(KotlinCalendar.DAY_OF_YEAR, 1)
-                                updateTimeSlots(tomorrow)
+                            if (e == null) {
+                                updateTimeSlotsToTomorrow()
                             }
                         }
                     }
@@ -219,8 +229,14 @@ class MechanicFragment() : Fragment() {
         CustomerSession.initCustomerSession(c, StripeKeyProvider(c))
     }
 
+    private fun updateTimeSlotsToTomorrow() {
+        val calendar = getInstance()
+        calendar.add(DAY_OF_YEAR, 1)
+        updateTimeSlots(calendar)
+    }
+
     private fun updateTimeSlots(calendar: java.util.Calendar) {
-        val mechanicId = mechanicViewModel.mechanics.value?.safeFirst()?.mechanic?.id
+        val mechanicId = mechanicViewAdapter.selectedMechanicId
         updateMonthYear(calendar.get(MONTH), calendar.get(YEAR))
         if (mechanicId == null) {
             return

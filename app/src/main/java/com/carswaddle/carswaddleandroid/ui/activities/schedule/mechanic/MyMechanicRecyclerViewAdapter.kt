@@ -41,6 +41,10 @@ class MyMechanicRecyclerViewAdapter(
         return mechanicElements[index]
     }
 
+    val selectedMechanicId: String? get() {
+        return selectedMechanicListElements?.mechanic?.id
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.fragment_mechanic_item, parent, false)
