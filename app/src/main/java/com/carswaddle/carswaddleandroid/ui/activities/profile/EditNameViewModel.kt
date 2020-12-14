@@ -38,13 +38,13 @@ class EditNameViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    fun updatePhoneNumber(phoneNumber: String, cacheCompletion: () -> Unit, completion: (error: Error?) -> Unit) {
+    fun updatePhoneNumber(phoneNumber: String, cacheCompletion: () -> Unit, completion: (throwable: Throwable?) -> Unit) {
         userRepo.updatePhoneNumber(phoneNumber, getApplication(), cacheCompletion) { error ->
             completion(error)
         }
     }
 
-    fun updateName(firstName: String?, lastName: String?, cacheCompletion: () -> Unit, completion: (error: Error?) -> Unit) {
+    fun updateName(firstName: String?, lastName: String?, cacheCompletion: () -> Unit, completion: (throwable: Throwable?) -> Unit) {
         userRepo.updateName(firstName, lastName, getApplication(), cacheCompletion) { error ->
             completion(error)
         }

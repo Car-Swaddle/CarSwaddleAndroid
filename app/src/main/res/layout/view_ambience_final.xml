@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:id="@+id/ambience_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    
+    <ImageView
+        android:id="@+id/ambience_image_view"
+        android:layout_width="1539dp"
+        android:layout_height="2736dp"
+        tools:srcCompat="@drawable/suburbs"
+        app:srcCompat="@drawable/suburbs"
+        app:layout_constraintTop_toTopOf="@+id/ambience_parent"
+        app:layout_constraintEnd_toEndOf="@+id/ambience_parent">
+    </ImageView>
+
+    <View
+        android:id="@+id/ambience_final_mask"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/brandAlpha"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

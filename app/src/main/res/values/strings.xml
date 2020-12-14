@@ -188,4 +188,6 @@
     <string name="no_funds_refund">Because the auto service is less than 24 hours away, your funds will not be refunded to you, should you cancel this auto service. Your mechanic will be notified of the cancellation.</string>
     <string name="rate">Rate</string>
     <string name="review_message">Review message</string>
+    <string name="create_an_account">Create an account</string>
+    <string name="or">OR</string>
 </resources>
