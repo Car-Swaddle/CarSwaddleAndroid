@@ -190,4 +190,10 @@
     <string name="review_message">Review message</string>
     <string name="create_an_account">Create an account</string>
     <string name="or">OR</string>
+    <string name="go_to_login">Go to login</string>
+    <string name="already_have_account">Already have an account?</string>
+    <string name="web">Web</string>
+    <string name="car_swaddle_terms_of_use">Terms of Use</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="stripe_agreement">Stripe Agreement</string>
 </resources>

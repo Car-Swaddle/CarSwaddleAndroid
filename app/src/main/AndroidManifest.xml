@@ -41,9 +41,6 @@
             android:name=".ui.activities.SetNameActivity"
             android:label="@string/set_name"/>
         <activity
-            android:name=".ui.activities.SignUpActivity"
-            android:label="@string/title_sign_up"/>
-        <activity
             android:name=".ui.activities.SetPhoneNumberActivity"
             android:label="@string/title_set_phone_number"/>
         <activity
@@ -52,6 +49,9 @@
         <activity
             android:name=".ui.activities.ForgotPasswordActivity"
             android:label="@string/title_forgot_password"/>
+        <activity
+            android:name=".ui.activities.WebActivity"
+            android:label="@string/web"/>
         <activity
             android:name=".activities.ui.SplashActivity"
             android:launchMode="singleTask"
@@ -85,9 +85,6 @@
             android:name=".activities.ui.MainActivity"
             android:label="Main"
             android:windowSoftInputMode="adjustPan"/>
-        <activity
-            android:name=".activities.ui.LoginActivity"
-            android:label="Login" />
         <service
             android:name=".pushNotifications.MessagingController"
             android:exported="false">

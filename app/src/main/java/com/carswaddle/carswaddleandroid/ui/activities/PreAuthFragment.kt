@@ -36,8 +36,8 @@ class PreAuthFragment : Fragment() {
         }
 
         signUpButton.setOnClickListener {
-//            val intent = Intent(this, SignUpActivity::class.java)
-//            startActivity(intent)
+            val navController = requireActivity().findNavController(R.id.auth_nav_host)
+            navController.navigate(R.id.action_navigation_pre_auth_to_signUpFragment, null)
         }
 
         return root

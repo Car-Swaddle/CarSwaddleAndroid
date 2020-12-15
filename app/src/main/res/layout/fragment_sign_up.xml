@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/login"
+    android:id="@+id/signUp"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:focusableInTouchMode="true"
+    android:focusable="true">
 
     <ImageView
         android:id="@+id/car_swaddle_text"
@@ -16,20 +17,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/car_swaddle_white_one_line" />
-
+    
     <EditText
         android:id="@+id/emailEditText"
         android:layout_width="wrap_content"
         android:minWidth="294dp"
-        android:layout_height="wrap_content"
-        android:textColor="@color/neutral8"
-        android:textColorHint="@color/neutral8"
-        android:backgroundTint="@color/neutral8"
-        android:layout_marginHorizontal="16dp"
-        android:textCursorDrawable="@drawable/cursor_color_white"
+        android:layout_height="45dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="96dp"
+        android:layout_marginEnd="16dp"
         android:gravity="center_horizontal"
         android:layout_centerInParent="true"
-        android:layout_marginTop="96dp"
+        android:textCursorDrawable="@drawable/cursor_color_white"
+        android:textColor="@color/neutral7"
+        android:textColorHint="@color/neutral7"
+        android:backgroundTint="@color/neutral7"
         android:hint="@string/email_hint"
         android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
@@ -41,15 +43,16 @@
         android:id="@+id/password_edit_text"
         android:layout_width="wrap_content"
         android:minWidth="294dp"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
         android:gravity="center_horizontal"
         android:layout_centerInParent="true"
         android:textCursorDrawable="@drawable/cursor_color_white"
         android:textColor="@color/neutral7"
         android:textColorHint="@color/neutral7"
         android:backgroundTint="@color/neutral7"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="32dp"
         android:autofillHints="AUTOFILL_HINT_PASSWORD"
         android:hint="@string/password_hint"
         android:inputType="textPassword"
@@ -58,26 +61,52 @@
         app:layout_constraintTop_toBottomOf="@+id/emailEditText" />
 
     <Button
-        android:id="@+id/sendResetButton"
+        android:id="@+id/sign_up_button"
         android:layout_marginTop="44dp"
-        android:text="@string/login"
-        style="@style/CarSwaddle.AuthButton.Filled"
+        style="@style/CarSwaddleOutlineButton"
+        android:text="@string/sign_up"
         app:layout_constraintEnd_toEndOf="@+id/password_edit_text"
         app:layout_constraintStart_toStartOf="@+id/password_edit_text"
         app:layout_constraintTop_toBottomOf="@+id/password_edit_text" />
 
-    <Button
-        android:id="@+id/forgotPasswordButton"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:textColor="@color/brandContrast"
+        android:textSize="@dimen/subtitle"
+        android:text="@string/already_have_account"
+        android:translationY="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/go_to_login_button"/>
+    
+    <Button
+        android:id="@+id/go_to_login_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/content_gap"
         android:textAllCaps="false"
         android:fontFamily="@font/montserrat_bold"
         android:textSize="@dimen/title"
-        android:text="@string/forgot_password"
+        android:text="@string/go_to_login"
         style="?android:attr/borderlessButtonStyle"
-        app:layout_constraintEnd_toEndOf="@+id/password_edit_text"
-        app:layout_constraintStart_toStartOf="@+id/password_edit_text"
-        app:layout_constraintTop_toBottomOf="@+id/sendResetButton" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/agreement_text_view" />
     
+    <TextView
+        android:id="@+id/agreement_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="32dp"
+        android:layout_marginBottom="@dimen/content_margin"
+        android:textColor="@color/brandContrast"
+        android:textSize="@dimen/tiny_text"
+        android:text="By registering your account, you agree to the Car Swaddle Terms of Use Agreement, the Car Swaddle Privacy Policy and the Stripe Connected Account Agreement"
+        android:textColorHighlight="#5FFF"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:ignore="HardcodedText" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

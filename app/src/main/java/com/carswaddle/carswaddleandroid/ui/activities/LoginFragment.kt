@@ -13,6 +13,7 @@ import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.carswaddle.carswaddleandroid.CarSwaddleApp.CarSwaddleApp.Companion.applicationContext
+import com.carswaddle.carswaddleandroid.Extensions.dismissKeyboard
 import com.carswaddle.carswaddleandroid.Extensions.isEmpty
 import com.carswaddle.carswaddleandroid.Extensions.isValidEmail
 import com.carswaddle.carswaddleandroid.R
@@ -64,6 +65,10 @@ class LoginFragment : Fragment() {
                 updateLoginButton()
             }
         })
+        
+        root.setOnClickListener { 
+            dismissKeyboard()
+        }
 
         loginButton.setOnClickListener {
             didTapLogin()
