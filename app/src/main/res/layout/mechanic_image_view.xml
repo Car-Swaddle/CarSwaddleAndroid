@@ -7,6 +7,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:adjustViewBounds="false"
-    android:scaleType="fitXY"
+    android:scaleType="centerCrop"
     app:srcCompat="@drawable/ic_car_swaddle_pin"
     tools:srcCompat="@drawable/ic_car_swaddle_pin" />
