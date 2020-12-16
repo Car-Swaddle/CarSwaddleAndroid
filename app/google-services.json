@@ -1,35 +1,43 @@
 {
   "project_info": {
-    "project_number": "348618357444",
-    "firebase_url": "https://car-swaddle-android.firebaseio.com",
-    "project_id": "car-swaddle-android",
-    "storage_bucket": "car-swaddle-android.appspot.com"
+    "project_number": "1089255662484",
+    "firebase_url": "https://car-swaddle-56a01.firebaseio.com",
+    "project_id": "car-swaddle-56a01",
+    "storage_bucket": "car-swaddle-56a01.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:348618357444:android:26a8b260b8bfe35e0aa791",
+        "mobilesdk_app_id": "1:1089255662484:android:e75b64e8d61b6fdf196581",
         "android_client_info": {
           "package_name": "com.carswaddle.carswaddleandroid"
         }
       },
       "oauth_client": [
         {
-          "client_id": "348618357444-kf4npfi9b3ugh4s3m06gduhgahndajf4.apps.googleusercontent.com",
+          "client_id": "1089255662484-oic5ijk5o48ntksvddmgoft3cnmao6eg.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAdAyAc8tDNotm4VB_K_TDPbTmyBpjpIaM"
+          "current_key": "AIzaSyBRUPDddXCos9K90EVH8b4n62EXh_oRc98"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "348618357444-kf4npfi9b3ugh4s3m06gduhgahndajf4.apps.googleusercontent.com",
+              "client_id": "1089255662484-oic5ijk5o48ntksvddmgoft3cnmao6eg.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "1089255662484-du5dbld08hpittdtarcqovv1nrpehbcv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.carswaddle.carswaddle",
+                "app_store_id": "1462564436"
+              }
             }
           ]
         }
