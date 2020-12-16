@@ -43,7 +43,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
             viewModelScope.launch {
                 val currentUser = userRepo.getCurrentUser(getApplication())
                 if (currentUser != null) {
-                    _currentUser.postValue(currentUser)
+                    _currentUser.postValue(currentUser!!)
                 } else {
                     // TODO: fail better man
                 }

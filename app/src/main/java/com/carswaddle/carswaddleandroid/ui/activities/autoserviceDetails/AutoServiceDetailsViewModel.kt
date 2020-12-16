@@ -83,9 +83,9 @@ class AutoServiceDetailsViewModel(application: Application) : AndroidViewModel(a
                         autoServiceElement.value?.serviceEntities?.let {
                             if (it.size > 0) {
                                 val service = it.get(0)
-                                if (service != null) {
-                                    val o = oilChangeRepo.getOilChange(service.oilChangeID)
-                                    _oilChange.postValue(o)
+                                val o = oilChangeRepo.getOilChange(service.oilChangeID)
+                                if (o != null) {
+                                    _oilChange.postValue(o!!)
                                 }
                             }
                         }
