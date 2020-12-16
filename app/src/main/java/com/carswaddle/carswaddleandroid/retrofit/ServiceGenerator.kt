@@ -16,7 +16,7 @@ private val productionUrl = "https://api.carswaddle.com"
 private val stagingUrl = "https://api.staging.carswaddle.com"
 private val localUrl = "Kyles-MacBook-Pro.local"
 
-val server: Server = Server.staging
+val server: Server = Server.production
 
 enum class Server() {
     staging,
@@ -79,4 +79,3 @@ class ServiceGenerator(baseURL: String, okHttpClient: OkHttpClient) {
 
 
 class ServiceNotAvailable(message: String = "Cannot create a Service to make network request") : Throwable(message) {}
-
