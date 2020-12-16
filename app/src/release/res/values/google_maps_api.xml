@@ -1,4 +1,3 @@
 <resources>
-    <!-- Restricted to just this app signed with the keystore for release -->
-    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyBYKl02b4aU_kE_AV14Q76fxY9WncWh7Lc</string>
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyBhsEAWOnsQExyOXUESQuYbINBZMXFvZPg</string>
 </resources>
