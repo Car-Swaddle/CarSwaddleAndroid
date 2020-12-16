@@ -35,8 +35,12 @@ class SplashActivity: AppCompatActivity() {
         if (auth.isUserLoggedIn()) {
             userRepo.importCurrentUser(this) {
                 val user = userRepo.getCurrentUser(this)
-                if (user == null) {
-                    Log.d("dunno", "something messed up, no user, but signed in")
+                if (it != null) {
+                    val intent = Intent(this, PreAuthenticationActivity::class.java)
+                    startActivity(intent)
+                } else if (user == null) {
+                    val intent = Intent(this, PreAuthenticationActivity::class.java)
+                    startActivity(intent)
                 } else if (user.firstName.isNullOrBlank() || user.lastName.isNullOrBlank()) {
                     val intent = Intent(this, SetNameActivity::class.java)
                     startActivity(intent)

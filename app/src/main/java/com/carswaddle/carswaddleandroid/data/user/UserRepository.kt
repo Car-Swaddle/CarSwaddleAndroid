@@ -7,6 +7,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.carswaddle.carswaddleandroid.Extensions.carSwaddlePreferences
 import com.carswaddle.carswaddleandroid.data.Authentication
 import com.carswaddle.carswaddleandroid.retrofit.ServiceGenerator
+import com.carswaddle.carswaddleandroid.retrofit.ServiceNotAvailable
 import com.carswaddle.carswaddleandroid.retrofit.serviceGenerator
 import com.carswaddle.carswaddleandroid.services.AuthenticationService
 import com.carswaddle.carswaddleandroid.services.LogoutBody
@@ -264,23 +265,23 @@ class UserRepository(private val userDao: UserDao) {
         })
     }
 
-    fun updateName(firstName: String?, lastName: String?, context: Context, cacheCompletion: () -> Unit = {}, completion: (error: Error?) -> Unit) {
+    fun updateName(firstName: String?, lastName: String?, context: Context, cacheCompletion: () -> Unit = {}, completion: (throwable: Throwable?) -> Unit) {
         update(firstName, lastName, null, null, null, null, cacheCompletion, context, completion)
     }
 
-    fun updatePhoneNumber(phoneNumber: String, context: Context, cacheCompletion: () -> Unit = {}, completion: (error: Error?) -> Unit) {
+    fun updatePhoneNumber(phoneNumber: String, context: Context, cacheCompletion: () -> Unit = {}, completion: (throwable: Throwable?) -> Unit) {
         update(null, null, phoneNumber, null, null, null, cacheCompletion, context, completion)
     }
 
-    fun updatePushToken(token: String, context: Context, cacheCompletion: () -> Unit = {}, completion: (error: Error?) -> Unit) {
+    fun updatePushToken(token: String, context: Context, cacheCompletion: () -> Unit = {}, completion: (throwable: Throwable?) -> Unit) {
         update(null, null, null, token, null, null, cacheCompletion, context, completion)
     }
 
-    private fun update(updateUser: UpdateUser, context: Context, cacheCompletion: () -> Unit = {}, completion: (error: Error?) -> Unit) {
+    private fun update(updateUser: UpdateUser, context: Context, cacheCompletion: () -> Unit = {}, completion: (throwable: Throwable?) -> Unit) {
         val userService = ServiceGenerator.authenticated(context)?.retrofit?.create(UserService::class.java)
         if (userService == null) {
             // TODO: call with error
-            completion(null)
+            completion(ServiceNotAvailable())
             return
         }
 
@@ -305,7 +306,7 @@ class UserRepository(private val userDao: UserDao) {
                 if (result == null) {
                     // TODO: make an error here
                     Log.d("retrofit ", "call failed")
-                    completion(null) // somethind
+                    completion(ServiceError())
                 } else {
                     Log.d("retrofit ", "call succeeded")
                     GlobalScope.async {
@@ -318,7 +319,7 @@ class UserRepository(private val userDao: UserDao) {
         })
     }
 
-    private fun update(firstName: String?, lastName: String?, phoneNumber: String?, token: String?, timeZone: String?, adminKey: String?, cacheCompletion: () -> Unit, context: Context, completion: (error: Error?) -> Unit) {
+    private fun update(firstName: String?, lastName: String?, phoneNumber: String?, token: String?, timeZone: String?, adminKey: String?, cacheCompletion: () -> Unit, context: Context, completion: (throwable: Throwable?) -> Unit) {
         val updateUser = UpdateUser(firstName, lastName, phoneNumber, token, PUSH_TOKEN_TYPE, timeZone, adminKey)
         update(updateUser, context, cacheCompletion, completion)
     }
@@ -357,3 +358,5 @@ class UserRepository(private val userDao: UserDao) {
 
 
 class EmailNotFoundError(message: String) : Throwable(message) {}
+
+class ServiceError() : Throwable() {}

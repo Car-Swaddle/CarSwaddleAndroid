@@ -12,6 +12,7 @@ import android.widget.Button
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.Navigation.findNavController
@@ -44,6 +45,7 @@ class AutoServicesListFragment : Fragment() {
     ): View? {
         autoServicesListViewModel =
             ViewModelProviders.of(requireActivity()).get(AutoServicesListViewModel::class.java)
+        ViewModelProvider(requireActivity())
         val root = inflater.inflate(R.layout.fragment_autoservices_list, container, false)
 
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver(object: BroadcastReceiver() {

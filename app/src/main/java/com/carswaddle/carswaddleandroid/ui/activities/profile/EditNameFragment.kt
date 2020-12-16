@@ -10,8 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.carswaddle.carswaddleandroid.R
-import com.carswaddle.carswaddleandroid.activities.ui.LoginActivity
-import com.carswaddle.carswaddleandroid.data.Authentication
 import com.carswaddle.carswaddleandroid.data.user.User
 
 
