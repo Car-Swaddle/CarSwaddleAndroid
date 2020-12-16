@@ -1,6 +1,7 @@
 package com.carswaddle.carswaddleandroid.retrofit
 
 import android.content.Context
+import com.carswaddle.carswaddleandroid.BuildConfig
 import com.carswaddle.carswaddleandroid.data.Authentication
 import com.carswaddle.carswaddleandroid.services.serviceModels.CreateAutoService
 import com.carswaddle.carswaddleandroid.services.serviceModels.CreateServiceEntity
@@ -16,13 +17,26 @@ private val productionUrl = "https://api.carswaddle.com"
 private val stagingUrl = "https://api.staging.carswaddle.com"
 private val localUrl = "Kyles-MacBook-Pro.local"
 
-val server: Server = Server.production
+val server: Server = Server.fromBuildConfigs()
 
 enum class Server() {
     staging,
     production,
-    local
-}
+    local;
+    
+    companion object {
+        fun fromBuildConfigs(): Server {
+            when (BuildConfig.BUILD_TYPE) {
+                "debug" -> return Server.staging
+                "release" -> return Server.production
+                else -> {
+                    return Server.staging
+                }
+            }
+        }
+    }
+    
+} 
 
 fun serverUrl(): String {
     return when(server) {
