@@ -11,7 +11,6 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.TextView
@@ -19,9 +18,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.R.layout.activity_verify_code
 import com.carswaddle.carswaddleandroid.activities.ui.MainActivity
-import com.carswaddle.carswaddleandroid.data.AppDatabase
-import com.carswaddle.carswaddleandroid.data.Authentication
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
+import com.carswaddle.services.Authentication
+import com.carswaddle.store.AppDatabase
 import com.mukesh.OtpView
 
 

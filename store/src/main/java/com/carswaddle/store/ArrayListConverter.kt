@@ -1,4 +1,4 @@
-package com.carswaddle.carswaddleandroid.data
+package com.carswaddle.store
 
 import androidx.room.TypeConverter
 import java.util.*
@@ -14,15 +14,5 @@ class ArrayListConverter {
     fun fromArrayOptional(value: List<String>?): String? {
         return value?.joinToString()
     }
-
-//    @TypeConverter
-//    fun toArray(value: String): List<String> {
-//        return value.split(",").toList()
-//    }
-//
-//    @TypeConverter
-//    fun fromArray(value: List<String>): String {
-//        return value.joinToString()
-//    }
 
 }

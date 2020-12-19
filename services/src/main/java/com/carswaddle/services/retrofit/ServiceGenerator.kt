@@ -1,7 +1,7 @@
 package com.carswaddle.carswaddleandroid.retrofit
 
 import android.content.Context
-import com.carswaddle.carswaddleandroid.data.Authentication
+import com.carswaddle.services.Authentication
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit

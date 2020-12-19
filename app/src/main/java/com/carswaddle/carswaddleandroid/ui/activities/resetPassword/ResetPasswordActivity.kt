@@ -8,9 +8,9 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import com.carswaddle.carswaddleandroid.R
-import com.carswaddle.carswaddleandroid.data.AppDatabase
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
 import com.carswaddle.carswaddleandroid.R.layout.activity_reset_password
+import com.carswaddle.store.AppDatabase
 
 class ResetPasswordActivity: AppCompatActivity() {
 

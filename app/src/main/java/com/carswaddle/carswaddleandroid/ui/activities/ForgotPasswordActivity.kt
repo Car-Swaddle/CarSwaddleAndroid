@@ -2,7 +2,6 @@ package com.carswaddle.carswaddleandroid.ui.activities
 
 import android.app.AlertDialog
 import android.content.DialogInterface
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -11,8 +10,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
 import com.carswaddle.carswaddleandroid.R.layout.activity_forgot_password
-import com.carswaddle.carswaddleandroid.data.AppDatabase
 import com.carswaddle.carswaddleandroid.data.user.EmailNotFoundError
+import com.carswaddle.store.AppDatabase
 
 class ForgotPasswordActivity: AppCompatActivity() {
 

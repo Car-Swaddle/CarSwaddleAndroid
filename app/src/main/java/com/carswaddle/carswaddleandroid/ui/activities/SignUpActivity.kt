@@ -13,9 +13,9 @@ import com.carswaddle.carswaddleandroid.Extensions.isValidEmail
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.R.layout.activity_sign_up
 import com.carswaddle.carswaddleandroid.activities.ui.MainActivity
-import com.carswaddle.carswaddleandroid.data.AppDatabase
-import com.carswaddle.carswaddleandroid.data.Authentication
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
+import com.carswaddle.services.Authentication
+import com.carswaddle.store.AppDatabase
 
 class SignUpActivity: AppCompatActivity() {
 

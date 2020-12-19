@@ -1,4 +1,4 @@
-package com.carswaddle.carswaddleandroid.data
+package com.carswaddle.store
 
 import android.content.Context
 import androidx.room.Database

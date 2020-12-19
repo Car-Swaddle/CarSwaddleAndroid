@@ -12,12 +12,12 @@ import com.carswaddle.carswaddleandroid.Extensions.isEmpty
 import com.carswaddle.carswaddleandroid.Extensions.isValidEmail
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.R.layout.activity_login
-import com.carswaddle.carswaddleandroid.data.AppDatabase
-import com.carswaddle.carswaddleandroid.data.Authentication
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
 import com.carswaddle.carswaddleandroid.ui.activities.ForgotPasswordActivity
 import com.carswaddle.carswaddleandroid.ui.activities.SetNameActivity
 import com.carswaddle.carswaddleandroid.ui.activities.SetPhoneNumberActivity
+import com.carswaddle.services.Authentication
+import com.carswaddle.store.AppDatabase
 
 
 class LoginActivity : AppCompatActivity() {

@@ -3,13 +3,13 @@ package com.carswaddle.carswaddleandroid.data.user
 import android.content.Context
 import android.util.Log
 import com.carswaddle.carswaddleandroid.Extensions.carSwaddlePreferences
-import com.carswaddle.carswaddleandroid.data.Authentication
 import com.carswaddle.carswaddleandroid.retrofit.ServiceGenerator
 import com.carswaddle.carswaddleandroid.retrofit.serviceGenerator
 import com.carswaddle.carswaddleandroid.services.AuthenticationService
 import com.carswaddle.carswaddleandroid.services.UserService
 import com.carswaddle.carswaddleandroid.services.serviceModels.AuthResponse
 import com.carswaddle.carswaddleandroid.services.serviceModels.UpdateUser
+import com.carswaddle.services.Authentication
 import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -52,7 +52,10 @@ class UserRepository(private val userDao: UserDao) {
                 val result = response?.body()
                 if (result?.token != null) {
                     val auth = Authentication(context)
-                    auth.setLoginToken(result.token)
+                    val t = result.token
+                    if (t != null) {
+                        auth.setLoginToken(t)
+                    }
                 }
                 val user = result?.user
                 if (user != null) {
@@ -83,7 +86,10 @@ class UserRepository(private val userDao: UserDao) {
                 val result = response?.body()
                 if (result?.token != null) {
                     val auth = Authentication(context)
-                    auth.setLoginToken(result.token)
+                    val t = result.token
+                    if (t != null) {
+                        auth.setLoginToken(t)
+                    }
                 }
                 val user = result?.user
                 if (user != null) {

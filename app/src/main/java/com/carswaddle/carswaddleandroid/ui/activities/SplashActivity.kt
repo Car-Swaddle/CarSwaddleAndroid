@@ -6,12 +6,12 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.carswaddle.carswaddleandroid.R
-import com.carswaddle.carswaddleandroid.data.AppDatabase
-import com.carswaddle.carswaddleandroid.data.Authentication
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
 import com.carswaddle.carswaddleandroid.ui.activities.PreAuthenticationActivity
 import com.carswaddle.carswaddleandroid.ui.activities.SetNameActivity
 import com.carswaddle.carswaddleandroid.ui.activities.SetPhoneNumberActivity
+import com.carswaddle.services.Authentication
+import com.carswaddle.store.AppDatabase
 
 
 class SplashActivity: AppCompatActivity() {

@@ -2,7 +2,6 @@ package com.carswaddle.carswaddleandroid.activities.ui.home
 
 import android.app.Application
 import androidx.lifecycle.*
-import com.carswaddle.carswaddleandroid.data.AppDatabase
 import com.carswaddle.carswaddleandroid.data.autoservice.AutoServiceRepository
 import com.carswaddle.carswaddleandroid.data.location.AutoServiceLocationRepository
 import com.carswaddle.carswaddleandroid.data.mechanic.MechanicRepository
@@ -11,6 +10,7 @@ import com.carswaddle.carswaddleandroid.data.serviceEntity.ServiceEntityReposito
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
 import com.carswaddle.carswaddleandroid.data.vehicle.VehicleRepository
 import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServiceListElements
+import com.carswaddle.store.AppDatabase
 import kotlinx.coroutines.*
 import java.lang.Exception
 

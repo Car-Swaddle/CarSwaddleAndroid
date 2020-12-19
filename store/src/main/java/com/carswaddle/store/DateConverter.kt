@@ -1,4 +1,4 @@
-package com.carswaddle.carswaddleandroid.data
+package com.carswaddle.store
 
 import androidx.room.TypeConverter
 import com.carswaddle.carswaddleandroid.services.serviceModels.AutoServiceStatus

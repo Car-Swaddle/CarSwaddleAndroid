@@ -2,7 +2,6 @@ package com.carswaddle.carswaddleandroid.activities.ui
 
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -10,8 +9,8 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.carswaddle.carswaddleandroid.R
-import com.carswaddle.carswaddleandroid.data.AppDatabase
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
+import com.carswaddle.store.AppDatabase
 
 class MainActivity : AppCompatActivity() {
 

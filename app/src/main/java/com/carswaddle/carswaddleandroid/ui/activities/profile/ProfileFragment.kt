@@ -11,12 +11,10 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.carswaddle.carswaddleandroid.R
-import com.carswaddle.carswaddleandroid.activities.ui.LoginActivity
-import com.carswaddle.carswaddleandroid.data.AppDatabase
-import com.carswaddle.carswaddleandroid.data.Authentication
 import com.carswaddle.carswaddleandroid.data.user.User
 import com.carswaddle.carswaddleandroid.ui.activities.PreAuthenticationActivity
-import com.carswaddle.carswaddleandroid.ui.activities.autoserviceDetails.AutoServiceDetailsFragment
+import com.carswaddle.services.Authentication
+import com.carswaddle.store.AppDatabase
 import java.util.*
 
 

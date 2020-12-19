@@ -1,6 +1,5 @@
 package com.carswaddle.carswaddleandroid.services.serviceModels
 
-import com.carswaddle.carswaddleandroid.Extensions.toCalendar
 import com.google.android.gms.maps.model.LatLng
 
 class Point {

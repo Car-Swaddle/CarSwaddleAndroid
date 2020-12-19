@@ -12,8 +12,8 @@ import com.bumptech.glide.load.model.LazyHeaders
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.ViewTarget
 import com.carswaddle.carswaddleandroid.R
-import com.carswaddle.carswaddleandroid.data.Authentication
 import com.carswaddle.carswaddleandroid.retrofit.serverUrl
+import com.carswaddle.services.Authentication
 
 private const val mechanicProfileImage = "/api/data/mechanic/profile-picture/{mechanicId}"
 
