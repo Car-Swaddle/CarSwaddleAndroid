@@ -1,6 +1,5 @@
 package com.carswaddle.carswaddleandroid.services.serviceModels
 
-import android.app.Service
 import com.google.gson.annotations.SerializedName
 import java.util.*
 
@@ -35,10 +34,10 @@ enum class AutoServiceStatus {
 
     fun localizedString(): String {
         when (this) {
-            AutoServiceStatus.scheduled -> return "scheduled"
-            AutoServiceStatus.canceled -> return "canceled"
-            AutoServiceStatus.inProgress -> return "inprogress"
-            AutoServiceStatus.completed -> return "completed"
+            scheduled -> return "Scheduled"
+            canceled -> return "Canceled"
+            inProgress -> return "In progress"
+            completed -> return "Completed"
             else -> return ""
         }
     }

@@ -9,11 +9,6 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.carswaddle.carswaddleandroid.R
-import java.text.DateFormatSymbols
-import java.text.SimpleDateFormat
-import java.util.*
-import java.util.concurrent.TimeUnit
-import kotlin.concurrent.schedule
 
 class LabeledEditText @JvmOverloads constructor(
     context: Context,

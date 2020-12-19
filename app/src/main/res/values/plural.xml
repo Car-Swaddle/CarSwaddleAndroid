@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="welcome_message_name">
+        <item quantity="one">Hello %2$s, you have %1$d upcoming appointment</item>
+        <item quantity="other">Hello %2$s, you have %1$d upcoming appointments</item>
+    </plurals>
+    <plurals name="welcome_message_no_name">
+        <item quantity="one">You have %1$d upcoming appointment</item>
+        <item quantity="other">You have %1$d upcoming appointments</item>
+    </plurals>
+</resources>

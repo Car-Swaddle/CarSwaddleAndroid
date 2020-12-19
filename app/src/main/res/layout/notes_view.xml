@@ -11,9 +11,10 @@
         android:id="@+id/notesTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="@dimen/content_margin"
+        android:layout_marginTop="@dimen/content_margin"
+        android:layout_marginEnd="@dimen/content_margin"
+        android:textSize="@dimen/subtitle"
         android:gravity="left"
         android:text="@string/notes" />
 
@@ -23,13 +24,11 @@
         android:layout_height="wrap_content"
         android:textCursorDrawable="@drawable/cursor_color"
         android:hint="Add a note for the mechanic here. They will receive a notification when you are done typing."
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_margin="@dimen/content_margin"
+        android:textSize="@dimen/text"
         android:inputType="textMultiLine"
         android:layout_alignParentBottom="true"
-        app:backgroundTint="@color/colorPrimary"
+        app:backgroundTint="@color/brand"
         android:layout_below="@id/notesTitle"/>
 
 </RelativeLayout>

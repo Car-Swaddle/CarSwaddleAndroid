@@ -1,13 +1,9 @@
 package com.carswaddle.carswaddleandroid.services.serviceModels
 
-import android.util.Log
-import java.text.SimpleDateFormat
-import java.time.LocalDate
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatterBuilder
 import java.util.*
-import kotlin.time.ExperimentalTime
-import kotlin.time.milliseconds
-import kotlin.time.seconds
 
 data class TemplateTimeSpan(
     val id: String,
@@ -16,29 +12,24 @@ data class TemplateTimeSpan(
     /// The second of the day, provided as HH:mm format string
     val startTime: String,
     /// The number of seconds
-    val duration: Int,
+    val duration: Float,
     val mechanicID: String
 ) {
 
     val weekDayEnum: Weekday = Weekday.fromInt(weekDay)
 
     /// Start time of the time span in seconds since midnight
-    var startTimeInt: Int = 0
+    val startTimeInt: Int
     get() {
-        val cal = Calendar.getInstance()
-        val sdf = SimpleDateFormat("HH:mm:ss", Locale.ENGLISH)
-        
-        cal.set(0,0,0,0,0,0)
-        
-        cal.time = sdf.parse(startTime)
+        val localTime = LocalTime.parse(startTime, dateTimeFormatter)
+        return localTime.toSecondOfDay()
+    }
 
-        val hour = cal.get(Calendar.HOUR_OF_DAY)
-        val minute = cal.get(Calendar.MINUTE)
-        val second = cal.get(Calendar.SECOND)
-        
-        val sum = (hour*60*60) + (minute*60) + second
-        
-        return sum
+    companion object {
+        val dateTimeFormatter: DateTimeFormatter = DateTimeFormatterBuilder()
+            .parseCaseInsensitive()
+            .appendPattern("HH:mm:ss")
+            .toFormatter(Locale.US)
     }
     
 }

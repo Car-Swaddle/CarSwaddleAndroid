@@ -2,6 +2,8 @@ package com.carswaddle.carswaddleandroid.retrofit
 
 import android.content.Context
 import com.carswaddle.services.Authentication
+import com.carswaddle.carswaddleandroid.services.serviceModels.CreateServiceEntity
+import com.carswaddle.carswaddleandroid.services.serviceModels.CreateServiceEntitySerializer
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -11,14 +13,21 @@ private val okHttpClient = OkHttpClient()
 
 private val productionUrl = "https://api.carswaddle.com"
 private val stagingUrl = "https://api.staging.carswaddle.com"
+private val localUrl = "Kyles-MacBook-Pro.local"
 
-private val useProduction: Boolean = false
+val server: Server = Server.staging
+
+enum class Server() {
+    staging,
+    production,
+    local
+}
 
 fun serverUrl(): String {
-    if (useProduction) {
-        return productionUrl
-    } else {
-        return stagingUrl
+    return when(server) {
+        Server.staging -> stagingUrl
+        Server.production -> productionUrl
+        Server.local -> localUrl
     }
 }
 
@@ -29,7 +38,10 @@ class ServiceGenerator(baseURL: String, okHttpClient: OkHttpClient) {
     val retrofit: Retrofit
 
     init {
-        val gson = GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create()
+        val gson = GsonBuilder()
+            .registerTypeAdapter(CreateServiceEntity::class.java, CreateServiceEntitySerializer())
+            .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create()
+        
         this.retrofit = Retrofit.Builder()
             .baseUrl(baseURL)
             .addConverterFactory(GsonConverterFactory.create(gson))
@@ -65,5 +77,5 @@ class ServiceGenerator(baseURL: String, okHttpClient: OkHttpClient) {
 }
 
 
-class ServiceNotAvailable(message: String) : Throwable(message) {}
+class ServiceNotAvailable(message: String = "Cannot create a Service to make network request") : Throwable(message) {}
 

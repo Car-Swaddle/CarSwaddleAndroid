@@ -4,7 +4,8 @@
     android:id="@+id/autoservices_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:scrollbars="vertical">
+    android:scrollbars="vertical"
+    android:background="@color/background">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/autoservice_recycler_view"
@@ -16,14 +17,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/scheduleButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:text="Schedule oil change"
+        android:text="@string/schedule_oil_change"
         android:textColor="#fff"
-        app:backgroundTint="@color/colorPrimary"
+        app:backgroundTint="@color/brand"
+        app:shapeAppearanceOverlay="@style/CarSwaddle.ConfirmButton"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "348618357444",
+    "firebase_url": "https://car-swaddle-android.firebaseio.com",
+    "project_id": "car-swaddle-android",
+    "storage_bucket": "car-swaddle-android.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:348618357444:android:26a8b260b8bfe35e0aa791",
+        "android_client_info": {
+          "package_name": "com.carswaddle.carswaddleandroid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "348618357444-kf4npfi9b3ugh4s3m06gduhgahndajf4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdAyAc8tDNotm4VB_K_TDPbTmyBpjpIaM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "348618357444-kf4npfi9b3ugh4s3m06gduhgahndajf4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

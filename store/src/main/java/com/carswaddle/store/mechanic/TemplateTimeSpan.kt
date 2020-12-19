@@ -4,8 +4,9 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.carswaddle.carswaddleandroid.services.serviceModels.Weekday
-import java.text.DateFormatSymbols
-import java.text.SimpleDateFormat
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatterBuilder
 import java.util.*
 
 @Entity
@@ -14,7 +15,7 @@ data class TemplateTimeSpan(
     @ColumnInfo val weekDayInt: Int,
     /// The number of seconds since midnight. The time the time slot starts
     @ColumnInfo val startTime: Int,
-    @ColumnInfo val duration: Int
+    @ColumnInfo val duration: Float
 ) {
 
     constructor(span: com.carswaddle.carswaddleandroid.services.serviceModels.TemplateTimeSpan) :
@@ -24,30 +25,30 @@ data class TemplateTimeSpan(
                 span.startTimeInt,
                 span.duration
             )
-    
-    
+
+
     fun weekday(): Weekday {
         return Weekday.fromInt(weekDayInt)
     }
-    
+
     fun localizedStartTime(): String {
-        var startTimeCal = Calendar.getInstance()
-        val hourOfDay = startTime / 60 / 60 
+        return dateTimeFormatter.format(localTime)
+    }
+
+    val localTime: LocalTime get() {
+        val hourOfDay = startTime / 60 / 60
         val minuteInHour = startTime / 60 % 60
         val secondInMinute = startTime % 60
-        startTimeCal.set(Calendar.HOUR_OF_DAY, hourOfDay)
-        startTimeCal.set(Calendar.SECOND, secondInMinute)
-        startTimeCal.set(Calendar.MINUTE, minuteInHour)
-        
-        val sdf = SimpleDateFormat("h:mm a")
-        
-        val symbols = DateFormatSymbols(Locale.getDefault())
-        symbols.setAmPmStrings(arrayOf("am", "pm"))
-        sdf.setDateFormatSymbols(symbols)
-        
-        return sdf.format(startTimeCal.getTime())
+        return LocalTime.of(hourOfDay, minuteInHour, secondInMinute)
     }
-    
+
+    companion object {
+        val dateTimeFormatter: DateTimeFormatter = DateTimeFormatterBuilder()
+            .parseCaseInsensitive()
+            .appendPattern("hh:mm a")
+            .toFormatter(Locale.US)
+    }
+
 }
 
 

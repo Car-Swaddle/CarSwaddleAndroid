@@ -18,7 +18,7 @@ data class ServiceEntity (
 
     constructor(serviceEntity: com.carswaddle.carswaddleandroid.services.serviceModels.ServiceEntity) :
             this(serviceEntity.id,
-            serviceEntity.entityType,
+            serviceEntity.entityType.toString(),
             serviceEntity.createdAt,
             serviceEntity.updatedAt,
             serviceEntity.autoServiceID,

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_autoservices_list">
+
+    <fragment
+        android:id="@+id/navigation_autoservices_list"
+        android:name="com.carswaddle.carswaddleandroid.activities.ui.home.AutoServicesListFragment"
+        android:label="@string/your_services"
+        tools:layout="@layout/fragment_autoservices_list">
+        <action
+            android:id="@+id/action_navigation_autoservices_list_to_navigation_autoservice_details"
+            app:destination="@id/navigation_autoservice_details" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_autoservice_details"
+        android:name="com.carswaddle.carswaddleandroid.ui.activities.autoserviceDetails.AutoServiceDetailsFragment"
+        android:label="@string/title_oil_change"
+        tools:layout="@layout/fragment_autoservice_details">
+        <argument
+            android:name="autoServiceId"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_profile"
+        android:name="com.carswaddle.carswaddleandroid.ui.activities.profile.ProfileFragment"
+        android:label="@string/title_profile"
+        tools:layout="@layout/fragment_profile">
+        <action
+            android:id="@+id/action_navigation_profile_to_navigation_edit_name"
+            app:destination="@id/navigation_edit_name" />
+        <action
+            android:id="@+id/action_navigation_profile_to_editPhoneNumberFragment"
+            app:destination="@id/editPhoneNumberFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_edit_name"
+        android:name="com.carswaddle.carswaddleandroid.ui.activities.profile.EditNameFragment"
+        android:label="@string/edit_name"
+        tools:layout="@layout/fragment_edit_name" />
+
+    <fragment
+        android:id="@+id/editPhoneNumberFragment"
+        android:name="com.carswaddle.carswaddleandroid.ui.activities.profile.EditPhoneNumberFragment"
+        android:label="@string/edit_phone_number" />
+    <fragment
+        android:id="@+id/addVehicleFragment"
+        android:name="com.carswaddle.carswaddleandroid.ui.activities.schedule.details.AddVehicleFragment"
+        android:label="AddVehicleFragment" />
+    <fragment
+        android:id="@+id/selectDetailsFragment"
+        android:name="com.carswaddle.carswaddleandroid.ui.activities.schedule.details.SelectDetailsFragment"
+        android:label="fragment_select_details"
+        tools:layout="@layout/fragment_select_details">
+        <action
+            android:id="@+id/action_selectDetailsFragment_to_addVehicleFragment"
+            app:destination="@id/addVehicleFragment" />
+    </fragment>
+
+</navigation>

@@ -13,7 +13,7 @@ import java.util.*
 @Entity
 data class AutoServiceLocation(
     @PrimaryKey val id: String,
-    @ColumnInfo val streetAddress: String,
+    @ColumnInfo val streetAddress: String?,
     @ColumnInfo val latitude: Double,
     @ColumnInfo val longitude: Double,
     @ColumnInfo val createdAt: Calendar,

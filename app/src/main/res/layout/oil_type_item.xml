@@ -6,9 +6,15 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/text_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_margin="32dp"/>
+        android:layout_margin="8dp"
+        android:minWidth="32dp"
+        android:text="Conventional"
+        android:background="@drawable/large_unselected_border"
+        android:elevation="4dp"
+        android:paddingVertical="24dp"
+        android:paddingHorizontal="24dp"/>
 
 </LinearLayout>

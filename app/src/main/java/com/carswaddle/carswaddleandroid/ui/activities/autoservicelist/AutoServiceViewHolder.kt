@@ -6,10 +6,6 @@ import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.ui.activities.autoserviceDetails.AutoServiceDetailsFragment
 import java.util.*
 
-//interface AutoServiceViewHolderDelegate {
-//    fun didSelectItem(autoServiceElements: AutoServiceListElements)
-//}
-
 
 class AutoServiceViewHolder (view: View) : RecyclerView.ViewHolder(view) {
 
@@ -29,7 +25,7 @@ class AutoServiceViewHolder (view: View) : RecyclerView.ViewHolder(view) {
         }
 
         mechanicImageLabel.text = autoServiceElements.mechanicUser.firstName ?: ""
-        locationImageLabel.text = autoServiceElements.location.streetAddress
+        locationImageLabel.text = autoServiceElements.location.streetAddress ?: ""
         vehicleImageLabel.text = autoServiceElements.vehicle.name ?: ""
 
         itemView.context
@@ -38,17 +34,6 @@ class AutoServiceViewHolder (view: View) : RecyclerView.ViewHolder(view) {
 
         itemView.setOnClickListener {
             listener(autoServiceElements)
-
-            // Navigation.createNavigationOnClickListener(R.id.action_searchFragment)
-
-//            delegate.didSelectItem(autoServiceElements)
-
-//            val details = AutoServiceDetailsFragment(it.autoService.id)
-//            val transaction = manager.beginTransaction()
-//            transaction.add(R.id.autoservices_fragment, details)
-//            transaction.addToBackStack(null)
-//            transaction.commit()
-
         }
     }
 

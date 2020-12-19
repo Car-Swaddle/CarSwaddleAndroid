@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
+import com.carswaddle.carswaddleandroid.pushNotifications.MessagingController
 import com.carswaddle.carswaddleandroid.ui.activities.PreAuthenticationActivity
 import com.carswaddle.carswaddleandroid.ui.activities.SetNameActivity
 import com.carswaddle.carswaddleandroid.ui.activities.SetPhoneNumberActivity
@@ -18,6 +19,8 @@ class SplashActivity: AppCompatActivity() {
 
     private lateinit var userRepo: UserRepository
 
+    private var auth = Authentication(this)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -26,11 +29,18 @@ class SplashActivity: AppCompatActivity() {
 
         setContentView(R.layout.splash)
 
+        // Create here so it can listen if the user logs in
+        MessagingController.initialize()
+        
         if (auth.isUserLoggedIn()) {
-            userRepo.updateCurrentUser(this) {
+            userRepo.importCurrentUser(this) {
                 val user = userRepo.getCurrentUser(this)
-                if (user == null) {
-                    Log.d("dunno", "something messed up, no user, but signed in")
+                if (it != null) {
+                    val intent = Intent(this, PreAuthenticationActivity::class.java)
+                    startActivity(intent)
+                } else if (user == null) {
+                    val intent = Intent(this, PreAuthenticationActivity::class.java)
+                    startActivity(intent)
                 } else if (user.firstName.isNullOrBlank() || user.lastName.isNullOrBlank()) {
                     val intent = Intent(this, SetNameActivity::class.java)
                     startActivity(intent)
@@ -43,13 +53,13 @@ class SplashActivity: AppCompatActivity() {
                     finish()
                 }
             }
+            
+            MessagingController.instance.registerPushToken()
         } else {
             val intent = Intent(this, PreAuthenticationActivity::class.java)
             startActivity(intent)
         }
         finish()
     }
-
-    private var auth = Authentication(this)
 
 }

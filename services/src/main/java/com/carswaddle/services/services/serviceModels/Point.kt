@@ -6,20 +6,25 @@ class Point {
 
     val type: String
     val coordinates: Array<Double>
+    
+    var streetAddress: String? = null
 
-    constructor(type: String, coordinates: Array<Double>) {
+    constructor(type: String, coordinates: Array<Double>, streetAddress: String?) {
         this.type = type
         this.coordinates = coordinates
+        this.streetAddress = streetAddress
     }
 
-    constructor(latitude: Double, longitude: Double) {
+    constructor(latitude: Double, longitude: Double, streetAddress: String?) {
         type = ""
         coordinates = arrayOf<Double>(longitude, latitude)
+        this.streetAddress = streetAddress
     }
 
-    constructor(latLng: LatLng) {
+    constructor(latLng: LatLng, streetAddress: String?) {
         type = ""
         coordinates = arrayOf<Double>(latLng.longitude, latLng.latitude)
+        this.streetAddress = streetAddress
     }
 
     fun latitude(): Double {

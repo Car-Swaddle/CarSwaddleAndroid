@@ -12,7 +12,7 @@ import com.carswaddle.carswaddleandroid.services.serviceModels.Stats
 import com.carswaddle.carswaddleandroid.services.serviceModels.TemplateTimeSpan as TemplateTimeSpanModel
 import com.google.gson.Gson
 import com.google.gson.JsonObject
-import com.google.protobuf.Parser
+//import com.google.protobuf.Parser
 import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -62,7 +62,11 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
                                 var newMap = map.toMutableMap() 
                                 val jsonTree = gson.toJsonTree(map)
                                 val user = gson.fromJson<User>(jsonTree, User::class.java)
-                                val userMap = gson.fromJson<Map<String, Any>>(gson.toJsonTree(user), Map::class.java)
+                                var userMap = gson.fromJson<Map<String, Any>>(gson.toJsonTree(user), Map::class.java).toMutableMap()
+                                // The value for `id` is the mechanic id, set `userID` as `id` in newMap 
+                                (map["userID"] as? String)?.let {
+                                    userMap["id"] = it
+                                }
                                 newMap["user"] = userMap
                                 val newJSONTree = gson.toJsonTree(newMap)
                                 val mechanic = gson.fromJson<Mechanic>(newJSONTree, Mechanic::class.java)
@@ -110,6 +114,7 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
                     CoroutineScope(Dispatchers.IO).launch {
                         var mechanic = mechanicDao.getMechanic(mechanicId)
                         if (mechanic == null) {
+                            completion(null, null)
                             return@launch
                         }
                         
@@ -168,25 +173,6 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
                         }
 
                         completion(null, spanIds)
-
-//                        var mechanic = mechanicDao.getMechanic(mechanicId)
-//                        if (mechanic == null) {
-//                            return@launch
-//                        }
-//
-//                        val gson = Gson()
-//                        val json = gson.toJsonTree(result[mechanicId])
-//                        val stats = gson.fromJson<Stats>(json, Stats::class.java)
-//
-//                        Log.w("logging stuff", "map: $result")
-//
-//                        mechanic.averageRating = stats.averageRating
-//                        mechanic.numberOfRatings = stats.numberOfRatings
-//                        mechanic.autoServicesProvided = stats.autoServicesProvided
-//
-//                        mechanicDao.insertMechanic(mechanic)
-//                        completion(null, mechanicId)
-
                     }
                 }
             }
@@ -198,7 +184,7 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
     }
 
 
-    suspend private fun insertNestedMechanic(mechanic: com.carswaddle.carswaddleandroid.services.serviceModels.Mechanic): MechanicListElements? {
+    private fun insertNestedMechanic(mechanic: com.carswaddle.carswaddleandroid.services.serviceModels.Mechanic): MechanicListElements? {
         var storedUser = mechanic.user?.let { User(it) }
         val userId = mechanic.userID
         if (storedUser == null && userId != null) {

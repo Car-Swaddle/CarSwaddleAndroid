@@ -14,6 +14,10 @@ class EditPhoneNumberViewModel(application: Application) : AndroidViewModel(appl
 
     private val userRepo: UserRepository
 
+    val currentUser: LiveData<User>
+        get() = _currentUser
+
+    private val _currentUser = MutableLiveData<User>()
 
     init {
         val db = AppDatabase.getDatabase(application)
@@ -21,12 +25,6 @@ class EditPhoneNumberViewModel(application: Application) : AndroidViewModel(appl
 
         loadCurrentUser()
     }
-
-
-    val currentUser: LiveData<User>
-        get() = _currentUser
-
-    private val _currentUser = MutableLiveData<User>()
 
     private fun loadCurrentUser() {
         viewModelScope.launch {
@@ -39,13 +37,13 @@ class EditPhoneNumberViewModel(application: Application) : AndroidViewModel(appl
         }
     }
 
-    fun updatePhoneNumber(phoneNumber: String, cacheCompletion: () -> Unit, completion: (error: Error?) -> Unit) {
+    fun updatePhoneNumber(phoneNumber: String, cacheCompletion: () -> Unit, completion: (throwable: Throwable?) -> Unit) {
         userRepo.updatePhoneNumber(phoneNumber, getApplication(), cacheCompletion) { error ->
             completion(error)
         }
     }
 
-    fun updateName(firstName: String?, lastName: String?, cacheCompletion: () -> Unit, completion: (error: Error?) -> Unit) {
+    fun updateName(firstName: String?, lastName: String?, cacheCompletion: () -> Unit, completion: (throwable: Throwable?) -> Unit) {
         userRepo.updateName(firstName, lastName, getApplication(), cacheCompletion) { error ->
             completion(error)
         }

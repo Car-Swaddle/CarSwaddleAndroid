@@ -35,7 +35,7 @@ class MechanicImageView @JvmOverloads constructor(
 
     init {
         LayoutInflater.from(context).inflate(R.layout.mechanic_image_view, this, true)
-        imageView = findViewById<ImageView>(R.id.imageView)
+        imageView = findViewById(R.id.imageView)
     }
     
     private fun updateImage() {
@@ -44,8 +44,8 @@ class MechanicImageView @JvmOverloads constructor(
             return
         }
          Glide.with(context)
-            .load(url)
-            .into(imageView)
+             .load(url)
+             .into(imageView)
     }
     
     private fun glideUrl(): GlideUrl? {

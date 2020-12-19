@@ -11,7 +11,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.carswaddle.carswaddleandroid.R
-import com.carswaddle.carswaddleandroid.data.user.User
 import com.carswaddle.carswaddleandroid.ui.activities.PreAuthenticationActivity
 import com.carswaddle.services.Authentication
 import com.carswaddle.store.AppDatabase
@@ -35,18 +34,8 @@ class ProfileFragment() : Fragment() {
 
         nameValueTextView = root.findViewById(R.id.nameValueTextView)
         phoneNumberValueTextView = root.findViewById(R.id.phoneNumberValueTextView)
-
-        profileViewModel.currentUser.observeForever {
-            nameValueTextView.text = it.displayName()
-            if (!it.phoneNumber.isNullOrBlank()) {
-                phoneNumberValueTextView.text = PhoneNumberUtils.formatNumber(
-                    it.phoneNumber,
-                    Locale.getDefault().getCountry()
-                )
-            }
-        }
-
-        profileViewModel.currentUser.observe(viewLifecycleOwner, Observer<User> { user ->
+        
+        profileViewModel.currentUser.observe(viewLifecycleOwner, Observer { user -> 
             nameValueTextView.text = user.displayName()
             if (!user.phoneNumber.isNullOrBlank()) {
                 phoneNumberValueTextView.text = PhoneNumberUtils.formatNumber(
@@ -58,7 +47,6 @@ class ProfileFragment() : Fragment() {
 
         nameValueTextView.setOnClickListener {
             val action = ProfileFragmentDirections.actionNavigationProfileToNavigationEditName()
-
             findNavController().navigate(action)
 //            val details = AutoServiceDetailsFragment(it.autoService.id)
 //            val manager = childFragmentManager
