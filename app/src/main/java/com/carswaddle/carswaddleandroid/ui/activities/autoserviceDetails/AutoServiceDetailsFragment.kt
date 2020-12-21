@@ -47,8 +47,6 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.MarkerOptions
-import kotlinx.android.synthetic.main.fragment_mechanic_item.*
-import kotlinx.android.synthetic.main.view_review_creation.view.*
 import java.math.RoundingMode
 import java.util.*
 
@@ -348,7 +346,7 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
         builder.setView(ratingView)
 
         builder.setPositiveButton("Rate", { dialog, whichButton ->
-            val reviewText = ratingView.editTextReview.text ?: ""
+            val reviewText = ratingView.reviewEditText.text ?: ""
             val rating = ratingView.serviceRatingBar.rating
             updateServerWithReview(rating, reviewText.toString())
             serviceRatingBar.rating = rating

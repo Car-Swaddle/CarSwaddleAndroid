@@ -13,15 +13,16 @@ import com.carswaddle.carswaddleandroid.Extensions.afterTextChanged
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.activities.ui.MainActivity
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
+import com.carswaddle.carswaddleandroid.ui.view.ProgressButton
 import com.carswaddle.services.Authentication
 import com.carswaddle.store.AppDatabase
 
 
-class SetNameActivity: AppCompatActivity() {
+class SetNameActivity : AppCompatActivity() {
 
     private val firstNameEditText: EditText by lazy { findViewById(R.id.firstNameEditText) as EditText }
     private val lastNameEditText: EditText by lazy { findViewById(R.id.lastNameEditText) as EditText }
-    private val saveButton: Button by lazy { findViewById(R.id.savePhoneNumberButton) as Button }
+    private val saveButton: ProgressButton by lazy { findViewById(R.id.savePhoneNumberButton) as ProgressButton }
 
     lateinit var userRepo: UserRepository
 
@@ -33,7 +34,7 @@ class SetNameActivity: AppCompatActivity() {
 
         setContentView(R.layout.activity_set_name)
 
-        saveButton.setOnClickListener {
+        saveButton.button.setOnClickListener {
             savePhoneNumber()
         }
 
@@ -53,7 +54,7 @@ class SetNameActivity: AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.profile_action_logout) {
-            Log.w("car swaddle android", "logged out∂")
+            Log.w("car swaddle android", "logged out")
             val db = AppDatabase.getDatabase(applicationContext)
             db?.clearAllTables()
 
@@ -69,9 +70,7 @@ class SetNameActivity: AppCompatActivity() {
     }
 
     private fun updateButtonEnabledness() {
-        saveButton.isEnabled = !TextUtils.isEmpty(firstNameEditText.text) && !TextUtils.isEmpty(
-            firstNameEditText.text
-        )
+        saveButton.isButtonEnabled = !TextUtils.isEmpty(firstNameEditText.text) && !TextUtils.isEmpty(firstNameEditText.text)
     }
 
     private fun savePhoneNumber() {
@@ -80,9 +79,15 @@ class SetNameActivity: AppCompatActivity() {
         if (firstName == null || firstName == null) {
             return
         }
+        
+        saveButton.isLoading = true
+        
         userRepo.updateName(firstName, lastName, this, {
 
         }) {
+            runOnUiThread {
+                saveButton.isLoading = false
+            }
             if (it == null) {
                 val user = userRepo.getCurrentUser(this)
                 if (user == null) {

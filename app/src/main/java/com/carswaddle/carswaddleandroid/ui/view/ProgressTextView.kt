@@ -54,7 +54,7 @@ class ProgressTextView @JvmOverloads constructor(
             if (isTextViewEnabled) {
                 textView.setTextColor(ContextCompat.getColor(context, R.color.brand))
             } else {
-                textView.setTextColor(ContextCompat.getColor(context, R.color.brandDisabled))
+                textView.setTextColor(ContextCompat.getColor(context, R.color.brandAlpha))
             }
             
         }

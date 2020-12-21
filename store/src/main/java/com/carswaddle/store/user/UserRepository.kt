@@ -142,7 +142,7 @@ class UserRepository(private val userDao: UserDao) {
                         }
                     }
                 } else {
-                    completion(null, result)
+                    completion(EmailNotFoundError(""), result)
                 }
             }
         })

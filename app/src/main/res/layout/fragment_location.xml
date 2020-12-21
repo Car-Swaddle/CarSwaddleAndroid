@@ -51,7 +51,7 @@
         android:text="Confirm oil change location"
         android:textColor="#fff"
         app:backgroundTint="#387DFF"
-        app:shapeAppearanceOverlay="@style/CarSwaddle.ConfirmButton"
+        style="@style/CarSwaddle.ConfirmButton"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

@@ -13,14 +13,17 @@ import android.view.View.OnFocusChangeListener
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.carswaddle.carswaddleandroid.Extensions.*
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.activities.ui.MainActivity
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
+import com.carswaddle.carswaddleandroid.ui.view.ProgressButton
 import com.carswaddle.services.Authentication
 import com.carswaddle.store.AppDatabase
 
@@ -29,13 +32,14 @@ private val carSwaddleTermsOfUse = "https://carswaddle.net/terms-of-use/"
 private val carSwaddlePrivacyPolicy = "https://carswaddle.net/privacy-policy/"
 private val stripeConnectAgreement = "https://stripe.com/connect-account/legal"
 
-
 class SignUpFragment: Fragment() {
 
     private lateinit var passwordEditText: EditText
     private lateinit var emailEditText: EditText
     private lateinit var signUpButton: Button
     private lateinit var agreementTextView: TextView
+    private lateinit var statusTextView: TextView
+    private lateinit var progressBar: ProgressBar
 
     private lateinit var goToLoginButton: Button
 
@@ -53,15 +57,22 @@ class SignUpFragment: Fragment() {
         signUpButton = root.findViewById(R.id.sign_up_button)
         goToLoginButton = root.findViewById(R.id.go_to_login_button)
         agreementTextView = root.findViewById(R.id.agreement_text_view)
+        statusTextView = root.findViewById(R.id.status_text_view)
+        progressBar = root.findViewById(R.id.progressBar)
+        
+        progressBar.visibility = View.GONE
         
         val db = AppDatabase.getDatabase(requireContext())
         userRepo = UserRepository(db.userDao())
+        
+        statusTextView.visibility = View.GONE
         
         passwordEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {}
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 updateSignUpButton()
+                statusTextView.visibility = View.GONE
             }
         })
 
@@ -70,6 +81,7 @@ class SignUpFragment: Fragment() {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 updateSignUpButton()
+                statusTextView.visibility = View.GONE
             }
         })
         
@@ -81,7 +93,8 @@ class SignUpFragment: Fragment() {
         goToLoginButton.setOnClickListener {
             dismissKeyboard()
             val navController = requireActivity().findNavController(R.id.auth_nav_host)
-            navController.navigate(R.id.action_signUpFragment_to_navigation_login, null)
+            val bundle = bundleOf("preExistingEmail" to emailEditText.text.toString())
+            navController.navigate(R.id.action_signUpFragment_to_navigation_login, bundle)
         }
 
         updateSignUpButton()
@@ -125,12 +138,24 @@ class SignUpFragment: Fragment() {
 
     private fun didTapSignUp() {
         val auth = Authentication(requireContext())
+        progressBar.visibility = View.VISIBLE
+        signUpButton.text = ""
+        signUpButton.isEnabled = false
+
+        statusTextView.visibility = View.GONE
+        
         userRepo.signUp(
             emailEditText.text.toString(),
             passwordEditText.text.toString(),
             requireContext()
         ) { throwable, authResponse ->
+            requireActivity().runOnUiThread {
+                signUpButton.text = getText(R.string.sign_up)
+                progressBar.visibility = View.GONE
+                signUpButton.isEnabled = true
+            }
             if (throwable == null && auth.isUserLoggedIn()) {
+                
                 val user = userRepo.getCurrentUser(requireContext())
                 if (user == null) {
                     Log.d("dunno", "something messed up, no user, but signed in")
@@ -147,6 +172,11 @@ class SignUpFragment: Fragment() {
                 }
             } else {
                 Log.d("dunno", "Unable to sign up")
+                requireActivity().runOnUiThread {
+                    val text = getString(R.string.unable_to_sign_up)
+                    statusTextView.visibility = View.VISIBLE
+                    statusTextView.setText(text)
+                }
             }
         }
     }

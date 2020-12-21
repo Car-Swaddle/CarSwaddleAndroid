@@ -19,7 +19,7 @@
     <string name="reset_password_button">Reset</string>
     <string name="reset_password_text">Reset your Car Swaddle account password</string>
     <string name="error_sending_reset_link_title">Car Swaddle was unable to send reset link</string>
-    <string name="error_sending_reset_link_message">Please make sure the email you entered is correct.</string>
+    <string name="error_sending_reset_link_message">Please make sure the email you entered is correct. If it is correct, we do not have an account with that email address. Use the sign up button to sign up!</string>
     <string name="success_sending_reset_link_title">Success! Car Swaddle sent a password reset link to %1$s</string>
     <string name="success_sending_reset_link_message">Tap on the link you\'ve received to reset your password. It may take a moment for the email to arrive.</string>
     <string name="success_reset_password_title">Success! You successfully reset your password</string>
@@ -196,4 +196,8 @@
     <string name="car_swaddle_terms_of_use">Terms of Use</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="stripe_agreement">Stripe Agreement</string>
+    <string name="save">Save</string>
+    <string name="email_input">Email</string>
+    <string name="unable_to_sign_up">Car Swaddle already has an account with this email address. Please go to login.</string>
+    <string name="login_failure">Car Swaddle wasn\'t able to find an account with that email and password. If you\'ve already sign up, try resetting your password</string>
 </resources>
