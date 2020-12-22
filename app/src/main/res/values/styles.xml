@@ -16,6 +16,8 @@
         <item name="android:textColorSecondary">@color/text2</item>
         <item name="android:windowBackground">@color/background</item>
         <item name="actionBarTheme">@style/CarSwaddle.ActionBarTheme</item>
+        <item name="ratingBarStyle">@style/CarSwaddle.RatingBar</item>
+        <item name="android:ratingBarStyle">@style/CarSwaddle.RatingBar</item>
     </style>
 
     <style name="CarSwaddle.ConfirmButton" parent="@style/Widget.MaterialComponents.Button">
@@ -90,6 +92,11 @@
         <item name="android:backgroundTint">@color/text2</item>
         <item name="android:textColor">@color/text</item>
         <item name="android:textSize">@dimen/text</item>
+    </style>
+
+    <style name="CarSwaddle.RatingBar" parent="Widget.AppCompat.RatingBar.Small">
+        <item name="colorControlNormal">@color/rating</item>
+        <item name="colorControlActivated">@color/neutral6</item>
     </style>
 
 </resources>

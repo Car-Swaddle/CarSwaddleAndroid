@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.carswaddle.carswaddleandroid.Extensions.updateMapStyle
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.util.PermissionUtils
 import com.google.android.gms.common.api.Status
@@ -76,7 +77,6 @@ class LocationFragment : Fragment(), OnMapReadyCallback, ActivityCompat.OnReques
         // Set up a PlaceSelectionListener to handle the response.
         autocompleteFragment?.setOnPlaceSelectedListener(object : PlaceSelectionListener {
             override fun onPlaceSelected(place: Place) {
-                // TODO: Get info about the selected place.
                 Log.i(
                     "autocomplete",
                     "Place: " + place.getName().toString() + ", " + place.getId()
@@ -105,6 +105,7 @@ class LocationFragment : Fragment(), OnMapReadyCallback, ActivityCompat.OnReques
      */
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
+        googleMap.updateMapStyle(requireContext())
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(40.4456955, -111.8971674), 10f))
         enableMyLocation()
     }

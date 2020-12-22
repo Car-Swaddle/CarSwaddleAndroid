@@ -2,10 +2,12 @@ package com.carswaddle.carswaddleandroid.ui.activities.autoserviceDetails
 
 import android.Manifest
 import android.app.AlertDialog
-import android.content.DialogInterface
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.icu.text.MeasureFormat
 import android.icu.util.Measure
 import android.icu.util.MeasureUnit
@@ -18,7 +20,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -27,13 +28,11 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.carswaddle.carswaddleandroid.Extensions.updateMapStyle
 import com.carswaddle.carswaddleandroid.R
-import com.carswaddle.carswaddleandroid.activities.ui.home.AutoServicesListFragment
 import com.carswaddle.carswaddleandroid.data.oilChange.OilChange
 import com.carswaddle.carswaddleandroid.services.serviceModels.AutoServiceStatus
 import com.carswaddle.carswaddleandroid.services.serviceModels.CreateReview
-import com.carswaddle.carswaddleandroid.services.serviceModels.Review
 import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServiceListElements
 import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.DateDisplayView
 import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.ImageLabel
@@ -46,6 +45,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import java.math.RoundingMode
 import java.util.*
@@ -119,7 +119,7 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
         streetAddressImageLabel.text = "--"
         mechanicNameTextView.text = "--"
         statusPillTextView.backgroundTintList = ColorStateList.valueOf(defaultStatusColor())
-        
+
         rateTextView.visibility = View.GONE
 
         notesView.notesDidChange = {
@@ -165,9 +165,9 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
         rateTextView.setOnClickListener {
             showRateDialog()
         }
-        
+
         serviceRatingBar.rating = 0.0f
-        
+
         autoServiceDetailsViewModel.autoServiceElement.observe(
             viewLifecycleOwner,
             Observer<AutoServiceListElements> { autoService ->
@@ -179,13 +179,13 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
                 mechanicNameTextView.text = autoService.mechanicUser.displayName()
                 statusPillTextView.text = autoService.autoService.status?.localizedString()
                 serviceRatingBar.rating = autoService.review?.rating ?: 0.0F
-                
+
                 if (autoService.review == null) {
                     rateTextView.visibility = View.VISIBLE
                 } else {
                     rateTextView.visibility = View.GONE
                 }
-                
+
                 val status = autoService.autoService.status
                 if (status != null) {
                     statusPillTextView.backgroundTintList =
@@ -285,9 +285,30 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
+
+        googleMap.getUiSettings().setScrollGesturesEnabled(false)
+        
+        googleMap.updateMapStyle(requireContext())
+
         // Centered on lehi showing slc + provo
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(saltLakeAndProvo, 10f))
         enableMyLocation()
+    }
+    
+    private fun updateMapStyle() {
+        try {
+            val mode =
+                context?.resources?.configuration?.uiMode?.and(Configuration.UI_MODE_NIGHT_MASK)
+            var mapStyle = R.raw.standard_map
+            when (mode) {
+                Configuration.UI_MODE_NIGHT_YES -> mapStyle = R.raw.night_mode_map
+                Configuration.UI_MODE_NIGHT_NO -> { }
+                Configuration.UI_MODE_NIGHT_UNDEFINED -> { }
+            }
+            map.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(), mapStyle))
+        } catch (e: Resources.NotFoundException) {
+            Log.e(TAG, "Can't find style. Error: ", e)
+        }
     }
 
     private fun statusColor(status: AutoServiceStatus): Int {
@@ -359,8 +380,13 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
     }
 
     private fun updateServerWithReview(rating: Float, text: String) {
-        autoServiceDetailsViewModel.createReview(CreateReview(rating, text)) { error, autoServiceId ->
-            
+        autoServiceDetailsViewModel.createReview(
+            CreateReview(
+                rating,
+                text
+            )
+        ) { error, autoServiceId ->
+
         }
     }
 

@@ -6,8 +6,11 @@ import android.content.SharedPreferences
 import android.util.Log
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.carswaddle.carswaddleandroid.Extensions.carSwaddlePreferences
+import com.carswaddle.carswaddleandroid.retrofit.serviceGenerator
+import com.carswaddle.carswaddleandroid.services.AuthenticationService
 import com.carswaddle.carswaddleandroid.services.serviceModels.AuthResponse
 import kotlinx.coroutines.*
+import retrofit2.Callback
 
 private val authSharedPreferencesName = "authSharedPreferencesName"
 private val authTokenKey = "authTokenKey"
@@ -38,10 +41,8 @@ class Authentication(private val context: Context) {
 
         val intent = Intent(USER_WILL_LOGOUT)
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
-        
         removeToken()
-        // TODO: make network request to remove push tokens and auth token from server
-
+        
         CoroutineScope(Dispatchers.Default).launch {
             val intent = Intent(USER_DID_LOGOUT)
             LocalBroadcastManager.getInstance(context).sendBroadcast(intent)

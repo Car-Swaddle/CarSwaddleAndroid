@@ -159,7 +159,18 @@ class UserRepository(private val userDao: UserDao) {
 
             override fun onResponse(call: Call<Void>?, response: Response<Void>?) {
                 Log.d("retrofit ", "call succeeded")
-                completion(null)
+                
+                val r = response
+                if (r == null) {
+                    completion(ServiceError())
+                    return
+                }
+                if (r.code() >= 400 && r.code() < 500) {
+                    completion(ServiceError())
+                } else {
+                    completion(null)
+                }
+                
             }
         })
     }
@@ -226,9 +237,9 @@ class UserRepository(private val userDao: UserDao) {
             override fun onResponse(call: Call<com.carswaddle.carswaddleandroid.services.serviceModels.User>?, response: Response<com.carswaddle.carswaddleandroid.services.serviceModels.User>?) {
                 Log.d("retrofit ", "call succeeded")
                 val user = response?.body()
-                if (user != null) {
+                if (user != null && user.isPhoneNumberVerified == true) {
                     Log.d("retrofit ", "call succeeded")
-                    GlobalScope.async {
+                    CoroutineScope(Dispatchers.IO).async {
                         val dataUser = User(user)
                         insert(dataUser)
                         completion(null)
@@ -296,7 +307,7 @@ class UserRepository(private val userDao: UserDao) {
 
         val user = getCurrentUser(context)
         if (user != null) {
-            GlobalScope.async {
+            CoroutineScope(Dispatchers.IO).async {
                 update(user, updateUser)
                 cacheCompletion()
             }
@@ -318,7 +329,7 @@ class UserRepository(private val userDao: UserDao) {
                     completion(ServiceError())
                 } else {
                     Log.d("retrofit ", "call succeeded")
-                    GlobalScope.async {
+                    CoroutineScope(Dispatchers.IO).async {
                         val user = User(result)
                         insert(user)
                         completion(null)

@@ -39,8 +39,8 @@ class LabeledEditText @JvmOverloads constructor(
     init {
         LayoutInflater.from(context).inflate(R.layout.labeled_edit_text, this, true)
 
-        labelTextView = findViewById<TextView>(R.id.labeledEditText_textView)
-        editText = findViewById<EditText>(R.id.labeledEditText_editText)
+        labelTextView = findViewById(R.id.labeledEditText_textView)
+        editText = findViewById(R.id.labeledEditText_editText)
 
         textWatcher = object: TextWatcher {
             override fun afterTextChanged(s: Editable?) {}

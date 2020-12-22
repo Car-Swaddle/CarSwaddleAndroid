@@ -4,7 +4,6 @@
     android:id="@+id/fragment_autoservice_details"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
     android:clickable="true"
     android:windowSoftInputMode="adjustPan">
 
@@ -77,7 +76,7 @@
 
                         <androidx.appcompat.widget.AppCompatRatingBar
                             android:id="@+id/serviceRatingBar"
-                            style="?android:attr/ratingBarStyleSmall"
+                            style="@style/CarSwaddle.RatingBar"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="@dimen/content_margin"
@@ -308,9 +307,12 @@
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/content"
                     android:shadowColor="@color/content"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:textAllCaps="false"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:textSize="@dimen/title"
                     android:text="@string/cancel_auto_service"
-                    android:textColor="@color/important"
-                    android:textSize="@dimen/title" />
+                    android:textColor="@color/important" />
 
             </RelativeLayout>
 

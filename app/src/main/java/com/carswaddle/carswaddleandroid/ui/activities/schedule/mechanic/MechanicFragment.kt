@@ -37,7 +37,7 @@ class MechanicFragment() : Fragment() {
     
     private val mechanicLinearLayoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
 
-    lateinit var point: Point
+    var point: Point? = null
 
     fun setOnConfirmCallbackListener(callback: OnConfirmListener) {
         this.callback = callback

@@ -13,8 +13,10 @@
     <color name="brand2Disabled">#88EC2322</color>
     <color name="brand2Contrast">#FFFFFF</color>
     <color name="brand2ContrastAlpha">#EEEEEE</color>
+    <color name="selection">#333</color>
+    <color name="selectionContrast">#eee</color>
     <color name="content">#FFFFFF</color>
-    <color name="content2">#F6F6F6</color>
+    <color name="content2">#FFFFFF</color>
     <color name="content3">#FFFFFF</color>
     <color name="content4">#FFFFFF</color>
     <color name="contentDivider">#33000000</color>
@@ -50,4 +52,5 @@
     <color name="statusColorInProgress">#1A66FC</color>
     <color name="statusColorCompleted">#26893A</color>
     <color name="clear">#00000000</color>
+    <color name="rating">#EBD336</color>
 </resources>

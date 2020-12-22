@@ -12,6 +12,8 @@
     <color name="brand2Disabled">#88EC2322</color>
     <color name="brand2Contrast">#FFFFFF</color>
     <color name="brand2ContrastAlpha">#EEEEEE</color>
+    <color name="selection">#eee</color>
+    <color name="selectionContrast">#333</color>
     <color name="content">#333333</color>
     <color name="content2">#555555</color>
     <color name="content3">#000000</color>
@@ -37,9 +39,9 @@
     <color name="successContrast">#FFFFFF</color>
     <color name="warning">#ebb136</color>
     <color name="warningContrast">#FFFFFF</color>
-    <color name="text">#EEFFFFFF</color>
-    <color name="text2">#66FFFFFF</color>
-    <color name="text3">#99FFFFFF</color>
+    <color name="text">#FFFFFFFF</color>
+    <color name="text2">#77FFFFFF</color>
+    <color name="text3">#BBFFFFFF</color>
     <color name="textAlpha">#33FFFFFF</color>
     <color name="textEmphasis">#FFFFFF</color>
     <color name="important">#FC2302</color>
@@ -49,4 +51,5 @@
     <color name="statusColorInProgress">#1A66FC</color>
     <color name="statusColorCompleted">#26893A</color>
     <color name="clear">#00000000</color>
+    <color name="rating">#EBD336</color>
 </resources>

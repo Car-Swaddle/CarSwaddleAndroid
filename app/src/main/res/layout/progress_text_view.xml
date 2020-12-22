@@ -13,6 +13,8 @@
         android:textSize="@dimen/title"
         android:textStyle="bold"
         android:textColor="@color/brand"
+        android:textAllCaps="false"
+        android:fontFamily="@font/montserrat_bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:paddingHorizontal="@dimen/content_margin"

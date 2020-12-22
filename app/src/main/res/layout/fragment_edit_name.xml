@@ -3,14 +3,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="#FFFFFF"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <com.carswaddle.carswaddleandroid.ui.activities.profile.LabeledEditText
         android:id="@+id/firstNameLabeledEditText"
         android:layout_width="wrap_content"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/content_gap"
+        android:minWidth="@dimen/min_width"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -18,7 +19,8 @@
     <com.carswaddle.carswaddleandroid.ui.activities.profile.LabeledEditText
         android:id="@+id/lastNameLabeledEditText"
         android:layout_width="wrap_content"
-        android:layout_height="150dp"
+        android:layout_height="wrap_content"
+        android:minWidth="@dimen/min_width"
         app:layout_constraintEnd_toEndOf="@id/firstNameLabeledEditText"
         app:layout_constraintStart_toStartOf="@id/firstNameLabeledEditText"
         app:layout_constraintTop_toBottomOf="@id/firstNameLabeledEditText" />

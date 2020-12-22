@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fff"
+    android:background="@color/background"
     android:paddingBottom="32dp"
     tools:context=".ui.activities.schedule.ProgressFragment">
 
@@ -56,8 +56,8 @@
         android:layout_marginTop="8dp"
         android:text="Location"
         android:textAlignment="center"
-        android:textColor="#333"
-        android:textSize="14sp"
+        android:textColor="@color/text"
+        android:textSize="@dimen/title"
         app:layout_constraintStart_toStartOf="@+id/bubble1"
         app:layout_constraintEnd_toEndOf="@+id/bubble1"
         app:layout_constraintTop_toBottomOf="@id/bubble1"/>
@@ -69,8 +69,8 @@
         android:layout_marginTop="8dp"
         android:text="Mechanic"
         android:textAlignment="center"
-        android:textColor="#333"
-        android:textSize="14sp"
+        android:textColor="@color/text"
+        android:textSize="@dimen/title"
         app:layout_constraintStart_toStartOf="@+id/bubble2"
         app:layout_constraintEnd_toEndOf="@+id/bubble2"
         app:layout_constraintTop_toBottomOf="@id/bubble2"/>
@@ -82,8 +82,8 @@
         android:layout_marginTop="8dp"
         android:text="Details"
         android:textAlignment="center"
-        android:textColor="#333"
-        android:textSize="14sp"
+        android:textColor="@color/text"
+        android:textSize="@dimen/title"
         app:layout_constraintEnd_toEndOf="@+id/bubble3"
         app:layout_constraintStart_toStartOf="@+id/bubble3"
         app:layout_constraintTop_toBottomOf="@id/bubble3" />
@@ -91,7 +91,7 @@
     <View
         android:layout_width="0dp"
         android:layout_height="1dp"
-        android:background="#999"
+        android:background="@color/contentDivider"
         android:elevation="0dp"
         app:layout_constraintTop_toTopOf="@id/bubble1"
         app:layout_constraintBottom_toBottomOf="@id/bubble2"
@@ -101,7 +101,7 @@
     <View
         android:layout_width="0dp"
         android:layout_height="1dp"
-        android:background="#999"
+        android:background="@color/contentDivider"
         android:elevation="0dp"
         app:layout_constraintTop_toTopOf="@id/bubble2"
         app:layout_constraintBottom_toBottomOf="@id/bubble3"
