@@ -7,9 +7,8 @@ import android.view.View
 import android.view.View.GONE
 import android.view.ViewGroup
 import com.carswaddle.carswaddleandroid.R
-import com.carswaddle.carswaddleandroid.services.serviceModels.Price
+import com.carswaddle.services.services.serviceModels.Price
 import com.carswaddle.carswaddleandroid.ui.view.PriceRow
-import com.carswaddle.carswaddleandroid.ui.view.ProgressBubble
 
 class PriceFragment : Fragment() {
 
@@ -67,19 +66,5 @@ class PriceFragment : Fragment() {
         
         row4.value = String.format("$%.2f", price.total / 100.0)
     }
-
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ProgressFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ProgressFragment()
-    }
+    
 }

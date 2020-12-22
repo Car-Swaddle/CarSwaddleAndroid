@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.util.AttributeSet
 import android.widget.FrameLayout
 import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import com.carswaddle.carswaddleandroid.R
 import com.google.android.material.card.MaterialCardView
 
@@ -34,9 +35,9 @@ class ProgressBubble : FrameLayout {
             _state = value
             when (value) {
                 ProgressState.Active -> {
-                    cardView.strokeColor = Color.parseColor("#ffffff")
-                    cardView.setCardBackgroundColor(Color.parseColor("#BFEC2322"))
-                    textView.setTextColor(Color.parseColor("#ffffff"))
+                    cardView.setCardBackgroundColor(color(R.color.brand2))
+                    cardView.strokeColor = color(R.color.brand2Contrast)
+                    textView.setTextColor(color(R.color.brand2Contrast))
                 }
                 ProgressState.Complete -> {
                     cardView.strokeColor = Color.parseColor("#00000000")
@@ -50,6 +51,11 @@ class ProgressBubble : FrameLayout {
                 }
             }
         }
+    
+    
+    private fun color(colorResource: Int): Int {
+        return ResourcesCompat.getColor(getResources(), colorResource, null)
+    }
 
     constructor(context: Context) : super(context) {
         init(context)

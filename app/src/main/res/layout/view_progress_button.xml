@@ -3,20 +3,19 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:clipChildren="false"
+    android:clipToPadding="false">
     
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/progressButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/brand"
-            android:textColor="@color/brandContrast"
-            app:shapeAppearanceOverlay="@style/CarSwaddle.ConfirmButton"
-            android:elevation="8dp"
             android:text="title"
+            android:minWidth="@dimen/min_width"
+            style="@style/CarSwaddle.ConfirmButton"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_margin="16dp" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <ProgressBar
             android:id="@+id/progressBar"

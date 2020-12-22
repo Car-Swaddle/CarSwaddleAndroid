@@ -5,7 +5,6 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.*
 import com.carswaddle.carswaddleandroid.R
-import com.carswaddle.carswaddleandroid.data.AppDatabase
 import com.carswaddle.carswaddleandroid.data.autoservice.AutoServiceRepository
 import com.carswaddle.carswaddleandroid.data.vehicle.Vehicle
 import com.carswaddle.carswaddleandroid.data.vehicle.VehicleRepository
@@ -14,7 +13,8 @@ import com.carswaddle.carswaddleandroid.services.CouponErrorType
 import com.carswaddle.carswaddleandroid.services.LocationJSON
 import com.carswaddle.carswaddleandroid.services.serviceModels.CreateAutoService
 import com.carswaddle.carswaddleandroid.services.serviceModels.OilType
-import com.carswaddle.carswaddleandroid.services.serviceModels.Price
+import com.carswaddle.services.services.serviceModels.Price
+import com.carswaddle.store.AppDatabase
 import kotlinx.coroutines.launch
 
 

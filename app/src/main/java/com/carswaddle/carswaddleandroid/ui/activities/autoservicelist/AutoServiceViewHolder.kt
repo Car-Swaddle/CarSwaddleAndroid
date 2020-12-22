@@ -17,8 +17,9 @@ class AutoServiceViewHolder (view: View) : RecyclerView.ViewHolder(view) {
     val context = view.context // Use itemView.context
 
     fun configure(autoServiceElements: AutoServiceListElements, listener: (AutoServiceListElements) -> Unit) {
-        if (autoServiceElements.autoService.scheduledDate != null) {
-            dateDisplayView.configure(autoServiceElements.autoService.scheduledDate)
+        val d = autoServiceElements.autoService.scheduledDate
+        if (d != null) {
+            dateDisplayView.configure(d)
         } else {
             // TODO: something went wrong
         }

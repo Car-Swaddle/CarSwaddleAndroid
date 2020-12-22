@@ -2,23 +2,27 @@ package com.carswaddle.carswaddleandroid.ui.activities
 
 import android.app.AlertDialog
 import android.content.DialogInterface
-import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.carswaddle.carswaddleandroid.Extensions.isEmpty
+import com.carswaddle.carswaddleandroid.Extensions.isValidEmail
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
 import com.carswaddle.carswaddleandroid.R.layout.activity_forgot_password
-import com.carswaddle.carswaddleandroid.data.AppDatabase
 import com.carswaddle.carswaddleandroid.data.user.EmailNotFoundError
+import com.carswaddle.carswaddleandroid.ui.view.ProgressButton
+import com.carswaddle.store.AppDatabase
 
 class ForgotPasswordActivity: AppCompatActivity() {
 
     private val explainTextView: TextView by lazy { findViewById(R.id.explainForgotEditText) as TextView }
     private val emailEditText: EditText by lazy { findViewById(R.id.emailEditText) as EditText }
-    private val sendButton: Button by lazy { findViewById(R.id.sendResetButton) as Button }
+    private val sendButton: ProgressButton by lazy { findViewById(R.id.sendResetButton) as ProgressButton }
 
     private lateinit var userRepo: UserRepository
 
@@ -26,21 +30,36 @@ class ForgotPasswordActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(activity_forgot_password)
+        
+        val email = intent.getStringExtra(EMAIL) ?: ""
+        emailEditText.setText(email)
 
         val db = AppDatabase.getDatabase(this)
         userRepo = UserRepository(db.userDao())
 
-        sendButton.setOnClickListener {
+        sendButton.button.setOnClickListener {
             sendResetLink()
         }
+
+        emailEditText.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {}
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                updateSendButton()
+            }
+        })
+        
+        updateSendButton()
     }
 
     private fun sendResetLink() {
-        val email = emailEditText.text.toString()
-        if (email == null) {
+        if (isSendButtonEnabled() == false) {
             return
         }
+        val email = emailEditText.text.toString()
+        sendButton.isLoading = true
         userRepo.sendResetLink(email,this) {
+            runOnUiThread { sendButton.isLoading = false }
             if (it == null) {
                 showSuccessDialog(email)
             } else if (it is EmailNotFoundError) {
@@ -49,6 +68,14 @@ class ForgotPasswordActivity: AppCompatActivity() {
                 showErrorDialog(getString(R.string.error_sending_reset_link_title), getString(R.string.error_sending_reset_link_message))
             }
         }
+    }
+
+    private fun isSendButtonEnabled(): Boolean {
+        return !emailEditText.isEmpty() && emailEditText.text.toString().isValidEmail()
+    }
+
+    private fun updateSendButton() {
+        sendButton.isButtonEnabled = isSendButtonEnabled()
     }
 
     private fun showErrorDialog(title: String, message: String) {
@@ -78,4 +105,8 @@ class ForgotPasswordActivity: AppCompatActivity() {
         alert.show()
     }
 
+    companion object {
+        val EMAIL = "EMAIL"
+    }
+    
 }

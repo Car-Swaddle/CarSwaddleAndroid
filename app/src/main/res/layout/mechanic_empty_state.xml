@@ -14,7 +14,8 @@
         android:textSize="@dimen/large_title"
         android:textStyle="bold"
         android:text="@string/no_mechanics"
-        android:textAlignment="center" 
+        android:textAlignment="center"
+        android:textColor="@color/text"
         android:layout_marginBottom="@dimen/content_margin"/>
 
     <TextView
@@ -23,6 +24,7 @@
         android:layout_height="wrap_content"
         android:textAlignment="center"
         android:textSize="@dimen/title"
+        android:textColor="@color/text2"
         android:text="@string/message_no_mechanics" />
     
 </LinearLayout>

@@ -1,15 +1,13 @@
 package com.carswaddle.carswaddleandroid.ui.activities.schedule
 
 //import com.carswaddle.carswaddleandroid.services.serviceModels.TemplateTimeSpan as TimeSlot
-import android.location.Address
 import android.location.Geocoder
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.carswaddle.carswaddleandroid.Extensions.safeFirst
 import com.carswaddle.carswaddleandroid.R
-import com.carswaddle.carswaddleandroid.data.mechanic.TemplateTimeSpan
 import com.carswaddle.carswaddleandroid.services.serviceModels.Point
-import com.carswaddle.carswaddleandroid.services.serviceModels.Price
+import com.carswaddle.services.services.serviceModels.Price
 import com.carswaddle.carswaddleandroid.ui.activities.schedule.details.SelectDetailsFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.Places

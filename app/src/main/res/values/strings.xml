@@ -19,7 +19,7 @@
     <string name="reset_password_button">Reset</string>
     <string name="reset_password_text">Reset your Car Swaddle account password</string>
     <string name="error_sending_reset_link_title">Car Swaddle was unable to send reset link</string>
-    <string name="error_sending_reset_link_message">Please make sure the email you entered is correct.</string>
+    <string name="error_sending_reset_link_message">Please make sure the email you entered is correct. If it is correct, we do not have an account with that email address. Use the sign up button to sign up!</string>
     <string name="success_sending_reset_link_title">Success! Car Swaddle sent a password reset link to %1$s</string>
     <string name="success_sending_reset_link_message">Tap on the link you\'ve received to reset your password. It may take a moment for the email to arrive.</string>
     <string name="success_reset_password_title">Success! You successfully reset your password</string>
@@ -181,9 +181,9 @@
     <string name="completed_appointments">Completed appointments</string>
     <string name="no_mechanics">Bummer! There are no mechanics in your area.</string>
     <string name="message_no_mechanics">We are working on getting mechanics to your area and we have been alerted of this.</string>
-    <string name="tap_to_select_a_mechanic">Tap to select a Mechanic</string>
+    <string name="tap_to_select_a_mechanic">Select a mechanic</string>
     <string name="select_a_date">Select a Date</string>
-    <string name="redeem">REDEEM</string>
+    <string name="redeem">Redeem</string>
     <string name="funds_refunded">If you cancel this auto service your funds will be refunded and your mechanic will be notified.</string>
     <string name="no_funds_refund">Because the auto service is less than 24 hours away, your funds will not be refunded to you, should you cancel this auto service. Your mechanic will be notified of the cancellation.</string>
     <string name="rate">Rate</string>
@@ -196,4 +196,8 @@
     <string name="car_swaddle_terms_of_use">Terms of Use</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="stripe_agreement">Stripe Agreement</string>
+    <string name="save">Save</string>
+    <string name="email_input">Email</string>
+    <string name="unable_to_sign_up">Car Swaddle already has an account with this email address. Please go to login.</string>
+    <string name="login_failure">Car Swaddle wasn\'t able to find an account with that email and password. If you\'ve already sign up, try resetting your password</string>
 </resources>

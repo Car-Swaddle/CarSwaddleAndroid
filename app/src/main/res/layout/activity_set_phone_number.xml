@@ -10,20 +10,24 @@
         android:id="@+id/phoneNumberEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="@dimen/content_gap"
         android:ems="10"
+        android:minWidth="@dimen/min_width"
         android:hint="@string/phone_number"
         android:inputType="phone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <com.carswaddle.carswaddleandroid.ui.view.ProgressButton
         android:id="@+id/savePhoneNumberButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
-        android:text="Save"
+        android:layout_marginTop="@dimen/content_gap"
+        android:minWidth="@dimen/min_width"
+        android:text="@string/save"
+        app:displayText="@string/save"
+        style="@style/CarSwaddle.ConfirmButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/phoneNumberEditText" />

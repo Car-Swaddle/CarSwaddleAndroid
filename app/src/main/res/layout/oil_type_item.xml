@@ -14,6 +14,7 @@
         android:text="Conventional"
         android:background="@drawable/large_unselected_border"
         android:elevation="4dp"
+        android:textColor="@color/text"
         android:paddingVertical="24dp"
         android:paddingHorizontal="24dp"/>
 

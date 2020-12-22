@@ -36,6 +36,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
+                        android:textColor="@color/text"
                         android:text="Kyle Kendall" />
 
                 </LinearLayout>
@@ -65,6 +66,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
+                        android:textColor="@color/text"
                         android:text="801-960-5212" />
 
                 </LinearLayout>

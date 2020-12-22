@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="brand">#3B7DFF</color>
-    <color name="brandDisabled">#084ACC</color>
     <color name="brandVivid">#0852BF</color>
-    <color name="brandAlpha">#D83B7DFF</color>
+    <color name="brandAlpha">#883B7DFF</color>
+    <color name="brandAuxiliary">#3B7DFF</color>
+    <color name="brandAuxiliaryAlpha">#D83B7DFF</color>
+    <color name="brandAuxiliaryContrast">#FFFFFF</color>
+    <color name="brandAuxiliaryContrastAlpha">#ADFFFFFF</color>
     <color name="brandContrast">#FFFFFF</color>
-    <color name="brandContrastDisabled">#EEEEEE</color>
+    <color name="brandContrastAlpha">#88EEEEEE</color>
     <color name="brand2">#EC2322</color>
+    <color name="brand2Disabled">#88EC2322</color>
     <color name="brand2Contrast">#FFFFFF</color>
-    <color name="brand2ContrastDisabled">#EEEEEE</color>
+    <color name="brand2ContrastAlpha">#EEEEEE</color>
+    <color name="selection">#333</color>
+    <color name="selectionContrast">#eee</color>
     <color name="content">#FFFFFF</color>
-    <color name="content2">#F6F6F6</color>
+    <color name="content2">#FFFFFF</color>
     <color name="content3">#FFFFFF</color>
     <color name="content4">#FFFFFF</color>
     <color name="contentDivider">#33000000</color>
@@ -46,4 +52,5 @@
     <color name="statusColorInProgress">#1A66FC</color>
     <color name="statusColorCompleted">#26893A</color>
     <color name="clear">#00000000</color>
+    <color name="rating">#EBD336</color>
 </resources>

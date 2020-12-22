@@ -9,8 +9,8 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.carswaddle.carswaddleandroid.R
-import com.carswaddle.carswaddleandroid.data.AppDatabase
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
+import com.carswaddle.store.AppDatabase
 
 class MainActivity : AppCompatActivity() {
     

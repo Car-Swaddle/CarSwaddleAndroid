@@ -18,6 +18,6 @@
         android:id="@+id/ambience_final_mask"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/brandAlpha"/>
+        android:background="@color/brandAuxiliaryAlpha"/>
 
 </FrameLayout>

@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.*
 import com.carswaddle.carswaddleandroid.Extensions.*
@@ -36,7 +37,7 @@ class MechanicFragment() : Fragment() {
     
     private val mechanicLinearLayoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
 
-    lateinit var point: Point
+    var point: Point? = null
 
     fun setOnConfirmCallbackListener(callback: OnConfirmListener) {
         this.callback = callback
@@ -81,7 +82,7 @@ class MechanicFragment() : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_mechanic, container, false)
 
-        mechanicViewModel = ViewModelProviders.of(this).get(SelectMechanicViewModel::class.java)
+        mechanicViewModel = ViewModelProvider(this).get(SelectMechanicViewModel::class.java)
 
         mechanicViewModel.point = point
 
