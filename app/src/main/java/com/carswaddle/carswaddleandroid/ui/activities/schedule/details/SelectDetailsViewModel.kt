@@ -61,7 +61,7 @@ class SelectDetailsViewModel(application: Application) : AndroidViewModel(applic
             Log.w("price", "Got price back")
             val p = price
             if (p != null) {
-                _price.postValue(p)
+                _price.postValue(p!!)
             }
             if (error != null && error is CouponError) {
                 _couponError.postValue(error.couponErrorType)

@@ -31,7 +31,7 @@ class EditNameViewModel(application: Application) : AndroidViewModel(application
         viewModelScope.launch {
             val currentUser = userRepo.getCurrentUser(getApplication())
             if (currentUser != null) {
-                _currentUser.value = currentUser
+                _currentUser.value = currentUser!!
             } else {
                 // TODO: fail better man
             }

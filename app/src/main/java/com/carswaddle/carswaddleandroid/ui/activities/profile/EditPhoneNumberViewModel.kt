@@ -30,7 +30,7 @@ class EditPhoneNumberViewModel(application: Application) : AndroidViewModel(appl
         viewModelScope.launch {
             val currentUser = userRepo.getCurrentUser(getApplication())
             if (currentUser != null) {
-                _currentUser.value = currentUser
+                _currentUser.value = currentUser!!
             } else {
                 // TODO: fail better man
             }

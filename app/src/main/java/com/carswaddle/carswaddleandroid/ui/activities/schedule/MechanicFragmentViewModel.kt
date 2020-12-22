@@ -254,7 +254,10 @@ class SelectMechanicViewModel(application: Application) : AndroidViewModel(appli
             val newElement = MechanicListElements(mechanic, mechanicElement.user, mechanicElement.timeSpans)
             mechanicElements[index] = newElement
 
-            _mechanics.postValue(mechanicElements)
+            if (mechanicElements == null) {
+                return@getStats
+            }
+            _mechanics.postValue(mechanicElements!!)
         }
     }
 

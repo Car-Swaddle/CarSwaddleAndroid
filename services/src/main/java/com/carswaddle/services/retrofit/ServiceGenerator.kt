@@ -4,6 +4,7 @@ import android.content.Context
 import com.carswaddle.services.Authentication
 import com.carswaddle.carswaddleandroid.services.serviceModels.CreateServiceEntity
 import com.carswaddle.carswaddleandroid.services.serviceModels.CreateServiceEntitySerializer
+import com.carswaddle.foundation.BuildConfig
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -15,13 +16,26 @@ private val productionUrl = "https://api.carswaddle.com"
 private val stagingUrl = "https://api.staging.carswaddle.com"
 private val localUrl = "Kyles-MacBook-Pro.local"
 
-val server: Server = Server.staging
+val server: Server = Server.fromBuildConfigs()
 
 enum class Server() {
     staging,
     production,
-    local
-}
+    local;
+    
+    companion object {
+        fun fromBuildConfigs(): Server {
+            when (BuildConfig.BUILD_TYPE) {
+                "debug" -> return staging
+                "release" -> return production
+                else -> {
+                    return staging
+                }
+            }
+        }
+    }
+    
+} 
 
 fun serverUrl(): String {
     return when(server) {
@@ -78,4 +92,3 @@ class ServiceGenerator(baseURL: String, okHttpClient: OkHttpClient) {
 
 
 class ServiceNotAvailable(message: String = "Cannot create a Service to make network request") : Throwable(message) {}
-
