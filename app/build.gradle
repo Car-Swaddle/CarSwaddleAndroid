@@ -7,10 +7,8 @@ apply plugin: 'com.google.gms.google-services'
 android {
     signingConfigs {
         Release {
-            storeFile file('car-swaddle-android.jks')
-            storePassword ''
-            keyAlias 'carswaddle'
-            keyPassword ''
+            storeFile file('/Users/kylekendall/Documents/Car Swaddle Documents/Android/car-swaddle-android.jks')
+            keyAlias 'carswaddle-release'
         }
     }
     compileSdkVersion 30
