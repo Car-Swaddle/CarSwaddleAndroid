@@ -84,28 +84,7 @@ class UserRepository(private val userDao: UserDao) {
             override fun onResponse(call: Call<AuthResponse>?, response: Response<AuthResponse>?) {
                 Log.d("retrofit ", "call succeeded")
                 val result = response?.body()
-                if (result?.token != null) {
-                    val auth = Authentication(context)
-                    val t = auth.getAuthToken()
-                    if (t != null) {
-                        auth.setLoginToken(t)
-                    }
-                }
-                val user = result?.user
-                if (user != null) {
-                    CoroutineScope(Dispatchers.IO).launch {
-                        insert(User(user))
-                        setCurrentUserId(user.id, context)
-                        completion(null, result)
-                        CoroutineScope(Dispatchers.Default).launch {
-                            val intent = Intent(USER_DID_LOGIN)
-                            intent.putExtra(IS_SIGN_UP, false)
-                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
-                        }
-                    }
-                } else {
-                    completion(null, result)
-                }
+                completion(null, result)
             }
         })
     }

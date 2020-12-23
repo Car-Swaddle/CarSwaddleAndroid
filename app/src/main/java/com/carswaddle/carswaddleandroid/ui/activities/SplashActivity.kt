@@ -48,8 +48,9 @@ class SplashActivity: AppCompatActivity() {
                     val intent = Intent(this, SetPhoneNumberActivity::class.java)
                     startActivity(intent)
                 } else {
-                    val intent = Intent(this, MainActivity::class.java)
-                    startActivity(intent)
+                    val mainIntent = Intent(this, MainActivity::class.java)
+                    mainIntent.putExtras(intent)
+                    startActivity(mainIntent)
                     finish()
                 }
             }

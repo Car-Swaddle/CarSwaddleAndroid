@@ -94,7 +94,7 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
         val root = inflater.inflate(R.layout.fragment_autoservice_details, container, false)
 
         this.autoServiceId = arguments?.getString("autoServiceId") ?: ""
-
+        
         activity?.let {
             fusedLocationClient = LocationServices.getFusedLocationProviderClient(it)
         }
@@ -237,6 +237,13 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
             val alert = dialogBuilder.create()
             alert.setTitle(title)
             alert.show()
+        }
+
+        
+        val promptRating = arguments?.getBoolean("promptRating") ?: false
+        
+        if (promptRating) {
+            showRateDialog()
         }
 
         return root

@@ -27,11 +27,7 @@ class AutoServiceViewHolder (view: View) : RecyclerView.ViewHolder(view) {
         mechanicImageLabel.text = autoServiceElements.mechanicUser.firstName ?: ""
         locationImageLabel.text = autoServiceElements.location.streetAddress ?: ""
         vehicleImageLabel.text = autoServiceElements.vehicle.name ?: ""
-
-        itemView.context
-
-        // Show the fragment from this class
-
+        
         itemView.setOnClickListener {
             listener(autoServiceElements)
         }
@@ -39,7 +35,7 @@ class AutoServiceViewHolder (view: View) : RecyclerView.ViewHolder(view) {
 
     init {
         val mImageLabel: ImageLabel = view.findViewById(R.id.mechanicImageLabel)
-        mImageLabel.imageType = ImageLabel.ImageType.VEHICLE
+        mImageLabel.imageType = ImageLabel.ImageType.PERSON
         mechanicImageLabel = mImageLabel
 
         val lImageLabel: ImageLabel = view.findViewById(R.id.addressImageLabel)
@@ -47,7 +43,7 @@ class AutoServiceViewHolder (view: View) : RecyclerView.ViewHolder(view) {
         locationImageLabel = lImageLabel
 
         val vLabel: ImageLabel = view.findViewById(R.id.vehicleImageLabel)
-        vLabel.imageType = ImageLabel.ImageType.PERSON
+        vLabel.imageType = ImageLabel.ImageType.VEHICLE
         vehicleImageLabel = vLabel
     }
 }
