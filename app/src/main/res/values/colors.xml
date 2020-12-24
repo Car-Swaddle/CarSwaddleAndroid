@@ -21,7 +21,7 @@
     <color name="content4">#FFFFFF</color>
     <color name="contentDivider">#33000000</color>
     <color name="stroke">#AAAAAA</color>
-    <color name="icon">#80000000</color>
+    <color name="icon">#000000</color>
     <color name="icon2">#4D000000</color>
     <color name="icon3">#CC000000</color>
     <color name="neutral">#000000</color>
