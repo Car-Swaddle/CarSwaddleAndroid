@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.carswaddle.carswaddleandroid">
 
     <!--
@@ -28,6 +29,9 @@
              sign the APK for publishing.
              You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
+        <meta-data
+            android:name="asset_statements"
+            android:resource="@string/asset_statements" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
@@ -64,10 +68,16 @@
         <activity
             android:name=".ui.activities.resetPassword.ResetPasswordActivity"
             android:label="@string/title_reset_password">
-            <intent-filter android:label="@string/title_reset_password">
+            <tools:validation testUrl="http://api.carswaddle.com/car-swaddle/reset-password" />
+            <tools:validation testUrl="http://api.staging.carswaddle.com/car-swaddle/reset-password" />
+
+            <intent-filter android:label="@string/title_reset_password"
+                android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data
                     android:host="api.carswaddle.com"
                     android:pathPrefix="/car-swaddle/reset-password"

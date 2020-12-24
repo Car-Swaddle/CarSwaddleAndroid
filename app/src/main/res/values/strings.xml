@@ -200,4 +200,5 @@
     <string name="email_input">Email</string>
     <string name="unable_to_sign_up">Car Swaddle already has an account with this email address. Please go to login.</string>
     <string name="login_failure">Car Swaddle wasn\'t able to find an account with that email and password. If you\'ve already sign up, try resetting your password</string>
+    <string name="asset_statements" translatable="false">[{ \"include\": \"https://api.staging.carswaddle.com/.well-known/assetlinks.json\" }]</string>
 </resources>
