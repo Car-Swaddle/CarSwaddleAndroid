@@ -115,7 +115,8 @@
                         android:gravity="center_vertical|center_horizontal"
                         android:padding="16dp"
                         android:scaleType="fitXY"
-                        android:src="@drawable/ic_sms_bubble" />
+                        app:tint="@color/icon"
+                        android:src="@drawable/new_sms" />
 
                     <ImageView
                         android:id="@+id/phoneImageView"
@@ -126,7 +127,8 @@
                         android:gravity="center_vertical|center_horizontal"
                         android:padding="16dp"
                         android:scaleType="fitXY"
-                        android:src="@drawable/phone" />
+                        app:tint="@color/icon"
+                        android:src="@drawable/new_phone" />
 
                 </LinearLayout>
 
