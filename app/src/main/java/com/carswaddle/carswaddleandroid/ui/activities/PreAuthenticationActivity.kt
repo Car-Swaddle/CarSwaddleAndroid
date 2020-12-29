@@ -11,9 +11,6 @@ import androidx.fragment.app.add
 import androidx.fragment.app.commit
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.R.layout.activity_pre_auth
-import com.carswaddle.carswaddleandroid.R.layout.fragment_pre_auth
-import com.carswaddle.carswaddleandroid.activities.ui.LoginFragment
-import com.carswaddle.carswaddleandroid.ui.activities.schedule.PriceFragment
 
 class PreAuthenticationActivity : AppCompatActivity() {
     

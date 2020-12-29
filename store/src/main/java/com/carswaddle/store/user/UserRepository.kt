@@ -5,6 +5,7 @@ import android.content.Intent
 import android.util.Log
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.carswaddle.carswaddleandroid.Extensions.carSwaddlePreferences
+import com.carswaddle.carswaddleandroid.data.mechanic.Mechanic
 import com.carswaddle.carswaddleandroid.retrofit.ServiceGenerator
 import com.carswaddle.carswaddleandroid.retrofit.ServiceNotAvailable
 import com.carswaddle.carswaddleandroid.retrofit.serviceGenerator
@@ -20,7 +21,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 private val currentUserIdKey: String = "com.carswaddle.carswaddleandroid.user.currentUserId"
-
+private val currentMechanicIdKey: String = "com.carswaddle.carswaddleandroid.user.currentMechanicId"
 
 // Declares the DAO as a private property in the constructor. Pass in the DAO
 // instead of the whole database, because you only need access to the DAO
@@ -30,13 +31,17 @@ class UserRepository(private val userDao: UserDao) {
         userDao.insertUser(user)
     }
 
+    suspend fun insert(mechanic: Mechanic) = withContext(Dispatchers.IO + NonCancellable) {
+        userDao.insertMechanic(mechanic)
+    }
+
     suspend fun update(user: User, updateUser: UpdateUser) = withContext(Dispatchers.IO + NonCancellable) {
         userDao.insertUser(User(user, updateUser))
     }
 
-    fun login(email: String, password: String, context: Context, completion: (error: Throwable?, response: AuthResponse?) -> Unit) {
+    fun login(email: String, password: String, isMechanic: Boolean, context: Context, completion: (error: Throwable?, response: AuthResponse?) -> Unit) {
         val auth = serviceGenerator.retrofit.create(AuthenticationService::class.java)
-        val call = auth.login(email, password, false)
+        val call = auth.login(email, password, isMechanic)
         call.enqueue(object : Callback<AuthResponse> {
             override fun onFailure(call: Call<AuthResponse>?, t: Throwable?) {
                 Log.d("retrofit ", "call failed")
@@ -54,10 +59,17 @@ class UserRepository(private val userDao: UserDao) {
                     }
                 }
                 val user = result?.user
+                val mechanic = result?.mechanic
                 if (user != null) {
                     CoroutineScope(Dispatchers.IO).launch {
                         insert(User(user))
                         setCurrentUserId(user.id, context)
+                        
+                        if (mechanic != null) {
+                            insert(Mechanic(mechanic))
+                            setCurrentMechanicId(mechanic.id, context)
+                        }
+                        
                         completion(null, result)
                         CoroutineScope(Dispatchers.Default).launch {
                             val intent = Intent(USER_DID_LOGIN)
@@ -89,9 +101,9 @@ class UserRepository(private val userDao: UserDao) {
         })
     }
 
-    fun signUp(email: String, password: String, context: Context, completion: (error: Throwable?, response: AuthResponse?) -> Unit) {
+    fun signUp(email: String, password: String, isMechanic: Boolean, context: Context, completion: (error: Throwable?, response: AuthResponse?) -> Unit) {
         val auth = serviceGenerator.retrofit.create(AuthenticationService::class.java)
-        val call = auth.signUp(email, password, false)
+        val call = auth.signUp(email, password, isMechanic)
         call.enqueue(object : Callback<AuthResponse> {
             override fun onFailure(call: Call<AuthResponse>?, t: Throwable?) {
                 Log.d("retrofit ", "call failed")
@@ -340,6 +352,12 @@ class UserRepository(private val userDao: UserDao) {
     fun setCurrentUserId(userId: String, context: Context) {
         val editContext = context.carSwaddlePreferences().edit()
         editContext.putString(currentUserIdKey, userId)
+        editContext.apply()
+    }
+
+    fun setCurrentMechanicId(mechanicId: String, context: Context) {
+        val editContext = context.carSwaddlePreferences().edit()
+        editContext.putString(currentMechanicIdKey, mechanicId)
         editContext.apply()
     }
     

@@ -8,6 +8,7 @@ import com.carswaddle.carswaddleandroid.data.oilChange.OilChange
 import com.carswaddle.carswaddleandroid.data.user.User
 import com.carswaddle.carswaddleandroid.data.vehicle.Vehicle
 import com.carswaddle.carswaddleandroid.data.serviceEntity.ServiceEntity
+import java.util.*
 
 @Dao
 public abstract class AutoServiceDao {
@@ -38,6 +39,9 @@ public abstract class AutoServiceDao {
 
     @Query("SELECT * FROM autoService WHERE creator_id is (:userId) ORDER BY creation_date ASC")
     abstract fun getAutoServicesForUser(userId: String): List<AutoService>
+
+    @Query("SELECT * FROM autoService WHERE scheduled_date > (:startDate) AND scheduled_date <= (:endDate) AND mechanic_id is (:mechanicId) ORDER BY scheduled_date ASC")
+    abstract fun getAutoServices(startDate: Calendar, endDate: Calendar, mechanicId: String): List<AutoService>
 
     @Query("SELECT * FROM autoService WHERE id IN (:autoServiceIds)")
     abstract fun getAutoServicesWithIds(autoServiceIds: List<String>): List<AutoService>

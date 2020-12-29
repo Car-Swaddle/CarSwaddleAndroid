@@ -147,6 +147,7 @@ class SignUpFragment: Fragment() {
         userRepo.signUp(
             emailEditText.text.toString(),
             passwordEditText.text.toString(),
+            false,
             requireContext()
         ) { throwable, authResponse ->
             requireActivity().runOnUiThread {
