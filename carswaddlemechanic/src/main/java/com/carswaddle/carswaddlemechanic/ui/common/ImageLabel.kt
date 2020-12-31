@@ -19,7 +19,7 @@ class ImageLabel @JvmOverloads constructor(
     private val image: ImageView
     private val textView: TextView
 
-    enum class ImageType { VEHICLE, LOCATION, OIL, PERSON }
+    enum class ImageType { VEHICLE, LOCATION, OIL, PERSON, TIME }
 
     var imageType: ImageType = ImageType.VEHICLE
         set(value) {
@@ -41,6 +41,8 @@ class ImageLabel @JvmOverloads constructor(
                 return R.drawable.ic_user_male
             ImageType.OIL ->
                 return R.drawable.engine_oil
+            ImageType.TIME ->
+                return R.drawable.ic_basic_clock
         }
     }
 

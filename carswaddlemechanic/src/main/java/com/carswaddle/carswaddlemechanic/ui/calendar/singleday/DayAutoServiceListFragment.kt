@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.carswaddle.carswaddlemechanic.R
@@ -47,7 +48,7 @@ class DayAutoServiceListFragment(val date: Calendar) : Fragment() {
             val manager = childFragmentManager
             if (manager != null) {
                 val bundle = bundleOf("autoServiceId" to it.autoService.id)
-//                findNavController().navigate(R.id.action_navigation_autoservices_list_to_navigation_autoservice_details, bundle)
+                findNavController().navigate(R.id.action_navigation_calendar_to_autoServiceDetailsFragment, bundle)
             }
         }
 

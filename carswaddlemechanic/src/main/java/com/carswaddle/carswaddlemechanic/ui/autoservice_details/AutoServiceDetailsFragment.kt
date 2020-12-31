@@ -31,24 +31,32 @@ import com.carswaddle.carswaddleandroid.data.oilChange.OilChange
 import com.carswaddle.carswaddleandroid.services.serviceModels.AutoServiceStatus
 import com.carswaddle.carswaddleandroid.services.serviceModels.CreateReview
 import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServiceListElements
+import com.carswaddle.carswaddlemechanic.R
+import com.carswaddle.carswaddlemechanic.extensions.updateMapStyle
 import com.carswaddle.carswaddlemechanic.ui.common.ImageLabel
+import com.carswaddle.carswaddlemechanic.utils.PermissionUtils
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import java.math.RoundingMode
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatterBuilder
+import java.time.temporal.ChronoField
 import java.util.*
+
+public val saltLakeAndProvo = LatLng(40.4456955, -111.8971674)
 
 
 class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
 
-    private lateinit var dateDisplay: DateDisplayView
     private lateinit var mechanicNameTextView: TextView
-    private lateinit var statusPillTextView: TextView
     private lateinit var vehicleImageLabel: ImageLabel
     private lateinit var oilTypeImageLabel: ImageLabel
     private lateinit var streetAddressImageLabel: ImageLabel
@@ -56,8 +64,8 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
     private lateinit var distanceBetweenTextView: TextView
     private lateinit var chatImageView: ImageView
     private lateinit var phoneImageView: ImageView
-    private lateinit var serviceRatingBar: AppCompatRatingBar
-    private lateinit var rateTextView: TextView
+    private lateinit var timeImageLabel: ImageLabel
+    private lateinit var statusBannerView: TextView
 
     private lateinit var autoServiceId: String
 
@@ -72,7 +80,6 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
     private val locationPermissionRequestCode = 1
     private val zoomLevel = 18.0f
 
-    private lateinit var callback: LocationFragment.OnLocationSelectedListener
     private lateinit var map: GoogleMap
     private var fusedLocationClient: FusedLocationProviderClient? = null
 
@@ -91,10 +98,8 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
         activity?.let {
             fusedLocationClient = LocationServices.getFusedLocationProviderClient(it)
         }
-
-        dateDisplay = root.findViewById(R.id.date_display)
+        
         mechanicNameTextView = root.findViewById(R.id.mechanic_name_text_view)
-        statusPillTextView = root.findViewById(R.id.status_pill)
         vehicleImageLabel = root.findViewById(R.id.vehicle_image_label)
         oilTypeImageLabel = root.findViewById(R.id.oil_type_image_label)
         locationMapView = root.findViewById(R.id.preview_location_map_view)
@@ -104,17 +109,16 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
         phoneImageView = root.findViewById(R.id.phoneImageView)
         notesView = root.findViewById(R.id.notesView)
         cancelAutoServiceButton = root.findViewById(R.id.cancelAutoService)
-        serviceRatingBar = root.findViewById(R.id.serviceRatingBar)
-        rateTextView = root.findViewById(R.id.rateTextView)
+        timeImageLabel = root.findViewById(R.id.time_image_label)
+        statusBannerView = root.findViewById(R.id.statusBannerView)
 
         vehicleImageLabel.text = "--"
         oilTypeImageLabel.text = "--"
+        timeImageLabel.text = "--"
         streetAddressImageLabel.text = "--"
         mechanicNameTextView.text = "--"
-        statusPillTextView.backgroundTintList = ColorStateList.valueOf(defaultStatusColor())
-
-        rateTextView.visibility = View.GONE
-
+        statusBannerView.backgroundTintList = ColorStateList.valueOf(defaultStatusColor())
+        
         notesView.notesDidChange = {
             autoServiceDetailsViewModel.updateNotes(it ?: "") { error, autoServiceId ->
                 Log.w("car swaddle android", "returned")
@@ -144,10 +148,11 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
         streetAddressImageLabel.imageType = ImageLabel.ImageType.LOCATION
         vehicleImageLabel.imageType = ImageLabel.ImageType.VEHICLE
         oilTypeImageLabel.imageType = ImageLabel.ImageType.OIL
+        timeImageLabel.imageType = ImageLabel.ImageType.TIME
 
-        locationMapView.onCreate(savedInstanceState)
+//        locationMapView.onCreate(savedInstanceState)
 
-        locationMapView.getMapAsync(this)
+//        locationMapView.getMapAsync(this)
 
         autoServiceDetailsViewModel = ViewModelProviders.of(requireActivity()).get(
             AutoServiceDetailsViewModel::class.java
@@ -155,62 +160,53 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
 
         autoServiceDetailsViewModel.autoServiceId = autoServiceId
 
-        rateTextView.setOnClickListener {
-            showRateDialog()
+
+        autoServiceDetailsViewModel.autoServiceElement.observe(viewLifecycleOwner) { autoService ->
+            Log.v("tag autoservice", "autoservice" + autoService.mechanicUser.firstName)
+            val date = autoService.autoService.scheduledDate
+            if (date != null) {
+//                dateDisplay.configure(date)
+                // TODO("Configure Date")
+            }
+            mechanicNameTextView.text = autoService.mechanicUser.displayName()
+            statusBannerView.text = autoService.autoService.status?.localizedString()
+            
+            val d = autoService.autoService.scheduledDate
+            if (d != null) {
+                val localDateTime = LocalDateTime.ofInstant(d.toInstant(), d.timeZone.toZoneId())
+                timeImageLabel.text = timeFormatter.format(localDateTime)
+            }
+
+            val status = autoService.autoService.status
+            if (status != null) {
+                statusBannerView.backgroundTintList =
+                    ColorStateList.valueOf(statusColor(status))
+                if (status == AutoServiceStatus.scheduled) {
+                    cancelAutoServiceButton.visibility = View.VISIBLE
+                } else {
+                    cancelAutoServiceButton.visibility = View.GONE
+                }
+            }
+
+            vehicleImageLabel.text = autoService.vehicle.displayValue()
+            streetAddressImageLabel.text = autoService.location.streetAddress ?: ""
+            val location = autoService.location.latLong
+            this.autoServiceLocation = autoService.location.location
+            updateDistanceToService()
+            if (this::map.isInitialized) {
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 14f))
+                map.addMarker(
+                    MarkerOptions()
+                        .position(location)
+                        .title("Service location")
+                )
+            }
+            notesView.notesText = autoService.autoService.notes
         }
 
-        serviceRatingBar.rating = 0.0f
-
-        autoServiceDetailsViewModel.autoServiceElement.observe(
-            viewLifecycleOwner,
-            Observer<AutoServiceListElements> { autoService ->
-                Log.v("tag autoservice", "autoservice" + autoService.mechanicUser.firstName)
-                val date = autoService.autoService.scheduledDate
-                if (date != null) {
-                    dateDisplay.configure(date)
-                }
-                mechanicNameTextView.text = autoService.mechanicUser.displayName()
-                statusPillTextView.text = autoService.autoService.status?.localizedString()
-                serviceRatingBar.rating = autoService.review?.rating ?: 0.0F
-
-                if (autoService.review == null) {
-                    rateTextView.visibility = View.VISIBLE
-                } else {
-                    rateTextView.visibility = View.GONE
-                }
-
-                val status = autoService.autoService.status
-                if (status != null) {
-                    statusPillTextView.backgroundTintList =
-                        ColorStateList.valueOf(statusColor(status))
-                    if (status == AutoServiceStatus.scheduled) {
-                        cancelAutoServiceButton.visibility = View.VISIBLE
-                    } else {
-                        cancelAutoServiceButton.visibility = View.GONE
-                    }
-                }
-
-                vehicleImageLabel.text = autoService.vehicle.displayValue()
-                streetAddressImageLabel.text = autoService.location.streetAddress ?: ""
-                val location = autoService.location.latLong
-                this.autoServiceLocation = autoService.location.location
-                updateDistanceToService()
-                if (this::map.isInitialized) {
-                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 14f))
-                    map.addMarker(
-                        MarkerOptions()
-                            .position(location)
-                            .title("Service location")
-                    )
-                }
-                notesView.notesText = autoService.autoService.notes
-            })
-
-        autoServiceDetailsViewModel.oilChange.observe(
-            viewLifecycleOwner,
-            Observer<OilChange> { oilChange ->
-                oilTypeImageLabel.text = oilChange.oilType.localizedString()
-            })
+        autoServiceDetailsViewModel.oilChange.observe(viewLifecycleOwner) { oilChange ->
+            oilTypeImageLabel.text = oilChange.oilType.localizedString()
+        }
 
         cancelAutoServiceButton.setOnClickListener {
             val dialogBuilder = AlertDialog.Builder(requireContext())
@@ -230,13 +226,6 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
             val alert = dialogBuilder.create()
             alert.setTitle(title)
             alert.show()
-        }
-
-
-        val promptRating = arguments?.getBoolean("promptRating") ?: false
-
-        if (promptRating) {
-            showRateDialog()
         }
 
         return root
@@ -302,8 +291,10 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
             var mapStyle = R.raw.standard_map
             when (mode) {
                 Configuration.UI_MODE_NIGHT_YES -> mapStyle = R.raw.night_mode_map
-                Configuration.UI_MODE_NIGHT_NO -> { }
-                Configuration.UI_MODE_NIGHT_UNDEFINED -> { }
+                Configuration.UI_MODE_NIGHT_NO -> {
+                }
+                Configuration.UI_MODE_NIGHT_UNDEFINED -> {
+                }
             }
             map.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(), mapStyle))
         } catch (e: Resources.NotFoundException) {
@@ -358,27 +349,6 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
         }
     }
 
-    private fun showRateDialog() {
-        val builder = AlertDialog.Builder(context)
-        builder.setTitle("Rate your mechanic")
-
-        val ratingView = ReviewCreationView(requireContext())
-
-        builder.setView(ratingView)
-
-        builder.setPositiveButton("Rate", { dialog, whichButton ->
-            val reviewText = ratingView.reviewEditText.text ?: ""
-            val rating = ratingView.serviceRatingBar.rating
-            updateServerWithReview(rating, reviewText.toString())
-            serviceRatingBar.rating = rating
-            rateTextView.visibility = View.GONE
-        })
-
-        builder.setNegativeButton("Cancel", { dialog, whichButton -> })
-
-        builder.show()
-    }
-
     private fun updateServerWithReview(rating: Float, text: String) {
         autoServiceDetailsViewModel.createReview(
             CreateReview(
@@ -396,34 +366,42 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
 
     // See https://github.com/googlemaps/android-samples/blob/main/ApiDemos/kotlin/app/src/gms/java/com/example/kotlindemos/RawMapViewDemoActivity.kt
     // Need to forward all lifecycle events to map view
-    override fun onResume() {
-        super.onResume()
-        locationMapView.onResume()
-    }
+//    override fun onResume() {
+//        super.onResume()
+//        locationMapView.onResume()
+//    }
+//
+//    override fun onStart() {
+//        super.onStart()
+//        locationMapView.onStart()
+//    }
+//
+//    override fun onStop() {
+//        super.onStop()
+//        locationMapView.onStop()
+//    }
+//
+//    override fun onPause() {
+//        locationMapView.onPause()
+//        super.onPause()
+//    }
+//
+//    override fun onDestroy() {
+//        locationMapView.onDestroy()
+//        super.onDestroy()
+//    }
+//
+//    override fun onLowMemory() {
+//        super.onLowMemory()
+//        locationMapView.onLowMemory()
+//    }
 
-    override fun onStart() {
-        super.onStart()
-        locationMapView.onStart()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        locationMapView.onStop()
-    }
-
-    override fun onPause() {
-        locationMapView.onPause()
-        super.onPause()
-    }
-
-    override fun onDestroy() {
-        locationMapView.onDestroy()
-        super.onDestroy()
-    }
-
-    override fun onLowMemory() {
-        super.onLowMemory()
-        locationMapView.onLowMemory()
+    companion object {
+        private val timeFormatter: DateTimeFormatter = DateTimeFormatterBuilder()
+            .appendPattern("h:mm ")
+            .appendText(ChronoField.AMPM_OF_DAY, mapOf(0L to "am", 1L to "pm"))
+            .appendPattern(" M/d/yyyy")
+            .toFormatter(Locale.US)
     }
 
 }

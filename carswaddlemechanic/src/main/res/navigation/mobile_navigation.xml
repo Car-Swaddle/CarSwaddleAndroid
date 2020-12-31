@@ -9,7 +9,11 @@
         android:id="@+id/navigation_calendar"
         android:name="com.carswaddle.carswaddlemechanic.ui.calendar.calendarfragment.CalendarFragment"
         android:label="@string/day_autoservices_title"
-        tools:layout="@layout/fragment_calendar" />
+        tools:layout="@layout/fragment_calendar" >
+        <action
+            android:id="@+id/action_navigation_calendar_to_autoServiceDetailsFragment"
+            app:destination="@id/autoServiceDetailsFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_dashboard"
@@ -23,4 +27,9 @@
         android:label="@string/mechanic_profile"
         tools:layout="@layout/fragment_mechanic_profile" />
     
+    <fragment
+        android:id="@+id/autoServiceDetailsFragment"
+        android:name="com.carswaddle.carswaddlemechanic.ui.autoservice_details.AutoServiceDetailsFragment"
+        android:label="@string/service_details" />
+
 </navigation>
