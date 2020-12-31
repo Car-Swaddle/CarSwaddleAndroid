@@ -115,6 +115,7 @@ class AutoServiceDetailsViewModel(application: Application) : AndroidViewModel(a
             val location = locationRepo.getLocation(locationId)
             val mechanicUser = userRepo.getUser(mechanic?.userId ?: "")
             val serviceEntities = serviceEntityRepo.getServiceEntities(autoServiceId)
+            val creator = userRepo.getUser(autoService.creatorId ?: "")
 
             var oilChange: OilChange? = null
 
@@ -128,7 +129,7 @@ class AutoServiceDetailsViewModel(application: Application) : AndroidViewModel(a
             if (mechanic == null || vehicle == null || location == null || mechanicUser == null) {
                 return null
             }
-            return AutoServiceListElements(autoService, mechanic, vehicle, location, mechanicUser, serviceEntities, review, oilChange)
+            return AutoServiceListElements(autoService, mechanic, vehicle, location, mechanicUser, serviceEntities, review, creator, oilChange)
         } catch (e: Exception) {
             print(e)
             return null
