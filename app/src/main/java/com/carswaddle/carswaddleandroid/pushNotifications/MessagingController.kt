@@ -5,9 +5,9 @@ import android.util.Log
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.carswaddle.carswaddleandroid.CarSwaddleApp.CarSwaddleApp
 import com.carswaddle.carswaddleandroid.Extensions.carSwaddlePreferences
-import com.carswaddle.carswaddleandroid.data.AppDatabase
-import com.carswaddle.carswaddleandroid.data.Authentication
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
+import com.carswaddle.services.Authentication
+import com.carswaddle.store.AppDatabase
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
@@ -78,7 +78,6 @@ class MessagingController: FirebaseMessagingService() {
             } else {
                 Log.w(TAG, "unable to register device token")
             }
-            
         }
     }
     

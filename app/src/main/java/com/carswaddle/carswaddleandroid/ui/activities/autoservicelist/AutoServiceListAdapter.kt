@@ -101,7 +101,12 @@ class AutoServiceListAdapter(private val upcomingServices: LiveData<List<AutoSer
         if (upcomingCount > 0) {
             return 1 + upcomingCount + 1 + pastCount  
         } else {
-            return 1 + pastCount
+            if (pastCount > 0) {
+                return 1 + pastCount
+            } else {
+                return 0
+            }
+            
         }
     }
     

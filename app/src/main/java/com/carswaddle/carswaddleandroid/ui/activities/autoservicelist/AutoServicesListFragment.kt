@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.LinearLayout
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -37,6 +38,7 @@ class AutoServicesListFragment : Fragment() {
     private lateinit var viewManager: RecyclerView.LayoutManager
 
     private lateinit var scheduleButton: Button
+    private lateinit var autoServiceEmptyState: LinearLayout
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,9 +46,14 @@ class AutoServicesListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         autoServicesListViewModel =
-            ViewModelProviders.of(requireActivity()).get(AutoServicesListViewModel::class.java)
+            ViewModelProvider(requireActivity()).get(AutoServicesListViewModel::class.java)
         ViewModelProvider(requireActivity())
         val root = inflater.inflate(R.layout.fragment_autoservices_list, container, false)
+        
+        autoServiceEmptyState = root.findViewById(R.id.autoServiceEmptyState)
+        
+        // Hide until we've made the request and know if we should show it or not
+        autoServiceEmptyState.visibility = View.GONE
 
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver(object: BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
@@ -56,17 +63,15 @@ class AutoServicesListFragment : Fragment() {
         
         scheduleButton = root.findViewById(R.id.scheduleButton)
 
-        autoServicesListViewModel.upcomingAutoServices.observe(
-            viewLifecycleOwner,
-            Observer<List<AutoServiceListElements>> { autoServices ->
+        autoServicesListViewModel.upcomingAutoServices.observe(viewLifecycleOwner, { autoServices ->
                 viewAdapter.notifyDataSetChanged()
+                updateEmptyStateDisplay()
             }
         )
 
-        autoServicesListViewModel.pastAutoServices.observe(
-            viewLifecycleOwner,
-            Observer<List<AutoServiceListElements>> { autoServices ->
+        autoServicesListViewModel.pastAutoServices.observe(viewLifecycleOwner, { autoServices ->
                 viewAdapter.notifyDataSetChanged()
+                updateEmptyStateDisplay()
             }
         )
         
@@ -96,10 +101,18 @@ class AutoServicesListFragment : Fragment() {
         scheduleButton.setOnClickListener {
             didTapSchedule()
         }
-
+        
         return root
     }
 
+    private fun updateEmptyStateDisplay() {
+        autoServiceEmptyState.visibility = if (shouldShowEmptyState()) View.VISIBLE else View.GONE 
+    }
+    
+    private fun shouldShowEmptyState(): Boolean {
+        return autoServicesListViewModel.pastAutoServices.value?.isNullOrEmpty() == true && autoServicesListViewModel.upcomingAutoServices.value.isNullOrEmpty() == true
+    }
+    
     private fun didTapSchedule() {
         startActivity(Intent(activity, MapsActivity::class.java))
     }

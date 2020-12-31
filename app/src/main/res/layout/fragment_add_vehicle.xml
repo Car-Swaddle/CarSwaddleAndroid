@@ -4,12 +4,12 @@
     android:id="@+id/autoservices_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     android:scrollbars="vertical">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#FFFFFF"
         android:clickable="true"
         android:windowSoftInputMode="adjustPan">
 
@@ -27,7 +27,7 @@
                 <com.carswaddle.carswaddleandroid.ui.activities.profile.LabeledEditText
                     android:id="@+id/vehicleNameLabeledTextView"
                     android:layout_width="match_parent"
-                    android:layout_height="86dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"/>
 
             </TableRow>
@@ -41,7 +41,7 @@
                 <com.carswaddle.carswaddleandroid.ui.activities.profile.LabeledEditText
                     android:id="@+id/licensePlateLabeledTextView"
                     android:layout_width="wrap_content"
-                    android:layout_height="86dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"/>
 
             </TableRow>
@@ -54,9 +54,10 @@
 
                 <Spinner
                     android:id="@+id/spinner"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="56dp"
                     android:layout_marginLeft="5dp"
+                    android:minWidth="@dimen/min_width"
                     android:layout_weight="1"
                     style="@style/Base.Widget.AppCompat.Spinner.Underlined"/>
 
@@ -66,17 +67,17 @@
 
     </ScrollView>
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+    <com.carswaddle.carswaddleandroid.ui.view.ProgressButton
         android:id="@+id/saveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:padding="16dp"
         android:text="@string/save_vehicle"
-        android:textColor="#fff"
-        app:backgroundTint="@color/brand"
+        style="@style/CarSwaddle.ConfirmButton"
+        app:displayText="@string/save_vehicle"
+        android:minWidth="@dimen/min_width"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

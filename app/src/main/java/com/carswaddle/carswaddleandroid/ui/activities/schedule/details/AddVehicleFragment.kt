@@ -8,14 +8,15 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
+import com.carswaddle.carswaddleandroid.Extensions.dismissKeyboard
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.ui.activities.profile.LabeledEditText
-import com.google.android.gms.maps.OnMapReadyCallback
+import com.carswaddle.carswaddleandroid.ui.view.ProgressButton
 
 class AddVehicleFragment() : Fragment() {
     
-    private lateinit var saveButton: Button
+    private lateinit var saveButton: ProgressButton
 
     private lateinit var addVehicleViewModel: AddVehicleViewModel
     
@@ -28,7 +29,7 @@ class AddVehicleFragment() : Fragment() {
     ): View? {
         val root = inflater.inflate(R.layout.fragment_add_vehicle, container, false)
 
-        addVehicleViewModel = ViewModelProviders.of(this).get(AddVehicleViewModel::class.java)
+        addVehicleViewModel = ViewModelProvider(this).get(AddVehicleViewModel::class.java)
         
         val vehicleName: LabeledEditText  = root.findViewById(R.id.vehicleNameLabeledTextView)
         val licensePlate: LabeledEditText  = root.findViewById(R.id.licensePlateLabeledTextView)
@@ -59,15 +60,18 @@ class AddVehicleFragment() : Fragment() {
         
         saveButton = root.findViewById(R.id.saveButton)
         
-        saveButton.setOnClickListener {
+        saveButton.button.setOnClickListener {
+            dismissKeyboard()
             val name: String? = vehicleName.editTextValue
             val licensePlate: String? = licensePlate.editTextValue
             val state: String? = spinner.selectedItem.toString()
             if (name == null || licensePlate == null || state == null) {
                 return@setOnClickListener
             }
+            saveButton.isLoading = true
             addVehicleViewModel.createVehicle(name, licensePlate, state) {
                 activity?.runOnUiThread {
+                    saveButton.isLoading = false
                     if (it != null) {
                         activity?.supportFragmentManager?.popBackStack()
                         didAddVehicle(it)

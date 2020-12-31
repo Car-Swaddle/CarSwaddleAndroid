@@ -20,12 +20,14 @@
             android:id="@+id/vehicleName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/text"
             android:text="Add vehicle" />
 
         <TextView
             android:id="@+id/licensePlate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/text"
             android:text="+" />
 
 

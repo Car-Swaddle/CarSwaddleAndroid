@@ -1,3 +1,6 @@
+include ':foundation'
+include ':services'
+include ':store'
 rootProject.name='CarSwaddleAndroid'
 include ':app'
 include ':carswaddlemechanic'

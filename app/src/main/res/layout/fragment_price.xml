@@ -6,7 +6,7 @@
     android:id="@+id/fragment_price"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fff"
+    android:background="@color/background"
     android:paddingBottom="32dp">
 
     <LinearLayout
@@ -34,7 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginStart="16dp"
-            android:background="#ddd"/>
+            android:background="@color/contentDivider"/>
 
         <com.carswaddle.carswaddleandroid.ui.view.PriceRow
             android:id="@+id/row4"

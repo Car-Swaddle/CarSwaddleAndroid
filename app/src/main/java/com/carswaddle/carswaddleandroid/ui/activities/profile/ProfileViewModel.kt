@@ -5,16 +5,9 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.carswaddle.carswaddleandroid.data.AppDatabase
-import com.carswaddle.carswaddleandroid.data.autoservice.AutoServiceRepository
-import com.carswaddle.carswaddleandroid.data.location.AutoServiceLocationRepository
-import com.carswaddle.carswaddleandroid.data.mechanic.MechanicRepository
-import com.carswaddle.carswaddleandroid.data.oilChange.OilChangeRepository
-import com.carswaddle.carswaddleandroid.data.serviceEntity.ServiceEntityRepository
 import com.carswaddle.carswaddleandroid.data.user.User
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
-import com.carswaddle.carswaddleandroid.data.vehicle.VehicleRepository
-import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServiceListElements
+import com.carswaddle.store.AppDatabase
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(application: Application) : AndroidViewModel(application) {

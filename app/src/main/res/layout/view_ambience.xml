@@ -11,13 +11,13 @@
         android:id="@+id/ambience_image_view"
         android:layout_width="1539dp"
         android:layout_height="2736dp"
-        tools:srcCompat="@drawable/suburbs"
-        app:srcCompat="@drawable/suburbs"/>
+        tools:srcCompat="@mipmap/suburbs"
+        app:srcCompat="@mipmap/suburbs"/>
     
     <View
         android:id="@+id/ambience_final_mask"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/brandAlpha"/>
+        android:background="@color/brandAuxiliaryAlpha"/>
 
 </FrameLayout>

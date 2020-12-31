@@ -1,29 +1,27 @@
 package com.carswaddle.carswaddleandroid.ui.activities
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.telephony.PhoneNumberUtils
-import android.text.TextWatcher
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.carswaddle.carswaddleandroid.Extensions.afterTextChanged
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.R.layout.activity_set_phone_number
-import com.carswaddle.carswaddleandroid.data.AppDatabase
-import com.carswaddle.carswaddleandroid.data.Authentication
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
+import com.carswaddle.carswaddleandroid.ui.view.ProgressButton
+import com.carswaddle.services.Authentication
+import com.carswaddle.store.AppDatabase
 
 
 class SetPhoneNumberActivity: AppCompatActivity() {
 
     private val phoneNumberEditText: EditText by lazy { findViewById(R.id.phoneNumberEditText) as EditText }
-    private val saveButton: Button by lazy { findViewById(R.id.savePhoneNumberButton) as Button }
+    private val saveButton: ProgressButton by lazy { findViewById(R.id.savePhoneNumberButton) as ProgressButton }
 
     lateinit var userRepo: UserRepository
 
@@ -35,7 +33,7 @@ class SetPhoneNumberActivity: AppCompatActivity() {
 
         setContentView(activity_set_phone_number)
 
-        saveButton.setOnClickListener {
+        saveButton.button.setOnClickListener {
             savePhoneNumber()
         }
 
@@ -45,7 +43,7 @@ class SetPhoneNumberActivity: AppCompatActivity() {
     }
 
     private fun updateButtonEnabledness() {
-        saveButton.isEnabled = PhoneNumberUtils.isGlobalPhoneNumber(phoneNumberEditText.text.toString())
+        saveButton.isButtonEnabled = PhoneNumberUtils.isGlobalPhoneNumber(phoneNumberEditText.text.toString())
     }
 
     private fun savePhoneNumber() {
@@ -53,9 +51,13 @@ class SetPhoneNumberActivity: AppCompatActivity() {
         if (phone == null && PhoneNumberUtils.isGlobalPhoneNumber(phone)) {
             return
         }
+
+        saveButton.isLoading = true
+        
         userRepo.updatePhoneNumber(phone, this, {
 
         }) {
+            runOnUiThread { saveButton.isLoading = false }
             if (it == null) {
                 val intent = Intent(this, VerifySMSCodeActivity::class.java)
                 startActivity(intent)

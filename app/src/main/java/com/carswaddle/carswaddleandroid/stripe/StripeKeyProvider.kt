@@ -3,7 +3,7 @@ package com.carswaddle.carswaddleandroid.stripe
 import android.content.Context
 import androidx.annotation.Size
 import com.carswaddle.carswaddleandroid.retrofit.ServiceGenerator
-import com.carswaddle.carswaddleandroid.services.StripeService
+import com.carswaddle.services.services.StripeService
 import com.stripe.android.EphemeralKeyProvider
 import com.stripe.android.EphemeralKeyUpdateListener
 import org.json.JSONException

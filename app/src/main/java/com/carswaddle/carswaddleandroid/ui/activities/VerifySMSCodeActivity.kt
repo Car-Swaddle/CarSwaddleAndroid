@@ -11,7 +11,6 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.TextView
@@ -19,17 +18,18 @@ import androidx.appcompat.app.AppCompatActivity
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.R.layout.activity_verify_code
 import com.carswaddle.carswaddleandroid.activities.ui.MainActivity
-import com.carswaddle.carswaddleandroid.data.AppDatabase
-import com.carswaddle.carswaddleandroid.data.Authentication
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
+import com.carswaddle.carswaddleandroid.ui.view.ProgressButton
+import com.carswaddle.services.Authentication
+import com.carswaddle.store.AppDatabase
 import com.mukesh.OtpView
 
 
 class VerifySMSCodeActivity: AppCompatActivity() {
 
     private val verify: OtpView by lazy { findViewById(R.id.codeEntryView) as OtpView }
-    private val verifyButton: Button by lazy { findViewById(R.id.verifyCodeButton) as Button }
-    private val resendButton: Button by lazy { findViewById(R.id.resendCodeButton) as Button }
+    private val verifyButton: ProgressButton by lazy { findViewById(R.id.verifyCodeButton) as ProgressButton }
+    private val resendButton: ProgressButton by lazy { findViewById(R.id.resendCodeButton) as ProgressButton }
     private val verifyTextView: TextView by lazy { findViewById(R.id.verifyCodeEditText) as TextView }
     private val sentCodeTextView: TextView by lazy { findViewById(R.id.sentCodeTextView) as TextView }
 
@@ -58,11 +58,11 @@ class VerifySMSCodeActivity: AppCompatActivity() {
 
         }
 
-        resendButton.setOnClickListener {
+        resendButton.button.setOnClickListener {
             sendVerificationCode()
         }
 
-        verifyButton.setOnClickListener {
+        verifyButton.button.setOnClickListener {
             verifySMSCode()
         }
 
@@ -84,7 +84,9 @@ class VerifySMSCodeActivity: AppCompatActivity() {
     }
 
     private fun sendVerificationCode() {
+        resendButton.isLoading = true
         userRepo.sendSMSVerificationSMS(this) {
+            runOnUiThread { resendButton.isLoading = false }
             if (it != null) {
                 Log.w("android", "unable to send verification")
             }
@@ -96,7 +98,9 @@ class VerifySMSCodeActivity: AppCompatActivity() {
         if (code.isNullOrBlank()) {
             return
         }
+        verifyButton.isLoading = true
         userRepo.verifySMSCode(this, code) {
+            runOnUiThread { verifyButton.isLoading = false }
             if (it == null) {
                 Log.w("Android", "verified code")
                 val intent = Intent(this, MainActivity::class.java)
