@@ -51,6 +51,8 @@ class CalendarFragment : Fragment() {
                 }
                 val c = calendar.toJavaCalendar()
                 updateMonthView(c)
+                val index = DayPagerAdapter.calendarToPosition(c)
+                viewPager.setCurrentItem(index, false)
             }
         })
 
@@ -81,7 +83,7 @@ class CalendarFragment : Fragment() {
                 calendarView.scrollToCalendar(year, month, day, true, false)
 
                 updateMonthView(c)
-                
+
                 super.onPageSelected(position)
             }
         })

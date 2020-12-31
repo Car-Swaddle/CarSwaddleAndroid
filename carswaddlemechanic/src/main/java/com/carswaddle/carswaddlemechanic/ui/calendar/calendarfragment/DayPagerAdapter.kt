@@ -1,9 +1,6 @@
 package com.carswaddle.carswaddlemechanic.ui.calendar.calendarfragment
 
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
-import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.carswaddle.carswaddlemechanic.ui.calendar.singleday.DayAutoServiceListFragment
 import java.util.*
@@ -30,6 +27,23 @@ class DayPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
             val difference = position - todayItemIndex 
             newDay.add(Calendar.DATE, difference)
             return newDay
+        }
+
+        fun calendarToPosition(calendar: Calendar): Int {
+            var different: Long = calendar.time.time - positionToCalendar(todayItemIndex).time.time
+            
+            val secondsInMilli: Long = 1000
+            val minutesInMilli = secondsInMilli * 60
+            val hoursInMilli = minutesInMilli * 60
+            val daysInMilli = hoursInMilli * 24 
+            
+            val days = different / daysInMilli
+            var new = days.toInt() + todayItemIndex
+
+            if (different > 0) {
+                new += 1
+            }
+            return new
         }
 
         private val todayItemIndex: Int = Int.MAX_VALUE / 2
