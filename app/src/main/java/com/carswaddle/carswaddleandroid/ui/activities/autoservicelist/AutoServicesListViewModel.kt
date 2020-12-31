@@ -10,6 +10,7 @@ import com.carswaddle.carswaddleandroid.Extensions.carSwaddlePreferences
 import com.carswaddle.carswaddleandroid.data.autoservice.AutoServiceRepository
 import com.carswaddle.carswaddleandroid.data.location.AutoServiceLocationRepository
 import com.carswaddle.carswaddleandroid.data.mechanic.MechanicRepository
+import com.carswaddle.carswaddleandroid.data.oilChange.OilChange
 import com.carswaddle.carswaddleandroid.data.oilChange.OilChangeRepository
 import com.carswaddle.carswaddleandroid.data.serviceEntity.ServiceEntityRepository
 import com.carswaddle.carswaddleandroid.data.user.User
@@ -118,6 +119,14 @@ class AutoServicesListViewModel(application: Application) : AndroidViewModel(app
             val location = locationRepo.getLocation(locationId)
             val mechanicUser = userRepo.getUser(mechanic?.userId ?: "")
             val serviceEntities = serviceEntityRepo.getServiceEntities(autoServiceId)
+            val creator = userRepo.getUser(autoService.creatorId ?: "")
+
+            var oilChange: OilChange? = null
+
+            val oilChangeId = serviceEntities?.firstOrNull()?.oilChangeID
+            if (oilChangeId != null) {
+                oilChange = oilChangeRepo.getOilChange(oilChangeId)
+            }
 
             if (mechanic == null || vehicle == null || location == null || mechanicUser == null) {
                 return null
@@ -130,7 +139,9 @@ class AutoServicesListViewModel(application: Application) : AndroidViewModel(app
                 location,
                 mechanicUser,
                 serviceEntities,
-                null
+                null,
+                creator,
+                oilChange
             )
         } catch (e: Exception) {
             print(e)

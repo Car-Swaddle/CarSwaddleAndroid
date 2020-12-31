@@ -261,36 +261,4 @@ class SelectMechanicViewModel(application: Application) : AndroidViewModel(appli
         }
     }
 
-//    suspend private fun fetchAutoServiceListElements(autoServiceId: String): AutoServiceListElements? {
-//        try {
-//            val autoService = autoServiceRepo.getAutoService(autoServiceId)
-//            val vehicleId = autoService?.vehicleId
-//            val locationId = autoService?.locationId
-//            if (autoService == null || vehicleId == null || locationId == null) {
-//                return null
-//            }
-//            val mechanic = mechanicRepo.getMechanic(autoService.mechanicId)
-//            val vehicle = vehicleRepo.getVehicle(vehicleId)
-//            val location = locationRepo.getLocation(locationId)
-//            val mechanicUser = userRepo.getUser(mechanic?.userId ?: "")
-//            val serviceEntities = serviceEntityRepo.getServiceEntities(autoServiceId)
-//
-//            if (mechanic == null || vehicle == null || location == null || mechanicUser == null) {
-//                return null
-//            }
-//
-//            return AutoServiceListElements(
-//                autoService,
-//                mechanic,
-//                vehicle,
-//                location,
-//                mechanicUser,
-//                serviceEntities
-//            )
-//        } catch (e: Exception) {
-//            print(e)
-//            return null
-//        }
-//    }
-
 }

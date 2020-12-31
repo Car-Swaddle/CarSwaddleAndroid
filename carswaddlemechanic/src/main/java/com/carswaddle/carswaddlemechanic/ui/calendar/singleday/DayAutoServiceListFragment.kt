@@ -1,4 +1,4 @@
-package com.carswaddle.carswaddlemechanic.ui.calendar
+package com.carswaddle.carswaddlemechanic.ui.calendar.singleday
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,24 +8,14 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.carswaddle.carswaddlemechanic.R
 import java.util.*
 
-class DayAutoServiceListFragment : Fragment() {
+class DayAutoServiceListFragment(val date: Calendar) : Fragment() {
     
-    var date: Calendar? = null
-    set(newValue) {
-        field = newValue
-        if (newValue != null) {
-            viewAdapter.date = newValue
-        } 
-    }
-
     private lateinit var viewModel: DayAutoServiceListViewModel
     
     private lateinit var emptyStateLayout: LinearLayout
@@ -69,8 +59,10 @@ class DayAutoServiceListFragment : Fragment() {
             adapter = viewAdapter
         }
         
-        viewModel.date = Calendar.getInstance()
+        viewModel.date = date
+        viewAdapter.date = date
         
         return root
     }
+    
 }

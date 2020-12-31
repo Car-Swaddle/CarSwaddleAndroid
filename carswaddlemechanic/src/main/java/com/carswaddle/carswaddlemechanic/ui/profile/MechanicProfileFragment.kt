@@ -6,16 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.RecyclerView
 import com.carswaddle.carswaddlemechanic.R
-import com.carswaddle.carswaddlemechanic.ui.calendar.DayAutoServiceListViewModel
 import com.carswaddle.carswaddlemechanic.ui.login.AuthActivity
 import com.carswaddle.services.Authentication
-import kotlin.math.log
 
 class MechanicProfileFragment : Fragment() {
 

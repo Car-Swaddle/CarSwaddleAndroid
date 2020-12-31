@@ -9,7 +9,6 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.*
 import com.carswaddle.carswaddleandroid.Extensions.*
 import com.carswaddle.carswaddleandroid.R
@@ -25,7 +24,6 @@ import com.stripe.android.CustomerSession
 import java.text.DateFormatSymbols
 import java.util.*
 import java.util.Calendar.*
-import java.util.Calendar as KotlinCalendar
 
 
 class MechanicFragment() : Fragment() {

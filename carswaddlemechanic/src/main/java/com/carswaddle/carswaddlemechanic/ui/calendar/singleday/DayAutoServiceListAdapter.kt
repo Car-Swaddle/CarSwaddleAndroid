@@ -1,4 +1,4 @@
-package com.carswaddle.carswaddlemechanic.ui.calendar
+package com.carswaddle.carswaddlemechanic.ui.calendar.singleday
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -37,10 +37,12 @@ class DayAutoServiceListAdapter(private val services: LiveData<List<AutoServiceL
         val viewType = getItemViewType(position)
         if (holder is DayAutoServiceSectionViewHolder) {
             holder.date = date
+            holder.displayConnectingLine = services.value?.isEmpty() == false
         } else if (holder is DayAutoServiceViewHolder) {
             val s = services.value
             if (s != null) {
                 holder.configure(s[position-1], listener)
+                holder.isLastServiceOfDay = position == s.count()
             }
         }
     }
@@ -52,9 +54,9 @@ class DayAutoServiceListAdapter(private val services: LiveData<List<AutoServiceL
     override fun getItemCount(): Int {
         val s = services.value
         if (s == null) {
-            return 0
+            return 1
         }
-        return if (s.count() == 0) 0 else s.count() + 1
+        return s.count() + 1
     }
 
     companion object {

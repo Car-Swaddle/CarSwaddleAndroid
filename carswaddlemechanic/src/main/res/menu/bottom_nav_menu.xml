@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/navigation_day_autoservices"
+        android:id="@+id/navigation_calendar"
         android:icon="@drawable/ic_home_black_24dp"
         android:title="@string/day_autoservices_title" />
 

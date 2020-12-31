@@ -16,4 +16,5 @@
     <dimen name="tiny_text">10sp</dimen>
     <dimen name="corner_radius">8dp</dimen>
     <dimen name="min_width">294dp</dimen>
+    <dimen name="card_elevation">8dp</dimen>
 </resources>

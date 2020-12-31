@@ -1,4 +1,4 @@
-package com.carswaddle.carswaddlemechanic.ui.calendar
+package com.carswaddle.carswaddlemechanic.ui.calendar.singleday
 
 import android.app.Application
 import android.util.Log
@@ -9,6 +9,7 @@ import androidx.lifecycle.Observer
 import com.carswaddle.carswaddleandroid.data.autoservice.AutoServiceRepository
 import com.carswaddle.carswaddleandroid.data.location.AutoServiceLocationRepository
 import com.carswaddle.carswaddleandroid.data.mechanic.MechanicRepository
+import com.carswaddle.carswaddleandroid.data.oilChange.OilChange
 import com.carswaddle.carswaddleandroid.data.oilChange.OilChangeRepository
 import com.carswaddle.carswaddleandroid.data.serviceEntity.ServiceEntityRepository
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
@@ -21,7 +22,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import java.util.*
 import java.util.concurrent.TimeUnit
-import kotlin.math.exp
 
 
 val dayAutoServiceListCacheValidator: CacheValidator = CacheValidator(90)
@@ -38,11 +38,6 @@ class DayAutoServiceListViewModel(application: Application) : AndroidViewModel(a
     }
 
     private val _dayAutoServices = MutableLiveData<List<AutoServiceListElements>>()
-
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is dashboard Fragment"
-    }
-    val text: LiveData<String> = _text
 
     private val _showEmptyState = MutableLiveData<Boolean>().apply {
         value = false
@@ -101,7 +96,7 @@ class DayAutoServiceListViewModel(application: Application) : AndroidViewModel(a
         }
 
         val startDate = (date.clone() as Calendar)
-        startDate.add(Calendar.DATE, 1)
+//        startDate.set(Calendar.DATE, 0)
         startDate.set(Calendar.HOUR_OF_DAY, 0)
         startDate.set(Calendar.MINUTE, 0)
         startDate.set(Calendar.SECOND, 0)
@@ -184,6 +179,13 @@ class DayAutoServiceListViewModel(application: Application) : AndroidViewModel(a
             val mechanicUser = userRepo.getUser(mechanic?.userId ?: "")
             val serviceEntities = serviceEntityRepo.getServiceEntities(autoServiceId)
             val creator = userRepo.getUser(autoService.creatorId ?: "")
+            
+            var oilChange: OilChange? = null
+            
+            val oilChangeId = serviceEntities?.firstOrNull()?.oilChangeID
+            if (oilChangeId != null) {
+                oilChange = oilChangeRepo.getOilChange(oilChangeId)
+            }
 
             if (mechanic == null || vehicle == null || location == null || mechanicUser == null) {
                 return null
@@ -197,7 +199,8 @@ class DayAutoServiceListViewModel(application: Application) : AndroidViewModel(a
                 mechanicUser,
                 serviceEntities,
                 null,
-                creator
+                creator,
+                oilChange
             )
         } catch (e: Exception) {
             print(e)
