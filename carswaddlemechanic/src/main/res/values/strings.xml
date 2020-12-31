@@ -201,7 +201,7 @@
     <string name="login_failure">Car Swaddle wasn\'t able to find an account with that email and password. If you\'ve already sign up, try resetting your password</string>
     <string name="asset_statements" translatable="false">[{ \"include\": \"https://api.staging.carswaddle.com/.well-known/assetlinks.json\" }]</string>
     <string name="login">Login</string>
-    <string name="day_autoservices_title">Services</string>
+    <string name="day_autoservices_title">Calendar</string>
     <string name="mechanic_profile">Profile</string>
     <string name="today">Today</string>
 </resources>
