@@ -181,7 +181,7 @@ class SelectMechanicViewModel(application: Application) : AndroidViewModel(appli
             endDate.set(Calendar.SECOND, 0)
             endDate.set(Calendar.MILLISECOND, 0)
              
-            val filterAutoServiceStatus = listOf<AutoServiceStatus>(
+            val filterAutoServiceStatus = listOf(
                 AutoServiceStatus.scheduled,
                 AutoServiceStatus.inProgress,
                 AutoServiceStatus.completed

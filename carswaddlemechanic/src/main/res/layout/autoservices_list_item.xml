@@ -114,24 +114,24 @@
                 android:layout_marginTop="@dimen/content_margin"
                 android:orientation="vertical">
 
-                <com.carswaddle.carswaddlemechanic.ui.common.ImageLabel
+                <com.carswaddle.carswaddleandroid.ImageLabel
                     android:id="@+id/userImageLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
-                <com.carswaddle.carswaddlemechanic.ui.common.ImageLabel
+                <com.carswaddle.carswaddleandroid.ImageLabel
                     android:id="@+id/oilTypeImageLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/text_margin" />
 
-                <com.carswaddle.carswaddlemechanic.ui.common.ImageLabel
+                <com.carswaddle.carswaddleandroid.ImageLabel
                     android:id="@+id/addressImageLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/text_margin" />
 
-                <com.carswaddle.carswaddlemechanic.ui.common.ImageLabel
+                <com.carswaddle.carswaddleandroid.ImageLabel
                     android:id="@+id/vehicleImageLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

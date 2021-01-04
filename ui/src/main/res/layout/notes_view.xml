@@ -16,7 +16,7 @@
         android:layout_marginEnd="@dimen/content_margin"
         android:textSize="@dimen/subtitle"
         android:gravity="left"
-        android:text="@string/notes" />
+        android:text="@string/notes_hint"/>
 
     <EditText
         android:id="@+id/notesEditText"
@@ -28,7 +28,7 @@
         android:textSize="@dimen/text"
         android:inputType="textMultiLine"
         android:layout_alignParentBottom="true"
-        app:backgroundTint="@color/brand"
+        app:backgroundTint="#99000000"
         android:layout_below="@id/notesTitle"/>
 
 </RelativeLayout>

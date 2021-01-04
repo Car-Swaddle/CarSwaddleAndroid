@@ -1,4 +1,4 @@
-package com.carswaddle.carswaddleandroid.ui.common
+package com.carswaddle.ui
 
 import android.content.Context
 import androidx.recyclerview.widget.LinearLayoutManager

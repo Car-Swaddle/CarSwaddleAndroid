@@ -1,18 +1,11 @@
 package com.carswaddle.carswaddleandroid.ui.view
 
 import android.content.Context
-import android.content.res.TypedArray
-import android.graphics.BlendModeColorFilter
-import android.graphics.PorterDuff
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import android.widget.ProgressBar
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.BlendModeColorFilterCompat
-import androidx.core.graphics.BlendModeCompat
-import com.carswaddle.carswaddleandroid.R
-import com.carswaddle.carswaddleandroid.ui.activities.schedule.details.VehicleRecyclerViewAdapter
+import com.carswaddle.ui.R
 import com.google.android.material.button.MaterialButton
 
 
@@ -113,11 +106,3 @@ enum class ProgressButtonStyle(val value: Int) {
         fun fromInt(value: Int) = values().first { it.value == value }
     }
 }
-
-
-/*
-* <enum name="filledBrand" value="0" />
-            <enum name="filledAlternate" value="1" />
-            <enum name="borderless" value="2" />
-            <enum name="outline" value="3" />
-* */

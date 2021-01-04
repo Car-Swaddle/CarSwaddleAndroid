@@ -56,6 +56,7 @@ data class AutoService(
         c[Calendar.SECOND] = 0
         c[Calendar.MILLISECOND] = 0
         val passed = date - c.timeInMillis
+        
         return (passed / 1000).toInt()
     }
 

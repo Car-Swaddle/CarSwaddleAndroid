@@ -39,13 +39,13 @@
                     android:orientation="vertical"
                     android:layout_marginTop="@dimen/content_margin">
     
-                    <com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.ImageLabel
+                    <com.carswaddle.carswaddleandroid.ImageLabel
                         android:id="@+id/mechanicImageLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/content_margin" />
         
-                    <com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.ImageLabel
+                    <com.carswaddle.carswaddleandroid.ImageLabel
                         android:id="@+id/addressImageLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -53,7 +53,7 @@
                         android:layout_marginTop="@dimen/text_margin"
                         android:layout_marginBottom="@dimen/text_margin"/>
         
-                    <com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.ImageLabel
+                    <com.carswaddle.carswaddleandroid.ImageLabel
                         android:id="@+id/vehicleImageLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

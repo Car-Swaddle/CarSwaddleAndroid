@@ -124,7 +124,7 @@
 
                 </LinearLayout>
                 
-                <com.carswaddle.carswaddleandroid.ui.view.ProgressTextView
+                <com.carswaddle.ui.ProgressTextView
                     android:id="@+id/redeemTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

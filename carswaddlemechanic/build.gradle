@@ -92,7 +92,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
 
     implementation 'com.android.volley:volley:1.1.1'
-
+    
     implementation 'com.squareup.retrofit2:retrofit:2.8.1'
 
     implementation 'com.haibin:calendarview:3.6.9'
@@ -109,9 +109,11 @@ dependencies {
     implementation "androidx.room:room-ktx:$room_version"
     testImplementation "androidx.room:room-testing:$room_version"
 
+    implementation project(":ui")
     implementation project(':store')
     implementation project(':foundation')
     implementation project(":services")
+    
 
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.1'
 

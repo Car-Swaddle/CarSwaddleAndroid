@@ -164,13 +164,13 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-                <com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.ImageLabel
+                <com.carswaddle.carswaddleandroid.ImageLabel
                     android:id="@+id/vehicle_image_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/text_margin" />
 
-                <com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.ImageLabel
+                <com.carswaddle.carswaddleandroid.ImageLabel
                     android:id="@+id/oil_type_image_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
@@ -214,7 +214,7 @@
                     android:orientation="horizontal"
                     android:paddingBottom="16dp">
 
-                    <com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.ImageLabel
+                    <com.carswaddle.carswaddleandroid.ImageLabel
                         android:id="@+id/location_image_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -270,7 +270,7 @@
             android:layout_height="match_parent"
             android:layout_margin="16dp">
 
-            <com.carswaddle.carswaddleandroid.ui.activities.autoserviceDetails.NotesView
+            <com.carswaddle.ui.NotesView
                 android:id="@+id/notesView"
                 android:layout_height="196dp"
                 android:layout_weight="1" />

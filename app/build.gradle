@@ -101,7 +101,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.8.1'
     implementation 'com.haibin:calendarview:3.6.9'
     implementation 'com.stripe:stripe-android:16.1.0'
-
+    
     implementation platform('com.google.firebase:firebase-bom:26.1.0')
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-messaging-ktx'
@@ -115,6 +115,7 @@ dependencies {
     implementation project(':store')
     implementation project(':foundation')
     implementation project(":services")
+    implementation project(":ui")
     
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.1'
 

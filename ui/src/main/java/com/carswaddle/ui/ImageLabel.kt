@@ -1,4 +1,5 @@
-package com.carswaddle.carswaddleandroid.ui.activities.autoservicelist
+package com.carswaddle.carswaddleandroid
+
 
 import android.content.Context
 import android.util.AttributeSet
@@ -6,7 +7,8 @@ import android.view.LayoutInflater
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.carswaddle.carswaddleandroid.R
+
+import com.carswaddle.ui.R
 
 
 class ImageLabel @JvmOverloads constructor(
@@ -19,7 +21,7 @@ class ImageLabel @JvmOverloads constructor(
     private val image: ImageView
     private val textView: TextView
 
-    enum class ImageType { VEHICLE, LOCATION, OIL, PERSON }
+    enum class ImageType { VEHICLE, LOCATION, OIL, PERSON, TIME }
 
     var imageType: ImageType = ImageType.VEHICLE
         set(value) {
@@ -41,6 +43,8 @@ class ImageLabel @JvmOverloads constructor(
                 return R.drawable.ic_user_male
             ImageType.OIL ->
                 return R.drawable.engine_oil
+            ImageType.TIME ->
+                return R.drawable.ic_user_male
         }
     }
 
@@ -52,8 +56,8 @@ class ImageLabel @JvmOverloads constructor(
         LayoutInflater.from(context).inflate(R.layout.image_label, this, true)
         orientation = HORIZONTAL
 
-        image = findViewById<ImageView>(R.id.image_label_imageView)
-        textView = findViewById<TextView>(R.id.image_label_label)
+        image = findViewById(R.id.image_label_imageView)
+        textView = findViewById(R.id.image_label_label)
     }
 
 }

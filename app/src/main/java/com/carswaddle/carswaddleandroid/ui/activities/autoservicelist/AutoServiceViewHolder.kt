@@ -2,9 +2,8 @@ package com.carswaddle.carswaddleandroid.ui.activities.autoservicelist
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import com.carswaddle.carswaddleandroid.ImageLabel
 import com.carswaddle.carswaddleandroid.R
-import com.carswaddle.carswaddleandroid.ui.activities.autoserviceDetails.AutoServiceDetailsFragment
-import java.util.*
 
 
 class AutoServiceViewHolder (view: View) : RecyclerView.ViewHolder(view) {

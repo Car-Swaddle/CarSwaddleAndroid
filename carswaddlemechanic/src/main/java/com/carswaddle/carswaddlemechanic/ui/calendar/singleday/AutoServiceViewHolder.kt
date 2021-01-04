@@ -1,17 +1,16 @@
 package com.carswaddle.carswaddlemechanic.ui.calendar.singleday
 
 import android.content.res.ColorStateList
-import android.os.Build
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.carswaddle.carswaddleandroid.ImageLabel
 import com.carswaddle.carswaddleandroid.services.serviceModels.AutoServiceStatus
 import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServiceListElements
 import com.carswaddle.carswaddlemechanic.R
 import com.carswaddle.carswaddlemechanic.application.CarSwaddleMechanicApp.Companion.applicationContext
-import com.carswaddle.carswaddlemechanic.ui.common.ImageLabel
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatterBuilder

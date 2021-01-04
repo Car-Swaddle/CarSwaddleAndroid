@@ -1,4 +1,4 @@
-package com.carswaddle.carswaddleandroid.ui.activities.autoserviceDetails
+package com.carswaddle.ui
 
 import android.content.Context
 import android.text.Editable
@@ -7,8 +7,6 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.EditText
 import android.widget.LinearLayout
-import com.carswaddle.carswaddleandroid.R
-import org.w3c.dom.Text
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.concurrent.schedule
