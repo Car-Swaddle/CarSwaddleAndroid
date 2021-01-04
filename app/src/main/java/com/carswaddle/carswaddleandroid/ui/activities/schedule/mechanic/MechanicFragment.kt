@@ -120,7 +120,7 @@ class MechanicFragment() : Fragment() {
                             activity?.runOnUiThread {
                                 // If error or changed during fetch, don't update
                                 if (e == null && mechanicId == mechanicViewAdapter.selectedMechanicId) {
-                                    updateTimeSlotsToTomorrow()
+                                    updateTimeSlotsToSelectedDate()
                                 }
                             }
                         }
@@ -208,7 +208,7 @@ class MechanicFragment() : Fragment() {
                     mechanicViewModel.loadTimeSlots(firstMechanicId) { e ->
                         activity?.runOnUiThread {
                             if (e == null) {
-                                updateTimeSlotsToTomorrow()
+                                updateTimeSlotsToSelectedDate()
                             }
                         }
                     }
@@ -230,9 +230,14 @@ class MechanicFragment() : Fragment() {
         CustomerSession.initCustomerSession(c, StripeKeyProvider(c))
     }
 
-    private fun updateTimeSlotsToTomorrow() {
-        val calendar = getInstance()
-        calendar.add(DAY_OF_YEAR, 1)
+    private fun updateTimeSlotsToSelectedDate() {
+        var calendar: java.util.Calendar = getInstance()
+        val s = calendarView.selectedCalendar.toJavaCalendar()
+        if (s == null) {
+            calendar.add(DAY_OF_YEAR, 1)
+        } else {
+            calendar = s
+        }
         updateTimeSlots(calendar)
     }
 
