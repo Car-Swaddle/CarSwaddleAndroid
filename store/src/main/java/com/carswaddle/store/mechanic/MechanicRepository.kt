@@ -2,6 +2,7 @@ package com.carswaddle.carswaddleandroid.data.mechanic
 
 import android.content.Context
 import android.util.Log
+import com.carswaddle.carswaddleandroid.Extensions.carSwaddlePreferences
 import com.carswaddle.carswaddleandroid.data.user.User
 import com.carswaddle.carswaddleandroid.retrofit.ServiceGenerator
 import com.carswaddle.carswaddleandroid.retrofit.ServiceNotAvailable
@@ -18,6 +19,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.lang.Exception
+
+private val currentMechanicIdKey: String = "com.carswaddle.carswaddleandroid.user.currentMechanicId"
 
 class MechanicRepository(private val mechanicDao: MechanicDao) {
 
@@ -214,6 +217,21 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
         }
     }
 
+    fun getCurrentMechanic(context: Context): com.carswaddle.carswaddleandroid.data.mechanic.Mechanic? {
+        val mechanicId = getCurrentMechanicId(context) ?: return null
+        return mechanicDao.getMechanic(mechanicId)
+    }
+    
+    fun getCurrentMechanicId(context: Context): String? {
+        val preferences = context.carSwaddlePreferences()
+        return preferences.getString(currentMechanicIdKey, null)
+    }
+
+    fun setCurrentMechanicId(userId: String, context: Context) {
+        val editContext = context.carSwaddlePreferences().edit()
+        editContext.putString(currentMechanicIdKey, userId)
+        editContext.apply()
+    }
 
 }
 

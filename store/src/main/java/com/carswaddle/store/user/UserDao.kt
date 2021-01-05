@@ -2,6 +2,7 @@ package com.carswaddle.carswaddleandroid.data.user
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.carswaddle.carswaddleandroid.data.mechanic.Mechanic
 
 
 @Dao
@@ -17,6 +18,9 @@ interface UserDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertUser(user: User)
+    
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertMechanic(mechanic: Mechanic)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertUsers(vararg users: User)

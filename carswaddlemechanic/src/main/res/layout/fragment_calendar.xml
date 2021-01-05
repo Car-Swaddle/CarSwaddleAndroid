@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/content">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/calendarCardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="@dimen/card_elevation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/month_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/content"
+                android:text="August 2020"
+                android:layout_marginTop="@dimen/content_margin"
+                android:textAlignment="center"
+                android:textColor="@color/text2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.haibin.calendarview.CalendarLayout
+                android:id="@+id/calendar_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/content"
+                android:orientation="vertical"
+                app:default_status="shrink"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/month_text_view">
+
+                <com.haibin.calendarview.CalendarView
+                    android:id="@+id/calendar_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/content"
+                    app:calendar_height="46dp"
+                    app:calendar_padding="10dp"
+                    app:current_month_lunar_text_color="@color/textAlpha"
+                    app:current_month_text_color="@color/text"
+                    app:min_year="2004"
+                    app:month_view="com.carswaddle.carswaddlemechanic.ui.calendar.calendarfragment.SimpleMonthView"
+                    app:other_month_text_color="@color/textAlpha"
+                    app:scheme_text_color="@color/textAlpha"
+                    app:scheme_theme_color="@color/textAlpha"
+                    app:selected_text_color="@color/selectionContrast"
+                    app:selected_theme_color="@color/selection"
+                    app:week_background="@color/content3"
+                    app:week_text_color="@color/text2"
+                    app:week_view="com.carswaddle.carswaddlemechanic.ui.calendar.calendarfragment.SimpleWeekView"
+                    app:year_view_day_text_color="@color/textAlpha"
+                    app:year_view_day_text_size="9sp"
+                    app:year_view_month_text_color="@color/brand2"
+                    app:year_view_month_text_size="20sp"
+                    app:year_view_scheme_color="#f17706" />
+
+            </com.haibin.calendarview.CalendarLayout>
+            
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/calendarViewPager"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/calendarCardView" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,11 +1,102 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight">
+        <item name="android:fontFamily">@font/montserrat</item>
+        <item name="colorPrimary">@color/brand</item>
+        <item name="colorPrimaryDark">@color/brandVivid</item>
+        <item name="colorAccent">@color/brand2</item>
+        <item name="colorSurface">@color/content</item>
+        <item name="android:colorBackground">@color/background</item>
+        <item name="otpViewStyle">@style/OtpWidget.OtpView</item>
+        <item name="colorError">@color/error</item>
+        <item name="android:textCursorDrawable">@drawable/cursor_color</item>
+        <item name="editTextStyle">@style/CarSwaddle.EditText</item>
+        <item name="android:textColorPrimary">@color/text</item>
+        <item name="android:textColorSecondary">@color/text2</item>
+        <item name="android:windowBackground">@color/background</item>
+        <item name="actionBarTheme">@style/CarSwaddle.ActionBarTheme</item>
+        <item name="ratingBarStyle">@style/CarSwaddle.RatingBar</item>
+        <item name="android:ratingBarStyle">@style/CarSwaddle.RatingBar</item>
+    </style>
+
+    <style name="CarSwaddle.ConfirmButton" parent="@style/Widget.MaterialComponents.Button">
+        <item name="android:fontFamily">@font/montserrat_bold</item>
+        <item name="android:textSize">@dimen/title</item>
+        <item name="backgroundTint">@color/brand_background_color</item>
+        <item name="android:textColor">@color/brandContrast</item>
+        <item name="android:paddingTop">@dimen/content_margin</item>
+        <item name="android:paddingBottom">@dimen/content_margin</item>
+        <item name="android:layout_width">@dimen/min_width</item>
+        <item name="minWidth">@dimen/min_width</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="textAllCaps">false</item>
+        <item name="shapeAppearanceOverlay">@style/Round</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColorPrimaryDisableOnly">@color/brandContrastAlpha</item>
+    </style>
+    
+    <style name="Round">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">264dp</item>
+    </style>
+
+    <style name="CarSwaddle.AuthButton.Filled" parent="@style/CarSwaddle.ConfirmButton">
+        <item name="backgroundTint">@color/white_filled_color</item>
+        <item name="android:textColor">@color/red_text_color</item>
+    </style>
+
+    <style name="CarSwaddleOutlineButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="cornerFamily">rounded</item>
+        <item name="android:fontFamily">@font/montserrat_bold</item>
+        <item name="android:textSize">@dimen/title</item>
+        <item name="android:textColor">@color/outline_button_foreground_color</item>
+        <item name="android:paddingTop">@dimen/content_margin</item>
+        <item name="backgroundTint">@color/clear</item>
+        <item name="android:paddingBottom">@dimen/content_margin</item>
+        <item name="android:layout_width">@dimen/min_width</item>
+        <item name="minWidth">@dimen/min_width</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="textAllCaps">false</item>
+        <item name="shapeAppearanceOverlay">@style/Round</item>
+        <item name="android:textStyle">bold</item>
+        <item name="rippleColor">@color/brandAuxiliaryContrastAlpha</item>>
+        <item name="strokeColor">@color/outline_button_foreground_color</item>
+        <item name="strokeWidth">2dp</item>
+    </style>
+
+    <style name="CarSwaddle.ActionBarStyle" parent="Widget.AppCompat.ActionBar">
+        <item name="titleTextStyle">@style/CarSwaddle.ActionBar.TitleTextStyle</item>
+        <item name="background">@color/brandAuxiliary</item>
+        <item name="android:textColorPrimary">#00FF28</item>
+    </style>
+
+    <style name="CarSwaddle.ActionBar.TitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">#26927F</item>
+        <item name="android:textColorPrimary">#00FF28</item>
+    </style>
+
+
+    <style name="CarSwaddle.ActionBarTheme" parent="@style/ThemeOverlay.MaterialComponents.ActionBar">
+        <item name="android:textColorPrimary">@color/brandAuxiliaryContrast</item> // For title text color
+        <item name="colorPrimary">@color/brandAuxiliary</item> // For toolbar background
+        <item name="popupTheme">@style/ActionBarPopupTheme</item>
+    </style>
+
+    <style name="ActionBarPopupTheme">
+        <item name="android:textColor">@color/text</item> // For option menu text color
+    </style>
+    
+
+    <style name="CarSwaddle.EditText" parent="@android:style/Widget.EditText">
+        <item name="android:backgroundTint">@color/text2</item>
+        <item name="android:textColor">@color/text</item>
+        <item name="android:textSize">@dimen/text</item>
+    </style>
+
+    <style name="CarSwaddle.RatingBar" parent="Widget.AppCompat.RatingBar.Small">
+        <item name="colorControlNormal">@color/rating</item>
+        <item name="colorControlActivated">@color/neutral6</item>
     </style>
 
 </resources>

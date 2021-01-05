@@ -1,3 +1,4 @@
+include ':ui'
 include ':foundation'
 include ':services'
 include ':store'

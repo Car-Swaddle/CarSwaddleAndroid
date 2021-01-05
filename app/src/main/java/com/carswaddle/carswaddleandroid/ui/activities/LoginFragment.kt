@@ -117,7 +117,7 @@ class LoginFragment : Fragment() {
         statusTextView.visibility = View.GONE
         
         val auth = Authentication(requireContext())
-        userRepo.login(emailEditText.text.toString(), passwordEditText.text.toString(), requireContext()) { throwable, authResponse ->
+        userRepo.login(emailEditText.text.toString(), passwordEditText.text.toString(), false, requireContext()) { throwable, authResponse ->
             requireActivity().runOnUiThread { loginButton.isLoading = false }
             if (throwable == null && auth.isUserLoggedIn()) {
                 val user = userRepo.getCurrentUser(applicationContext)

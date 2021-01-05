@@ -1,0 +1,91 @@
+{
+  "project_info": {
+    "project_number": "1089255662484",
+    "firebase_url": "https://car-swaddle-56a01.firebaseio.com",
+    "project_id": "car-swaddle-56a01",
+    "storage_bucket": "car-swaddle-56a01.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1089255662484:android:d661579d5fe4ab9d196581",
+        "android_client_info": {
+          "package_name": "com.carswaddle.carswaddleandroid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1089255662484-oic5ijk5o48ntksvddmgoft3cnmao6eg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRUPDddXCos9K90EVH8b4n62EXh_oRc98"
+        },
+        {
+          "current_key": "AIzaSyDwUJ53kNcQThJjY1PUucHznzaU7_LFh_Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1089255662484-oic5ijk5o48ntksvddmgoft3cnmao6eg.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1089255662484-du5dbld08hpittdtarcqovv1nrpehbcv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.carswaddle.carswaddle",
+                "app_store_id": "1462564436"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1089255662484:android:28a09800cf0e31b2196581",
+        "android_client_info": {
+          "package_name": "com.carswaddle.carswaddlemechanic"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1089255662484-oic5ijk5o48ntksvddmgoft3cnmao6eg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRUPDddXCos9K90EVH8b4n62EXh_oRc98"
+        },
+        {
+          "current_key": "AIzaSyDwUJ53kNcQThJjY1PUucHznzaU7_LFh_Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1089255662484-oic5ijk5o48ntksvddmgoft3cnmao6eg.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1089255662484-du5dbld08hpittdtarcqovv1nrpehbcv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.carswaddle.carswaddle",
+                "app_store_id": "1462564436"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -9,7 +9,6 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.*
 import com.carswaddle.carswaddleandroid.Extensions.*
 import com.carswaddle.carswaddleandroid.R
@@ -25,7 +24,6 @@ import com.stripe.android.CustomerSession
 import java.text.DateFormatSymbols
 import java.util.*
 import java.util.Calendar.*
-import java.util.Calendar as KotlinCalendar
 
 
 class MechanicFragment() : Fragment() {
@@ -193,8 +191,7 @@ class MechanicFragment() : Fragment() {
         })
         
         mechanicViewModel.mechanics.observe(
-            viewLifecycleOwner,
-            Observer<List<MechanicListElements>> { mechanicElements ->
+            viewLifecycleOwner, { mechanicElements ->
                 this.mechanicViewAdapter.mechanicElements = mechanicElements
                 val firstMechanicId = mechanicElements.safeFirst()?.mechanic?.id
                 activity?.runOnUiThread {
@@ -229,12 +226,11 @@ class MechanicFragment() : Fragment() {
         }
         CustomerSession.initCustomerSession(c, StripeKeyProvider(c))
     }
-
     private fun updateTimeSlotsToSelectedDate() {
         var calendar: java.util.Calendar = getInstance()
         val s = calendarView.selectedCalendar.toJavaCalendar()
         if (s == null) {
-            calendar.add(DAY_OF_YEAR, 1)
+            calendar.add(DAY_OF_YEAR, 1) 
         } else {
             calendar = s
         }

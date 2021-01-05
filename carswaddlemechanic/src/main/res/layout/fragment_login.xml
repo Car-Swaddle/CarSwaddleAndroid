@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/login"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true">
+
+    <ImageView
+        android:id="@+id/car_swaddle_text"
+        android:layout_width="200dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="@dimen/content_gap"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/car_swaddle_white_one_line" />
+
+    <TextView
+        android:id="@+id/status_text_view"
+        android:layout_width="@dimen/min_width"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/content_gap"
+        android:textColor="@color/error"
+        android:textSize="@dimen/subtitle"
+        android:textAlignment="center"
+        android:padding="3dp"
+        android:text="@string/login_failure"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/car_swaddle_text"
+        android:background="@drawable/round_2_5" />
+
+    <EditText
+        android:id="@+id/emailEditText"
+        android:layout_width="wrap_content"
+        android:minWidth="@dimen/min_width"
+        android:layout_height="wrap_content"
+        android:textColor="@color/neutral8"
+        android:textColorHint="@color/neutral8"
+        android:backgroundTint="@color/neutral8"
+        android:layout_marginHorizontal="16dp"
+        android:textCursorDrawable="@drawable/cursor_color_white"
+        android:gravity="center_horizontal"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="96dp"
+        android:hint="@string/email_hint"
+        android:inputType="textEmailAddress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/status_text_view"
+        android:autofillHints="AUTOFILL_HINT_EMAIL_ADDRESS" />
+
+    <EditText
+        android:id="@+id/password_edit_text"
+        android:layout_width="wrap_content"
+        android:minWidth="@dimen/min_width"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_centerInParent="true"
+        android:textCursorDrawable="@drawable/cursor_color_white"
+        android:textColor="@color/neutral7"
+        android:textColorHint="@color/neutral7"
+        android:backgroundTint="@color/neutral7"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="32dp"
+        android:autofillHints="AUTOFILL_HINT_PASSWORD"
+        android:hint="@string/password_hint"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/emailEditText" />
+
+    <com.carswaddle.carswaddlemechanic.ui.common.ProgressButton
+        android:id="@+id/sendResetButton"
+        android:text="@string/login"
+        app:displayText="@string/login"
+        android:layout_margin="@dimen/content_margin"
+        app:progressButtonStyle="filledAlternate"
+        style="@style/CarSwaddle.AuthButton.Filled"
+        app:layout_constraintEnd_toEndOf="@+id/password_edit_text"
+        app:layout_constraintStart_toStartOf="@+id/password_edit_text"
+        app:layout_constraintTop_toBottomOf="@+id/password_edit_text" />
+
+    <com.carswaddle.carswaddlemechanic.ui.common.ProgressButton
+        android:id="@+id/forgotPasswordButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:progressButtonStyle="borderless"
+        android:text="@string/forgot_password"
+        app:displayText="@string/forgot_password"
+        app:progressButtonForegroundColor="@color/brandAuxiliaryContrast"
+        app:progressButtonTextColor="@color/brandAuxiliaryContrast"
+        app:layout_constraintEnd_toEndOf="@+id/password_edit_text"
+        app:layout_constraintStart_toStartOf="@+id/password_edit_text"
+        app:layout_constraintTop_toBottomOf="@+id/sendResetButton" />
+    
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -40,6 +40,10 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
         return autoServiceDao.getAutoService(autoServiceId)
     }
 
+    suspend fun getAutoService(startDate: Calendar, endDate: Calendar, mechanicId: String): List<DataAutoService> {
+        return autoServiceDao.getAutoServices(startDate, endDate, mechanicId)
+    }
+
     fun createAndPayForAutoService(
         createAutoService: CreateAutoService,
         context: Context,
@@ -389,7 +393,13 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
         autoServiceDao.insertLocation(location)
         val vehicle = Vehicle(autoService.vehicle)
         autoServiceDao.insertVehicle(vehicle)
-
+        
+        val u = autoService.user
+        if (u != null) {
+            val user = User(u)
+            autoServiceDao.insertUser(user)
+        }
+        
         val review = autoService.reviewFromUser
         if (review != null) {
             val review = Review(review)

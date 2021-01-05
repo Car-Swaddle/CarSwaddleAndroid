@@ -24,8 +24,6 @@ import com.carswaddle.carswaddleandroid.CarSwaddleApp.CarSwaddleApp
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
 import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServiceListAdapter
-import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServiceListElements
-import com.carswaddle.carswaddleandroid.ui.activities.autoserviceDetails.AutoServiceDetailsFragmentArgs
 import com.carswaddle.carswaddleandroid.ui.activities.schedule.MapsActivity
 
 

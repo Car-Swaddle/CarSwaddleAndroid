@@ -46,8 +46,7 @@ class ProfileFragment() : Fragment() {
         })
 
         nameValueTextView.setOnClickListener {
-            val action = ProfileFragmentDirections.actionNavigationProfileToNavigationEditName()
-            findNavController().navigate(action)
+            findNavController().navigate(R.id.action_navigation_profile_to_navigation_edit_name)
 //            val details = AutoServiceDetailsFragment(it.autoService.id)
 //            val manager = childFragmentManager
 //            if (manager != null) {
@@ -70,8 +69,7 @@ class ProfileFragment() : Fragment() {
 //                transaction.commit()
 //            }
 
-            val action = ProfileFragmentDirections.actionNavigationProfileToEditPhoneNumberFragment()
-            findNavController().navigate(action)
+            findNavController().navigate(R.id.action_navigation_profile_to_editPhoneNumberFragment)
         }
 
         setHasOptionsMenu(true)
