@@ -8,11 +8,13 @@ import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.content.res.Resources
+import android.graphics.drawable.Drawable
 import android.icu.text.MeasureFormat
 import android.icu.util.Measure
 import android.icu.util.MeasureUnit
 import android.location.Location
 import android.net.Uri
+import android.opengl.Visibility
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -21,16 +23,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.TableRow
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.carswaddle.carswaddleandroid.ImageLabel
+import com.carswaddle.carswaddleandroid.services.serviceModels.AutoService
 import com.carswaddle.carswaddleandroid.services.serviceModels.AutoServiceStatus
 import com.carswaddle.carswaddleandroid.services.serviceModels.CreateReview
+import com.carswaddle.carswaddleandroid.ui.view.ProgressButton
 import com.carswaddle.carswaddlemechanic.R
+import com.carswaddle.carswaddlemechanic.application.CarSwaddleMechanicApp
 import com.carswaddle.carswaddlemechanic.extensions.updateMapStyle
+import com.carswaddle.carswaddlemechanic.ui.common.AutoserviceStatusView
 import com.carswaddle.carswaddlemechanic.utils.PermissionUtils
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -63,7 +70,12 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
     private lateinit var phoneImageView: ImageView
     private lateinit var timeImageLabel: ImageLabel
     private lateinit var statusBannerView: TextView
-
+    private lateinit var changeStatusButton: ProgressButton
+    private lateinit var cancelTableRow: TableRow
+    private lateinit var statusBannerBackgroundView: View
+    
+    private lateinit var statusView: AutoserviceStatusView
+    
     private lateinit var autoServiceId: String
 
     private lateinit var cancelAutoServiceButton: Button
@@ -95,7 +107,7 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
         activity?.let {
             fusedLocationClient = LocationServices.getFusedLocationProviderClient(it)
         }
-        
+
         mechanicNameTextView = root.findViewById(R.id.mechanic_name_text_view)
         vehicleImageLabel = root.findViewById(R.id.vehicle_image_label)
         oilTypeImageLabel = root.findViewById(R.id.oil_type_image_label)
@@ -108,16 +120,20 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
         cancelAutoServiceButton = root.findViewById(R.id.cancelAutoService)
         timeImageLabel = root.findViewById(R.id.time_image_label)
         statusBannerView = root.findViewById(R.id.statusBannerView)
+        statusBannerBackgroundView = root.findViewById(R.id.statusBannerBackgroundView)
+        changeStatusButton = root.findViewById(R.id.changeStatusButton)
+        cancelTableRow = root.findViewById(R.id.cancelTableRow)
+        statusView = root.findViewById(R.id.statusView)
 
         vehicleImageLabel.text = "--"
         oilTypeImageLabel.text = "--"
         timeImageLabel.text = "--"
         streetAddressImageLabel.text = "--"
         mechanicNameTextView.text = "--"
-        statusBannerView.backgroundTintList = ColorStateList.valueOf(defaultStatusColor())
-        
+//        statusBannerView.backgroundTintList = ColorStateList.valueOf(defaultStatusColor())
+
         notesView.notesDidChange = {
-            autoServiceDetailsViewModel.updateNotes(it ?: "") { error, autoServiceId ->
+            autoServiceDetailsViewModel.updateNotes(it ?: "", requireContext()) { error, autoServiceId ->
                 Log.w("car swaddle android", "returned")
             }
         }
@@ -147,13 +163,13 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
         oilTypeImageLabel.imageType = ImageLabel.ImageType.OIL
         timeImageLabel.imageType = ImageLabel.ImageType.TIME
 
+
 //        locationMapView.onCreate(savedInstanceState)
 
 //        locationMapView.getMapAsync(this)
 
-        autoServiceDetailsViewModel = ViewModelProviders.of(requireActivity()).get(
-            AutoServiceDetailsViewModel::class.java
-        )
+        autoServiceDetailsViewModel =
+            ViewModelProvider(requireActivity()).get(AutoServiceDetailsViewModel::class.java)
 
         autoServiceDetailsViewModel.autoServiceId = autoServiceId
 
@@ -165,9 +181,11 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
 //                dateDisplay.configure(date)
                 // TODO("Configure Date")
             }
-            mechanicNameTextView.text = autoService.mechanicUser.displayName()
+            mechanicNameTextView.text = autoService.user?.displayName()
             statusBannerView.text = autoService.autoService.status?.localizedString()
-            
+
+            configureUpdateStatusButton(autoService.autoService.status ?: AutoServiceStatus.scheduled)
+
             val d = autoService.autoService.scheduledDate
             if (d != null) {
                 val localDateTime = LocalDateTime.ofInstant(d.toInstant(), d.timeZone.toZoneId())
@@ -176,12 +194,15 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
 
             val status = autoService.autoService.status
             if (status != null) {
-                statusBannerView.backgroundTintList =
-                    ColorStateList.valueOf(statusColor(status))
+                statusView.autoServiceStatus = status
+                statusBannerBackgroundView.background = statusBackground(status)
+                
                 if (status == AutoServiceStatus.scheduled) {
                     cancelAutoServiceButton.visibility = View.VISIBLE
+                    cancelTableRow.visibility = View.VISIBLE
                 } else {
                     cancelAutoServiceButton.visibility = View.GONE
+                    cancelTableRow.visibility = View.GONE
                 }
             }
 
@@ -217,12 +238,31 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
             dialogBuilder.setMessage(message)
                 .setCancelable(false)
                 .setNegativeButton(getString(R.string.cancel_auto_service), { dialog, id ->
-                    autoServiceDetailsViewModel.cancelAutoService { error, autoServiceId -> }
+                    autoServiceDetailsViewModel.cancelAutoService(requireContext()) { error, autoServiceId -> }
                 })
                 .setNeutralButton(getString(R.string.dismiss)) { dialog, id -> }
             val alert = dialogBuilder.create()
             alert.setTitle(title)
             alert.show()
+        }
+        
+        changeStatusButton.button.setOnClickListener { 
+            val s = autoServiceDetailsViewModel.autoServiceElement.value?.autoService?.status
+            if (s == null) {
+                return@setOnClickListener
+            }
+            
+            val nextStatus = changeToStatusForStatus(s)
+            if (nextStatus == null) {
+                return@setOnClickListener
+            }
+            changeStatusButton.isLoading = true
+            autoServiceDetailsViewModel.setAutoServiceStatus(nextStatus, requireContext()) { error, autoServiceId ->
+                changeStatusButton.isLoading = false
+                if (error != null) {
+                    // TODO("Show error message")
+                }
+            }
         }
 
         return root
@@ -314,6 +354,16 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
         }
     }
 
+    private fun statusBackground(status: AutoServiceStatus): Drawable {
+        val drawableResource = when (status) {
+            AutoServiceStatus.scheduled -> R.drawable.right_round_scheduled
+            AutoServiceStatus.canceled -> R.drawable.right_round_canceled
+            AutoServiceStatus.inProgress -> R.drawable.right_round_in_progress
+            AutoServiceStatus.completed -> R.drawable.right_round_complete
+        }
+        return resources.getDrawable(drawableResource, null)
+    }
+
     private fun defaultStatusColor(): Int {
         val t = context?.theme ?: return 0
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -393,11 +443,53 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
 //        locationMapView.onLowMemory()
 //    }
 
+    private fun configureUpdateStatusButton(status: AutoServiceStatus) {
+        changeStatusButton.displayText = buttonStatusTitle(status) ?: ""
+        changeStatusButton.visibility = changeStatusButtonVisibility(status)
+    }
+
+    private fun statusColorStateList(status: AutoServiceStatus): ColorStateList? {
+        val colorId = when (status) {
+            AutoServiceStatus.scheduled -> R.color.statusColorScheduled
+            AutoServiceStatus.canceled -> R.color.statusColorCanceled
+            AutoServiceStatus.inProgress -> R.color.statusColorInProgress
+            AutoServiceStatus.completed -> R.color.statusColorCompleted
+        }
+        return ContextCompat.getColorStateList(CarSwaddleMechanicApp.applicationContext, colorId)
+    }
+
+    private fun buttonStatusTitle(status: AutoServiceStatus): String? {
+        return when (status) {
+            AutoServiceStatus.scheduled -> "Start Service"
+            AutoServiceStatus.inProgress -> "Complete Service"
+            AutoServiceStatus.canceled -> null
+            AutoServiceStatus.completed -> null
+        }
+    }
+
+    private fun changeToStatusForStatus(status: AutoServiceStatus): AutoServiceStatus? {
+        return when (status) {
+            AutoServiceStatus.scheduled -> AutoServiceStatus.inProgress
+            AutoServiceStatus.inProgress -> AutoServiceStatus.completed
+            AutoServiceStatus.canceled -> null
+            AutoServiceStatus.completed -> null
+        }
+    }
+
+    private fun changeStatusButtonVisibility(status: AutoServiceStatus): Int {
+        return when (status) {
+            AutoServiceStatus.scheduled -> View.VISIBLE
+            AutoServiceStatus.inProgress -> View.VISIBLE
+            AutoServiceStatus.canceled -> View.GONE
+            AutoServiceStatus.completed -> View.GONE
+        }
+    }
+
     companion object {
         private val timeFormatter: DateTimeFormatter = DateTimeFormatterBuilder()
             .appendPattern("h:mm ")
             .appendText(ChronoField.AMPM_OF_DAY, mapOf(0L to "am", 1L to "pm"))
-            .appendPattern(" M/d/yyyy")
+            .appendPattern(" - MMM d, yyyy")
             .toFormatter(Locale.US)
     }
 

@@ -24,54 +24,18 @@
         android:layout_marginStart="@dimen/content_gap"
         android:background="@color/contentDivider"
         app:layout_constrainedWidth="false"
-        app:layout_constraintBottom_toBottomOf="@id/statusContainerView"
+        app:layout_constraintBottom_toBottomOf="@id/statusView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/statusContainerView"
+    <com.carswaddle.carswaddlemechanic.ui.common.AutoserviceStatusView
+        android:id="@+id/statusView"
         android:layout_width="33dp"
         android:layout_height="33dp"
         android:layout_margin="@dimen/content_margin"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <View
-            android:id="@+id/statusBackgroundView"
-            android:layout_width="33dp"
-            android:layout_height="33dp"
-            android:background="@drawable/round_24"
-            android:backgroundTint="@color/statusColorScheduled"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/statusImageView"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/ic_calendar_filled"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/brandContrast" />
-
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/lottieAnimationView"
-            android:layout_width="33dp"
-            android:layout_height="33dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:lottie_autoPlay="true"
-            app:lottie_fileName="in-progress.json"
-            app:lottie_loop="true" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
+        app:layout_constraintTop_toTopOf="parent"/>
+    
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -81,7 +45,7 @@
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/statusContainerView"
+        app:layout_constraintStart_toEndOf="@id/statusView"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView

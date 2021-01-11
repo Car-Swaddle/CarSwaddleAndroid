@@ -11,6 +11,7 @@ import com.carswaddle.carswaddleandroid.services.serviceModels.AutoServiceStatus
 import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServiceListElements
 import com.carswaddle.carswaddlemechanic.R
 import com.carswaddle.carswaddlemechanic.application.CarSwaddleMechanicApp.Companion.applicationContext
+import com.carswaddle.carswaddlemechanic.ui.common.AutoserviceStatusView
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatterBuilder
@@ -28,7 +29,7 @@ class DayAutoServiceViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val timeTextView: TextView
     private val connectingViewFull: View
     private val connectingViewMid: View
-    private val statusBackgroundView: View
+    private val statusView: AutoserviceStatusView
     private val lottieAnimationView: View
 
     val context = view.context // Use itemView.context
@@ -66,21 +67,9 @@ class DayAutoServiceViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         itemView.setOnClickListener {
             listener(autoServiceElements)
         }
-
-        statusBackgroundView.backgroundTintList = statusColorStateList(autoServiceElements.autoService.status ?: AutoServiceStatus.scheduled)
         
-        val status = autoServiceElements.autoService.status
-        if (status == AutoServiceStatus.inProgress) {
-            statusImageView.visibility = View.GONE
-            lottieAnimationView.visibility = View.VISIBLE
-        } else {
-            statusImageView.visibility = View.VISIBLE
-            lottieAnimationView.visibility = View.GONE
-            val r = statusImage(status ?: AutoServiceStatus.scheduled)
-            if (r != null) {
-                statusImageView.setImageResource(r)
-            }
-        }
+        val status = autoServiceElements.autoService.status ?: AutoServiceStatus.scheduled
+        statusView.autoServiceStatus = status
         
         if (scheduledDate != null) {
             val localDateTime = LocalDateTime.ofInstant(scheduledDate.toInstant(), scheduledDate.timeZone.toZoneId())
@@ -88,24 +77,24 @@ class DayAutoServiceViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         }
     }
 
-    private fun statusColorStateList(status: AutoServiceStatus): ColorStateList? {
-        val colorId = when (status) {
-            AutoServiceStatus.scheduled -> R.color.statusColorScheduled
-            AutoServiceStatus.canceled -> R.color.statusColorCanceled
-            AutoServiceStatus.inProgress -> R.color.statusColorInProgress
-            AutoServiceStatus.completed -> R.color.statusColorCompleted
-        }
-        return ContextCompat.getColorStateList(applicationContext, colorId)
-    }
-
-    private fun statusImage(status: AutoServiceStatus): Int? {
-        return when (status) {
-            AutoServiceStatus.scheduled -> R.drawable.ic_calendar_filled
-            AutoServiceStatus.canceled -> R.drawable.ic_x
-            AutoServiceStatus.inProgress -> null
-            AutoServiceStatus.completed -> R.drawable.ic_checkmark
-        }
-    }
+//    private fun statusColorStateList(status: AutoServiceStatus): ColorStateList? {
+//        val colorId = when (status) {
+//            AutoServiceStatus.scheduled -> R.color.statusColorScheduled
+//            AutoServiceStatus.canceled -> R.color.statusColorCanceled
+//            AutoServiceStatus.inProgress -> R.color.statusColorInProgress
+//            AutoServiceStatus.completed -> R.color.statusColorCompleted
+//        }
+//        return ContextCompat.getColorStateList(applicationContext, colorId)
+//    }
+//
+//    private fun statusImage(status: AutoServiceStatus): Int? {
+//        return when (status) {
+//            AutoServiceStatus.scheduled -> R.drawable.ic_calendar_filled
+//            AutoServiceStatus.canceled -> R.drawable.ic_x
+//            AutoServiceStatus.inProgress -> null
+//            AutoServiceStatus.completed -> R.drawable.ic_checkmark
+//        }
+//    }
 
     init {
         val oil: ImageLabel = view.findViewById(R.id.oilTypeImageLabel)
@@ -128,7 +117,7 @@ class DayAutoServiceViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         timeTextView = view.findViewById(R.id.timeTextView)
         connectingViewFull = view.findViewById(R.id.connectingViewFull)
         connectingViewMid = view.findViewById(R.id.connectingViewMid)
-        statusBackgroundView = view.findViewById(R.id.statusBackgroundView)
+        statusView = view.findViewById(R.id.statusView)
         lottieAnimationView = view.findViewById(R.id.lottieAnimationView)
 
         updateForLastServiceOfDay()

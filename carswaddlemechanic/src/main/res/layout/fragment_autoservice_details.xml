@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fragment_autoservice_details"
     android:layout_width="match_parent"
@@ -7,324 +7,349 @@
     android:clickable="true"
     android:windowSoftInputMode="adjustPan">
 
-    <TableLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent">
 
-        <TableRow
-            android:id="@+id/row_1"
+        <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:paddingTop="16dp"
-            android:paddingEnd="16dp"
-            android:paddingBottom="16dp">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:paddingBottom="70dp">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="wrap_content"
+            <TableRow
+                android:id="@+id/row_1"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="horizontal">
+                android:paddingTop="16dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="16dp">
 
-                <LinearLayout
-                    android:id="@+id/details_stuff"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.0">
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/mechanic_name_text_view"
+                    <LinearLayout
+                        android:id="@+id/details_stuff"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/content_gap"
-                        android:layout_marginBottom="16dp"
-                        android:text="TextView"
-                        android:textSize="@dimen/large_text" />
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/content_gap"
-                        android:layout_marginEnd="@dimen/content_margin"
-                        android:layout_marginBottom="@dimen/content_margin"
-                        android:background="@drawable/right_round_brand"
-                        android:paddingVertical="@dimen/text_margin"
-                        android:paddingStart="@dimen/content_gap"
-                        android:paddingEnd="@dimen/content_margin"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:orientation="vertical"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0">
 
-                        <LinearLayout
-                            android:id="@+id/textContainer"
+                        <TextView
+                            android:id="@+id/mechanic_name_text_view"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:gravity="center"
+                            android:layout_marginStart="@dimen/content_gap"
+                            android:layout_marginBottom="16dp"
+                            android:text="TextView"
+                            android:textSize="@dimen/large_text" />
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/statusBannerBackgroundView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/content_gap"
+                            android:layout_marginEnd="@dimen/content_margin"
+                            android:layout_marginBottom="@dimen/content_margin"
+                            android:background="@drawable/right_round_scheduled"
+                            android:paddingVertical="@dimen/text_margin"
+                            android:paddingStart="@dimen/content_gap"
+                            android:paddingEnd="@dimen/content_margin"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent">
 
-                            <TextView
-                                android:id="@+id/statusBannerView"
+                            <LinearLayout
+                                android:id="@+id/textContainer"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Scheduled"
-                                android:textColor="@color/brandContrast"
-                                android:textSize="@dimen/title"
-                                android:textStyle="bold" />
+                                android:gravity="center"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent">
+                                
+                                <com.carswaddle.carswaddlemechanic.ui.common.AutoserviceStatusView
+                                    android:id="@+id/statusView"
+                                    android:layout_width="33dp"
+                                    android:layout_height="33dp"
+                                    android:layout_marginEnd="@dimen/text_margin"/>
 
-                        </LinearLayout>
+                                <TextView
+                                    android:id="@+id/statusBannerView"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Scheduled"
+                                    android:textColor="@color/brandContrast"
+                                    android:textSize="@dimen/title"
+                                    android:textStyle="bold" />
 
-                    </androidx.constraintlayout.widget.ConstraintLayout>
+                            </LinearLayout>
 
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <ImageView
-                        android:id="@+id/chatImageView"
-                        android:layout_width="56dp"
-                        android:layout_height="56dp"
-                        android:layout_marginBottom="8dp"
-                        android:background="@drawable/pill_outline"
-                        android:gravity="center_vertical|center_horizontal"
-                        android:padding="16dp"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/new_sms"
-                        app:tint="@color/icon" />
-
-                    <ImageView
-                        android:id="@+id/phoneImageView"
-                        android:layout_width="56dp"
-                        android:layout_height="56dp"
-                        android:layout_marginBottom="8dp"
-                        android:background="@drawable/pill_outline"
-                        android:gravity="center_vertical|center_horizontal"
-                        android:padding="16dp"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/new_phone"
-                        app:tint="@color/icon" />
-
-                </LinearLayout>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-        </TableRow>
+                    </LinearLayout>
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
-            <View
-                android:id="@+id/line2"
+                        <ImageView
+                            android:id="@+id/chatImageView"
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/pill_outline"
+                            android:gravity="center_vertical|center_horizontal"
+                            android:padding="16dp"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/new_sms"
+                            app:tint="@color/icon" />
+
+                        <ImageView
+                            android:id="@+id/phoneImageView"
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/pill_outline"
+                            android:gravity="center_vertical|center_horizontal"
+                            android:padding="16dp"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/new_phone"
+                            app:tint="@color/icon" />
+
+                    </LinearLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </TableRow>
+
+            <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="1dip"
-                android:layout_weight="1"
-                android:background="@color/contentDivider"
-                android:padding="2dip" />
-        </TableRow>
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp">
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:orientation="vertical">
+                <View
+                    android:id="@+id/line2"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dip"
+                    android:layout_weight="1"
+                    android:background="@color/contentDivider"
+                    android:padding="2dip" />
+            </TableRow>
 
-            <LinearLayout
+            <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <com.carswaddle.carswaddleandroid.ImageLabel
-                    android:id="@+id/vehicle_image_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/text_margin" />
-
-                <com.carswaddle.carswaddleandroid.ImageLabel
-                    android:id="@+id/oil_type_image_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-            </LinearLayout>
-
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp">
-
-            <View
-                android:id="@+id/line1"
-                android:layout_width="match_parent"
-                android:layout_height="1dip"
-                android:layout_weight="1"
-                android:background="@color/contentDivider"
-                android:padding="2dip" />
-
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingBottom="16dp">
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
                     <com.carswaddle.carswaddleandroid.ImageLabel
-                        android:id="@+id/location_image_label"
+                        android:id="@+id/vehicle_image_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/text_margin" />
+                        android:layout_marginBottom="@dimen/text_margin" />
 
-                    <TextView
-                        android:id="@+id/distance_text_view"
+                    <com.carswaddle.carswaddleandroid.ImageLabel
+                        android:id="@+id/oil_type_image_label"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:maxLines="1"
-                        android:text="0 mi"
-                        android:textSize="@dimen/small_text" />
+                        android:layout_height="wrap_content" />
 
                 </LinearLayout>
 
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/border"
-                    app:cardCornerRadius="@dimen/corner_radius">
+            </TableRow>
 
-                    <com.google.android.gms.maps.MapView
-                        android:id="@+id/preview_location_map_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="132dp"
-                        android:layout_weight="1" />
-
-                </androidx.cardview.widget.CardView>
-
-            </LinearLayout>
-
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp">
-
-            <View
-                android:id="@+id/line3"
+            <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="1dip"
-                android:layout_weight="1"
-                android:background="@color/contentDivider"
-                android:padding="2dip" />
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp">
 
-        </TableRow>
+                <View
+                    android:id="@+id/line1"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dip"
+                    android:layout_weight="1"
+                    android:background="@color/contentDivider"
+                    android:padding="2dip" />
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="16dp">
+            </TableRow>
 
-            <LinearLayout
+            <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="16dp">
 
-                <com.carswaddle.carswaddleandroid.ImageLabel
-                    android:id="@+id/time_image_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/text_margin" />
-
-                <com.carswaddle.carswaddlemechanic.ui.autoservice_details.NotesView
-                    android:id="@+id/notesView"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="196dp" />
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-            </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingBottom="16dp">
 
-        </TableRow>
+                        <com.carswaddle.carswaddleandroid.ImageLabel
+                            android:id="@+id/location_image_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/text_margin" />
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp">
+                        <TextView
+                            android:id="@+id/distance_text_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:maxLines="1"
+                            android:text="0 mi"
+                            android:textSize="@dimen/small_text" />
 
-            <View
-                android:id="@+id/line6"
+                    </LinearLayout>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/border"
+                        app:cardCornerRadius="@dimen/corner_radius">
+
+                        <com.google.android.gms.maps.MapView
+                            android:id="@+id/preview_location_map_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="132dp"
+                            android:layout_weight="1" />
+
+                    </androidx.cardview.widget.CardView>
+
+                </LinearLayout>
+
+            </TableRow>
+
+            <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="1dip"
-                android:layout_weight="1"
-                android:background="@color/contentDivider"
-                android:padding="2dp" />
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp">
 
-        </TableRow>
+                <View
+                    android:id="@+id/line3"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dip"
+                    android:layout_weight="1"
+                    android:background="@color/contentDivider"
+                    android:padding="2dip" />
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="16dp">
+            </TableRow>
 
-            <RelativeLayout
-                android:layout_height="100dp"
-                android:layout_weight="1"
-                android:gravity="center_vertical|center_horizontal">
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="16dp">
 
-                <Button
-                    android:id="@+id/cancelAutoService"
-                    style="?android:attr/borderlessButtonStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@color/content"
-                    android:fontFamily="@font/montserrat_bold"
-                    android:shadowColor="@color/content"
-                    android:text="@string/cancel_auto_service"
-                    android:textAllCaps="false"
-                    android:textColor="@color/important"
-                    android:textSize="@dimen/title" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-            </RelativeLayout>
+                    <com.carswaddle.carswaddleandroid.ImageLabel
+                        android:id="@+id/time_image_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/text_margin" />
 
-        </TableRow>
+                    <com.carswaddle.carswaddlemechanic.ui.autoservice_details.NotesView
+                        android:id="@+id/notesView"
+                        android:layout_width="match_parent"
+                        android:layout_height="196dp" />
 
-    </TableLayout>
+                </LinearLayout>
 
-</ScrollView>
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp">
+
+                <View
+                    android:id="@+id/line6"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dip"
+                    android:layout_weight="1"
+                    android:background="@color/contentDivider"
+                    android:padding="2dp" />
+
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/cancelTableRow"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="16dp">
+
+                <RelativeLayout
+                    android:layout_height="100dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|center_horizontal">
+
+                    <Button
+                        android:id="@+id/cancelAutoService"
+                        style="?android:attr/borderlessButtonStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/content"
+                        android:fontFamily="@font/montserrat_bold"
+                        android:shadowColor="@color/content"
+                        android:text="@string/cancel_auto_service"
+                        android:textAllCaps="false"
+                        android:textColor="@color/important"
+                        android:textSize="@dimen/title" />
+
+                </RelativeLayout>
+
+            </TableRow>
+
+        </TableLayout>
+        
+    </ScrollView>
+
+    <com.carswaddle.carswaddleandroid.ui.view.ProgressButton
+        android:id="@+id/changeStatusButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:displayText="Start Service"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

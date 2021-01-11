@@ -44,7 +44,7 @@ class ImageLabel @JvmOverloads constructor(
             ImageType.OIL ->
                 return R.drawable.engine_oil
             ImageType.TIME ->
-                return R.drawable.ic_user_male
+                return R.drawable.ic_basic_clock
         }
     }
 

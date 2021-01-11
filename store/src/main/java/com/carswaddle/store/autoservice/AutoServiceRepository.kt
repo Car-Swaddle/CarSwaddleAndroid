@@ -145,8 +145,17 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
         context: Context,
         completion: (error: Throwable?, autoServiceId: String?) -> Unit
     ) {
+        setAutoServiceStatus(AutoServiceStatus.canceled, autoServiceId, context, completion)
+    }
+
+    fun setAutoServiceStatus(
+        autoServiceStatus: AutoServiceStatus,
+        autoServiceId: String,
+        context: Context,
+        completion: (error: Throwable?, autoServiceId: String?) -> Unit
+    ) {
         val updateAutoService = UpdateAutoService(
-            AutoServiceStatus.canceled.toString(),
+            autoServiceStatus,
             null,
             null,
             null,

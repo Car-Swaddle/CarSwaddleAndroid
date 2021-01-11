@@ -63,6 +63,8 @@ class ProgressButton @JvmOverloads constructor(
             ProgressButtonStyle.FILLED_ALTERNATE -> layout = R.layout.view_progress_button_alternate
             ProgressButtonStyle.BORDERLESS -> layout = R.layout.view_progress_button_borderless
             ProgressButtonStyle.OUTLINE -> layout = R.layout.view_progress_button_outline
+            ProgressButtonStyle.FILLED_COMPLETE -> R.layout.view_progress_button_complete
+            ProgressButtonStyle.FILLED_START -> R.layout.view_progress_button_start
         }
         
         LayoutInflater.from(context).inflate(layout, this, true)
@@ -99,8 +101,10 @@ class ProgressButton @JvmOverloads constructor(
 enum class ProgressButtonStyle(val value: Int) {
     FILLED_BRAND(0),
     FILLED_ALTERNATE(1),
-    BORDERLESS(2),
-    OUTLINE(3);
+    FILLED_COMPLETE(2),
+    FILLED_START(3),
+    BORDERLESS(4),
+    OUTLINE(5);
 
     companion object {
         fun fromInt(value: Int) = values().first { it.value == value }

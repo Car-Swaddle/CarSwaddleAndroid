@@ -1,6 +1,7 @@
 package com.carswaddle.carswaddlemechanic.ui.autoservice_details
 
 import android.app.Application
+import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -14,6 +15,7 @@ import com.carswaddle.carswaddleandroid.data.oilChange.OilChangeRepository
 import com.carswaddle.carswaddleandroid.data.serviceEntity.ServiceEntityRepository
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
 import com.carswaddle.carswaddleandroid.data.vehicle.VehicleRepository
+import com.carswaddle.carswaddleandroid.services.serviceModels.AutoServiceStatus
 import com.carswaddle.carswaddleandroid.services.serviceModels.CreateReview
 import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServiceListElements
 import com.carswaddle.store.AppDatabase
@@ -135,10 +137,12 @@ class AutoServiceDetailsViewModel(application: Application) : AndroidViewModel(a
         }
     }
 
-    fun cancelAutoService(completion: (error: Throwable?, autoServiceId: String?) -> Unit) {
+    fun cancelAutoService(context: Context, completion: (error: Throwable?, autoServiceId: String?) -> Unit) {
         val id = autoServiceId
-        if (id == null) { return }
-        autoServiceRepo.cancelAutoService(id, getApplication()) { error, autoServiceId ->
+        if (id == null) {
+            return completion(AutoServiceIdNotSet(), null)
+        }
+        autoServiceRepo.cancelAutoService(id, context) { error, autoServiceId ->
             viewModelScope.launch {
                 val id = autoServiceId
                 if (id != null) {
@@ -147,14 +151,30 @@ class AutoServiceDetailsViewModel(application: Application) : AndroidViewModel(a
             }
         }
     }
-
-    fun updateNotes(notes: String, completion: (error: Throwable?, autoServiceId: String?) -> Unit) {
+    
+    fun setAutoServiceStatus(autoServiceStatus: AutoServiceStatus, context: Context, completion: (error: Throwable?, autoServiceId: String?) -> Unit) {
         val id = autoServiceId
         if (id == null) {
-            return
+            return completion(AutoServiceIdNotSet(), null)
         }
-        autoServiceRepo.updateNotes(id, notes, getApplication(), completion)
+        autoServiceRepo.setAutoServiceStatus(autoServiceStatus, id, context) { error, id ->
+            viewModelScope.launch {
+                if (id != null) {
+                    _autoServiceElement.postValue(fetchAutoServiceListElements(id))
+                }
+                completion(error, id)
+            }
+        }
+    }
+
+    fun updateNotes(notes: String, context: Context, completion: (error: Throwable?, autoServiceId: String?) -> Unit) {
+        val id = autoServiceId
+        if (id == null) {
+            return completion(AutoServiceIdNotSet(), null)
+        }
+        autoServiceRepo.updateNotes(id, notes, context, completion)
     }
 
 }
 
+class AutoServiceIdNotSet() : Throwable() {}
