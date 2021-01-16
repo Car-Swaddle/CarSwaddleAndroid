@@ -92,3 +92,5 @@ class ServiceGenerator(baseURL: String, okHttpClient: OkHttpClient) {
 
 
 class ServiceNotAvailable(message: String = "Cannot create a Service to make network request") : Throwable(message) {}
+
+class EmptyResponseBody() : Throwable() {}

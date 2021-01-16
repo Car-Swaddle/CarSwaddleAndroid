@@ -12,6 +12,7 @@
     <dimen name="subtitle">13sp</dimen>
     <dimen name="large_text">19sp</dimen>
     <dimen name="jumbo_text">30sp</dimen>
+    <dimen name="massive_text">64sp</dimen>
     <dimen name="small_text">12sp</dimen>
     <dimen name="tiny_text">10sp</dimen>
     <dimen name="corner_radius">8dp</dimen>

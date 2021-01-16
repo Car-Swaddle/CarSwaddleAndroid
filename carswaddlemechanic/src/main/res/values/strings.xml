@@ -206,4 +206,12 @@
     <string name="today">Today</string>
     <string name="notes_hint">Add a note for the mechanic here. They will receive a notification when you are done typing.</string>
     <string name="service_details">Service Details</string>
+    <string name="account_balance">Account balance</string>
+    <string name="transferring">Transferring</string>
+    <string name="processing">Processing</string>
+    <string name="earnings_title">Earnings</string>
+    <string name="deposits_title">Deposits</string>
+    <string name="transactions_title">Transactions</string>
+    <string name="empty_value">--</string>
+    <string name="rolling_balance">(2 day rolling deposit)</string>
 </resources>

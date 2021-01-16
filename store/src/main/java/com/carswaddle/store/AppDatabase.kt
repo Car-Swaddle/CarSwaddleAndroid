@@ -26,9 +26,11 @@ import com.carswaddle.carswaddleandroid.generic.SingletonHolder
 import com.carswaddle.carswaddleandroid.data.serviceEntity.ServiceEntity
 import com.carswaddle.carswaddleandroid.data.serviceEntity.ServiceEntityDao
 import com.carswaddle.carswaddleandroid.data.Review.Review
+import com.carswaddle.store.balance.Balance
+import com.carswaddle.store.balance.BalanceDao
 
 
-@Database(entities = arrayOf(User::class, AutoService::class, Vehicle::class, AutoServiceLocation::class, VehicleDescription::class, Mechanic::class, ServiceEntity::class, OilChange::class, TemplateTimeSpan::class, Review::class), version = 14)
+@Database(entities = arrayOf(User::class, AutoService::class, Vehicle::class, AutoServiceLocation::class, VehicleDescription::class, Mechanic::class, ServiceEntity::class, OilChange::class, TemplateTimeSpan::class, Review::class, Balance::class), version = 15)
 @TypeConverters(DateConverter::class, CalendarConverter::class, ArrayListConverter::class, AutoServiceStatusConverter::class, OilTypeConverter::class)
 abstract class AppDatabase : RoomDatabase() {
 
@@ -42,6 +44,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun oilChangeDao(): OilChangeDao
     abstract fun templateTimeSpanDao(): TemplateTimeSpanDao
     abstract fun reviewDao(): ReviewDao
+    abstract fun balanceDao(): BalanceDao
 
     companion object {
         // Singleton prevents multiple instances of database opening at the

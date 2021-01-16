@@ -16,10 +16,17 @@
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.carswaddle.carswaddlemechanic.ui.home.HomeFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        android:id="@+id/navigation_earnings"
+        android:name="com.carswaddle.carswaddlemechanic.ui.earnings.EarningsFragment"
+        android:label="@string/earnings_title"
+        tools:layout="@layout/fragment_earnings" >
+        <action
+            android:id="@+id/action_navigation_earnings_to_depositsFragment"
+            app:destination="@id/navigation_deposits" />
+        <action
+            android:id="@+id/action_navigation_earnings_to_transactionsFragment"
+            app:destination="@id/navigation_transactions" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_mechanic_profile"
@@ -31,5 +38,15 @@
         android:id="@+id/autoServiceDetailsFragment"
         android:name="com.carswaddle.carswaddlemechanic.ui.autoservice_details.AutoServiceDetailsFragment"
         android:label="@string/service_details" />
+
+    <fragment
+        android:id="@+id/navigation_deposits"
+        android:name="com.carswaddle.carswaddlemechanic.ui.earnings.deposits.DepositsFragment"
+        android:label="@string/deposits_title" />
+
+    <fragment
+        android:id="@+id/navigation_transactions"
+        android:name="com.carswaddle.carswaddlemechanic.ui.earnings.transactions.TransactionsFragment"
+        android:label="@string/transactions_title" />
 
 </navigation>

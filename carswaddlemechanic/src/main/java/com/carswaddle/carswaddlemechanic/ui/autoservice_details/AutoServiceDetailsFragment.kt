@@ -168,8 +168,7 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
 
 //        locationMapView.getMapAsync(this)
 
-        autoServiceDetailsViewModel =
-            ViewModelProvider(requireActivity()).get(AutoServiceDetailsViewModel::class.java)
+        autoServiceDetailsViewModel = ViewModelProvider(requireActivity()).get(AutoServiceDetailsViewModel::class.java)
 
         autoServiceDetailsViewModel.autoServiceId = autoServiceId
 

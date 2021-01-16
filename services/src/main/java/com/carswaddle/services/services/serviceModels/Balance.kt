@@ -1,8 +1,7 @@
 package com.carswaddle.carswaddleandroid.services.serviceModels
 
 data class Balance(
-    val available: Amount,
-    val pending: Amount,
-    val reserved: Amount?,
-    val mechanic: Mechanic?
+    val available: List<Amount>,
+    val pending: List<Amount>,
+    val connect_reserved: List<Amount>?
 )
