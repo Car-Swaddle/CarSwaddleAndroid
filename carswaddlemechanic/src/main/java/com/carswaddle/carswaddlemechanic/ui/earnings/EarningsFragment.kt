@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.carswaddle.carswaddleandroid.services.serviceModels.PayoutStatus
 import com.carswaddle.carswaddlemechanic.R
 import com.carswaddle.carswaddlemechanic.ui.autoservice_details.AutoServiceDetailsViewModel
 import java.text.NumberFormat
@@ -58,34 +59,39 @@ class EarningsFragment() : Fragment() {
             updateProcessingBalance()
         }
 
-        earningsViewModel.updateBalance(requireContext()) {
-            if (it == null) {
-                print("success")
-            } else {
-                print("failure")
-            }
+        updateTransferringBalance()
+        earningsViewModel.transferringBalance.observe(viewLifecycleOwner) { transferringBalance ->
+            updateTransferringBalance()
         }
+
+        // Updates total balance and processing in Balance Stripe object
+        earningsViewModel.updateBalance(requireContext()) {}
+        // Updates transferring amount by fetching payouts with `inTransit` status and summing all amounts of those payouts.
+        earningsViewModel.updateTransferringAmount(requireContext()) {}
         
         return root
     }
     
     private fun updateAccountBalanceForCurrentValue() {
         val t = earningsViewModel.totalBalance.value
-        if (t == null) {
-            accountBalanceTextView.text = getString(R.string.empty_value)
-        } else {
-            val localizedBalance = format.format(t.toFloat()/100.0)
-            accountBalanceTextView.text = localizedBalance
-        }
+        accountBalanceTextView.text = currencyFormatted(t)
     }
 
     private fun updateProcessingBalance() {
         val p = earningsViewModel.processingBalance.value
-        if (p == null) {
-            processingBalanceTextView.text = getString(R.string.empty_value)
+        processingBalanceTextView.text = currencyFormatted(p)
+    }
+
+    private fun updateTransferringBalance() {
+        val t = earningsViewModel.transferringBalance.value
+        transferringBalanceTextView.text = currencyFormatted(t)
+    }
+    
+    private fun currencyFormatted(value: Int?): String {
+        return if (value == null) { 
+            getString(R.string.empty_value) 
         } else {
-            val localizedBalance = format.format(p.toFloat()/100.0)
-            processingBalanceTextView.text = localizedBalance
+            format.format(value.toFloat()/100.0)
         }
     }
     

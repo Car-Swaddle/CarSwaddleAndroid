@@ -22,16 +22,20 @@ import com.carswaddle.carswaddleandroid.data.vehicle.Vehicle
 import com.carswaddle.carswaddleandroid.data.vehicle.VehicleDao
 import com.carswaddle.carswaddleandroid.data.vehicleDescription.VehicleDescription
 import com.carswaddle.carswaddleandroid.data.vehicleDescription.VehicleDescriptionDao
-import com.carswaddle.carswaddleandroid.generic.SingletonHolder
 import com.carswaddle.carswaddleandroid.data.serviceEntity.ServiceEntity
 import com.carswaddle.carswaddleandroid.data.serviceEntity.ServiceEntityDao
 import com.carswaddle.carswaddleandroid.data.Review.Review
 import com.carswaddle.store.balance.Balance
 import com.carswaddle.store.balance.BalanceDao
+import com.carswaddle.store.payout.Payout
+import com.carswaddle.store.payout.PayoutDao
+import com.carswaddle.store.transaction.Transaction
+import com.carswaddle.store.transaction.TransactionDao
+import com.carswaddle.store.transaction.TransactionMetadata
 
 
-@Database(entities = arrayOf(User::class, AutoService::class, Vehicle::class, AutoServiceLocation::class, VehicleDescription::class, Mechanic::class, ServiceEntity::class, OilChange::class, TemplateTimeSpan::class, Review::class, Balance::class), version = 15)
-@TypeConverters(DateConverter::class, CalendarConverter::class, ArrayListConverter::class, AutoServiceStatusConverter::class, OilTypeConverter::class)
+@Database(entities = arrayOf(User::class, AutoService::class, Vehicle::class, AutoServiceLocation::class, VehicleDescription::class, Mechanic::class, ServiceEntity::class, OilChange::class, TemplateTimeSpan::class, Review::class, Balance::class, Payout::class, Transaction::class, TransactionMetadata::class), version = 18)
+@TypeConverters(DateConverter::class, DateDoubleConverter::class, DateIntConverter::class, CalendarConverter::class, CalendarDoubleConverter::class, CalendarIntConverter::class, ArrayListConverter::class, AutoServiceStatusConverter::class, OilTypeConverter::class, PayoutStatusConverter::class)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun userDao(): UserDao
@@ -45,6 +49,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun templateTimeSpanDao(): TemplateTimeSpanDao
     abstract fun reviewDao(): ReviewDao
     abstract fun balanceDao(): BalanceDao
+    abstract fun transactionDao(): TransactionDao
+    abstract fun payoutDao(): PayoutDao
 
     companion object {
         // Singleton prevents multiple instances of database opening at the

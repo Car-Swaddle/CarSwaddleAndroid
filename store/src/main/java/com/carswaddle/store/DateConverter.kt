@@ -3,6 +3,7 @@ package com.carswaddle.store
 import androidx.room.TypeConverter
 import com.carswaddle.carswaddleandroid.services.serviceModels.AutoServiceStatus
 import com.carswaddle.carswaddleandroid.services.serviceModels.OilType
+import com.carswaddle.carswaddleandroid.services.serviceModels.PayoutStatus
 import com.carswaddle.carswaddleandroid.services.serviceModels.Weekday
 import java.util.*
 
@@ -21,6 +22,43 @@ class DateConverter {
 }
 
 
+class DateDoubleConverter {
+
+    @TypeConverter
+    fun fromTimestamp(value: Double?): Date? {
+        val d = value?.toLong()
+        if (d != null) {
+            return Date(d)
+        }
+        return null
+    }
+
+    @TypeConverter
+    fun dateToTimestamp(date: Date?): Double? {
+        return date?.time?.toDouble()
+    }
+
+}
+
+class DateIntConverter {
+
+    @TypeConverter
+    fun fromTimestamp(value: Int?): Date? {
+        val d = value?.toLong()
+        if (d != null) {
+            return Date(d)
+        }
+        return null
+    }
+
+    @TypeConverter
+    fun dateToTimestamp(date: Date?): Int? {
+        return date?.time?.toInt()
+    }
+
+}
+
+
 class AutoServiceStatusConverter {
 
     @TypeConverter
@@ -34,6 +72,24 @@ class AutoServiceStatusConverter {
             return AutoServiceStatus.valueOf(value)
         }
         return null
+    }
+
+}
+
+
+class PayoutStatusConverter {
+
+    @TypeConverter
+    fun fromPayoutStatusOptional(status: PayoutStatus): String {
+        return status.name
+    }
+
+    @TypeConverter
+    fun toPayoutStatusOptional(value: String): PayoutStatus {
+        if (value != null) {
+            return PayoutStatus.valueOf(value)
+        }
+        return PayoutStatus.pending
     }
 
 }

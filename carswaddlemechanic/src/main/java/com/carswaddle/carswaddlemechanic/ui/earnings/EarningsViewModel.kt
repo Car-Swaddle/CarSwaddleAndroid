@@ -12,8 +12,10 @@ import com.carswaddle.carswaddleandroid.data.serviceEntity.ServiceEntityReposito
 import com.carswaddle.carswaddleandroid.data.user.MechanicIdIsUnavailable
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
 import com.carswaddle.carswaddleandroid.data.vehicle.VehicleRepository
+import com.carswaddle.carswaddleandroid.services.serviceModels.PayoutStatus
 import com.carswaddle.store.AppDatabase
 import com.carswaddle.store.balance.BalanceRepository
+import com.carswaddle.store.payout.PayoutRepository
 import kotlinx.coroutines.launch
 import kotlin.coroutines.coroutineContext
 
@@ -21,11 +23,13 @@ class EarningsViewModel(application: Application) : AndroidViewModel(application
     
     private val balanceRepo: BalanceRepository
     private val userRepo: UserRepository
+    private val payoutRepo: PayoutRepository
 
     init {
         val db = AppDatabase.getDatabase(application)
         balanceRepo = BalanceRepository(db.balanceDao())
         userRepo = UserRepository(db.userDao())
+        payoutRepo = PayoutRepository(db.payoutDao())
     }
     
     fun updateBalance(context: Context, completion: (error: Throwable?) -> Unit) {
@@ -45,7 +49,20 @@ class EarningsViewModel(application: Application) : AndroidViewModel(application
             completion(MechanicIdIsUnavailable())
         }
     }
-
+    
+    fun updateTransferringAmount(context: Context, completion: (error: Throwable?) -> Unit) {
+        payoutRepo.getPayouts(null, PayoutStatus.inTransit, 100, context) { error, payoutIds ->
+            print("payouts")
+            viewModelScope.launch {
+                val inTransit = payoutRepo.payoutSumInTransit()
+                if (inTransit != null) {
+                    _transferringBalance.postValue(inTransit)
+                }
+                completion(null)
+            }
+        }
+    }
+    
     /// Number of cents
     private val _totalBalance = MutableLiveData<Int?>().apply {
         value = null
