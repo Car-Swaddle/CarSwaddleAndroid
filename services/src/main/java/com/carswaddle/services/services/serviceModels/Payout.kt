@@ -1,6 +1,7 @@
 package com.carswaddle.carswaddleandroid.services.serviceModels
 
 import com.carswaddle.carswaddleandroid.Extensions.toCalendar
+import com.carswaddle.foundation.Extensions.epochToDate
 import com.google.gson.annotations.SerializedName
 import java.util.*
 
@@ -27,8 +28,8 @@ data class Payout (
     val status: PayoutStatus
 ) {
 
-    fun arrivalDate(): Calendar = Date(arrivalDouble.toLong()).toCalendar()
-    fun created(): Calendar = Date(createdDouble.toLong()).toCalendar()
+    fun arrivalDate(): Calendar = arrivalDouble.epochToDate().toCalendar()
+    fun created(): Calendar = createdDouble.epochToDate().toCalendar()
     
 }
 

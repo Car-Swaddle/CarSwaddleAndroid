@@ -5,6 +5,7 @@ import com.carswaddle.carswaddleandroid.services.serviceModels.AutoServiceStatus
 import com.carswaddle.carswaddleandroid.services.serviceModels.OilType
 import com.carswaddle.carswaddleandroid.services.serviceModels.PayoutStatus
 import com.carswaddle.carswaddleandroid.services.serviceModels.Weekday
+import com.carswaddle.foundation.Extensions.epochToDate
 import java.util.*
 
 class DateConverter {
@@ -26,9 +27,9 @@ class DateDoubleConverter {
 
     @TypeConverter
     fun fromTimestamp(value: Double?): Date? {
-        val d = value?.toLong()
-        if (d != null) {
-            return Date(d)
+        val v = value
+        if (v != null) {
+            return v.epochToDate()
         }
         return null
     }

@@ -12,7 +12,11 @@
         tools:layout="@layout/fragment_calendar" >
         <action
             android:id="@+id/action_navigation_calendar_to_autoServiceDetailsFragment"
-            app:destination="@id/autoServiceDetailsFragment" />
+            app:destination="@id/autoServiceDetailsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
 
     <fragment
@@ -22,10 +26,18 @@
         tools:layout="@layout/fragment_earnings" >
         <action
             android:id="@+id/action_navigation_earnings_to_depositsFragment"
-            app:destination="@id/navigation_deposits" />
+            app:destination="@id/navigation_deposits"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
         <action
             android:id="@+id/action_navigation_earnings_to_transactionsFragment"
-            app:destination="@id/navigation_transactions" />
+            app:destination="@id/navigation_transactions"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
 
     <fragment

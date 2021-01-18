@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.carswaddle.carswaddleandroid.services.serviceModels.PayoutStatus
 import com.carswaddle.carswaddlemechanic.R
 import com.carswaddle.carswaddlemechanic.ui.autoservice_details.AutoServiceDetailsViewModel
+import com.carswaddle.foundation.Extensions.centsToDollars
 import java.text.NumberFormat
 
 class EarningsFragment() : Fragment() {
@@ -91,12 +92,12 @@ class EarningsFragment() : Fragment() {
         return if (value == null) { 
             getString(R.string.empty_value) 
         } else {
-            format.format(value.toFloat()/100.0)
+            currencyFormatter.format(value.centsToDollars())
         }
     }
     
     companion object {
-        val format: NumberFormat by lazy {
+        val currencyFormatter: NumberFormat by lazy {
             val f = NumberFormat.getCurrencyInstance()
             f.minimumFractionDigits = 2
             f.maximumFractionDigits = 2

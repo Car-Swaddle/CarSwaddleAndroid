@@ -4,21 +4,27 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.carswaddle.carswaddlemechanic.R
+import com.carswaddle.carswaddlemechanic.ui.calendar.singleday.DayAutoServiceListAdapter
 
 class TransactionsFragment : Fragment() {
 
     private lateinit var transactionViewModel: TransactionsViewModel
 
-//    private lateinit var depositsLayout: RelativeLayout
-//    private lateinit var transactionsLayout: RelativeLayout
-//    private lateinit var accountBalanceTextView: TextView
-//    private lateinit var processingBalanceTextView: TextView
-//    private lateinit var transferringBalanceTextView: TextView
+    private lateinit var emptyStateLayout: LinearLayout
+
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var viewAdapter: TransactionsListAdapter
+    private lateinit var viewManager: RecyclerView.LayoutManager
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,20 +33,40 @@ class TransactionsFragment : Fragment() {
     ): View? {
         transactionViewModel = ViewModelProvider(requireActivity()).get(TransactionsViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_transactions, container, false)
+        
+        recyclerView = root.findViewById(R.id.transactions_recycler_view)
+//        emptyStateLayout = root.findViewById(R.id.autoServiceListEmptyState)
 
-//        depositsLayout = root.findViewById(R.id.depositsLayout)
-//        transactionsLayout = root.findViewById(R.id.transactionsLayout)
-//        accountBalanceTextView = root.findViewById(R.id.accountBalanceTextView)
-//        processingBalanceTextView = root.findViewById(R.id.processingValueTextView)
-//        transferringBalanceTextView = root.findViewById(R.id.transferringValueTextView)
-//
-//        depositsLayout.setOnClickListener {
-//
+//        viewModel.showEmptyState.observe(viewLifecycleOwner) {
+//            emptyStateLayout.visibility = if (it) View.VISIBLE else View.GONE
 //        }
-//
-//        transactionsLayout.setOnClickListener {
-//
-//        }
+
+        transactionViewModel.transactions.observe(viewLifecycleOwner) {
+            viewAdapter.notifyDataSetChanged()
+        }
+
+        viewAdapter = TransactionsListAdapter(transactionViewModel.transactions) {
+            val manager = childFragmentManager
+            if (manager != null) {
+//                val bundle = bundleOf("autoServiceId" to it.autoService.id)
+//                findNavController().navigate(R.id.action_navigation_calendar_to_autoServiceDetailsFragment, bundle)
+            }
+        }
+
+        viewManager = LinearLayoutManager(requireContext())
+
+        recyclerView.apply {
+            setHasFixedSize(true)
+            layoutManager = viewManager
+            adapter = viewAdapter
+        }
+
+//        viewModel.date = date
+//        viewAdapter.date = date
+        
+        transactionViewModel.getTransactions(null, null, 100, requireContext()) { t, ids ->
+            print("got back transactions")
+        }
 
         return root
     }

@@ -4,6 +4,7 @@ import com.carswaddle.carswaddleandroid.services.ContentType
 import com.carswaddle.carswaddleandroid.services.serviceModels.Balance
 import com.carswaddle.carswaddleandroid.services.serviceModels.Payout
 import com.carswaddle.carswaddleandroid.services.serviceModels.PayoutStatus
+import com.carswaddle.carswaddleandroid.services.serviceModels.Transaction
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Headers
@@ -15,6 +16,8 @@ import java.util.*
 private const val ephemeralKeysEndpoint = "/api/stripe/ephemeral-keys"
 private const val balance = "/api/stripe/balance"
 private const val payouts = "/api/stripe/payouts"
+private const val transactions = "/api/stripe/transactions"
+private const val transactionDetails = "/api/stripe/transaction-details"
 
 interface StripeService {
 
@@ -28,12 +31,11 @@ interface StripeService {
 
     @Headers(ContentType.headerPrefix + ContentType.applicationJSON)
     @GET(payouts)
-    fun getPayoutsMap(@Query("startingAfterID") startingAfterId: String?, @Query("status") status: String?, @Query("limit") limit: Int?): Call<Map<String,Any>>
-
+    fun getPayouts(@Query("startingAfterID") startingAfterId: String?, @Query("status") status: PayoutStatus?, @Query("limit") limit: Int?): Call<PayoutResponse>
 
     @Headers(ContentType.headerPrefix + ContentType.applicationJSON)
-    @GET(payouts)
-    fun getPayouts(@Query("startingAfterId") startingAfterId: String?, @Query("status") status: PayoutStatus?, @Query("limit") limit: Int?): Call<PayoutResponse>
+    @GET(transactions)
+    fun getTransactions(@Query("startingAfterID") startingAfterId: String?, @Query("payoutID") payoutId: String?, @Query("limit") limit: Int?): Call<TransactionResponse>
     
 }
 
@@ -41,6 +43,9 @@ interface StripeService {
 data class PayoutResponse(
     val has_more: Boolean,
     val data: List<Payout>
-) {
-    
-}
+)
+
+data class TransactionResponse(
+    val has_more: Boolean,
+    val data: List<Transaction>
+)

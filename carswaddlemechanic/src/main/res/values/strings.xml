@@ -214,4 +214,5 @@
     <string name="transactions_title">Transactions</string>
     <string name="empty_value">--</string>
     <string name="rolling_balance">(2 day rolling deposit)</string>
+    <string name="separator">•</string>
 </resources>
