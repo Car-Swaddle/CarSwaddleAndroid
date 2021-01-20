@@ -1,10 +1,7 @@
 package com.carswaddle.store
 
 import androidx.room.TypeConverter
-import com.carswaddle.carswaddleandroid.services.serviceModels.AutoServiceStatus
-import com.carswaddle.carswaddleandroid.services.serviceModels.OilType
-import com.carswaddle.carswaddleandroid.services.serviceModels.PayoutStatus
-import com.carswaddle.carswaddleandroid.services.serviceModels.Weekday
+import com.carswaddle.carswaddleandroid.services.serviceModels.*
 import com.carswaddle.foundation.Extensions.epochToDate
 import java.util.*
 
@@ -108,6 +105,20 @@ class OilTypeConverter {
             return OilType.valueOf(value)
         }
         return null
+    }
+
+}
+
+class TransactionTypeConverter {
+
+    @TypeConverter
+    fun fromTransactionType(transactionType: TransactionType): String {
+        return transactionType.name
+    }
+
+    @TypeConverter
+    fun toTransactionType(value: String): TransactionType {
+        return TransactionType.valueOf(value)
     }
 
 }

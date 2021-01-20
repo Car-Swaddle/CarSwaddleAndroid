@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.carswaddle.carswaddleandroid.ImageLabel
 import com.carswaddle.carswaddleandroid.services.serviceModels.AutoServiceStatus
+import com.carswaddle.carswaddleandroid.services.serviceModels.TransactionType
 import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServiceListElements
 import com.carswaddle.carswaddlemechanic.R
 import com.carswaddle.carswaddlemechanic.application.CarSwaddleMechanicApp.Companion.applicationContext
@@ -25,17 +26,6 @@ import java.util.*
 
 class TransactionViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-//    private val oilTypeImageLabel: ImageLabel
-//    private val locationImageLabel: ImageLabel
-//    private val vehicleImageLabel: ImageLabel
-//    private val userImageLabel: ImageLabel
-//    private val statusImageView: ImageView
-//    private val timeTextView: TextView
-//    private val connectingViewFull: View
-//    private val connectingViewMid: View
-//    private val statusView: AutoserviceStatusView
-//    private val lottieAnimationView: View
-    
     private val dateTextView: TextView
     private val statusTextView: TextView
     private val descriptionTextView: TextView
@@ -47,9 +37,12 @@ class TransactionViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         transaction: Transaction,
         listener: (Transaction) -> Unit
     ) {
-        val localDateTime = LocalDateTime.ofInstant(transaction.created.toInstant(), transaction.created.timeZone.toZoneId())
+        val localDateTime = LocalDateTime.ofInstant(
+            transaction.created.toInstant(),
+            transaction.created.timeZone.toZoneId()
+        )
         dateTextView.text = dateFormatter.format(localDateTime)
-        statusTextView.text = transaction.status
+        statusTextView.text = transaction.type.localizedString()
         val desc = transaction.transactionDescription
         descriptionTextView.text = desc
         if (desc == null) {
@@ -57,12 +50,12 @@ class TransactionViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         } else {
             descriptionTextView.visibility = View.VISIBLE
         }
-        
-        val dollars = transaction.amount.centsToDollars() 
+
+        val dollars = transaction.amount.centsToDollars()
         priceTextView.text = currencyFormatter.format(dollars)
-        
+
         var colorResource: Int = R.color.text
-        
+
         if (dollars > 0) {
             colorResource = R.color.success
         }
@@ -71,69 +64,17 @@ class TransactionViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         } else {
             priceTextView.setTextColor(context.resources.getColor(colorResource))
         }
-        
+
         itemView.setOnClickListener {
             listener(transaction)
         }
-//        
-//        val status = autoServiceElements.autoService.status ?: AutoServiceStatus.scheduled
-//        statusView.autoServiceStatus = status
-//        
-//        if (scheduledDate != null) {
-//            val localDateTime = LocalDateTime.ofInstant(scheduledDate.toInstant(), scheduledDate.timeZone.toZoneId())
-//            timeTextView.text = timeFormatter.format(localDateTime)
-//        }
     }
 
-//    private fun statusColorStateList(status: AutoServiceStatus): ColorStateList? {
-//        val colorId = when (status) {
-//            AutoServiceStatus.scheduled -> R.color.statusColorScheduled
-//            AutoServiceStatus.canceled -> R.color.statusColorCanceled
-//            AutoServiceStatus.inProgress -> R.color.statusColorInProgress
-//            AutoServiceStatus.completed -> R.color.statusColorCompleted
-//        }
-//        return ContextCompat.getColorStateList(applicationContext, colorId)
-//    }
-//
-//    private fun statusImage(status: AutoServiceStatus): Int? {
-//        return when (status) {
-//            AutoServiceStatus.scheduled -> R.drawable.ic_calendar_filled
-//            AutoServiceStatus.canceled -> R.drawable.ic_x
-//            AutoServiceStatus.inProgress -> null
-//            AutoServiceStatus.completed -> R.drawable.ic_checkmark
-//        }
-//    }
-
     init {
-//        val oil: ImageLabel = view.findViewById(R.id.oilTypeImageLabel)
-//        oil.imageType = ImageLabel.ImageType.OIL
-//        oilTypeImageLabel = oil
-//
-//        val lImageLabel: ImageLabel = view.findViewById(R.id.addressImageLabel)
-//        lImageLabel.imageType = ImageLabel.ImageType.LOCATION
-//        locationImageLabel = lImageLabel
-//
-//        val vLabel: ImageLabel = view.findViewById(R.id.vehicleImageLabel)
-//        vLabel.imageType = ImageLabel.ImageType.VEHICLE
-//        vehicleImageLabel = vLabel
-//
-//        val uLabel: ImageLabel = view.findViewById(R.id.userImageLabel)
-//        uLabel.imageType = ImageLabel.ImageType.PERSON
-//        userImageLabel = uLabel
-//
-//        statusImageView = view.findViewById(R.id.statusImageView)
-//        timeTextView = view.findViewById(R.id.timeTextView)
-//        connectingViewFull = view.findViewById(R.id.connectingViewFull)
-//        connectingViewMid = view.findViewById(R.id.connectingViewMid)
-//        statusView = view.findViewById(R.id.statusView)
-//        lottieAnimationView = view.findViewById(R.id.lottieAnimationView)
-//
-//        updateForLastServiceOfDay()
         dateTextView = view.findViewById(R.id.transactionDateTextView)
         statusTextView = view.findViewById(R.id.transactionStatusTextView)
         descriptionTextView = view.findViewById(R.id.transactionDescriptionTextView)
         priceTextView = view.findViewById(R.id.priceTextView)
-//        priceTextView.setTypeface(Typeface.MONOSPACE)
     }
 
     companion object {
@@ -147,5 +88,39 @@ class TransactionViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             return@lazy f
         }
     }
-    
+
+}
+
+fun TransactionType.localizedString(): String {
+    return when (this) {
+        TransactionType.adjustment -> "Adjustment"
+        TransactionType.advance -> "Advance"
+        TransactionType.advanceFunding -> "Advance funding"
+        TransactionType.applicationFee -> "Application fee"
+        TransactionType.applicationFeeRefund -> "Application fee refund"
+        TransactionType.charge -> "Charge"
+        TransactionType.connectCollectionTransfer -> "Connect collection transfer"
+        TransactionType.issuingAuthorizationHold -> "Issuing authorization hold"
+        TransactionType.issuingAuthorizationRelease -> "Issuing authorization release"
+        TransactionType.issuingTransaction -> "Issuing transaction"
+        TransactionType.payment -> "Payment"
+        TransactionType.paymentFailureRefund -> "Payment failure refund"
+        TransactionType.paymentRefund -> "Payment refund"
+        TransactionType.payout -> "Payout"
+        TransactionType.payoutCancel -> "Payout cancel"
+        TransactionType.payoutFailure -> "Payout failure"
+        TransactionType.refund -> "Refund"
+        TransactionType.refundFailure -> "Refund failure"
+        TransactionType.reserveTransaction -> "Reserve transaction"
+        TransactionType.reservedFunds -> "Reserved funds"
+        TransactionType.stripeFee -> "Stripe fee"
+        TransactionType.stripeFxFee -> "Stripe fx fee"
+        TransactionType.taxFee -> "Tax fee"
+        TransactionType.topup -> "Topup"
+        TransactionType.topupReversal -> "Topup reversal"
+        TransactionType.transfer -> "Transfer"
+        TransactionType.transferCancel -> "Transfer cancel"
+        TransactionType.transferFailure -> "Transfer failure"
+        TransactionType.transferRefund -> "Transfer refund"
+    }
 }

@@ -3,7 +3,8 @@ package com.carswaddle.store.transaction
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.carswaddle.carswaddleandroid.services.serviceModels.TransactionMetadata
+import java.time.LocalDateTime
+import com.carswaddle.carswaddleandroid.services.serviceModels.TransactionMetadata as TransactionMetadataServiceModel
 import java.util.*
 
 @Entity
@@ -15,18 +16,16 @@ data class TransactionMetadata(
     @ColumnInfo(name = "auto_service_id") val autoServiceID: String,
     @ColumnInfo(name = "mechanic_id") val mechanicID: String,
     @ColumnInfo(name = "created_at") val createdAt: Date,
-    @ColumnInfo(name = "transaction_id") val transactionId: String?, // Transaction?,
 ) {
     
-    constructor(transactionMetadata: TransactionMetadata): this(
-        transactionMetadata.identifier,
+    constructor(transactionMetadata: TransactionMetadataServiceModel): this(
+        transactionMetadata.id,
         transactionMetadata.stripeTransactionID,
         transactionMetadata.mechanicCost,
         transactionMetadata.drivingDistance,
         transactionMetadata.autoServiceID,
         transactionMetadata.mechanicID,
         transactionMetadata.createdAt,
-        transactionMetadata.transaction?.id
     )
     
 }

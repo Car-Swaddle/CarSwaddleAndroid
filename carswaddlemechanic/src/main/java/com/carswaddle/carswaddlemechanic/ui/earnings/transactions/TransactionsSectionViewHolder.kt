@@ -16,37 +16,22 @@ class TransactionSectionViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     var depositDate: Calendar = Calendar.getInstance()
     set(newValue) {
         field = newValue
-//        val localDateTime = LocalDateTime.ofInstant(newValue.toInstant(), newValue.timeZone.toZoneId())
-//        sectionHeaderTextView.text = dayOfWeekAndDayOfMonthFormatter.format(localDateTime)
-//        
-//        if (DateUtils.isToday(date.timeInMillis)) {
-//            todayTextView.text = "Today"
-//            todayTextView.visibility = View.VISIBLE
-//            spacerTextView.visibility = View.VISIBLE
-//        } else {
-//            // TODO: iOS app shows "tomorrow" too
-//            todayTextView.visibility = View.GONE
-//            spacerTextView.visibility = View.GONE
-//        }
+        val localDateTime = LocalDateTime.ofInstant(depositDate.toInstant(), depositDate.timeZone.toZoneId())
+        val localizedDate = dayOfWeekAndDayOfMonthFormatter.format(localDateTime)
+        depositDateTextView.text = "Deposit date $localizedDate"
     }
     
     
-//    private var sectionHeaderTextView: TextView
-//    private var spacerTextView: TextView
-//    private var todayTextView: TextView
-//    private var headerConnectingView: View
     
+    private var depositDateTextView: TextView
     
     init {
-//        sectionHeaderTextView = view.findViewById(R.id.sectionHeaderTextView)
-//        spacerTextView = view.findViewById(R.id.sectionHeaderSpacer)
-//        todayTextView = view.findViewById(R.id.sectionHeaderTodayTextView)
-//        headerConnectingView = view.findViewById(R.id.headerConnectingView)
+        depositDateTextView = view.findViewById(R.id.depositDateTextView)
     }
     
     companion object {
         val dayOfWeekAndDayOfMonthFormatter: DateTimeFormatter = DateTimeFormatterBuilder()
-            .appendPattern("EEEE, d")
+            .appendPattern("MMM, d")
             .toFormatter(Locale.US)
     }
     

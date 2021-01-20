@@ -215,4 +215,8 @@
     <string name="empty_value">--</string>
     <string name="rolling_balance">(2 day rolling deposit)</string>
     <string name="separator">•</string>
+    <string name="transaction_details_title">Transaction</string>
+    <string name="cost_to_write_off_for_taxes_estimate">Cost to write off for taxes (estimate)</string>
+    <string name="miles_to_write_off_for_taxes_estimate">Miles to write off for taxes (estimate)</string>
+    <string name="auto_service_selection">Auto service</string>
 </resources>

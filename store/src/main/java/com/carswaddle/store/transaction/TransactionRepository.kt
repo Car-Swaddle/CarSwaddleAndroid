@@ -4,7 +4,8 @@ import android.content.Context
 import com.carswaddle.carswaddleandroid.retrofit.EmptyResponseBody
 import com.carswaddle.carswaddleandroid.retrofit.ServiceGenerator
 import com.carswaddle.carswaddleandroid.retrofit.ServiceNotAvailable
-import com.carswaddle.carswaddleandroid.services.serviceModels.Transaction
+import com.carswaddle.carswaddleandroid.services.serviceModels.Transaction as TransactionServiceModel
+import com.carswaddle.carswaddleandroid.services.serviceModels.TransactionMetadata as TransactionMetadataServiceModel
 import com.carswaddle.services.services.StripeService
 import com.carswaddle.services.services.TransactionResponse
 import kotlinx.coroutines.CoroutineScope
@@ -61,13 +62,68 @@ class TransactionRepository(val transactionDao: TransactionDao) {
         })
 
     }
-    
-    suspend fun insertTransaction(transaction: Transaction) {
-        transactionDao.insertTransaction(com.carswaddle.store.transaction.Transaction(transaction))
+
+    fun getTransactionDetails(transactionId: String, context: Context, completion: (t: Throwable?) -> Unit) {
+        val stripeService = ServiceGenerator.authenticated(context)?.retrofit?.create(StripeService::class.java)
+        if (stripeService == null) {
+            completion(ServiceNotAvailable())
+            return
+        }
+
+        val call = stripeService.getTransactionDetails(transactionId)
+
+        call.enqueue( object :
+            Callback<TransactionServiceModel> {
+
+            override fun onFailure(call: Call<TransactionServiceModel>, t: Throwable) {
+                completion(t)
+            }
+
+            override fun onResponse(
+                call: Call<TransactionServiceModel>,
+                response: Response<TransactionServiceModel>
+            ) {
+                val transactionDetails = response.body()
+                if (transactionDetails == null) {
+                    completion(EmptyResponseBody())
+                } else {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        insertTransaction(transactionDetails)
+                        completion(null)
+                    }
+                }
+            }
+
+        })
+
     }
     
-    suspend fun getTransactions(ids: List<String>): List<com.carswaddle.store.transaction.Transaction> {
-        return transactionDao.getTransaction(ids)
+    suspend fun insertTransaction(transaction: TransactionServiceModel) {
+        val t = Transaction(transaction)
+        val m = transaction.transactionMetadata
+        t.transactionMetadataId = m?.id 
+            
+        transactionDao.insertTransaction(t)
+        
+        if (m != null) {
+            insertTransactionMetadata(m)
+        }
+    }
+
+    suspend fun insertTransactionMetadata(transactionMetadata: TransactionMetadataServiceModel) {
+        transactionDao.insertTransactionMetadata(TransactionMetadata(transactionMetadata))
+    }
+    
+    suspend fun getTransactions(ids: List<String>): List<Transaction> {
+        return transactionDao.getTransactionExcludingPayouts(ids)
+    }
+
+    suspend fun getTransaction(id: String): Transaction? {
+        return transactionDao.getTransaction(id)
+    }
+
+    suspend fun getTransactionMetadata(transactionId: String): TransactionMetadata? {
+        return transactionDao.getTransactionMetadata(transactionId)
     }
 
 //    suspend fun getBalance(mechanicId: String): Balance? {

@@ -54,11 +54,41 @@
     <fragment
         android:id="@+id/navigation_deposits"
         android:name="com.carswaddle.carswaddlemechanic.ui.earnings.deposits.DepositsFragment"
-        android:label="@string/deposits_title" />
+        android:label="@string/deposits_title" >
+        <action
+            android:id="@+id/action_navigation_deposits_to_navigation_transaction_details"
+            app:destination="@id/navigation_transaction_details"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_transactions"
         android:name="com.carswaddle.carswaddlemechanic.ui.earnings.transactions.TransactionsFragment"
-        android:label="@string/transactions_title" />
+        android:label="@string/transactions_title" >
+        <action
+            android:id="@+id/action_navigation_transactions_to_navigation_transaction_details"
+            app:destination="@id/navigation_transaction_details"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
 
+    <fragment
+        android:id="@+id/navigation_transaction_details"
+        android:name="com.carswaddle.carswaddlemechanic.ui.earnings.transaction_details.TransactionDetailsFragment"
+        android:label="@string/transaction_details_title"
+        tools:layout="@layout/fragment_transaction_details" >
+        <action
+            android:id="@+id/action_navigation_transaction_details_to_autoServiceDetailsFragment"
+            app:destination="@id/autoServiceDetailsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
+    
 </navigation>

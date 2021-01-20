@@ -122,13 +122,14 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="1px"
             android:background="@color/contentDivider" />
         
         <RelativeLayout
             android:id="@+id/depositsLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
             android:padding="@dimen/content_margin">
 
             <TextView
@@ -142,13 +143,14 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="1px"
             android:background="@color/contentDivider" />
 
         <RelativeLayout
             android:id="@+id/transactionsLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
             android:padding="@dimen/content_margin">
 
             <TextView
@@ -162,7 +164,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="1px"
             android:background="@color/contentDivider" />
 
     </LinearLayout>

@@ -1,16 +1,12 @@
 package com.carswaddle.services.services
 
 import com.carswaddle.carswaddleandroid.services.ContentType
-import com.carswaddle.carswaddleandroid.services.serviceModels.Balance
-import com.carswaddle.carswaddleandroid.services.serviceModels.Payout
-import com.carswaddle.carswaddleandroid.services.serviceModels.PayoutStatus
-import com.carswaddle.carswaddleandroid.services.serviceModels.Transaction
+import com.carswaddle.carswaddleandroid.services.serviceModels.*
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Query
-import java.util.*
 
 
 private const val ephemeralKeysEndpoint = "/api/stripe/ephemeral-keys"
@@ -36,6 +32,10 @@ interface StripeService {
     @Headers(ContentType.headerPrefix + ContentType.applicationJSON)
     @GET(transactions)
     fun getTransactions(@Query("startingAfterID") startingAfterId: String?, @Query("payoutID") payoutId: String?, @Query("limit") limit: Int?): Call<TransactionResponse>
+
+    @Headers(ContentType.headerPrefix + ContentType.applicationJSON)
+    @GET(transactionDetails)
+    fun getTransactionDetails(@Query("transactionID") transactionId: String): Call<Transaction>
     
 }
 

@@ -11,66 +11,66 @@
         android:layout_width="1dp"
         android:layout_height="0dp"
         android:layout_marginStart="@dimen/content_gap"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintTop_toBottomOf="parent"
-        app:layout_constrainedWidth="false"
         android:background="@color/contentDivider"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constrainedWidth="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/right_round_brand"
-        android:paddingStart="@dimen/content_gap"
-        android:paddingEnd="@dimen/content_margin"
-        android:paddingVertical="@dimen/text_margin"
         android:layout_marginTop="@dimen/content_gap"
         android:layout_marginEnd="@dimen/content_margin"
         android:layout_marginBottom="@dimen/content_margin"
+        android:background="@drawable/right_round_brand"
+        android:paddingVertical="@dimen/text_margin"
+        android:paddingStart="@dimen/content_gap"
+        android:paddingEnd="@dimen/content_margin"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
-    
-    <LinearLayout
-        android:id="@+id/textContainer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/sectionHeaderTodayTextView"
+        <LinearLayout
+            android:id="@+id/textContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Today"
-            android:textColor="@color/brandContrast"
-            android:textSize="@dimen/title"
-            android:textStyle="bold"/>
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/sectionHeaderSpacer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="•"
-            android:textColor="@color/brandContrast"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:layout_marginHorizontal="@dimen/text_margin"/>
+            <TextView
+                android:id="@+id/sectionHeaderTodayTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Today"
+                android:textColor="@color/brandContrast"
+                android:textSize="@dimen/title"
+                android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/sectionHeaderTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tuesday, 29"
-            android:textColor="@color/brandContrast"
-            android:textSize="@dimen/title"
-            android:textStyle="bold"/>
-        
-    </LinearLayout>
+            <TextView
+                android:id="@+id/sectionHeaderSpacer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/text_margin"
+                android:text="•"
+                android:textColor="@color/brandContrast"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/sectionHeaderTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tuesday, 29"
+                android:textColor="@color/brandContrast"
+                android:textSize="@dimen/title"
+                android:textStyle="bold" />
+
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
     

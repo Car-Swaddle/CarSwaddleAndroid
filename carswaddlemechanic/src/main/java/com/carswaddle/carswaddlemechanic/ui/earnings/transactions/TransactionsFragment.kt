@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.carswaddle.carswaddleandroid.services.serviceModels.TransactionType
 import com.carswaddle.carswaddlemechanic.R
 import com.carswaddle.carswaddlemechanic.ui.calendar.singleday.DayAutoServiceListAdapter
 
@@ -31,9 +32,10 @@ class TransactionsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        transactionViewModel = ViewModelProvider(requireActivity()).get(TransactionsViewModel::class.java)
+        transactionViewModel =
+            ViewModelProvider(requireActivity()).get(TransactionsViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_transactions, container, false)
-        
+
         recyclerView = root.findViewById(R.id.transactions_recycler_view)
 //        emptyStateLayout = root.findViewById(R.id.autoServiceListEmptyState)
 
@@ -41,17 +43,21 @@ class TransactionsFragment : Fragment() {
 //            emptyStateLayout.visibility = if (it) View.VISIBLE else View.GONE
 //        }
 
-        transactionViewModel.transactions.observe(viewLifecycleOwner) {
-            viewAdapter.notifyDataSetChanged()
-        }
-
-        viewAdapter = TransactionsListAdapter(transactionViewModel.transactions) {
-            val manager = childFragmentManager
-            if (manager != null) {
-//                val bundle = bundleOf("autoServiceId" to it.autoService.id)
-//                findNavController().navigate(R.id.action_navigation_calendar_to_autoServiceDetailsFragment, bundle)
+        transactionViewModel.transactionItems.observe(viewLifecycleOwner) {
+            requireActivity().runOnUiThread {
+                viewAdapter.notifyDataSetChanged()
             }
         }
+
+        viewAdapter = TransactionsListAdapter(transactionViewModel.transactionItems) { transaction ->
+                if (transaction.type == TransactionType.payment) {
+                    val bundle = bundleOf("transactionId" to transaction.id)
+                    findNavController().navigate(
+                        R.id.action_navigation_transactions_to_navigation_transaction_details,
+                        bundle
+                    )
+                }
+            }
 
         viewManager = LinearLayoutManager(requireContext())
 
@@ -63,7 +69,7 @@ class TransactionsFragment : Fragment() {
 
 //        viewModel.date = date
 //        viewAdapter.date = date
-        
+
         transactionViewModel.getTransactions(null, null, 100, requireContext()) { t, ids ->
             print("got back transactions")
         }

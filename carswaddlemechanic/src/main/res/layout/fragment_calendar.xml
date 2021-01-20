@@ -58,7 +58,7 @@
                     app:scheme_theme_color="@color/textAlpha"
                     app:selected_text_color="@color/selectionContrast"
                     app:selected_theme_color="@color/selection"
-                    app:week_background="@color/content3"
+                    app:week_background="@color/content"
                     app:week_text_color="@color/text2"
                     app:week_view="com.carswaddle.carswaddlemechanic.ui.calendar.calendarfragment.SimpleWeekView"
                     app:year_view_day_text_color="@color/textAlpha"

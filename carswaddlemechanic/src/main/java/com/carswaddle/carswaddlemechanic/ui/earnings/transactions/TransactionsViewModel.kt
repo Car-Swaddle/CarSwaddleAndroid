@@ -12,8 +12,10 @@ import com.carswaddle.store.AppDatabase
 import com.carswaddle.store.balance.BalanceRepository
 import com.carswaddle.store.payout.PayoutRepository
 import com.carswaddle.store.transaction.Transaction
+import com.carswaddle.store.transaction.TransactionMetadata
 import com.carswaddle.store.transaction.TransactionRepository
 import kotlinx.coroutines.launch
+import java.util.*
 
 class TransactionsViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -24,10 +26,16 @@ class TransactionsViewModel(application: Application) : AndroidViewModel(applica
         transactionRepository = TransactionRepository(db.transactionDao())
     }
     
-    private val _transactions = MutableLiveData<List<Transaction>>().apply {
+    private val _transactionItems = MutableLiveData<List<TransactionItem>>().apply {
         value = listOf()
     }
-    val transactions: LiveData<List<Transaction>> = _transactions
+    val transactionItems: LiveData<List<TransactionItem>> = _transactionItems
+    
+    private var transactions: List<Transaction> = listOf()
+    set(newValue) {
+        field = newValue
+        updateViewModel()
+    }
     
     fun getTransactions(startingAfterId: String? = null, payoutId: String? = null, limit: Int = 10, context: Context, completion: (t: Throwable?, transactionIds: List<String>?) -> Unit) {
         transactionRepository.getTransactions(startingAfterId, payoutId, limit, context) { t, transactionIds ->
@@ -35,8 +43,7 @@ class TransactionsViewModel(application: Application) : AndroidViewModel(applica
             val ids = transactionIds
             if (ids != null && t == null) {
                 viewModelScope.launch {
-                    val transactions = transactionRepository.getTransactions(ids = ids)
-                    _transactions.postValue(transactions)
+                    transactions = transactionRepository.getTransactions(ids)
                     completion(t, transactionIds)
                 }
             } else {
@@ -45,4 +52,39 @@ class TransactionsViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
+    private fun updateViewModel() {
+        var newTransactionItems: MutableList<TransactionItem> = mutableListOf()
+        var lastDate: Calendar? = null
+        for (transaction in transactions) {
+            if (lastDate == null || lastDate != transaction.adjustedAvailableOn) {
+                lastDate = transaction.adjustedAvailableOn
+                val transactionSection = TransactionItem(TransactionItem.ItemType.SECTION, null, lastDate)
+                newTransactionItems.add(transactionSection)
+            }
+            val transactionItem = TransactionItem(TransactionItem.ItemType.TRANSACTION, transaction, null)
+            newTransactionItems.add(transactionItem)
+        }
+        _transactionItems.postValue(newTransactionItems)
+    }
+
+    fun transactionMetadata(transaction: Transaction, completion: (transactionMetadata: TransactionMetadata?) -> Unit) {
+        val id = transaction.id
+        viewModelScope.launch {
+            val m = transactionRepository.getTransactionMetadata(id)
+            completion(m)
+        }
+    }
+    
+}
+
+data class TransactionItem(
+    val type: ItemType,
+    val transaction: Transaction?,
+    val sectionDate: Calendar?,
+) {
+    
+    enum class ItemType {
+        SECTION, TRANSACTION
+    }
+    
 }

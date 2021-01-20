@@ -34,8 +34,8 @@ import com.carswaddle.store.transaction.TransactionDao
 import com.carswaddle.store.transaction.TransactionMetadata
 
 
-@Database(entities = arrayOf(User::class, AutoService::class, Vehicle::class, AutoServiceLocation::class, VehicleDescription::class, Mechanic::class, ServiceEntity::class, OilChange::class, TemplateTimeSpan::class, Review::class, Balance::class, Payout::class, Transaction::class, TransactionMetadata::class), version = 22)
-@TypeConverters(DateConverter::class, DateDoubleConverter::class, DateIntConverter::class, CalendarConverter::class, CalendarDoubleConverter::class, CalendarIntConverter::class, ArrayListConverter::class, AutoServiceStatusConverter::class, OilTypeConverter::class, PayoutStatusConverter::class)
+@Database(entities = arrayOf(User::class, AutoService::class, Vehicle::class, AutoServiceLocation::class, VehicleDescription::class, Mechanic::class, ServiceEntity::class, OilChange::class, TemplateTimeSpan::class, Review::class, Balance::class, Payout::class, Transaction::class, TransactionMetadata::class), version = 24)
+@TypeConverters(DateConverter::class, DateDoubleConverter::class, DateIntConverter::class, CalendarConverter::class, CalendarDoubleConverter::class, CalendarIntConverter::class, ArrayListConverter::class, AutoServiceStatusConverter::class, OilTypeConverter::class, PayoutStatusConverter::class, TransactionTypeConverter::class)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun userDao(): UserDao
