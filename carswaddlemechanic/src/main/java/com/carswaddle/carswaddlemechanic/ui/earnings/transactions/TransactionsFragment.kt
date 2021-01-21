@@ -35,7 +35,7 @@ class TransactionsFragment : Fragment() {
         transactionViewModel = ViewModelProvider(requireActivity()).get(TransactionsViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_transactions, container, false)
         
-        payoutId = arguments?.getString("payoutId") ?: ""
+        payoutId = arguments?.getString("payoutId")
         
         recyclerView = root.findViewById(R.id.transactions_recycler_view)
         transactionViewModel.transactionItems.observe(viewLifecycleOwner) {

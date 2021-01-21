@@ -219,4 +219,14 @@
     <string name="cost_to_write_off_for_taxes_estimate">Cost to write off for taxes (estimate)</string>
     <string name="miles_to_write_off_for_taxes_estimate">Miles to write off for taxes (estimate)</string>
     <string name="auto_service_selection">Auto service</string>
+    <string name="allow_new_explanation">If this is on, customers can schedule appointments on your calendar</string>
+    <string name="allow_new_appointments">Allow new appointments</string>
+    <string name="charge_for_travel">Charge for travel</string>
+    <string name="charge_travel_explained">If this is on, you will charge the normal price for travel. If you turn this off, you will no charge for travel and will not be covered for travel costs. Use this to offer a discount to your customers.</string>
+    <string name="tax_deductions">Tax deductions</string>
+    <string name="contact_information">Contact information</string>
+    <string name="personal_information">Personal information</string>
+    <string name="set_pricing">Set pricing</string>
+    <string name="set_hours">Set hours</string>
+    <string name="set_service_region">Set service region</string>
 </resources>
