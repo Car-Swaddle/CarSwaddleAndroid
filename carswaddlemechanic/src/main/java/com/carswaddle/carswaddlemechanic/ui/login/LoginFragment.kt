@@ -19,7 +19,6 @@ import com.carswaddle.carswaddleandroid.ui.view.ProgressButton
 import com.carswaddle.carswaddlemechanic.MainActivity
 import com.carswaddle.carswaddlemechanic.R.layout.fragment_login
 import com.carswaddle.carswaddlemechanic.R
-//import com.carswaddle.carswaddlemechanic.ui.common.ProgressButton
 import com.carswaddle.services.Authentication
 import com.carswaddle.store.AppDatabase
 

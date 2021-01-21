@@ -20,29 +20,24 @@ import com.carswaddle.carswaddlemechanic.ui.calendar.singleday.DayAutoServiceLis
 class TransactionsFragment : Fragment() {
 
     private lateinit var transactionViewModel: TransactionsViewModel
-
-    private lateinit var emptyStateLayout: LinearLayout
-
+    
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: TransactionsListAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
+    
+    private var payoutId: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        transactionViewModel =
-            ViewModelProvider(requireActivity()).get(TransactionsViewModel::class.java)
+        transactionViewModel = ViewModelProvider(requireActivity()).get(TransactionsViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_transactions, container, false)
-
+        
+        payoutId = arguments?.getString("payoutId") ?: ""
+        
         recyclerView = root.findViewById(R.id.transactions_recycler_view)
-//        emptyStateLayout = root.findViewById(R.id.autoServiceListEmptyState)
-
-//        viewModel.showEmptyState.observe(viewLifecycleOwner) {
-//            emptyStateLayout.visibility = if (it) View.VISIBLE else View.GONE
-//        }
-
         transactionViewModel.transactionItems.observe(viewLifecycleOwner) {
             requireActivity().runOnUiThread {
                 viewAdapter.notifyDataSetChanged()
@@ -66,11 +61,8 @@ class TransactionsFragment : Fragment() {
             layoutManager = viewManager
             adapter = viewAdapter
         }
-
-//        viewModel.date = date
-//        viewAdapter.date = date
-
-        transactionViewModel.getTransactions(null, null, 100, requireContext()) { t, ids ->
+        
+        transactionViewModel.getTransactions(null, payoutId, 100, requireContext()) { t, ids ->
             print("got back transactions")
         }
 

@@ -5,11 +5,12 @@ import android.util.Log
 import com.carswaddle.carswaddleandroid.retrofit.EmptyResponseBody
 import com.carswaddle.carswaddleandroid.retrofit.ServiceGenerator
 import com.carswaddle.carswaddleandroid.retrofit.ServiceNotAvailable
-import com.carswaddle.carswaddleandroid.services.serviceModels.Payout
+import com.carswaddle.carswaddleandroid.services.serviceModels.Payout as PayoutServiceModel
 import com.carswaddle.carswaddleandroid.services.serviceModels.PayoutStatus
 import com.carswaddle.services.services.PayoutResponse
 import com.carswaddle.services.services.StripeService
 import com.carswaddle.store.balance.Balance
+import com.carswaddle.store.payout.Payout as PayoutStoreModel 
 import com.carswaddle.store.balance.BalanceDao
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -71,8 +72,12 @@ class PayoutRepository(val payoutDao: PayoutDao) {
         })
     }
 
-    suspend private fun insertPayout(payout: Payout) {
-        payoutDao.insertPayout(com.carswaddle.store.payout.Payout(payout))
+    suspend fun getPayouts(payoutIds: List<String>): List<PayoutStoreModel> {
+        return payoutDao.getPayouts(payoutIds)
+    }
+    
+    suspend fun insertPayout(payout: PayoutServiceModel) {
+        payoutDao.insertPayout(PayoutStoreModel(payout))
     }
 
     fun payoutSumInTransit(): Int {

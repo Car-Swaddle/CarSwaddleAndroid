@@ -16,7 +16,9 @@ private val productionUrl = "https://api.carswaddle.com"
 private val stagingUrl = "https://api.staging.carswaddle.com"
 private val localUrl = "Kyles-MacBook-Pro.local"
 
-val server: Server = Server.fromBuildConfigs()
+//val server: Server = Server.fromBuildConfigs()
+
+val server: Server = Server.production
 
 enum class Server() {
     staging,

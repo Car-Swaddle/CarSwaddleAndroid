@@ -73,7 +73,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/emailEditText" />
 
-    <com.carswaddle.carswaddlemechanic.ui.common.ProgressButton
+    <com.carswaddle.carswaddleandroid.ui.view.ProgressButton
         android:id="@+id/sendResetButton"
         android:text="@string/login"
         app:displayText="@string/login"
@@ -84,7 +84,7 @@
         app:layout_constraintStart_toStartOf="@+id/password_edit_text"
         app:layout_constraintTop_toBottomOf="@+id/password_edit_text" />
 
-    <com.carswaddle.carswaddlemechanic.ui.common.ProgressButton
+    <com.carswaddle.carswaddleandroid.ui.view.ProgressButton
         android:id="@+id/forgotPasswordButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

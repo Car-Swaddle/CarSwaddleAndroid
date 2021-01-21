@@ -26,7 +26,7 @@
         tools:layout="@layout/fragment_earnings" >
         <action
             android:id="@+id/action_navigation_earnings_to_depositsFragment"
-            app:destination="@id/navigation_deposits"
+            app:destination="@id/navigation_payouts"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
@@ -52,12 +52,19 @@
         android:label="@string/service_details" />
 
     <fragment
-        android:id="@+id/navigation_deposits"
-        android:name="com.carswaddle.carswaddlemechanic.ui.earnings.deposits.DepositsFragment"
+        android:id="@+id/navigation_payouts"
+        android:name="com.carswaddle.carswaddlemechanic.ui.earnings.deposits.PayoutsFragment"
         android:label="@string/deposits_title" >
         <action
-            android:id="@+id/action_navigation_deposits_to_navigation_transaction_details"
+            android:id="@+id/action_navigation_payouts_to_navigation_transaction_details"
             app:destination="@id/navigation_transaction_details"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_navigation_payouts_to_navigation_transactions"
+            app:destination="@id/navigation_transactions"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
