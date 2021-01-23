@@ -360,6 +360,11 @@ class UserRepository(private val userDao: UserDao) {
         editContext.putString(currentMechanicIdKey, mechanicId)
         editContext.apply()
     }
+
+    fun getCurrentMechanicId(context: Context): String? {
+        val preferences = context.carSwaddlePreferences()
+        return preferences.getString(currentMechanicIdKey, null)
+    }
     
     companion object {
         
@@ -377,3 +382,5 @@ class UserRepository(private val userDao: UserDao) {
 class EmailNotFoundError(message: String) : Throwable(message) {}
 
 class ServiceError() : Throwable() {}
+
+class MechanicIdIsUnavailable() : Throwable() {}

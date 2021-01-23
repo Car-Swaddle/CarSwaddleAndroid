@@ -206,4 +206,27 @@
     <string name="today">Today</string>
     <string name="notes_hint">Add a note for the mechanic here. They will receive a notification when you are done typing.</string>
     <string name="service_details">Service Details</string>
+    <string name="account_balance">Account balance</string>
+    <string name="transferring">Transferring</string>
+    <string name="processing">Processing</string>
+    <string name="earnings_title">Earnings</string>
+    <string name="deposits_title">Deposits</string>
+    <string name="transactions_title">Transactions</string>
+    <string name="empty_value">--</string>
+    <string name="rolling_balance">(2 day rolling deposit)</string>
+    <string name="separator">•</string>
+    <string name="transaction_details_title">Transaction</string>
+    <string name="cost_to_write_off_for_taxes_estimate">Cost to write off for taxes (estimate)</string>
+    <string name="miles_to_write_off_for_taxes_estimate">Miles to write off for taxes (estimate)</string>
+    <string name="auto_service_selection">Auto service</string>
+    <string name="allow_new_explanation">If this is on, customers can schedule appointments on your calendar</string>
+    <string name="allow_new_appointments">Allow new appointments</string>
+    <string name="charge_for_travel">Charge for travel</string>
+    <string name="charge_travel_explained">If this is on, you will charge the normal price for travel. If you turn this off, you will no charge for travel and will not be covered for travel costs. Use this to offer a discount to your customers.</string>
+    <string name="tax_deductions">Tax deductions</string>
+    <string name="contact_information">Contact information</string>
+    <string name="personal_information">Personal information</string>
+    <string name="set_pricing">Set pricing</string>
+    <string name="set_hours">Set hours</string>
+    <string name="set_service_region">Set service region</string>
 </resources>

@@ -12,14 +12,33 @@
         tools:layout="@layout/fragment_calendar" >
         <action
             android:id="@+id/action_navigation_calendar_to_autoServiceDetailsFragment"
-            app:destination="@id/autoServiceDetailsFragment" />
+            app:destination="@id/autoServiceDetailsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.carswaddle.carswaddlemechanic.ui.home.HomeFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        android:id="@+id/navigation_earnings"
+        android:name="com.carswaddle.carswaddlemechanic.ui.earnings.EarningsFragment"
+        android:label="@string/earnings_title"
+        tools:layout="@layout/fragment_earnings" >
+        <action
+            android:id="@+id/action_navigation_earnings_to_depositsFragment"
+            app:destination="@id/navigation_payouts"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_navigation_earnings_to_transactionsFragment"
+            app:destination="@id/navigation_transactions"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_mechanic_profile"
@@ -32,4 +51,51 @@
         android:name="com.carswaddle.carswaddlemechanic.ui.autoservice_details.AutoServiceDetailsFragment"
         android:label="@string/service_details" />
 
+    <fragment
+        android:id="@+id/navigation_payouts"
+        android:name="com.carswaddle.carswaddlemechanic.ui.earnings.deposits.PayoutsFragment"
+        android:label="@string/deposits_title" >
+        <action
+            android:id="@+id/action_navigation_payouts_to_navigation_transaction_details"
+            app:destination="@id/navigation_transaction_details"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_navigation_payouts_to_navigation_transactions"
+            app:destination="@id/navigation_transactions"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_transactions"
+        android:name="com.carswaddle.carswaddlemechanic.ui.earnings.transactions.TransactionsFragment"
+        android:label="@string/transactions_title" >
+        <action
+            android:id="@+id/action_navigation_transactions_to_navigation_transaction_details"
+            app:destination="@id/navigation_transaction_details"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_transaction_details"
+        android:name="com.carswaddle.carswaddlemechanic.ui.earnings.transaction_details.TransactionDetailsFragment"
+        android:label="@string/transaction_details_title"
+        tools:layout="@layout/fragment_transaction_details" >
+        <action
+            android:id="@+id/action_navigation_transaction_details_to_autoServiceDetailsFragment"
+            app:destination="@id/autoServiceDetailsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
+    
 </navigation>
