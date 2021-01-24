@@ -1,19 +1,26 @@
 package com.carswaddle.carswaddleandroid.data.mechanic
 
+import android.app.Service
 import android.content.Context
 import android.util.Log
 import com.carswaddle.carswaddleandroid.Extensions.carSwaddlePreferences
+import com.carswaddle.carswaddleandroid.data.user.ServiceError
 import com.carswaddle.carswaddleandroid.data.user.User
 import com.carswaddle.carswaddleandroid.retrofit.ServiceGenerator
 import com.carswaddle.carswaddleandroid.retrofit.ServiceNotAvailable
 import com.carswaddle.carswaddleandroid.services.MechanicService
-//import com.carswaddle.carswaddleandroid.data.mechanic.Mechanic
-import com.carswaddle.carswaddleandroid.services.serviceModels.Mechanic
+import com.carswaddle.carswaddleandroid.services.UpdateMechanic
+import com.carswaddle.carswaddleandroid.services.UserService
+import com.carswaddle.carswaddleandroid.data.mechanic.Mechanic as StoreMechanic
+import  com.carswaddle.carswaddleandroid.services.serviceModels.Mechanic as ServiceMechanic
 import com.carswaddle.carswaddleandroid.services.serviceModels.Stats
+import com.carswaddle.carswaddleandroid.services.serviceModels.UpdateUser
+import com.carswaddle.carswaddleandroid.services.serviceModels.Verification as ServiceVerification
+import com.carswaddle.services.services.StripeService
+import com.carswaddle.store.mechanic.Verification as StoreVerification
 import com.carswaddle.carswaddleandroid.services.serviceModels.TemplateTimeSpan as TemplateTimeSpanModel
 import com.google.gson.Gson
 import com.google.gson.JsonObject
-//import com.google.protobuf.Parser
 import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -22,17 +29,35 @@ import java.lang.Exception
 
 private val currentMechanicIdKey: String = "com.carswaddle.carswaddleandroid.user.currentMechanicId"
 
+private val mechanicImportQueue = newSingleThreadContext("com.carswaddle.carswaddlemechanic.mechanicImportQueue")
+
+
 class MechanicRepository(private val mechanicDao: MechanicDao) {
 
     fun getMechanic(mechanicId: String): com.carswaddle.carswaddleandroid.data.mechanic.Mechanic? {
         return mechanicDao.getMechanic(mechanicId)
     }
 
+    fun getVerification(mechanicId: String): com.carswaddle.store.mechanic.Verification? {
+        return mechanicDao.getVerification(mechanicId)
+    }
+
     fun getMechanics(mechanicIds: List<String>): List<com.carswaddle.carswaddleandroid.data.mechanic.Mechanic>? {
         return mechanicDao.getMechanics(mechanicIds)
     }
 
-    fun getNearestMechanics(latitude: Double, longitude: Double, maxDistance: Double, limit: Int, context: Context, completion: (error: Throwable?, mechanicIDs: List<String>?) -> Unit) {
+    fun insertVerification(verification: StoreVerification) {
+        return mechanicDao.insertVerification(verification)
+    }
+
+    fun getNearestMechanics(
+        latitude: Double,
+        longitude: Double,
+        maxDistance: Double,
+        limit: Int,
+        context: Context,
+        completion: (error: Throwable?, mechanicIDs: List<String>?) -> Unit
+    ) {
         val mechanicService =
             ServiceGenerator.authenticated(context)?.retrofit?.create(MechanicService::class.java)
         if (mechanicService == null) {
@@ -43,7 +68,7 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
 
         val call = mechanicService.getNearestMechanic(latitude, longitude, maxDistance, limit)
         call.enqueue(object : Callback<List<Map<String, Any>>> {
-            
+
             override fun onFailure(call: Call<List<Map<String, Any>>>, t: Throwable) {
                 completion(t, null)
             }
@@ -57,26 +82,16 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
                 if (code < 200 || code >= 300 || result == null) {
                     completion(Throwable("The result was empty or got invalid response code"), null)
                 } else {
-                    CoroutineScope(Dispatchers.IO).launch {
+                    CoroutineScope(mechanicImportQueue).launch {
                         try {
                             var ids = arrayListOf<String>()
                             val gson = Gson()
                             for (map in result) {
-                                var newMap = map.toMutableMap() 
-                                val jsonTree = gson.toJsonTree(map)
-                                val user = gson.fromJson<User>(jsonTree, User::class.java)
-                                var userMap = gson.fromJson<Map<String, Any>>(gson.toJsonTree(user), Map::class.java).toMutableMap()
-                                // The value for `id` is the mechanic id, set `userID` as `id` in newMap 
-                                (map["userID"] as? String)?.let {
-                                    userMap["id"] = it
-                                }
-                                newMap["user"] = userMap
-                                val newJSONTree = gson.toJsonTree(newMap)
-                                val mechanic = gson.fromJson<Mechanic>(newJSONTree, Mechanic::class.java)
+                                val mechanic = mechanicFromMap(map)
                                 insertNestedMechanic(mechanic)
                                 ids.add(mechanic.id)
                             }
-                            
+
                             completion(null, ids.toList())
                         } catch (e: Exception) {
                             print(e)
@@ -90,8 +105,70 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
         })
     }
 
-    fun getStats(mechanicId: String, context: Context, completion: (error: Throwable?, mechanicId: String?) -> Unit) {
+    fun getCurrentMechanic(context: Context, completion: (throwable: Throwable?) -> Unit) {
         val mechanicService = ServiceGenerator.authenticated(context)?.retrofit?.create(MechanicService::class.java)
+        if (mechanicService == null) {
+            // TODO: call with error
+            completion(ServiceNotAvailable("No able to make service to make network call"))
+            return
+        }
+
+        val call = mechanicService.getCurrentMechanic()
+        call.enqueue(object : Callback<Map<String, Any>> {
+
+            override fun onFailure(call: Call<Map<String, Any>>, t: Throwable) {
+                completion(t)
+            }
+
+            override fun onResponse(
+                call: Call<Map<String, Any>>,
+                response: Response<Map<String, Any>>
+            ) {
+                val result = response?.body()
+                if (result == null) {
+                    completion(Throwable("The result was empty or got invalid response code"))
+                } else {
+                    CoroutineScope(mechanicImportQueue).launch {
+                        try {
+                            val mechanic = mechanicFromMap(result)
+                            insertNestedMechanic(mechanic)
+                            completion(null)
+                        } catch (e: Exception) {
+                            print(e)
+                            Log.d("retrofit ", "error persisting auto service" + e)
+                            completion(e)
+                        }
+                    }
+                }
+            }
+
+        })
+    }
+
+
+    private fun mechanicFromMap(map: Map<String, Any>): ServiceMechanic {
+        val gson = Gson()
+        var newMap = map.toMutableMap()
+        val jsonTree = gson.toJsonTree(map)
+        val user = gson.fromJson<User>(jsonTree, User::class.java)
+        var userMap =
+            gson.fromJson<Map<String, Any>>(gson.toJsonTree(user), Map::class.java).toMutableMap()
+        // The value for `id` is the mechanic id, set `userID` as `id` in newMap 
+        (map["userID"] as? String)?.let {
+            userMap["id"] = it
+        }
+        newMap["user"] = userMap
+        val newJSONTree = gson.toJsonTree(newMap)
+        return gson.fromJson(newJSONTree, ServiceMechanic::class.java)
+    }
+
+    fun getStats(
+        mechanicId: String,
+        context: Context,
+        completion: (error: Throwable?, mechanicId: String?) -> Unit
+    ) {
+        val mechanicService =
+            ServiceGenerator.authenticated(context)?.retrofit?.create(MechanicService::class.java)
         if (mechanicService == null) {
             // TODO: call with error
             completion(ServiceNotAvailable("No able to make service to make network call"), null)
@@ -100,7 +177,7 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
 
         val call = mechanicService.getStats(mechanicId)
         call.enqueue(object : Callback<Map<String, Any>> {
-            
+
             override fun onFailure(call: Call<Map<String, Any>>, t: Throwable) {
                 completion(t, null)
             }
@@ -114,17 +191,17 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
                 if (code < 200 || code >= 300 || result == null) {
                     completion(Throwable("The result was empty or got invalid response code"), null)
                 } else {
-                    CoroutineScope(Dispatchers.IO).launch {
+                    CoroutineScope(mechanicImportQueue).launch {
                         var mechanic = mechanicDao.getMechanic(mechanicId)
                         if (mechanic == null) {
                             completion(null, null)
                             return@launch
                         }
-                        
+
                         val gson = Gson()
                         val json = gson.toJsonTree(result[mechanicId])
-                        val stats = gson.fromJson<Stats>(json, Stats::class.java)
-                        
+                        val stats = gson.fromJson(json, Stats::class.java)
+
                         Log.w("logging stuff", "map: $result")
 
                         mechanic.averageRating = stats.averageRating
@@ -140,7 +217,11 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
         })
     }
 
-    fun getTimeSlots(mechanicId: String, context: Context, completion: (error: Throwable?, timeSpanIds: List<String>?) -> Unit): Call<List<TemplateTimeSpanModel>>? {
+    fun getTimeSlots(
+        mechanicId: String,
+        context: Context,
+        completion: (error: Throwable?, timeSpanIds: List<String>?) -> Unit
+    ): Call<List<TemplateTimeSpanModel>>? {
         val mechanicService =
             ServiceGenerator.authenticated(context)?.retrofit?.create(MechanicService::class.java)
         if (mechanicService == null) {
@@ -165,7 +246,7 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
                 if (code < 200 || code >= 300 || result == null) {
                     completion(Throwable("The result was empty or got invalid response code"), null)
                 } else {
-                    CoroutineScope(Dispatchers.IO).launch {
+                    CoroutineScope(mechanicImportQueue).launch {
 
                         var spanIds = mutableListOf<String>()
 
@@ -179,15 +260,14 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
                     }
                 }
             }
-            
+
         })
 
         return call
-        
     }
 
 
-    private fun insertNestedMechanic(mechanic: com.carswaddle.carswaddleandroid.services.serviceModels.Mechanic): MechanicListElements? {
+    private fun insertNestedMechanic(mechanic: ServiceMechanic): MechanicListElements? {
         var storedUser = mechanic.user?.let { User(it) }
         val userId = mechanic.userID
         if (storedUser == null && userId != null) {
@@ -196,7 +276,9 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
             mechanicDao.insertUser(storedUser)
         }
         
-        val storedMechanic = Mechanic(mechanic)
+        val existingMechanic = getMechanic(mechanic.id)
+        
+        val storedMechanic = StoreMechanic(mechanic, existingMechanic?.averageRating, existingMechanic?.numberOfRatings, existingMechanic?.autoServicesProvided)
         mechanicDao.insertMechanic(storedMechanic)
 
         var storedTimeSpans = arrayListOf<TemplateTimeSpan>()
@@ -209,6 +291,9 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
                 }
             }
         }
+        
+        print("mechanic inserted $storedMechanic")
+        Log.w("mechanic insertion", "mechanic inserted $storedMechanic")
 
         if (storedUser != null) {
             return MechanicListElements(storedMechanic, storedUser, storedTimeSpans)
@@ -217,11 +302,94 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
         }
     }
 
+    fun updateMechanic(
+        updateMechanic: UpdateMechanic,
+        context: Context,
+        cacheCompletion: () -> Unit = {},
+        completion: (throwable: Throwable?) -> Unit
+    ) {
+        val mechanicService =
+            ServiceGenerator.authenticated(context)?.retrofit?.create(MechanicService::class.java)
+        if (mechanicService == null) {
+            completion(ServiceNotAvailable())
+            return
+        }
+
+        val call = mechanicService.updateMechanic(updateMechanic)
+        call.enqueue(object : Callback<ServiceMechanic> {
+            override fun onFailure(call: Call<ServiceMechanic>, t: Throwable) {
+                Log.d("retrofit ", "call failed")
+                completion(Error(t.localizedMessage))
+            }
+
+            override fun onResponse(
+                call: Call<ServiceMechanic>,
+                response: Response<ServiceMechanic>
+            ) {
+                Log.d("retrofit ", "call succeeded")
+                val result = response.body()
+                if (result == null) {
+                    // TODO: make an error here
+                    Log.d("retrofit ", "call failed")
+                    completion(ServiceError())
+                } else {
+                    Log.d("retrofit ", "call succeeded")
+                    CoroutineScope(mechanicImportQueue).launch {
+                        insertNestedMechanic(result)
+                        completion(null)
+                    }
+                }
+            }
+        })
+    }
+
+    fun updatVerification(context: Context, completion: (throwable: Throwable?) -> Unit) {
+        val stripeService =
+            ServiceGenerator.authenticated(context)?.retrofit?.create(StripeService::class.java)
+        if (stripeService == null) {
+            completion(ServiceNotAvailable())
+            return
+        }
+
+        val call = stripeService.getVerification()
+        call.enqueue(object : Callback<ServiceVerification> {
+            override fun onFailure(call: Call<ServiceVerification>, t: Throwable) {
+                Log.d("retrofit ", "call failed")
+                completion(Error(t.localizedMessage))
+            }
+
+            override fun onResponse(
+                call: Call<ServiceVerification>,
+                response: Response<ServiceVerification>
+            ) {
+                Log.d("retrofit ", "call succeeded")
+                val result = response.body()
+                if (result == null) {
+                    // TODO: make an error here
+                    Log.d("retrofit ", "call failed")
+                    completion(ServiceError())
+                } else {
+                    Log.d("retrofit ", "call succeeded")
+                    CoroutineScope(mechanicImportQueue).launch {
+                        val mechanicId = getCurrentMechanicId(context) ?: ""
+                        insertVerification(StoreVerification(result, mechanicId))
+                        completion(null)
+                    }
+                }
+            }
+        })
+    }
+
+    fun getCurrentMechanicVerification(context: Context): StoreVerification? {
+        val mechanicId = getCurrentMechanicId(context) ?: return null
+        return mechanicDao.getVerification(mechanicId)
+    }
+
     fun getCurrentMechanic(context: Context): com.carswaddle.carswaddleandroid.data.mechanic.Mechanic? {
         val mechanicId = getCurrentMechanicId(context) ?: return null
         return mechanicDao.getMechanic(mechanicId)
     }
-    
+
     fun getCurrentMechanicId(context: Context): String? {
         val preferences = context.carSwaddlePreferences()
         return preferences.getString(currentMechanicIdKey, null)

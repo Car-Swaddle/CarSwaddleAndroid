@@ -44,6 +44,10 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
         return autoServiceDao.getAutoServices(startDate, endDate, mechanicId)
     }
 
+    suspend fun getMechanic(mechanicId: String): Mechanic? {
+        return autoServiceDao.getMechanic(mechanicId)
+    }
+
     fun createAndPayForAutoService(
         createAutoService: CreateAutoService,
         context: Context,
@@ -415,7 +419,9 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
             autoServiceDao.insertReview(review)
         }
 
-        val mechanic = Mechanic(autoService.mechanic)
+        val existingMechanic = getMechanic(autoService.mechanicID)
+        
+        val mechanic = Mechanic(autoService.mechanic, existingMechanic?.averageRating, existingMechanic?.numberOfRatings, existingMechanic?.autoServicesProvided)
         autoServiceDao.insertMechanic(mechanic)
         autoService.mechanic.user?.let {
             autoServiceDao.insertUser(User(it))

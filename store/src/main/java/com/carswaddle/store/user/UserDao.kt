@@ -13,6 +13,9 @@ interface UserDao {
     @Query("SELECT * FROM user WHERE id IN (:userIds)")
     fun getUsersWithUserIds(userIds: IntArray): List<User>
 
+    @Query("SELECT * FROM mechanic WHERE id IS (:mechanicId)")
+    fun getMechanic(mechanicId: String): Mechanic?
+
     @Query("SELECT * FROM user WHERE id = (:userId)")
     fun getUserWithUserId(userId: String): User?
 

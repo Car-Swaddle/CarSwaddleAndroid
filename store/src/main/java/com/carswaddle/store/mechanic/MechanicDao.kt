@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.carswaddle.carswaddleandroid.data.oilChange.OilChange
 import com.carswaddle.carswaddleandroid.data.user.User
+import com.carswaddle.store.mechanic.Verification
 
 @Dao
 interface MechanicDao {
@@ -18,6 +19,9 @@ interface MechanicDao {
 
     @Query("SELECT * FROM user WHERE id IN (:userId)")
     fun getUser(userId: String): User?
+    
+    @Query("SELECT * FROM verification WHERE mechanicId is (:mechanicId)")
+    fun getVerification(mechanicId: String): Verification
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertMechanic(mechanic: Mechanic)
@@ -27,5 +31,8 @@ interface MechanicDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertTimeSpan(user: TemplateTimeSpan)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract fun insertVerification(verification: Verification)
 
 }

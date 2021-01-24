@@ -14,6 +14,7 @@ private const val balance = "/api/stripe/balance"
 private const val payouts = "/api/stripe/payouts"
 private const val transactions = "/api/stripe/transactions"
 private const val transactionDetails = "/api/stripe/transaction-details"
+private const val verification = "/api/stripe/verification"
 
 interface StripeService {
 
@@ -36,6 +37,10 @@ interface StripeService {
     @Headers(ContentType.headerPrefix + ContentType.applicationJSON)
     @GET(transactionDetails)
     fun getTransactionDetails(@Query("transactionID") transactionId: String): Call<Transaction>
+
+    @Headers(ContentType.headerPrefix + ContentType.applicationJSON)
+    @GET(verification)
+    fun getVerification(): Call<Verification>
     
 }
 

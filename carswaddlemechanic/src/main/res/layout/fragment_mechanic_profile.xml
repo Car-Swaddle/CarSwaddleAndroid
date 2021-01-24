@@ -14,11 +14,13 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/mechanicProfileContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:orientation="vertical"
+                android:layout_margin="@dimen/content_margin"
                 android:padding="16dp">
 
                 <com.google.android.material.card.MaterialCardView
@@ -38,7 +40,7 @@
                 </com.google.android.material.card.MaterialCardView>
 
                 <TextView
-                    android:id="@+id/name"
+                    android:id="@+id/mechanicProfileNameTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
@@ -68,7 +70,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="2dp"
-                    android:text="5.0 avg from 4 ratings"
+                    android:text="- avg from - ratings"
                     android:textColor="@color/text" />
 
                 <TextView
@@ -76,7 +78,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:text="8 services completed"
+                    android:text="- services completed"
                     android:textColor="@color/text" />
 
             </LinearLayout>
@@ -123,6 +125,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:layout_marginStart="@dimen/content_margin"
+                    android:checked="true"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toTopOf="parent"
@@ -181,6 +184,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:layout_marginStart="@dimen/content_margin"
+                    android:checked="true"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toTopOf="parent"

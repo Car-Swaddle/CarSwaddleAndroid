@@ -35,6 +35,10 @@ class UserRepository(private val userDao: UserDao) {
         userDao.insertMechanic(mechanic)
     }
 
+    suspend fun getMechanic(mechanicId: String): Mechanic? {
+        return userDao.getMechanic(mechanicId)
+    }
+
     suspend fun update(user: User, updateUser: UpdateUser) = withContext(Dispatchers.IO + NonCancellable) {
         userDao.insertUser(User(user, updateUser))
     }
@@ -66,7 +70,8 @@ class UserRepository(private val userDao: UserDao) {
                         setCurrentUserId(user.id, context)
                         
                         if (mechanic != null) {
-                            insert(Mechanic(mechanic))
+                            val existingMechanic = getMechanic(mechanic.id)
+                            insert(Mechanic(mechanic, existingMechanic?.averageRating, existingMechanic?.numberOfRatings, existingMechanic?.autoServicesProvided))
                             setCurrentMechanicId(mechanic.id, context)
                         }
                         
