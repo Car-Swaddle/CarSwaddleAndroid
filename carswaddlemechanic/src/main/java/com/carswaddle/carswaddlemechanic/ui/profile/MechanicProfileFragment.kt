@@ -16,9 +16,11 @@ import androidx.appcompat.widget.AppCompatRatingBar
 import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.carswaddle.carswaddleandroid.data.mechanic.Mechanic
 import com.carswaddle.carswaddleandroid.services.UpdateMechanic
 import com.carswaddle.carswaddlemechanic.R
+import com.carswaddle.carswaddlemechanic.ui.common.ActionIndicatorView
 import com.carswaddle.carswaddlemechanic.ui.common.MechanicImageView
 import com.carswaddle.carswaddlemechanic.ui.login.AuthActivity
 import com.carswaddle.services.Authentication
@@ -40,6 +42,7 @@ class MechanicProfileFragment : Fragment() {
     private lateinit var setPricingContainer: LinearLayout
     private lateinit var personalInformationContainer: LinearLayout
     private lateinit var contactInformationContainer: LinearLayout
+    private lateinit var profileContactInfoActionIndicator: ActionIndicatorView
     private lateinit var taxDeductionsContainer: LinearLayout
     private lateinit var logoutButton: Button
 
@@ -63,6 +66,7 @@ class MechanicProfileFragment : Fragment() {
         setPricingContainer = root.findViewById(R.id.setPricingContainer)
         personalInformationContainer = root.findViewById(R.id.personalInformationContainer)
         contactInformationContainer = root.findViewById(R.id.contactInformationContainer)
+        profileContactInfoActionIndicator = root.findViewById(R.id.profileContactInfoActionIndicator)
         taxDeductionsContainer = root.findViewById(R.id.taxDeductionsContainer)
         logoutButton = root.findViewById(R.id.profile_logout_button)
         mechanicImageView = root.findViewById(R.id.mechanicImageView)
@@ -96,7 +100,10 @@ class MechanicProfileFragment : Fragment() {
         viewModel.mechanicUser.observe(viewLifecycleOwner) {
             requireActivity().runOnUiThread {
                 print("can show red dots correctly")
-                mechanicNameTextView.text = it?.displayName() ?: "--"
+                it?.let {
+                    mechanicNameTextView.text = it.displayName() ?: "--"
+                    profileContactInfoActionIndicator.visibility = if (it.isEmailVerified == true) View.GONE else View.VISIBLE
+                }
             }
         }
         
@@ -105,7 +112,7 @@ class MechanicProfileFragment : Fragment() {
         }
 
         allReviewsTextView.setOnClickListener {
-
+            
         }
 
         allowNewAppointmentsSwitch.setOnCheckedChangeListener { compoundButton, b ->
@@ -124,22 +131,22 @@ class MechanicProfileFragment : Fragment() {
             print("checked changed")
         }
         setServiceRegionContainer.setOnClickListener {
-
+            
         }
         setHoursContainer.setOnClickListener {
-
+            
         }
         setPricingContainer.setOnClickListener {
-
+            
         }
         personalInformationContainer.setOnClickListener {
-
+            
         }
         contactInformationContainer.setOnClickListener {
-
+            findNavController().navigate(R.id.action_navigation_mechanic_profile_to_navigation_contact)
         }
         taxDeductionsContainer.setOnClickListener {
-
+            
         }
         
         

@@ -170,6 +170,34 @@ class UserRepository(private val userDao: UserDao) {
             }
         })
     }
+    
+    fun sendEmailVerification(completion: (throwable: Throwable?) -> Unit) {
+        val auth = serviceGenerator.retrofit?.create(UserService::class.java)
+        val call = auth?.sendEmailVerification()
+        call?.enqueue(object : Callback<Map<String, Any>> {
+            override fun onFailure(call: Call<Map<String, Any>>?, t: Throwable?) {
+                Log.d("retrofit ", "call failed")
+                completion(t)
+            }
+
+            override fun onResponse(call: Call<Map<String, Any>>?, response: Response<Map<String, Any>>?) {
+                Log.d("retrofit ", "call succeeded")
+                val code = response?.code()
+                if (code == null) {
+                    completion(null)
+                } else if (code == 404) {
+                    val e = EmailNotFoundError("No email was found")
+                    completion(e)
+                } else if (code < 200 || code >= 300) {
+                    val e = EmailNotFoundError("Unable to send email")
+                    completion(e)
+                } else {
+                    // Code is between 200 and 299 inclusive
+                    completion(null)
+                }
+            }
+        })
+    }
 
     fun sendResetLink(email: String, context: Context, completion: (error: Throwable?) -> Unit) {
         val auth = serviceGenerator.retrofit?.create(AuthenticationService::class.java)

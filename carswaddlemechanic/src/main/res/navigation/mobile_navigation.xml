@@ -44,7 +44,17 @@
         android:id="@+id/navigation_mechanic_profile"
         android:name="com.carswaddle.carswaddlemechanic.ui.profile.MechanicProfileFragment"
         android:label="@string/mechanic_profile"
-        tools:layout="@layout/fragment_mechanic_profile" />
+        tools:layout="@layout/fragment_mechanic_profile" >
+        <action
+            android:id="@+id/action_navigation_mechanic_profile_to_navigation_contact"
+            app:destination="@id/navigation_contact" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_contact"
+        android:name="com.carswaddle.carswaddlemechanic.ui.profile.contact.ContactInfoFragment"
+        android:label="@string/contact_info_title"
+        tools:layout="@layout/fragment_mechanic_contact_info" />
     
     <fragment
         android:id="@+id/autoServiceDetailsFragment"

@@ -12,6 +12,8 @@ private const val statsEndpoint = "/api/stats"
 private const val availabilityEndpoint = "/api/availability"
 private const val updateMechanic = "api/update-mechanic"
 private const val currentMechanic = "/api/current-mechanic"
+private const val mechanicPricing = "/api/mechanic/pricing"
+private const val mechanicRegion = "/api/region"
 
 interface MechanicService {
 
@@ -34,6 +36,22 @@ interface MechanicService {
     @Headers(ContentType.headerPrefix + ContentType.applicationJSON)
     @PATCH(updateMechanic)
     fun getCurrentMechanic(): Call<Map<String, Any>>
+
+    @Headers(ContentType.headerPrefix + ContentType.applicationJSON)
+    @GET(mechanicPricing)
+    fun getMechanicPricing(): Call<MechanicPricing>
+
+    @Headers(ContentType.headerPrefix + ContentType.applicationJSON)
+    @PUT(mechanicPricing)
+    fun updateMechanicPricing(pricing: UpdateMechanicPricing): Call<MechanicPricing>
+
+    @Headers(ContentType.headerPrefix + ContentType.applicationJSON)
+    @GET(mechanicRegion)
+    fun getMechanicRegion(): Call<Region>
+
+    @Headers(ContentType.headerPrefix + ContentType.applicationJSON)
+    @POST(mechanicRegion)
+    fun updateMechanicRegion(updateRegion: UpdateRegion): Call<Region>
     
 }
 
@@ -55,4 +73,35 @@ data class UpdateMechanicAddress(
     val city: String,
     val state: String,
     val country: String
+)
+
+
+data class MechanicPricing(
+    val id: String,
+    val conventional: Int,
+    val blend: Int,
+    val synthetic: Int,
+    val highMileage: Int,
+    val centsPerMile: Int,
+    val mechanicID: String,
+)
+
+data class UpdateMechanicPricing(
+    val conventional: Int,
+    val blend: Int,
+    val synthetic: Int,
+    val highMileage: Int,
+)
+
+data class UpdateRegion(
+    val latitude: Double,
+    val longitude: Double,
+    val radius: Double
+)
+
+data class Region(
+    val id: String,
+    val latitude: Double,
+    val longitude: Double,
+    val radius: Double
 )

@@ -119,4 +119,6 @@ dependencies {
 
     implementation 'com.airbnb.android:lottie:3.5.0'
 
+    implementation 'com.github.jkwiecien:EasyImage:3.+'
+
 }

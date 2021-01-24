@@ -229,4 +229,10 @@
     <string name="set_pricing">Set pricing</string>
     <string name="set_hours">Set hours</string>
     <string name="set_service_region">Set service region</string>
+    <string name="email_unverified">Your email address has not been verified. Please tap on the link in the verification email. Tap below to resend the email.</string>
+    <string name="email_verified">Your email address has been verified</string>
+    <string name="resend_email_button_title">Resend email</string>
+    <string name="contact_info_title">Contact Info</string>
+    <string name="successfully_sent_email">Successfully sent</string>
+    <string name="unable_to_resend">Unable to resend</string>
 </resources>
