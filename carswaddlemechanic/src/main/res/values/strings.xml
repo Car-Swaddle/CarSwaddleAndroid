@@ -235,4 +235,5 @@
     <string name="contact_info_title">Contact Info</string>
     <string name="successfully_sent_email">Successfully sent</string>
     <string name="unable_to_resend">Unable to resend</string>
+    <string name="no_review_given">No review given</string>
 </resources>

@@ -48,6 +48,9 @@
         <action
             android:id="@+id/action_navigation_mechanic_profile_to_navigation_contact"
             app:destination="@id/navigation_contact" />
+        <action
+            android:id="@+id/action_navigation_mechanic_profile_to_navigation_reviewListFragment"
+            app:destination="@id/navigation_reviewListFragment" />
     </fragment>
 
     <fragment
@@ -108,4 +111,9 @@
             app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
     
+    <fragment
+        android:id="@+id/navigation_reviewListFragment"
+        android:name="com.carswaddle.carswaddlemechanic.ui.profile.reviews.ReviewListFragment"
+        android:label="ReviewListFragment" />
+
 </navigation>

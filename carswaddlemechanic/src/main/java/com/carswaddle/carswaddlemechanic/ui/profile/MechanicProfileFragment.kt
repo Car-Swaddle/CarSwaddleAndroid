@@ -112,7 +112,7 @@ class MechanicProfileFragment : Fragment() {
         }
 
         allReviewsTextView.setOnClickListener {
-            
+            findNavController().navigate(R.id.action_navigation_mechanic_profile_to_navigation_reviewListFragment)
         }
 
         allowNewAppointmentsSwitch.setOnCheckedChangeListener { compoundButton, b ->

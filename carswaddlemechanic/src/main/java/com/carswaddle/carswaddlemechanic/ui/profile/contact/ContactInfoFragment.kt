@@ -55,7 +55,7 @@ class ContactInfoFragment : Fragment() {
         
         resendEmailButton.button.setOnClickListener {
             resendEmailButton.isLoading = true
-            viewModel.resendVerificationEmail {
+            viewModel.resendVerificationEmail(requireContext()) {
                 resendEmailButton.isLoading = false
                 resendEmailButton.isButtonEnabled = false
                 if (it == null) {

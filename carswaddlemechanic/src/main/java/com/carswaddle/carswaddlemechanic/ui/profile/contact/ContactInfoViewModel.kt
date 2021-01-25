@@ -42,8 +42,8 @@ class ContactInfoViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
     
-    fun resendVerificationEmail(completion: (error: Throwable?) -> Unit) {
-        userRepository.sendEmailVerification(completion)
+    fun resendVerificationEmail(context: Context, completion: (error: Throwable?) -> Unit) {
+        userRepository.sendEmailVerification(context, completion)
     }
     
 }

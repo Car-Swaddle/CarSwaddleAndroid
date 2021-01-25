@@ -171,8 +171,12 @@ class UserRepository(private val userDao: UserDao) {
         })
     }
     
-    fun sendEmailVerification(completion: (throwable: Throwable?) -> Unit) {
-        val auth = serviceGenerator.retrofit?.create(UserService::class.java)
+    fun sendEmailVerification(context: Context, completion: (throwable: Throwable?) -> Unit) {
+        val auth = ServiceGenerator.authenticated(context)?.retrofit?.create(UserService::class.java)
+        if (auth == null) {
+            completion(ServiceNotAvailable())
+            return
+        }
         val call = auth?.sendEmailVerification()
         call?.enqueue(object : Callback<Map<String, Any>> {
             override fun onFailure(call: Call<Map<String, Any>>?, t: Throwable?) {

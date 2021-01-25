@@ -14,6 +14,7 @@ private const val updateMechanic = "api/update-mechanic"
 private const val currentMechanic = "/api/current-mechanic"
 private const val mechanicPricing = "/api/mechanic/pricing"
 private const val mechanicRegion = "/api/region"
+private const val reviews = "/api/reviews"
 
 interface MechanicService {
 
@@ -52,6 +53,11 @@ interface MechanicService {
     @Headers(ContentType.headerPrefix + ContentType.applicationJSON)
     @POST(mechanicRegion)
     fun updateMechanicRegion(updateRegion: UpdateRegion): Call<Region>
+
+    /// If 'mechanic' is null, returns reviews given by current user
+    @Headers(ContentType.headerPrefix + ContentType.applicationJSON)
+    @GET(reviews)
+    fun getReviews(@Query("mechanic") mechanicId: String?, @Query("limit") limit: Int = 100, @Query("offset") offset: Int): Call<ReviewResponse>
     
 }
 
@@ -104,4 +110,9 @@ data class Region(
     val latitude: Double,
     val longitude: Double,
     val radius: Double
+)
+
+
+data class ReviewResponse(
+    val reviewsGivenToMechanic: List<Review>
 )

@@ -14,5 +14,8 @@ public abstract class ReviewDao {
 
     @Query("SELECT * FROM review WHERE id is (:reviewId)")
     abstract fun getReview(reviewId: String): Review?
+
+    @Query("SELECT * FROM review WHERE id IN (:reviewIds) ORDER BY creationDate DESC")
+    abstract fun getReviews(reviewIds: List<String>): List<Review>
     
 }
