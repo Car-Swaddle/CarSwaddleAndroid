@@ -198,7 +198,7 @@
     <string name="save">Save</string>
     <string name="email_input">Email</string>
     <string name="unable_to_sign_up">Car Swaddle already has an account with this email address. Please go to login.</string>
-    <string name="login_failure">Car Swaddle wasn\'t able to find an account with that email and password. If you\'ve already sign up, try resetting your password</string>
+    <string name="login_failure">Car Swaddle wasn\'t able to find an account with that email and password. If you\'ve already signed up, try resetting your password.</string>
     <string name="asset_statements" translatable="false">[{ \"include\": \"https://api.staging.carswaddle.com/.well-known/assetlinks.json\" }]</string>
     <string name="login">Login</string>
     <string name="day_autoservices_title">Calendar</string>
@@ -229,4 +229,12 @@
     <string name="set_pricing">Set pricing</string>
     <string name="set_hours">Set hours</string>
     <string name="set_service_region">Set service region</string>
+    <string name="email_unverified">Your email address has not been verified. Please tap on the link in the verification email. Tap below to resend the email.</string>
+    <string name="email_verified">Your email address has been verified</string>
+    <string name="resend_email_button_title">Resend email</string>
+    <string name="contact_info_title">Contact Info</string>
+    <string name="successfully_sent_email">Successfully sent</string>
+    <string name="unable_to_resend">Unable to resend</string>
+    <string name="no_review_given">No review given</string>
+    <string name="all_reviews">All Reviews</string>
 </resources>

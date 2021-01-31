@@ -16,7 +16,7 @@ import com.carswaddle.carswaddleandroid.R.layout.activity_reset_password
 import com.carswaddle.carswaddleandroid.ui.view.ProgressButton
 import com.carswaddle.store.AppDatabase
 
-class ResetPasswordActivity: AppCompatActivity() {
+class ResetPasswordActivity : AppCompatActivity() {
 
     private lateinit var userRepo: UserRepository
 
@@ -42,7 +42,7 @@ class ResetPasswordActivity: AppCompatActivity() {
         resetButton.button.setOnClickListener {
             didTapReset()
         }
-        
+
         newPasswordEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {}
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -61,20 +61,25 @@ class ResetPasswordActivity: AppCompatActivity() {
     private fun didTapReset() {
         val newPassword = newPasswordEditText.text.toString()
         val token = resetToken
-        if (isValidPassword() || token == null) {
+        if (token == null) {
+            return
+        }
+        if (isValidPassword() == false) {
             return
         }
         resetButton.isLoading = true
 
         userRepo.resetPassword(newPassword, token) {
-            runOnUiThread { resetButton.isLoading = false }
-            if (it == null) {
-                Log.d("ui", "successful reset")
-                showSuccessDialog()
+            runOnUiThread { 
+                resetButton.isLoading = false
+                if (it == null) {
+                    Log.d("ui", "successful reset")
+                    showSuccessDialog()
+                }
             }
         }
     }
-    
+
     private fun isValidPassword(): Boolean {
         val p = newPasswordEditText.text.toString()
         return p != null && p.isNullOrBlank() == false && p.count() >= 3
@@ -83,7 +88,8 @@ class ResetPasswordActivity: AppCompatActivity() {
     private fun showSuccessDialog() {
         val dialogBuilder = AlertDialog.Builder(this)
 
-        dialogBuilder.setTitle(R.string.success_reset_password_title).setMessage(R.string.success_reset_password_message)
+        dialogBuilder.setTitle(R.string.success_reset_password_title)
+            .setMessage(R.string.success_reset_password_message)
             .setCancelable(true)
             .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, id ->
                 finish()

@@ -18,6 +18,8 @@
         <item name="actionBarTheme">@style/CarSwaddle.ActionBarTheme</item>
         <item name="ratingBarStyle">@style/CarSwaddle.RatingBar</item>
         <item name="android:ratingBarStyle">@style/CarSwaddle.RatingBar</item>
+        <item name="colorControlActivated">@color/brand</item>
+        <item name="colorSwitchThumbNormal">@color/content</item>
     </style>
 
     <style name="CarSwaddle.ConfirmButton" parent="@style/Widget.MaterialComponents.Button">

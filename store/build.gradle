@@ -25,6 +25,8 @@ android {
 
 
     compileOptions {
+        coreLibraryDesugaringEnabled true
+        
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -52,6 +54,8 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
     testImplementation "androidx.room:room-testing:$room_version"
+
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.1'
 
     implementation project(':services')
     implementation project(':foundation')

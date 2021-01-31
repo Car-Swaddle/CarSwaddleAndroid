@@ -49,7 +49,7 @@ public abstract class AutoServiceDao {
     @Query("SELECT * FROM autoService WHERE id IN (:autoServiceId)")
     abstract fun getAutoService(autoServiceId: String): AutoService?
 
-    @Query("SELECT * FROM mechanic WHERE id IN (:mechanicId)")
+    @Query("SELECT * FROM mechanic WHERE id IS (:mechanicId)")
     abstract fun getMechanic(mechanicId: String): Mechanic?
 
     @Query("SELECT * FROM vehicle WHERE id IN (:vehicleId)")
@@ -63,5 +63,5 @@ public abstract class AutoServiceDao {
     
     @Query("SELECT * FROM user WHERE id IN (:userId)")
     abstract fun getUser(userId: String): User?
-
+    
 }

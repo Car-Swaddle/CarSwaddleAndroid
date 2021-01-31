@@ -14,9 +14,11 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/mechanicProfileContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_margin="@dimen/content_margin"
                 android:gravity="center"
                 android:orientation="vertical"
                 android:padding="16dp">
@@ -33,16 +35,16 @@
                         android:id="@+id/mechanicImageView"
                         android:layout_width="145dp"
                         android:layout_height="145dp"
-                        android:src="@drawable/car_swaddle_logo" />
+                        android:background="@color/content" />
 
                 </com.google.android.material.card.MaterialCardView>
 
                 <TextView
-                    android:id="@+id/name"
+                    android:id="@+id/mechanicProfileNameTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
-                    android:text="Johnny Appleseed"
+                    android:text="-"
                     android:textColor="@color/text"
                     android:textSize="18sp" />
 
@@ -58,9 +60,10 @@
                     android:id="@+id/reviewsTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="2dp"
+                    android:layout_marginBottom="@dimen/text_margin"
+                    android:textSize="@dimen/title"
                     android:fontFamily="@font/montserrat_semi_bold"
-                    android:text="All Reviews"
+                    android:text="@string/all_reviews"
                     android:textColor="@color/brand" />
 
                 <TextView
@@ -68,7 +71,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="2dp"
-                    android:text="5.0 avg from 4 ratings"
+                    android:text="- avg from - ratings"
                     android:textColor="@color/text" />
 
                 <TextView
@@ -76,7 +79,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:text="8 services completed"
+                    android:text="- services completed"
                     android:textColor="@color/text" />
 
             </LinearLayout>
@@ -94,25 +97,25 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="32"
                     android:orientation="vertical"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/allowNewSwitch">
+                    app:layout_constraintEnd_toStartOf="@id/allowNewSwitch"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/text"
+                        android:layout_marginBottom="@dimen/text_margin"
                         android:text="@string/allow_new_appointments"
-                        android:textSize="@dimen/title"
-                        android:layout_marginBottom="@dimen/text_margin"/>
+                        android:textColor="@color/text"
+                        android:textSize="@dimen/title" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/small_text"
+                        android:text="@string/allow_new_explanation"
                         android:textColor="@color/text2"
-                        android:text="@string/allow_new_explanation" />
+                        android:textSize="@dimen/small_text" />
 
                 </LinearLayout>
 
@@ -121,12 +124,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
                     android:layout_marginStart="@dimen/content_margin"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_weight="1"
+                    android:checked="true"
                     app:layout_constraintBottom_toTopOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/allowNewTextLayout"/>
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/allowNewTextLayout"
+                    app:layout_constraintTop_toTopOf="parent" />
 
             </LinearLayout>
 
@@ -152,25 +156,25 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="32"
                     android:orientation="vertical"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/allowNewSwitch">
+                    app:layout_constraintEnd_toStartOf="@id/allowNewSwitch"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/text"
-                        android:textSize="@dimen/title"
+                        android:layout_marginBottom="@dimen/text_margin"
                         android:text="@string/charge_for_travel"
-                        android:layout_marginBottom="@dimen/text_margin"/>
+                        android:textColor="@color/text"
+                        android:textSize="@dimen/title" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/small_text"
+                        android:text="@string/charge_travel_explained"
                         android:textColor="@color/text2"
-                        android:text="@string/charge_travel_explained" />
+                        android:textSize="@dimen/small_text" />
 
                 </LinearLayout>
 
@@ -179,12 +183,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
                     android:layout_marginStart="@dimen/content_margin"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_weight="1"
+                    android:checked="true"
                     app:layout_constraintBottom_toTopOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/allowNewTextLayout"/>
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/allowNewTextLayout"
+                    app:layout_constraintTop_toTopOf="parent" />
 
             </LinearLayout>
 
@@ -201,16 +206,16 @@
                 android:id="@+id/setServiceRegionContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/content_margin"
                 android:background="?attr/selectableItemBackground"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="@dimen/content_margin">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/title"
+                    android:text="@string/set_service_region"
                     android:textColor="@color/text"
-                    android:text="@string/set_service_region" />
+                    android:textSize="@dimen/title" />
 
             </LinearLayout>
 
@@ -228,16 +233,16 @@
                 android:id="@+id/setHoursContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/content_margin"
                 android:background="?attr/selectableItemBackground"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="@dimen/content_margin">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/title"
+                    android:text="@string/set_hours"
                     android:textColor="@color/text"
-                    android:text="@string/set_hours" />
+                    android:textSize="@dimen/title" />
 
             </LinearLayout>
 
@@ -255,16 +260,16 @@
                 android:id="@+id/setPricingContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/content_margin"
                 android:background="?attr/selectableItemBackground"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="@dimen/content_margin">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/title"
+                    android:text="@string/set_pricing"
                     android:textColor="@color/text"
-                    android:text="@string/set_pricing" />
+                    android:textSize="@dimen/title" />
 
             </LinearLayout>
 
@@ -282,16 +287,16 @@
                 android:id="@+id/personalInformationContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/content_margin"
                 android:background="?attr/selectableItemBackground"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="@dimen/content_margin">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/title"
+                    android:text="@string/personal_information"
                     android:textColor="@color/text"
-                    android:text="@string/personal_information" />
+                    android:textSize="@dimen/title" />
 
             </LinearLayout>
 
@@ -309,19 +314,27 @@
                 android:id="@+id/contactInformationContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/content_margin"
                 android:background="?attr/selectableItemBackground"
-                android:orientation="vertical">
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="@dimen/content_margin">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/title"
+                    android:text="@string/contact_information"
                     android:textColor="@color/text"
-                    android:text="@string/contact_information" />
+                    android:textSize="@dimen/title"
+                    android:layout_marginEnd="@dimen/text_margin"
+                    android:layout_weight="1000"/>
+                
+                <com.carswaddle.carswaddlemechanic.ui.common.ActionIndicatorView
+                    android:id="@+id/profileContactInfoActionIndicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
 
             </LinearLayout>
-
 
             <View
                 android:layout_width="match_parent"
@@ -336,20 +349,18 @@
                 android:id="@+id/taxDeductionsContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/content_margin"
                 android:background="?attr/selectableItemBackground"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="@dimen/content_margin">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/title"
+                    android:text="@string/tax_deductions"
                     android:textColor="@color/text"
-                    android:text="@string/tax_deductions" />
-
+                    android:textSize="@dimen/title" />
 
             </LinearLayout>
-
 
             <View
                 android:layout_width="match_parent"
@@ -364,19 +375,19 @@
                 android:id="@+id/logoutContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/content_margin"
                 android:background="?attr/selectableItemBackground"
-                android:gravity="center">
+                android:gravity="center"
+                android:padding="@dimen/content_margin">
 
                 <Button
                     android:id="@+id/profile_logout_button"
                     style="@style/Widget.AppCompat.Button.Borderless"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/logout"
-                    android:textColor="@color/important"
-                    android:textAllCaps="false"
                     android:fontFamily="@font/montserrat_bold"
+                    android:text="@string/logout"
+                    android:textAllCaps="false"
+                    android:textColor="@color/important"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
