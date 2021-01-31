@@ -39,7 +39,7 @@ class ReviewsListAdapter(
         val review = (reviews.value ?: listOf())[position]
         if (holder is ReviewViewHolder) {
             holder.reviewTextView.text = if (review.text.isNullOrEmpty() == true)
-                context.getString(R.string.no_review_given)
+             context.getString(R.string.no_review_given)
             else 
                 review.text
             

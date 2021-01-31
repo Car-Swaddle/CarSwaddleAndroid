@@ -47,10 +47,25 @@
         tools:layout="@layout/fragment_mechanic_profile" >
         <action
             android:id="@+id/action_navigation_mechanic_profile_to_navigation_contact"
-            app:destination="@id/navigation_contact" />
+            app:destination="@id/navigation_contact"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
         <action
             android:id="@+id/action_navigation_mechanic_profile_to_navigation_reviewListFragment"
-            app:destination="@id/navigation_reviewListFragment" />
+            app:destination="@id/navigation_reviewListFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_navigation_mechanic_profile_to_navigation_availability"
+            app:destination="@id/navigation_availability"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
 
     <fragment
@@ -58,6 +73,12 @@
         android:name="com.carswaddle.carswaddlemechanic.ui.profile.contact.ContactInfoFragment"
         android:label="@string/contact_info_title"
         tools:layout="@layout/fragment_mechanic_contact_info" />
+
+    <fragment
+        android:id="@+id/navigation_availability"
+        android:name="com.carswaddle.carswaddlemechanic.ui.profile.availability.AvailabilityListFragment"
+        android:label="Availability"
+        tools:layout="@layout/fragment_availability_list" />
     
     <fragment
         android:id="@+id/autoServiceDetailsFragment"

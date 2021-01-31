@@ -50,6 +50,9 @@ enum class Weekday(val value: Int) {
 
     companion object {
         fun fromInt(value: Int) = Weekday.values().first { it.value == value }
+        fun all(): List<Weekday> {
+            return listOf(sunday, monday, tuesday, wednesday, thursday, friday, saturday)
+        }
     }
 
     fun localizedString(): String {

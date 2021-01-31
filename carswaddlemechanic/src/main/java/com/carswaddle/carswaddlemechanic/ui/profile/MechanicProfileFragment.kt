@@ -134,7 +134,7 @@ class MechanicProfileFragment : Fragment() {
             
         }
         setHoursContainer.setOnClickListener {
-            
+            findNavController().navigate(R.id.action_navigation_mechanic_profile_to_navigation_availability)
         }
         setPricingContainer.setOnClickListener {
             

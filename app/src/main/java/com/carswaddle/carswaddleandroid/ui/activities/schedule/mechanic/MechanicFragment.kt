@@ -13,10 +13,12 @@ import androidx.recyclerview.widget.*
 import com.carswaddle.carswaddleandroid.Extensions.*
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.services.serviceModels.Point
+import com.carswaddle.carswaddleandroid.services.serviceModels.TemplateTimeSpan
 import com.carswaddle.carswaddleandroid.stripe.StripeKeyProvider
 import com.carswaddle.carswaddleandroid.ui.activities.schedule.mechanic.MechanicEmptyStateView
 import com.carswaddle.carswaddleandroid.ui.activities.schedule.mechanic.TimeSlotsEmptyStateView
 import com.carswaddle.carswaddleandroid.ui.view.ProgressButton
+import com.carswaddle.ui.TimeItemSelectionViewAdapter
 import com.haibin.calendarview.Calendar
 import com.haibin.calendarview.CalendarView
 import com.stripe.android.CustomerSession
@@ -42,7 +44,7 @@ class MechanicFragment() : Fragment() {
 
     private lateinit var mechanicViewModel: SelectMechanicViewModel
     private lateinit var mechanicViewAdapter: MyMechanicRecyclerViewAdapter
-    private lateinit var timeSlotViewAdapter: TimePickerRecyclerViewAdapter
+    private lateinit var timeItemViewAdapter: TimeItemSelectionViewAdapter
     private lateinit var calendarView: CalendarView
     private lateinit var mechanicEmptyView: MechanicEmptyStateView
 //    private var selectedTimeSlot: TemplateTimeSpan? = null
@@ -180,11 +182,11 @@ class MechanicFragment() : Fragment() {
             override fun onCalendarOutOfRange(calendar: Calendar?) {
                 return
             }
-        }) 
+        })
 
-        timeSlotViewAdapter = TimePickerRecyclerViewAdapter()
+        timeItemViewAdapter = TimeItemSelectionViewAdapter()
         timeRecycler = view.findViewById<RecyclerView>(R.id.time_slot)
-        timeRecycler.adapter = timeSlotViewAdapter
+        timeRecycler.adapter = timeItemViewAdapter
         timeRecycler.setLayoutManager(object: GridLayoutManager(context, spanCount) {
             // override methods here
         })
@@ -245,10 +247,11 @@ class MechanicFragment() : Fragment() {
         selectedDate = null
         val slots = mechanicViewModel.timeSlots(mechanicId, calendar)
         currentTimeSlotCount = slots.count()
-        timeSlotViewAdapter.timeSlots = slots
+        timeItemViewAdapter.timeItems = slots.toMutableList()
         updateTimeSlotDisplayState()
-        timeSlotViewAdapter.didChangeSelectedTimeSlot = { newTimeSlot ->
+        timeItemViewAdapter.didChangeSelectedTimeItems = { newTimeItems ->
             activity?.runOnUiThread {
+                val newTimeSlot = newTimeItems.first()
                 if (newTimeSlot != null) {
                     val selectedCal = getInstance()
                     val localTime = newTimeSlot.localTime
@@ -301,3 +304,5 @@ class MechanicFragment() : Fragment() {
     }
 
 }
+
+
