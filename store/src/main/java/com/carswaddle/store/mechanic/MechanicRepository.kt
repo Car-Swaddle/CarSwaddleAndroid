@@ -9,12 +9,13 @@ import com.carswaddle.carswaddleandroid.data.user.User
 import com.carswaddle.carswaddleandroid.retrofit.ServiceGenerator
 import com.carswaddle.carswaddleandroid.retrofit.ServiceNotAvailable
 import com.carswaddle.carswaddleandroid.services.MechanicService
+import com.carswaddle.carswaddleandroid.services.UpdateAvailability
 import com.carswaddle.carswaddleandroid.services.UpdateMechanic
 import com.carswaddle.carswaddleandroid.services.UserService
 import com.carswaddle.carswaddleandroid.data.mechanic.Mechanic as StoreMechanic
 import  com.carswaddle.carswaddleandroid.services.serviceModels.Mechanic as ServiceMechanic
 import com.carswaddle.carswaddleandroid.services.serviceModels.Stats
-import com.carswaddle.carswaddleandroid.services.serviceModels.UpdateUser
+import com.carswaddle.carswaddleandroid.services.serviceModels.UpdateTemplateTimeSpan
 import com.carswaddle.carswaddleandroid.services.serviceModels.Verification as ServiceVerification
 import com.carswaddle.services.services.StripeService
 import com.carswaddle.store.mechanic.Verification as StoreVerification
@@ -231,6 +232,55 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
         }
 
         val call = mechanicService.getAvailability(mechanicId)
+        call.enqueue(object : Callback<List<TemplateTimeSpanModel>> {
+
+            override fun onFailure(call: Call<List<TemplateTimeSpanModel>>, t: Throwable) {
+                completion(t, null)
+            }
+
+            override fun onResponse(
+                call: Call<List<TemplateTimeSpanModel>>,
+                response: Response<List<TemplateTimeSpanModel>>
+            ) {
+                val result = response?.body()
+                val code = response?.code()
+                if (code < 200 || code >= 300 || result == null) {
+                    completion(Throwable("The result was empty or got invalid response code"), null)
+                } else {
+                    CoroutineScope(mechanicImportQueue).launch {
+
+                        var spanIds = mutableListOf<String>()
+
+                        for (s in result) {
+                            val newSpan = TemplateTimeSpan(s)
+                            mechanicDao.insertTimeSpan(newSpan)
+                            spanIds.add(newSpan.id)
+                        }
+
+                        completion(null, spanIds)
+                    }
+                }
+            }
+
+        })
+
+        return call
+    }
+
+    fun updateAvailability(
+        updateTimeSpans: List<UpdateTemplateTimeSpan>,
+        context: Context,
+        completion: (error: Throwable?, timeSpanIds: List<String>?) -> Unit
+    ): Call<List<TemplateTimeSpanModel>>? {
+        val mechanicService =
+            ServiceGenerator.authenticated(context)?.retrofit?.create(MechanicService::class.java)
+        if (mechanicService == null) {
+            // TODO: call with error
+            completion(ServiceNotAvailable("No able to make service to make network call"), null)
+            return null
+        }
+
+        val call = mechanicService.updateAvailability(UpdateAvailability(updateTimeSpans))
         call.enqueue(object : Callback<List<TemplateTimeSpanModel>> {
 
             override fun onFailure(call: Call<List<TemplateTimeSpanModel>>, t: Throwable) {

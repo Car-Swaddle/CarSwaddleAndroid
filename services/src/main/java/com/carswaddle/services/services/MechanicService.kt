@@ -31,6 +31,10 @@ interface MechanicService {
     fun getAvailability(@Query("mechanicID") mechanicId: String): Call<List<TemplateTimeSpan>>
 
     @Headers(ContentType.headerPrefix + ContentType.applicationJSON)
+    @POST(availabilityEndpoint)
+    fun updateAvailability(@Body body: UpdateAvailability): Call<List<TemplateTimeSpan>>
+
+    @Headers(ContentType.headerPrefix + ContentType.applicationJSON)
     @PATCH(updateMechanic)
     fun updateMechanic(@Body updateMechanic: UpdateMechanic): Call<Mechanic>
 
@@ -110,6 +114,10 @@ data class Region(
     val latitude: Double,
     val longitude: Double,
     val radius: Double
+)
+
+data class UpdateAvailability(
+    val spans: List<UpdateTemplateTimeSpan>
 )
 
 

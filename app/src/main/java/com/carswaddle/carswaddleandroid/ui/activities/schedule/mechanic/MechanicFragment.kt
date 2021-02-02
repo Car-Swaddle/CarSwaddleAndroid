@@ -14,10 +14,12 @@ import com.carswaddle.carswaddleandroid.Extensions.*
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.services.serviceModels.Point
 import com.carswaddle.carswaddleandroid.services.serviceModels.TemplateTimeSpan
+import com.carswaddle.carswaddleandroid.data.mechanic.TemplateTimeSpan as StoreTemplateTimeSpan
 import com.carswaddle.carswaddleandroid.stripe.StripeKeyProvider
 import com.carswaddle.carswaddleandroid.ui.activities.schedule.mechanic.MechanicEmptyStateView
 import com.carswaddle.carswaddleandroid.ui.activities.schedule.mechanic.TimeSlotsEmptyStateView
 import com.carswaddle.carswaddleandroid.ui.view.ProgressButton
+import com.carswaddle.ui.TimeAvailabilityItem
 import com.carswaddle.ui.TimeItemSelectionViewAdapter
 import com.haibin.calendarview.Calendar
 import com.haibin.calendarview.CalendarView
@@ -247,7 +249,7 @@ class MechanicFragment() : Fragment() {
         selectedDate = null
         val slots = mechanicViewModel.timeSlots(mechanicId, calendar)
         currentTimeSlotCount = slots.count()
-        timeItemViewAdapter.timeItems = slots.toMutableList()
+        timeItemViewAdapter.timeItems = convertTimeSpanToAvailability(slots)
         updateTimeSlotDisplayState()
         timeItemViewAdapter.didChangeSelectedTimeItems = { newTimeItems ->
             activity?.runOnUiThread {
@@ -272,6 +274,15 @@ class MechanicFragment() : Fragment() {
         }
 
         Log.w("slots", "slots: $slots")
+    }
+    
+    private fun convertTimeSpanToAvailability(timeSpans: List<StoreTemplateTimeSpan>): List<TimeAvailabilityItem> {
+        var availabilityItems: MutableList<TimeAvailabilityItem> = mutableListOf()
+        for (span in timeSpans) {
+            val n = TimeAvailabilityItem(span.weekday(), span.startTime)
+            availabilityItems.add(n)
+        }
+        return availabilityItems.toList()
     }
     
     private fun updateTimeSlotDisplayState() {

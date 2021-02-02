@@ -8,28 +8,50 @@ import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.carswaddle.carswaddleandroid.Extensions.toCalendar
-import com.carswaddle.carswaddleandroid.data.mechanic.TemplateTimeSpan
+import com.carswaddle.carswaddleandroid.services.serviceModels.Weekday
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatterBuilder
 import java.util.*
 
+
+/// Represents slots that are available to be shown 
+data class TimeAvailabilityItem(
+    val weekday: Weekday,
+    val secondsSinceMidnight: Int
+) {
+    val localTime: LocalTime
+        get() {
+            val hourOfDay = secondsSinceMidnight / 60 / 60
+            val minuteInHour = secondsSinceMidnight / 60 % 60
+            val secondInMinute = secondsSinceMidnight % 60
+            return LocalTime.of(hourOfDay, minuteInHour, secondInMinute)
+        }
+}
 
 class TimeItemSelectionViewAdapter(
 ) : RecyclerView.Adapter<TimeItemSelectionViewAdapter.ViewHolder>() {
 
     var allowMultiselect: Boolean = false
 
-    var timeItems: MutableList<TemplateTimeSpan> = mutableListOf()
+    var timeItems: List<TimeAvailabilityItem> = listOf()
         set(newValue) {
             field = newValue
             removeSelection()
             notifyDataSetChanged()
         }
 
-    var selectedTimeItems: MutableSet<TemplateTimeSpan> = mutableSetOf()
+    var originalSelectedTimeItems: Set<TimeAvailabilityItem> = setOf()
+        set(newValue) {
+            field = newValue
+            currentSelectedTimeItems = newValue.toMutableSet()
+        }
 
-    var didChangeSelectedTimeItems: (selectedTimeSlots: Set<TemplateTimeSpan>) -> Unit = { _ -> }
+    private var currentSelectedTimeItems: MutableSet<TimeAvailabilityItem> = mutableSetOf()
+
+    var didChangeSelectedTimeItems: (selectedTimeSlots: Set<TimeAvailabilityItem>) -> Unit =
+        { _ -> }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -40,36 +62,36 @@ class TimeItemSelectionViewAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = timeItems[position]
         holder.timeTextView.text = localizedDate(item)
-        holder.isSelectedView = selectedTimeItems.contains(item)
+        holder.isSelectedView = currentSelectedTimeItems.contains(item)
 
         holder.itemView.setOnClickListener() {
             val item = timeItems[position]
 
             if (allowMultiselect) {
-                if (selectedTimeItems.contains(item)) {
-                    selectedTimeItems.remove(item)
+                if (currentSelectedTimeItems.contains(item)) {
+                    currentSelectedTimeItems.remove(item)
                 } else {
-                    selectedTimeItems.add(item)
+                    currentSelectedTimeItems.add(item)
                 }
+                notifyItemChanged(position)
             } else {
-                if (selectedTimeItems.contains(item) == false) {
-                    selectedTimeItems = mutableSetOf()
-                    selectedTimeItems.add(item)
+                if (currentSelectedTimeItems.contains(item) == false) {
+                    removeSelection()
+                    currentSelectedTimeItems.add(item)
+                    notifyDataSetChanged()
                 }
             }
 
-            didChangeSelectedTimeItems(selectedTimeItems.toSet())
-            notifyDataSetChanged()
+            didChangeSelectedTimeItems(currentSelectedTimeItems)
         }
     }
 
-
-    private fun localizedDate(timeItem: TemplateTimeSpan): String {
+    private fun localizedDate(timeItem: TimeAvailabilityItem): String {
         return dateTimeFormatter.format(timeItem.localTime)
     }
 
     private fun removeSelection() {
-        selectedTimeItems = mutableSetOf()
+        currentSelectedTimeItems = mutableSetOf()
     }
 
     override fun getItemCount(): Int = timeItems.size
@@ -79,7 +101,7 @@ class TimeItemSelectionViewAdapter(
             get() {
                 return DateTimeFormatterBuilder()
                     .parseCaseInsensitive()
-                    .appendPattern("hh:mm a")
+                    .appendPattern("h:mm a")
                     .toFormatter(Locale.US)
             }
     }
@@ -122,8 +144,7 @@ class TimeItemSelectionViewAdapter(
 
 }
 
-
-@SuppressLint("toZoneId is bad because of some API thing")
+@SuppressLint("toZoneId is bad because of some API version thing")
 fun Date.toInstant(): LocalDateTime? {
     return LocalDateTime.ofInstant(
         this.toInstant(),
