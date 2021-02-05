@@ -238,4 +238,10 @@
     <string name="no_review_given">No review given</string>
     <string name="all_reviews">All Reviews</string>
     <string name="save_button_title">Save</string>
+    <string name="blank">--</string>
+    <string name="conventional">Conventional</string>
+    <string name="blend">Blend</string>
+    <string name="synthetic">Synthetic</string>
+    <string name="high_mileage">High Mileage</string>
+    <string name="pricing">Pricing</string>
 </resources>

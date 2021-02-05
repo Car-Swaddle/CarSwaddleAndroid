@@ -1,14 +1,14 @@
-package com.carswaddle.carswaddleandroid.ui.activities.profile
+package com.carswaddle.ui
 
 import android.content.Context
 import android.text.Editable
+import android.text.InputType
 import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.carswaddle.carswaddleandroid.R
 
 class LabeledEditText @JvmOverloads constructor(
     context: Context,
@@ -32,13 +32,15 @@ class LabeledEditText @JvmOverloads constructor(
         }
 
     private val labelTextView: TextView
-    private val editText: EditText
+    val editText: EditText
 
-    private lateinit var textWatcher: TextWatcher
+    private var textWatcher: TextWatcher
 
     init {
         LayoutInflater.from(context).inflate(R.layout.labeled_edit_text, this, true)
 
+        val a = context.obtainStyledAttributes(attrs, R.styleable.LabeledEditText)
+        
         labelTextView = findViewById(R.id.labeledEditText_textView)
         editText = findViewById(R.id.labeledEditText_editText)
 
@@ -51,6 +53,18 @@ class LabeledEditText @JvmOverloads constructor(
         }
 
         editText.addTextChangedListener(textWatcher)
+
+        val defaultText = a.getText(R.styleable.LabeledEditText_label) as? String
+        if (defaultText != null) {
+            labelText = defaultText
+        }
+
+        val textValue = a.getText(R.styleable.LabeledEditText_value) as? String
+        if (textValue != null) {
+            editTextValue = textValue
+        }
+        
+        editText.inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL
     }
 
 }

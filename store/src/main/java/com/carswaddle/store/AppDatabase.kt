@@ -27,6 +27,7 @@ import com.carswaddle.carswaddleandroid.data.serviceEntity.ServiceEntityDao
 import com.carswaddle.carswaddleandroid.data.Review.Review
 import com.carswaddle.store.balance.Balance
 import com.carswaddle.store.balance.BalanceDao
+import com.carswaddle.store.mechanic.OilChangePricing
 import com.carswaddle.store.mechanic.Verification
 import com.carswaddle.store.payout.Payout
 import com.carswaddle.store.payout.PayoutDao
@@ -35,7 +36,7 @@ import com.carswaddle.store.transaction.TransactionDao
 import com.carswaddle.store.transaction.TransactionMetadata
 
 
-@Database(entities = arrayOf(User::class, AutoService::class, Vehicle::class, AutoServiceLocation::class, VehicleDescription::class, Mechanic::class, ServiceEntity::class, OilChange::class, TemplateTimeSpan::class, Review::class, Balance::class, Payout::class, Transaction::class, TransactionMetadata::class, Verification::class), version = 27)
+@Database(entities = arrayOf(User::class, AutoService::class, Vehicle::class, AutoServiceLocation::class, VehicleDescription::class, Mechanic::class, ServiceEntity::class, OilChange::class, TemplateTimeSpan::class, Review::class, Balance::class, Payout::class, Transaction::class, TransactionMetadata::class, Verification::class, OilChangePricing::class), version = 28)
 @TypeConverters(DateConverter::class, DateDoubleConverter::class, DateIntConverter::class, CalendarConverter::class, CalendarDoubleConverter::class, CalendarIntConverter::class, ArrayListConverter::class, AutoServiceStatusConverter::class, OilTypeConverter::class, PayoutStatusConverter::class, TransactionTypeConverter::class)
 abstract class AppDatabase : RoomDatabase() {
 

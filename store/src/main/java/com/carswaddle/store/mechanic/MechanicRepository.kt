@@ -1,6 +1,5 @@
 package com.carswaddle.carswaddleandroid.data.mechanic
 
-import android.app.Service
 import android.content.Context
 import android.util.Log
 import com.carswaddle.carswaddleandroid.Extensions.carSwaddlePreferences
@@ -9,19 +8,15 @@ import com.carswaddle.carswaddleandroid.data.user.User
 import com.carswaddle.carswaddleandroid.retrofit.ServiceGenerator
 import com.carswaddle.carswaddleandroid.retrofit.ServiceNotAvailable
 import com.carswaddle.carswaddleandroid.services.MechanicService
-import com.carswaddle.carswaddleandroid.services.UpdateAvailability
-import com.carswaddle.carswaddleandroid.services.UpdateMechanic
-import com.carswaddle.carswaddleandroid.services.UserService
+import com.carswaddle.carswaddleandroid.services.serviceModels.*
 import com.carswaddle.carswaddleandroid.data.mechanic.Mechanic as StoreMechanic
 import  com.carswaddle.carswaddleandroid.services.serviceModels.Mechanic as ServiceMechanic
-import com.carswaddle.carswaddleandroid.services.serviceModels.Stats
-import com.carswaddle.carswaddleandroid.services.serviceModels.UpdateTemplateTimeSpan
 import com.carswaddle.carswaddleandroid.services.serviceModels.Verification as ServiceVerification
 import com.carswaddle.services.services.StripeService
 import com.carswaddle.store.mechanic.Verification as StoreVerification
 import com.carswaddle.carswaddleandroid.services.serviceModels.TemplateTimeSpan as TemplateTimeSpanModel
+import com.carswaddle.store.mechanic.OilChangePricing as StoreOilChangePricing
 import com.google.gson.Gson
-import com.google.gson.JsonObject
 import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -316,6 +311,85 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
         return call
     }
 
+    fun getOilChangePricing(
+        context: Context,
+        completion: (error: Throwable?, oilChangePricing: StoreOilChangePricing?) -> Unit
+    ): Call<OilChangePricing>? {
+        val mechanicService =
+            ServiceGenerator.authenticated(context)?.retrofit?.create(MechanicService::class.java)
+        if (mechanicService == null) {
+            completion(ServiceNotAvailable("No able to make service to make network call"), null)
+            return null
+        }
+
+        val call = mechanicService.getOilChangePricing()
+        call.enqueue(object : Callback<OilChangePricing> {
+
+            override fun onFailure(call: Call<OilChangePricing>, t: Throwable) {
+                completion(t, null)
+            }
+
+            override fun onResponse(
+                call: Call<OilChangePricing>,
+                response: Response<OilChangePricing>
+            ) {
+                val result = response.body()
+                val code = response.code()
+                if (code < 200 || code >= 300 || result == null) {
+                    completion(Throwable("The result was empty or got invalid response code"), null)
+                } else {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        val o = StoreOilChangePricing(result)
+                        completion(null, o)
+                    }
+                }
+            }
+
+        })
+
+        return call
+    }
+
+    fun updateOilChangePricing(
+        updateOilChangePricing: UpdateOilChangePricing,
+        context: Context,
+        completion: (error: Throwable?, oilChangePricing: StoreOilChangePricing?) -> Unit
+    ): Call<OilChangePricing>? {
+        val mechanicService =
+            ServiceGenerator.authenticated(context)?.retrofit?.create(MechanicService::class.java)
+        if (mechanicService == null) {
+            completion(ServiceNotAvailable("No able to make service to make network call"), null)
+            return null
+        }
+
+        val call = mechanicService.updateOilchangePricing(updateOilChangePricing)
+        call.enqueue(object : Callback<OilChangePricing> {
+
+            override fun onFailure(call: Call<OilChangePricing>, t: Throwable) {
+                completion(t, null)
+            }
+
+            override fun onResponse(
+                call: Call<OilChangePricing>,
+                response: Response<OilChangePricing>
+            ) {
+                val result = response.body()
+                val code = response.code()
+                if (code < 200 || code >= 300 || result == null) {
+                    completion(Throwable("The result was empty or got invalid response code"), null)
+                } else {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        val o = StoreOilChangePricing(result)
+                        completion(null, o)
+                    }
+                }
+            }
+
+        })
+
+        return call
+    }
+
 
     private fun insertNestedMechanic(mechanic: ServiceMechanic): MechanicListElements? {
         var storedUser = mechanic.user?.let { User(it) }
@@ -456,6 +530,8 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
 
 data class MechanicListElements(
     val mechanic: com.carswaddle.carswaddleandroid.data.mechanic.Mechanic,
-    val user: com.carswaddle.carswaddleandroid.data.user.User,
-    val timeSpans: List<com.carswaddle.carswaddleandroid.data.mechanic.TemplateTimeSpan>
+    val user: User,
+    val timeSpans: List<TemplateTimeSpan>
 )
+
+

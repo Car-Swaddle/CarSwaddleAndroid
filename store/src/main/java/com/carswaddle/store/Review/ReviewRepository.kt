@@ -7,7 +7,7 @@ import com.carswaddle.carswaddleandroid.retrofit.ServiceNotAvailable
 import com.carswaddle.carswaddleandroid.data.Review.Review as StoreReview
 import com.carswaddle.carswaddleandroid.retrofit.serviceGenerator
 import com.carswaddle.carswaddleandroid.services.MechanicService
-import com.carswaddle.carswaddleandroid.services.ReviewResponse
+import com.carswaddle.carswaddleandroid.services.serviceModels.ReviewResponse
 import kotlinx.coroutines.*
 import com.carswaddle.carswaddleandroid.services.serviceModels.Review as ServiceReview
 import retrofit2.Call

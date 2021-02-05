@@ -5,14 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.Button
 import android.widget.Spinner
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.carswaddle.carswaddleandroid.Extensions.dismissKeyboard
 import com.carswaddle.carswaddleandroid.R
-import com.carswaddle.carswaddleandroid.ui.activities.profile.LabeledEditText
 import com.carswaddle.carswaddleandroid.ui.view.ProgressButton
+import com.carswaddle.ui.LabeledEditText
 
 class AddVehicleFragment() : Fragment() {
     
@@ -31,7 +30,7 @@ class AddVehicleFragment() : Fragment() {
 
         addVehicleViewModel = ViewModelProvider(this).get(AddVehicleViewModel::class.java)
         
-        val vehicleName: LabeledEditText  = root.findViewById(R.id.vehicleNameLabeledTextView)
+        val vehicleName: LabeledEditText = root.findViewById(R.id.vehicleNameLabeledTextView)
         val licensePlate: LabeledEditText  = root.findViewById(R.id.licensePlateLabeledTextView)
         
         vehicleName.editTextValue = ""

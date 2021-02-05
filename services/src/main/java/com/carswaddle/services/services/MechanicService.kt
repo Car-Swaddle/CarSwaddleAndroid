@@ -44,11 +44,11 @@ interface MechanicService {
 
     @Headers(ContentType.headerPrefix + ContentType.applicationJSON)
     @GET(mechanicPricing)
-    fun getMechanicPricing(): Call<MechanicPricing>
+    fun getOilChangePricing(): Call<OilChangePricing>
 
     @Headers(ContentType.headerPrefix + ContentType.applicationJSON)
     @PUT(mechanicPricing)
-    fun updateMechanicPricing(pricing: UpdateMechanicPricing): Call<MechanicPricing>
+    fun updateOilchangePricing(@Body pricing: UpdateOilChangePricing): Call<OilChangePricing>
 
     @Headers(ContentType.headerPrefix + ContentType.applicationJSON)
     @GET(mechanicRegion)
@@ -64,63 +64,3 @@ interface MechanicService {
     fun getReviews(@Query("mechanic") mechanicId: String?, @Query("limit") limit: Int = 100, @Query("offset") offset: Int): Call<ReviewResponse>
     
 }
-
-data class UpdateMechanic(
-    val isActive: Boolean? = null, // Allow new appointments
-    val token: String? = null,
-    val dateOfBirth: Date? = null,
-    val address: UpdateMechanicAddress? = null,
-    val externalAccount: String? = null,
-    val ssnLast4: String? = null,
-    val personalID: String? = null,
-    val chargeForTravel: Boolean? = null
-)
-
-data class UpdateMechanicAddress(
-    val line1: String,
-    val line2: String?,
-    val postalCode: String,
-    val city: String,
-    val state: String,
-    val country: String
-)
-
-
-data class MechanicPricing(
-    val id: String,
-    val conventional: Int,
-    val blend: Int,
-    val synthetic: Int,
-    val highMileage: Int,
-    val centsPerMile: Int,
-    val mechanicID: String,
-)
-
-data class UpdateMechanicPricing(
-    val conventional: Int,
-    val blend: Int,
-    val synthetic: Int,
-    val highMileage: Int,
-)
-
-data class UpdateRegion(
-    val latitude: Double,
-    val longitude: Double,
-    val radius: Double
-)
-
-data class Region(
-    val id: String,
-    val latitude: Double,
-    val longitude: Double,
-    val radius: Double
-)
-
-data class UpdateAvailability(
-    val spans: List<UpdateTemplateTimeSpan>
-)
-
-
-data class ReviewResponse(
-    val reviewsGivenToMechanic: List<Review>
-)

@@ -66,6 +66,13 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_navigation_mechanic_profile_to_navigation_setPricing"
+            app:destination="@id/navigation_setPricing"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
 
     <fragment
@@ -136,5 +143,10 @@
         android:id="@+id/navigation_reviewListFragment"
         android:name="com.carswaddle.carswaddlemechanic.ui.profile.reviews.ReviewListFragment"
         android:label="ReviewListFragment" />
+
+    <fragment
+        android:id="@+id/navigation_setPricing"
+        android:name="com.carswaddle.carswaddlemechanic.ui.profile.pricing.PricingFragment"
+        android:label="@string/pricing" />
 
 </navigation>

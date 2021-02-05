@@ -18,7 +18,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.carswaddle.carswaddleandroid.data.mechanic.Mechanic
-import com.carswaddle.carswaddleandroid.services.UpdateMechanic
+import com.carswaddle.carswaddleandroid.services.serviceModels.UpdateMechanic
 import com.carswaddle.carswaddlemechanic.R
 import com.carswaddle.carswaddlemechanic.ui.common.ActionIndicatorView
 import com.carswaddle.carswaddlemechanic.ui.common.MechanicImageView
@@ -137,7 +137,7 @@ class MechanicProfileFragment : Fragment() {
             findNavController().navigate(R.id.action_navigation_mechanic_profile_to_navigation_availability)
         }
         setPricingContainer.setOnClickListener {
-            
+            findNavController().navigate(R.id.action_navigation_mechanic_profile_to_navigation_setPricing)
         }
         personalInformationContainer.setOnClickListener {
             

@@ -8,16 +8,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.carswaddle.carswaddleandroid.data.mechanic.Mechanic
 import com.carswaddle.carswaddleandroid.data.mechanic.MechanicRepository
-import com.carswaddle.carswaddleandroid.data.user.MechanicIdIsUnavailable
 import com.carswaddle.carswaddleandroid.data.user.User
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
-import com.carswaddle.carswaddleandroid.services.UpdateMechanic
-import com.carswaddle.carswaddleandroid.services.serviceModels.PayoutStatus
-import com.carswaddle.carswaddleandroid.services.serviceModels.Verification as ServiceVerification
+import com.carswaddle.carswaddleandroid.services.serviceModels.UpdateMechanic
 import com.carswaddle.store.mechanic.Verification as StoreVerification
 import com.carswaddle.store.AppDatabase
-import com.carswaddle.store.balance.BalanceRepository
-import com.carswaddle.store.payout.PayoutRepository
 import kotlinx.coroutines.launch
 
 

@@ -32,3 +32,41 @@ data class Mechanic (
     val oilChangePricing: OilChangePricing?,
     val chargeForTravel: Boolean
 )
+
+data class UpdateMechanic(
+    val isActive: Boolean? = null, // Allow new appointments
+    val token: String? = null,
+    val dateOfBirth: Date? = null,
+    val address: UpdateMechanicAddress? = null,
+    val externalAccount: String? = null,
+    val ssnLast4: String? = null,
+    val personalID: String? = null,
+    val chargeForTravel: Boolean? = null
+)
+
+
+data class UpdateMechanicAddress(
+    val line1: String,
+    val line2: String?,
+    val postalCode: String,
+    val city: String,
+    val state: String,
+    val country: String
+)
+
+data class UpdateRegion(
+    val latitude: Double,
+    val longitude: Double,
+    val radius: Double
+)
+
+
+
+data class UpdateAvailability(
+    val spans: List<UpdateTemplateTimeSpan>
+)
+
+
+data class ReviewResponse(
+    val reviewsGivenToMechanic: List<Review>
+)

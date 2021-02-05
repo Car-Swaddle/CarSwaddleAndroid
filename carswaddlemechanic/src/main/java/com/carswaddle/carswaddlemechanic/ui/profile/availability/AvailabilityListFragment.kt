@@ -41,7 +41,7 @@ class AvailabilityListFragment : Fragment() {
                 viewAdapter.notifyDataSetChanged()
             }
         }
-
+        
         // Load selected time slots
         // Use this to get the selected time slots when the user taps 'save' viewAdapter.adjustedWeekdaySelectedTimeSlots
         
