@@ -140,7 +140,7 @@ class MechanicProfileFragment : Fragment() {
             findNavController().navigate(R.id.action_navigation_mechanic_profile_to_navigation_setPricing)
         }
         personalInformationContainer.setOnClickListener {
-            
+            findNavController().navigate(R.id.action_navigation_mechanic_profile_to_navigation_personalInformation)
         }
         contactInformationContainer.setOnClickListener {
             findNavController().navigate(R.id.action_navigation_mechanic_profile_to_navigation_contact)

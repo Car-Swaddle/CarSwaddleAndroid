@@ -3,8 +3,8 @@ package com.carswaddle.store.mechanic
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.carswaddle.carswaddleandroid.Extensions.toCalendar
-import com.carswaddle.carswaddleandroid.services.serviceModels.Mechanic
+import com.carswaddle.carswaddleandroid.services.serviceModels.VerificationStatus
+import com.carswaddle.carswaddleandroid.services.serviceModels.VerifyField
 import com.carswaddle.carswaddleandroid.services.serviceModels.Verification as ServiceVerification
 import java.util.*
 
@@ -20,6 +20,62 @@ data class Verification(
     @ColumnInfo val eventuallyDue: List<String>?
 
 ) {
+    
+    fun status(verifyField: VerifyField): VerificationStatus {
+        if (pastDue?.contains(verifyField.name) == true) {
+            return VerificationStatus.pastDue
+        } else if (currentlyDue?.contains(verifyField.name) == true) {
+            return VerificationStatus.pastDue
+        } else if (eventuallyDue?.contains(verifyField.name) == true) {
+            return VerificationStatus.pastDue
+        } else {
+            return VerificationStatus.notDue
+        }
+    }
+
+    fun highestPriorityStatusForAddress(): VerificationStatus {
+        val addressLine1Status = status(VerifyField.ADDRESS_LINE1)
+        val addressCity = status(VerifyField.ADDRESS_CITY)
+        val addressPostalCode = status(VerifyField.ADDRESS_POSTAL_CODE)
+        val addressState = status(VerifyField.ADDRESS_STATE)
+
+        if (addressLine1Status == VerificationStatus.pastDue || addressCity == VerificationStatus.pastDue ||
+            addressPostalCode == VerificationStatus.pastDue || addressState == VerificationStatus.pastDue) {
+            return VerificationStatus.pastDue
+        } else if (addressLine1Status == VerificationStatus.currentlyDue || addressCity == VerificationStatus.currentlyDue ||
+            addressPostalCode == VerificationStatus.currentlyDue || addressState == VerificationStatus.currentlyDue) {
+            return VerificationStatus.currentlyDue
+        } else if (addressLine1Status == VerificationStatus.eventuallyDue || addressCity == VerificationStatus.eventuallyDue ||
+            addressPostalCode == VerificationStatus.eventuallyDue || addressState == VerificationStatus.eventuallyDue) {
+            return VerificationStatus.eventuallyDue
+        } else if (addressLine1Status == VerificationStatus.notDue || addressCity == VerificationStatus.notDue ||
+            addressPostalCode == VerificationStatus.notDue || addressState == VerificationStatus.notDue) {
+            return VerificationStatus.notDue
+        }
+        return VerificationStatus.notDue
+    }
+
+    fun highestPriorityStatusForBirthday(): VerificationStatus {
+        val day = status(VerifyField.BIRTHDAY_DAY)
+        val month = status(VerifyField.BIRTHDAY_MONTH)
+        val year = status(VerifyField.BIRTHDAY_YEAR)
+
+        if (day == VerificationStatus.pastDue || month == VerificationStatus.pastDue ||
+            month == VerificationStatus.pastDue) {
+            return VerificationStatus.pastDue
+        } else if (day == VerificationStatus.currentlyDue || month == VerificationStatus.currentlyDue ||
+            month == VerificationStatus.currentlyDue) {
+            return VerificationStatus.currentlyDue
+        } else if (day == VerificationStatus.eventuallyDue || month == VerificationStatus.eventuallyDue ||
+            month == VerificationStatus.eventuallyDue) {
+            return VerificationStatus.eventuallyDue
+        } else if (day == VerificationStatus.notDue || month == VerificationStatus.notDue ||
+            month == VerificationStatus.notDue) {
+            return VerificationStatus.notDue
+        }
+        return VerificationStatus.notDue
+    }
+    
     constructor(verification: ServiceVerification, mechanicId: String) :
             this(
                 "verification" + mechanicId,

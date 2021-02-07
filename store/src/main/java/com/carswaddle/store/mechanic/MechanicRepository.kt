@@ -73,8 +73,8 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
                 call: Call<List<Map<String, Any>>>,
                 response: Response<List<Map<String, Any>>>
             ) {
-                val result = response?.body()
-                val code = response?.code()
+                val result = response.body()
+                val code = response.code()
                 if (code < 200 || code >= 300 || result == null) {
                     completion(Throwable("The result was empty or got invalid response code"), null)
                 } else {
@@ -144,10 +144,10 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
 
     private fun mechanicFromMap(map: Map<String, Any>): ServiceMechanic {
         val gson = Gson()
-        var newMap = map.toMutableMap()
+        val newMap = map.toMutableMap()
         val jsonTree = gson.toJsonTree(map)
         val user = gson.fromJson<User>(jsonTree, User::class.java)
-        var userMap =
+        val userMap =
             gson.fromJson<Map<String, Any>>(gson.toJsonTree(user), Map::class.java).toMutableMap()
         // The value for `id` is the mechanic id, set `userID` as `id` in newMap 
         (map["userID"] as? String)?.let {
@@ -182,8 +182,8 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
                 call: Call<Map<String, Any>>,
                 response: Response<Map<String, Any>>
             ) {
-                val result = response?.body()
-                val code = response?.code()
+                val result = response.body()
+                val code = response.code()
                 if (code < 200 || code >= 300 || result == null) {
                     completion(Throwable("The result was empty or got invalid response code"), null)
                 } else {
@@ -237,8 +237,8 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
                 call: Call<List<TemplateTimeSpanModel>>,
                 response: Response<List<TemplateTimeSpanModel>>
             ) {
-                val result = response?.body()
-                val code = response?.code()
+                val result = response.body()
+                val code = response.code()
                 if (code < 200 || code >= 300 || result == null) {
                     completion(Throwable("The result was empty or got invalid response code"), null)
                 } else {
@@ -286,8 +286,8 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
                 call: Call<List<TemplateTimeSpanModel>>,
                 response: Response<List<TemplateTimeSpanModel>>
             ) {
-                val result = response?.body()
-                val code = response?.code()
+                val result = response.body()
+                val code = response.code()
                 if (code < 200 || code >= 300 || result == null) {
                     completion(Throwable("The result was empty or got invalid response code"), null)
                 } else {

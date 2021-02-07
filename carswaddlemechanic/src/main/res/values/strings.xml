@@ -244,4 +244,10 @@
     <string name="synthetic">Synthetic</string>
     <string name="high_mileage">High Mileage</string>
     <string name="pricing">Pricing</string>
+    <string name="date_of_birth">Date of birth</string>
+    <string name="full_social">Full social security number</string>
+    <string name="first_4_social">First 4 of social security number</string>
+    <string name="street_address">Street Address</string>
+    <string name="bank_account">Bank account</string>
+    <string name="identification_document">Identification document</string>
 </resources>
