@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.carswaddle.carswaddleandroid.data.mechanic.Mechanic
 import com.carswaddle.carswaddleandroid.services.serviceModels.UpdateMechanic
+import com.carswaddle.carswaddleandroid.services.serviceModels.VerifyField
 import com.carswaddle.carswaddlemechanic.R
 import com.carswaddle.carswaddlemechanic.ui.common.ActionIndicatorView
 import com.carswaddle.carswaddlemechanic.ui.common.MechanicImageView
@@ -43,6 +44,7 @@ class MechanicProfileFragment : Fragment() {
     private lateinit var personalInformationContainer: LinearLayout
     private lateinit var contactInformationContainer: LinearLayout
     private lateinit var profileContactInfoActionIndicator: ActionIndicatorView
+    private lateinit var personalInformationActionIndicator: ActionIndicatorView
     private lateinit var taxDeductionsContainer: LinearLayout
     private lateinit var logoutButton: Button
 
@@ -70,6 +72,9 @@ class MechanicProfileFragment : Fragment() {
         taxDeductionsContainer = root.findViewById(R.id.taxDeductionsContainer)
         logoutButton = root.findViewById(R.id.profile_logout_button)
         mechanicImageView = root.findViewById(R.id.mechanicImageView)
+        personalInformationActionIndicator = root.findViewById(R.id.personalInformationActionIndicator)
+
+        personalInformationActionIndicator.visibility = View.INVISIBLE
 
         viewModel.mechanic.observe(viewLifecycleOwner) {
             requireActivity().runOnUiThread {
@@ -78,7 +83,7 @@ class MechanicProfileFragment : Fragment() {
                 if (allowNewAppointmentsSwitch.isChecked != newIsActive) {
                     allowNewAppointmentsSwitch.isChecked = newIsActive
                 }
-                 
+                
                 val newCharge = it.chargeForTravel
                 if (chargeForTravelSwitch.isChecked != newCharge) {
                     chargeForTravelSwitch.isChecked = newCharge
@@ -94,6 +99,7 @@ class MechanicProfileFragment : Fragment() {
         viewModel.verification.observe(viewLifecycleOwner) {
             requireActivity().runOnUiThread {
                 print("can show red dots correctly")
+                personalInformationActionIndicator.visibility = if (it?.isAnyPersonalInformationDue() == true) View.VISIBLE else View.INVISIBLE 
             }
         }
 
@@ -102,7 +108,7 @@ class MechanicProfileFragment : Fragment() {
                 print("can show red dots correctly")
                 it?.let {
                     mechanicNameTextView.text = it.displayName() ?: "--"
-                    profileContactInfoActionIndicator.visibility = if (it.isEmailVerified == true) View.GONE else View.VISIBLE
+                    profileContactInfoActionIndicator.visibility = if (it.isEmailVerified == true) View.INVISIBLE else View.VISIBLE
                 }
             }
         }

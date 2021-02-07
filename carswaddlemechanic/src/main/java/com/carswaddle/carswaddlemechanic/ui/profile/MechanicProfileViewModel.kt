@@ -29,6 +29,7 @@ class MechanicProfileViewModel(application: Application) : AndroidViewModel(appl
         updateCurrentMechanic(application) {}
         updateCurrentUser(application) {}
         updateStats(application) {}
+        updateVerification(application) {}
     }
 
     /// This updates verification as well

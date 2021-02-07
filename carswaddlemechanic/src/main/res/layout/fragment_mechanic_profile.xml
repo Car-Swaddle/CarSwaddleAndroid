@@ -61,10 +61,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/text_margin"
-                    android:textSize="@dimen/title"
                     android:fontFamily="@font/montserrat_semi_bold"
                     android:text="@string/all_reviews"
-                    android:textColor="@color/brand" />
+                    android:textColor="@color/brand"
+                    android:textSize="@dimen/title" />
 
                 <TextView
                     android:id="@+id/ratingsTextView"
@@ -288,15 +288,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackground"
-                android:orientation="vertical"
+                android:gravity="center_vertical"
                 android:padding="@dimen/content_margin">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/text_margin"
+                    android:layout_weight="1000"
                     android:text="@string/personal_information"
                     android:textColor="@color/text"
                     android:textSize="@dimen/title" />
+
+                <com.carswaddle.carswaddlemechanic.ui.common.ActionIndicatorView
+                    android:id="@+id/personalInformationActionIndicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
 
             </LinearLayout>
 
@@ -315,24 +323,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackground"
-                android:orientation="horizontal"
                 android:gravity="center_vertical"
+                android:orientation="horizontal"
                 android:padding="@dimen/content_margin">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/text_margin"
+                    android:layout_weight="1000"
                     android:text="@string/contact_information"
                     android:textColor="@color/text"
-                    android:textSize="@dimen/title"
-                    android:layout_marginEnd="@dimen/text_margin"
-                    android:layout_weight="1000"/>
-                
+                    android:textSize="@dimen/title" />
+
                 <com.carswaddle.carswaddlemechanic.ui.common.ActionIndicatorView
                     android:id="@+id/profileContactInfoActionIndicator"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"/>
+                    android:layout_weight="1" />
 
             </LinearLayout>
 

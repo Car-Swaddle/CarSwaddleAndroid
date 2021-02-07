@@ -32,6 +32,20 @@ data class Verification(
             return VerificationStatus.notDue
         }
     }
+    
+    fun isAnyPersonalInformationDue(): Boolean {
+        val address = highestPriorityStatusForAddress()
+        val ss4 = status(VerifyField.SOCIAL_SECURITY_NUMBER_LAST_4)
+        val fullSS = status(VerifyField.PERSONAL_ID_NUMBER)
+        val bank = status(VerifyField.EXTERNAL_ACCOUNT)
+        val doc = status(VerifyField.VERIFICATION_DOCUMENT)
+        val birth = highestPriorityStatusForBirthday()
+        
+        val due = VerificationStatus.currentlyDue
+        val past = VerificationStatus.pastDue
+        
+        return (address == due || address == past) || (ss4 == due || ss4 == past) || (fullSS == due || fullSS == past) || (bank == due || bank == past) || (doc == due || doc == past) || (birth == due || birth == past)
+    }
 
     fun highestPriorityStatusForAddress(): VerificationStatus {
         val addressLine1Status = status(VerifyField.ADDRESS_LINE1)
