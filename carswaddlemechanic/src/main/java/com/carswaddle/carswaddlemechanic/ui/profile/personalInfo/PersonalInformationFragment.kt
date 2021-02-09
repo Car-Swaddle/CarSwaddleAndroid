@@ -6,12 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.carswaddle.carswaddleandroid.services.serviceModels.VerificationStatus
 import com.carswaddle.carswaddleandroid.services.serviceModels.VerifyField
 import com.carswaddle.carswaddlemechanic.R
 import com.carswaddle.carswaddlemechanic.ui.common.ActionIndicatorView
+import com.carswaddle.carswaddlemechanic.ui.profile.personalInfo.details.IdentificationNumberFragment
 
 
 class PersonalInformationFragment : Fragment() {
@@ -60,6 +63,27 @@ class PersonalInformationFragment : Fragment() {
         bankAccountActionIndicator.visibility = View.INVISIBLE
         identificationDocumentActionIndicator.visibility = View.INVISIBLE
         dateOfBirthActionIndicator.visibility = View.INVISIBLE
+        
+        
+        fullSocialLinearLayout.setOnClickListener {
+            val bundle = bundleOf("mode" to IdentificationNumberFragment.IdentificationMode.FULL_SOCIAL.value)
+            findNavController().navigate(
+                R.id.action_navigation_personalInformation_to_navigation_identification,
+                bundle
+            )    
+        }
+        
+        last4SocialLinearLayout.setOnClickListener {
+            val bundle = bundleOf("mode" to IdentificationNumberFragment.IdentificationMode.LAST_4_SOCIAL.value)
+            findNavController().navigate(
+                R.id.action_navigation_personalInformation_to_navigation_identification,
+                bundle
+            )
+        }
+        
+        streetAddressLinearLayout.setOnClickListener {
+            findNavController().navigate(R.id.action_navigation_personalInformation_to_navigation_street_address)
+        }
         
         viewModel.verification.observe(viewLifecycleOwner) {
             if (it != null) {

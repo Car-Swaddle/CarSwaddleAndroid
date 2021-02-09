@@ -32,6 +32,7 @@ import com.carswaddle.services.services.serviceModels.Price
 import com.stripe.android.PaymentSession
 import com.stripe.android.PaymentSessionConfig
 import com.stripe.android.PaymentSessionData
+import com.stripe.android.Stripe
 import com.stripe.android.model.PaymentMethod
 import java.util.*
 
@@ -95,7 +96,7 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String, val schedu
         paymentLayout.setOnClickListener {
             paymentSession.presentPaymentMethodSelection()
         }
-
+        
         selectDetailsViewModel.couponError.observe(
             viewLifecycleOwner,
             Observer<CouponErrorType?> { errorType ->

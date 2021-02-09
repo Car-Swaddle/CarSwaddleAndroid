@@ -159,6 +159,31 @@
     <fragment
         android:id="@+id/navigation_personalInformation"
         android:name="com.carswaddle.carswaddlemechanic.ui.profile.personalInfo.PersonalInformationFragment"
-        android:label="Personal Information" />
+        android:label="Personal Information" >
+        <action
+            android:id="@+id/action_navigation_personalInformation_to_navigation_identification"
+            app:destination="@id/navigation_identification"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_navigation_personalInformation_to_navigation_street_address"
+            app:destination="@id/navigation_street_address"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_identification"
+        android:name="com.carswaddle.carswaddlemechanic.ui.profile.personalInfo.details.IdentificationNumberFragment"
+        android:label="Identification" />
+
+    <fragment
+        android:id="@+id/navigation_street_address"
+        android:name="com.carswaddle.carswaddlemechanic.ui.profile.personalInfo.details.StreetAddressFragment"
+        android:label="Street address" />
 
 </navigation>

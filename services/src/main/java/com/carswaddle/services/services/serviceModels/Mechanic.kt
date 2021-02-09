@@ -38,9 +38,9 @@ data class UpdateMechanic(
     val token: String? = null,
     val dateOfBirth: Date? = null,
     val address: UpdateMechanicAddress? = null,
-    val externalAccount: String? = null,
+    val externalAccount: String? = null, // Bank acount token. Use stripe to generate a token to represent the bank account to send up to server
     val ssnLast4: String? = null,
-    val personalID: String? = null,
+    val personalID: String? = null, // Social Security number
     val chargeForTravel: Boolean? = null
 )
 
@@ -51,7 +51,7 @@ data class UpdateMechanicAddress(
     val postalCode: String,
     val city: String,
     val state: String,
-    val country: String
+    val country: String?
 )
 
 data class UpdateRegion(

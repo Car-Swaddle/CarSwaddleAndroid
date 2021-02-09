@@ -432,8 +432,7 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
         cacheCompletion: () -> Unit = {},
         completion: (throwable: Throwable?) -> Unit
     ) {
-        val mechanicService =
-            ServiceGenerator.authenticated(context)?.retrofit?.create(MechanicService::class.java)
+        val mechanicService = ServiceGenerator.authenticated(context)?.retrofit?.create(MechanicService::class.java)
         if (mechanicService == null) {
             completion(ServiceNotAvailable())
             return

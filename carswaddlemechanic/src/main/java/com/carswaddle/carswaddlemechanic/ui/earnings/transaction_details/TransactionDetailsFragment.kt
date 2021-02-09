@@ -85,7 +85,7 @@ class TransactionDetailsFragment : Fragment() {
         
         autoServiceSelectionLinearLayout.setOnClickListener { 
             print("tapped autoservice")
-            val autoServiceId = viewModel.transactionMetadata?.value?.autoServiceID
+            val autoServiceId = viewModel.transactionMetadata.value?.autoServiceID
             autoServiceId?.let {
                 val bundle = bundleOf("autoServiceId" to it)
                 findNavController().navigate(

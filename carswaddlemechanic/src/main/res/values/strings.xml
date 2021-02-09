@@ -250,4 +250,15 @@
     <string name="street_address">Street Address</string>
     <string name="bank_account">Bank account</string>
     <string name="identification_document">Identification document</string>
+    <string name="last_4_social_explain">The last four digits of your social security number are required in order to send you your tax documents at the end of the year. This may be a requirement in order for funds to be put into your account.</string>
+    <string name="full_social_explain">Your social security number is required in order to send you your tax documents at the end of the year. This may be a requirement in order for funds to be put into your account.</string>
+    <string name="last_4_social_title">Last 4 of social security number</string>
+    <string name="full_social_title">Full social security number</string>
+    <string name="line_1">Line 1</string>
+    <string name="line_2">Line 2</string>
+    <string name="postal_code">Postal code</string>
+    <string name="city">City</string>
+    <string name="state">State</string>
+    <string name="toast_full_social">Car Swaddle successfully saved your social security number.</string>
+    <string name="toast_last_4">Car Swaddle successfully saved the last 4 of your social.</string>
 </resources>
