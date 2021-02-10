@@ -123,7 +123,6 @@ class IdentificationNumberFragment : Fragment(), ApiResultCallback<Token> {
     }
     
     private fun finishSuccessfully() {
-        
         val text = when(identificationMode) {
             IdentificationMode.LAST_4_SOCIAL -> getString(R.string.toast_last_4)
             IdentificationMode.FULL_SOCIAL -> getString(R.string.toast_full_social)
@@ -135,6 +134,8 @@ class IdentificationNumberFragment : Fragment(), ApiResultCallback<Token> {
 
     override fun onError(e: Exception) {
         print("error")
+        saveButton.isLoading = false
+        Toast.makeText(requireContext(), "Car Swaddle was unable to upload. Please try again later", Toast.LENGTH_SHORT).show()
     }
 
 }

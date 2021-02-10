@@ -63,8 +63,13 @@ class LabeledEditText @JvmOverloads constructor(
         if (textValue != null) {
             editTextValue = textValue
         }
-        
-        editText.inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL
+
+        if (a.hasValue(R.styleable.LabeledEditText_android_inputType)) {
+            val inputType = a.getInt(R.styleable.LabeledEditText_android_inputType, 0)
+            editText.inputType = inputType
+        } else {
+            editText.inputType = InputType.TYPE_TEXT_VARIATION_PERSON_NAME
+        }
     }
 
 }

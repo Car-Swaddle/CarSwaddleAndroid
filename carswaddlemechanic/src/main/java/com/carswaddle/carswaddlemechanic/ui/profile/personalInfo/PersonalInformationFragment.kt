@@ -85,6 +85,10 @@ class PersonalInformationFragment : Fragment() {
             findNavController().navigate(R.id.action_navigation_personalInformation_to_navigation_street_address)
         }
         
+        bankAccountLinearLayout.setOnClickListener { 
+            findNavController().navigate(R.id.action_navigation_personalInformation_to_navigation_bank_account)
+        }
+        
         viewModel.verification.observe(viewLifecycleOwner) {
             if (it != null) {
                 fullSocialActionIndicator.visibility = visibilityFromVerificationStatus(it.status(VerifyField.SOCIAL_SECURITY_NUMBER_LAST_4))

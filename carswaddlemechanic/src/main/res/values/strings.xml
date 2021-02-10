@@ -261,4 +261,6 @@
     <string name="state">State</string>
     <string name="toast_full_social">Car Swaddle successfully saved your social security number.</string>
     <string name="toast_last_4">Car Swaddle successfully saved the last 4 of your social.</string>
+    <string name="routing_number">Routing number</string>
+    <string name="account_holder_name">Account holder name</string>
 </resources>

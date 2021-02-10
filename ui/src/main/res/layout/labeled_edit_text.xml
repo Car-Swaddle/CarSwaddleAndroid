@@ -11,7 +11,6 @@
         android:id="@+id/labeledEditText_editText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
         android:text="Value"
         tools:ignore="HardcodedText" />
 

@@ -22,5 +22,6 @@
     <declare-styleable name="LabeledEditText">
         <attr name="label" format="string" localization="suggested" />
         <attr name="value" format="string" localization="suggested" />
+        <attr name="android:inputType"/>
     </declare-styleable>
 </resources>
