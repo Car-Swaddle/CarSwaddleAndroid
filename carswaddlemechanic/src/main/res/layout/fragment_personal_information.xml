@@ -19,6 +19,7 @@
                 android:id="@+id/fullSocialLinearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
                 android:padding="@dimen/content_margin">
 
                 <TextView
@@ -50,6 +51,7 @@
                 android:id="@+id/last4SocialLinearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
                 android:padding="@dimen/content_margin">
 
                 <TextView
@@ -81,6 +83,7 @@
                 android:id="@+id/streetAddressLinearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
                 android:padding="@dimen/content_margin">
 
                 <TextView
@@ -112,6 +115,7 @@
                 android:id="@+id/bankAccountLinearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
                 android:padding="@dimen/content_margin">
 
                 <TextView
@@ -143,6 +147,7 @@
                 android:id="@+id/identificationDocumentLinearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
                 android:padding="@dimen/content_margin">
 
                 <TextView
@@ -174,6 +179,7 @@
                 android:id="@+id/dateOfBirthLinearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
                 android:padding="@dimen/content_margin">
 
                 <TextView
