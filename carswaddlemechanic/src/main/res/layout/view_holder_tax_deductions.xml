@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/content_margin"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/text_margin"
+            android:text="@string/tax_year"
+            android:textColor="@color/text2"
+            android:textSize="@dimen/title" />
+
+        <TextView
+            android:id="@+id/taxYearTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_semi_bold"
+            android:layout_marginBottom="@dimen/content_margin"
+            android:text="2019"
+            android:textColor="@color/text"
+            android:textSize="@dimen/text"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/text_margin"
+            android:text="@string/deduct_explained"
+            android:textColor="@color/text2"
+            android:textSize="@dimen/title" />
+
+        <TextView
+            android:id="@+id/dollarDeductTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/content_margin"
+            android:fontFamily="@font/montserrat_semi_bold"
+            android:text="$0.00"
+            android:textColor="@color/text"
+            android:textSize="@dimen/text" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/text_margin"
+            android:text="@string/miles_deduct"
+            android:textColor="@color/text2"
+            android:textSize="@dimen/title" />
+
+        <TextView
+            android:id="@+id/milesDeductTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_semi_bold"
+            android:text="0"
+            android:textColor="@color/text"
+            android:textSize="@dimen/text" />
+
+
+    </LinearLayout>
+    
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginStart="@dimen/content_margin"
+        android:background="@color/contentDivider"/>
+
+</LinearLayout>

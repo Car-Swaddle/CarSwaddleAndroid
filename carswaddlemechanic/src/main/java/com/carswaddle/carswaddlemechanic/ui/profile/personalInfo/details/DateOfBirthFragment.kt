@@ -56,19 +56,19 @@ class DateOfBirthFragment : Fragment(), DatePickerDialog.OnDateSetListener {
             val dpd = DatePickerDialog(requireContext(), this, year, month, day)
             dpd.show()
         }
-
+        
         saveButton = root.findViewById(R.id.saveDateOfBirthButton)
-
+        
         saveButton.button.setOnClickListener {
             saveDateOfBirth()
         }
-
+        
         viewModel.dateOfBirth.observe(viewLifecycleOwner) {
             selectedDate = it?.toCalendar()
         }
-
+        
         updateDisplayedDate()
-
+        
         return root
     }
 

@@ -31,12 +31,14 @@ import com.carswaddle.store.mechanic.OilChangePricing
 import com.carswaddle.store.mechanic.Verification
 import com.carswaddle.store.payout.Payout
 import com.carswaddle.store.payout.PayoutDao
+import com.carswaddle.store.taxInfo.TaxDao
+import com.carswaddle.store.taxInfo.TaxInfo
 import com.carswaddle.store.transaction.Transaction
 import com.carswaddle.store.transaction.TransactionDao
 import com.carswaddle.store.transaction.TransactionMetadata
 
 
-@Database(entities = arrayOf(User::class, AutoService::class, Vehicle::class, AutoServiceLocation::class, VehicleDescription::class, Mechanic::class, ServiceEntity::class, OilChange::class, TemplateTimeSpan::class, Review::class, Balance::class, Payout::class, Transaction::class, TransactionMetadata::class, Verification::class, OilChangePricing::class), version = 31)
+@Database(entities = arrayOf(User::class, AutoService::class, Vehicle::class, AutoServiceLocation::class, VehicleDescription::class, Mechanic::class, ServiceEntity::class, OilChange::class, TemplateTimeSpan::class, Review::class, Balance::class, Payout::class, Transaction::class, TransactionMetadata::class, Verification::class, OilChangePricing::class, TaxInfo::class), version = 32)
 @TypeConverters(DateConverter::class, DateDoubleConverter::class, DateIntConverter::class, CalendarConverter::class, CalendarDoubleConverter::class, CalendarIntConverter::class, ArrayListConverter::class, AutoServiceStatusConverter::class, OilTypeConverter::class, PayoutStatusConverter::class, TransactionTypeConverter::class)
 abstract class AppDatabase : RoomDatabase() {
 
@@ -53,6 +55,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun balanceDao(): BalanceDao
     abstract fun transactionDao(): TransactionDao
     abstract fun payoutDao(): PayoutDao
+    abstract fun taxDao(): TaxDao
 
     companion object {
         // Singleton prevents multiple instances of database opening at the

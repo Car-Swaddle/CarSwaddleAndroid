@@ -152,7 +152,7 @@ class MechanicProfileFragment : Fragment() {
             findNavController().navigate(R.id.action_navigation_mechanic_profile_to_navigation_contact)
         }
         taxDeductionsContainer.setOnClickListener {
-            
+            findNavController().navigate(R.id.action_navigation_mechanic_profile_to_navigation_tax_deductions)
         }
         
         

@@ -20,6 +20,7 @@
         <item name="android:ratingBarStyle">@style/CarSwaddle.RatingBar</item>
         <item name="colorControlActivated">@color/brand</item>
         <item name="colorSwitchThumbNormal">@color/content</item>
+        <item name="android:datePickerDialogTheme">@style/DatePicker</item>
     </style>
 
     <style name="CarSwaddle.ConfirmButton" parent="@style/Widget.MaterialComponents.Button">
@@ -101,4 +102,9 @@
         <item name="colorControlActivated">@color/neutral6</item>
     </style>
 
+    <style name="DatePicker" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorPrimary">@color/brand2</item>
+        <item name="colorAccent">@color/brand</item>
+    </style>
+    
 </resources>

@@ -80,6 +80,13 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_navigation_mechanic_profile_to_navigation_tax_deductions"
+            app:destination="@id/navigation_tax_deductions"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment
@@ -188,6 +195,7 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        
     </fragment>
 
     <fragment
@@ -209,5 +217,10 @@
         android:id="@+id/navigation_date_of_birth"
         android:name="com.carswaddle.carswaddlemechanic.ui.profile.personalInfo.details.DateOfBirthFragment"
         android:label="Date of birth" />
+
+    <fragment
+        android:id="@+id/navigation_tax_deductions"
+        android:name="com.carswaddle.carswaddlemechanic.ui.profile.personalInfo.details.taxDeductions.TaxDeductionsFragment"
+        android:label="Tax Deductions" />
 
 </navigation>
