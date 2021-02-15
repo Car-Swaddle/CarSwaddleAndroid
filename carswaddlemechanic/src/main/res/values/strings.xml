@@ -268,4 +268,5 @@
     <string name="tax_year">Tax year</string>
     <string name="deduct_explained">How much you can deduct (estimate):</string>
     <string name="miles_deduct">How many miles you can deduct (estimate):</string>
+    <string name="save_region">Save region</string>
 </resources>

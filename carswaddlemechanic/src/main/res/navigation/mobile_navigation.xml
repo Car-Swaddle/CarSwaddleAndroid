@@ -87,6 +87,13 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_navigation_mechanic_profile_to_navigation_region"
+            app:destination="@id/navigation_region"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
 
     <fragment
@@ -220,7 +227,12 @@
 
     <fragment
         android:id="@+id/navigation_tax_deductions"
-        android:name="com.carswaddle.carswaddlemechanic.ui.profile.personalInfo.details.taxDeductions.TaxDeductionsFragment"
+        android:name="com.carswaddle.carswaddlemechanic.ui.profile.taxDeductions.TaxDeductionsFragment"
         android:label="Tax Deductions" />
+
+    <fragment
+        android:id="@+id/navigation_region"
+        android:name="com.carswaddle.carswaddlemechanic.ui.profile.serviceRegion.ServiceRegionFragment"
+        android:label="Service Region" />
 
 </navigation>

@@ -1,4 +1,4 @@
-package com.carswaddle.carswaddlemechanic.ui.profile.personalInfo.details.taxDeductions
+package com.carswaddle.carswaddlemechanic.ui.profile.taxDeductions
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,10 +6,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.carswaddle.carswaddlemechanic.R
-import com.carswaddle.carswaddlemechanic.ui.profile.availability.DayAvailabilityViewHolder
 import com.carswaddle.foundation.Extensions.metersToMiles
 import com.carswaddle.store.taxInfo.TaxInfo as TaxInfoStoreModel
-import com.carswaddle.ui.TimeAvailabilityItem
+import java.math.RoundingMode
 import java.text.NumberFormat
 
 
@@ -39,7 +38,7 @@ class TaxDeductionsRecyclerViewAdapter() : RecyclerView.Adapter<TaxDeductionsRec
         fun configure(taxInfo: TaxInfoStoreModel) {
             taxYearTextView.text = taxInfo.year
             dollarTextView.text = currencyFormatter.format(taxInfo.mechanicCostInCents/100.0)
-            milesTextView.text = taxInfo.metersDriven.metersToMiles().toString() 
+            milesTextView.text = numberFormatter.format(taxInfo.metersDriven.metersToMiles())
         }
         
         companion object {
@@ -47,6 +46,14 @@ class TaxDeductionsRecyclerViewAdapter() : RecyclerView.Adapter<TaxDeductionsRec
                 val f = NumberFormat.getCurrencyInstance()
                 f.minimumFractionDigits = 2
                 f.maximumFractionDigits = 2
+                return@lazy f
+            }
+
+            val numberFormatter: NumberFormat by lazy {
+                val f = NumberFormat.getNumberInstance()
+                f.minimumFractionDigits = 0
+                f.maximumFractionDigits = 0
+                f.roundingMode = RoundingMode.FLOOR
                 return@lazy f
             }
         }

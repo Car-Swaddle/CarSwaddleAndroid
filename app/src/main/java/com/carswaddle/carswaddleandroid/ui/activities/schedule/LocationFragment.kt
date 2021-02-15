@@ -30,7 +30,7 @@ import java.util.*
 
 
 
-public val saltLakeAndProvo = LatLng(40.4456955, -111.8971674)
+val saltLakeAndProvo = LatLng(40.4456955, -111.8971674)
 
 /**
  * A simple [Fragment] subclass.

@@ -1,4 +1,4 @@
-package com.carswaddle.carswaddlemechanic.ui.profile.personalInfo.details.taxDeductions
+package com.carswaddle.carswaddlemechanic.ui.profile.taxDeductions
 
 import android.app.Application
 import android.content.Context

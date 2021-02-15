@@ -45,7 +45,7 @@ data class Mechanic(
                 mechanic.scheduleTimeSpans?.map { it.id },
                 mechanic.services?.map { it.id },
                 mechanic.reviews?.map { it.id },
-                mechanic.serviceRegion?.identifier,
+                mechanic.serviceRegion?.id,
                 mechanic.stats?.averageRating ?: averageRating,
                 mechanic.stats?.numberOfRatings ?: numberOfRatings,
                 mechanic.stats?.autoServicesProvided ?: numberOfServicesProvied)

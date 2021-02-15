@@ -1,4 +1,4 @@
-package com.carswaddle.carswaddlemechanic.ui.profile.personalInfo.details.taxDeductions
+package com.carswaddle.carswaddlemechanic.ui.profile.taxDeductions
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.carswaddle.carswaddlemechanic.R
-import com.carswaddle.carswaddlemechanic.ui.profile.availability.toTimeAvailabilityItems
 
 
 class TaxDeductionsFragment : Fragment() {

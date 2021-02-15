@@ -13,6 +13,10 @@ fun Int.metersToMiles(): Float {
     return this.toFloat() / metersToMilesConstant
 }
 
+fun Double.metersToMiles(): Double {
+    return this / metersToMilesConstant
+}
+
 fun Double.epochToDate(): Date {
     return Date((this*1000).toLong())
 }

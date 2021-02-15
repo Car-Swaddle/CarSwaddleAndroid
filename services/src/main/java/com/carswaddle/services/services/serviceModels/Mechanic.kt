@@ -54,13 +54,6 @@ data class UpdateMechanicAddress(
     val country: String?
 )
 
-data class UpdateRegion(
-    val latitude: Double,
-    val longitude: Double,
-    val radius: Double
-)
-
-
 
 data class UpdateAvailability(
     val spans: List<UpdateTemplateTimeSpan>

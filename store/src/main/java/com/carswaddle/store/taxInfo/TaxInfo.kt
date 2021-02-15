@@ -11,8 +11,8 @@ import java.util.*
 @Entity
 data class TaxInfo(
     @PrimaryKey val year: String,
-    @ColumnInfo(name = "meters_driven") val metersDriven: Int,
-    @ColumnInfo(name = "mechanic_cost_in_cents") val mechanicCostInCents: Int,
+    @ColumnInfo(name = "meters_driven") val metersDriven: Double,
+    @ColumnInfo(name = "mechanic_cost_in_cents") val mechanicCostInCents: Double,
 ) {
 
     constructor(taxInfo: TaxInfo) :

@@ -137,7 +137,7 @@ class MechanicProfileFragment : Fragment() {
             print("checked changed")
         }
         setServiceRegionContainer.setOnClickListener {
-            
+            findNavController().navigate(R.id.action_navigation_mechanic_profile_to_navigation_region)
         }
         setHoursContainer.setOnClickListener {
             findNavController().navigate(R.id.action_navigation_mechanic_profile_to_navigation_availability)
