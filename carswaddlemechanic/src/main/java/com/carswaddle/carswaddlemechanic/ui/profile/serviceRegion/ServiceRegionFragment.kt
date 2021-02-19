@@ -8,13 +8,10 @@ import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.view.MotionEvent.INVALID_POINTER_ID
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import androidx.core.view.MotionEventCompat
+import androidx.core.graphics.minus
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -30,6 +27,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.SphericalUtil
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -87,15 +85,46 @@ class ServiceRegionFragment : Fragment(), OnMapReadyCallback {
 
         viewModel.region.observe(viewLifecycleOwner) {
             if (it != null) {
-                val camUpdate = CameraUpdateFactory.newLatLngZoom(
-                    LatLng(it.latitude, it.longitude),
-                    zoomLevel
-                )
-                map.animateCamera(camUpdate)
+                
+                val heading = 270.0  //expressed in degrees clockwise from north
+                val latLong = LatLng(it.latitude, it.longitude)
+                val startLatLng = SphericalUtil.computeOffset(latLong, it.radius, heading)
+                
+                val distanceBetween = distanceBetween(latLong, startLatLng) * 2
+
+                // Just zooming to distanceBetween would display the circle with full width.
+                // Multiply by 3 so that you can get more context as to where the service region lies.
+                val localizedZoomLevel = zoomLevel(distanceBetween * 3)  
+                
+                val c = LatLng(it.latitude, it.longitude)
+                val camUpdate = CameraUpdateFactory.newLatLngZoom(c, localizedZoomLevel)
+                map.moveCamera(camUpdate)
+                
+                val p = map.projection.toScreenLocation(startLatLng)
+                val pointC = map.projection.toScreenLocation(c)
+                
+                val rad = pointC - p
+                
+                val length = rad.x * 2
+
+                val oldParams = regionView.layoutParams
+
+                oldParams.width = length
+                oldParams.height = length
+
+                regionView.layoutParams = oldParams
             }
         }
 
         return root
+    }
+
+    fun zoomLevel(distance: Float): Float {
+        val E = 40_075_000.0
+        var zoom = ((Math.log(E / distance) / Math.log(2.0)) + 1).toFloat()
+        if (zoom > 21) zoom = 21f
+        if (zoom < 1) zoom = 1f
+        return zoom
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -141,33 +170,44 @@ class ServiceRegionFragment : Fragment(), OnMapReadyCallback {
                 touchPositionYOffset = ev.rawY - regionView.globalVisibleRect().y()
                 touchPositionXOffset = ev.rawX - regionView.globalVisibleRect().x()
 
-                val radius = distance(ev.rawX.toDouble(), regionView.globalCenterX().toDouble(), ev.rawY.toDouble(), regionView.globalCenterY().toDouble())
+                val radius = distance(
+                    ev.rawX.toDouble(),
+                    regionView.globalCenterX().toDouble(),
+                    ev.rawY.toDouble(),
+                    regionView.globalCenterY().toDouble()
+                )
                 val fullRadius = regionView.width / 2
                 touchPercentage = fullRadius / radius
             }
             MotionEvent.ACTION_MOVE -> {
-                val radius = distance(ev.rawX.toDouble(), regionView.globalCenterX().toDouble(), ev.rawY.toDouble(), regionView.globalCenterY().toDouble())
-                val newWidth = abs(2*(radius*touchPercentage)).toInt()
-                
+                val radius = distance(
+                    ev.rawX.toDouble(),
+                    regionView.globalCenterX().toDouble(),
+                    ev.rawY.toDouble(),
+                    regionView.globalCenterY().toDouble()
+                )
+                val newWidth = abs(2 * (radius * touchPercentage)).toInt()
+
                 var adjustedWidth = max(newWidth, 200)
                 val d = rootView
                 if (d != null) {
                     adjustedWidth = min(adjustedWidth, d.width - 45)
                 }
-                
+
                 val oldParams = regionView.layoutParams
-                
+
                 oldParams.width = adjustedWidth
                 oldParams.height = adjustedWidth
-                
+
                 regionView.layoutParams = oldParams
             }
-            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> { 
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 touchPercentage = 0.0
                 touchPositionYOffset = 0.0f
                 touchPositionXOffset = 0.0f
             }
-            MotionEvent.ACTION_POINTER_UP -> { }
+            MotionEvent.ACTION_POINTER_UP -> {
+            }
         }
     }
     
@@ -176,18 +216,15 @@ class ServiceRegionFragment : Fragment(), OnMapReadyCallback {
         val startXPoint = Point(regionView.x.toInt(), regionView.y.toInt())
         val centerScreenLocation = map.projection.fromScreenLocation(centerPoint)
         val startScreenLocation = map.projection.fromScreenLocation(startXPoint)
-        
-        
-        var results: FloatArray = FloatArray(3)
-        Location.distanceBetween(centerScreenLocation.latitude, centerScreenLocation.longitude, startScreenLocation.latitude, startScreenLocation.longitude, results)
-        val distance = results[0]  // distance is in meters
-        
-        
-        Log.d("dist", "distance: $distance")
+        val distance = distanceBetween(centerScreenLocation, startScreenLocation)
         
         saveButton.isLoading = true
         
-        val u = UpdateRegion(centerScreenLocation.latitude, centerScreenLocation.longitude, distance.toDouble())
+        val u = UpdateRegion(
+            centerScreenLocation.latitude,
+            centerScreenLocation.longitude,
+            distance.toDouble()
+        )
         viewModel.updateRegion(u, requireContext()) {
             if (it == null) {
                 requireActivity().runOnUiThread {
@@ -200,13 +237,29 @@ class ServiceRegionFragment : Fragment(), OnMapReadyCallback {
     private fun finishSuccessfully() {
         saveButton.isLoading = false
         findNavController().popBackStack()
-        Toast.makeText(requireContext(), "Car Swaddle successfully saved your region.", Toast.LENGTH_SHORT).show()
+        Toast.makeText(
+            requireContext(),
+            "Car Swaddle successfully saved your region.",
+            Toast.LENGTH_SHORT
+        ).show()
     }
     
     private fun distance(x1: Double, x2: Double, y1: Double, y2: Double): Double {
         val xs = (x1-x2)
         val ys = (y1-y2)
-        return Math.sqrt((xs*xs) + (ys*ys))
+        return Math.sqrt((xs * xs) + (ys * ys))
+    }
+    
+    private fun distanceBetween(l1: LatLng, l2: LatLng): Float {
+        val results = FloatArray(3)
+        Location.distanceBetween(
+            l1.latitude,
+            l1.longitude,
+            l2.latitude,
+            l2.longitude,
+            results
+        )
+        return results[0]  // distance is in meters
     }
     
 }
