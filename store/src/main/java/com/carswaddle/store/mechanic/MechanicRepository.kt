@@ -1,12 +1,14 @@
 package com.carswaddle.carswaddleandroid.data.mechanic
 
 import android.content.Context
+import android.net.Uri
 import android.util.Log
 import com.carswaddle.carswaddleandroid.Extensions.carSwaddlePreferences
 import com.carswaddle.carswaddleandroid.data.user.ServiceError
 import com.carswaddle.carswaddleandroid.data.user.User
 import com.carswaddle.carswaddleandroid.retrofit.ServiceGenerator
 import com.carswaddle.carswaddleandroid.retrofit.ServiceNotAvailable
+import com.carswaddle.carswaddleandroid.services.IdDocumentImageSide
 import com.carswaddle.carswaddleandroid.services.MechanicService
 import com.carswaddle.carswaddleandroid.services.serviceModels.*
 import com.carswaddle.carswaddleandroid.data.mechanic.Mechanic as StoreMechanic
@@ -18,10 +20,15 @@ import com.carswaddle.carswaddleandroid.services.serviceModels.TemplateTimeSpan 
 import com.carswaddle.store.mechanic.OilChangePricing as StoreOilChangePricing
 import com.google.gson.Gson
 import kotlinx.coroutines.*
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
 import java.lang.Exception
+import java.net.URI
 
 private val currentMechanicIdKey: String = "com.carswaddle.carswaddleandroid.user.currentMechanicId"
 
@@ -452,7 +459,43 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
                 Log.d("retrofit ", "call succeeded")
                 val result = response.body()
                 if (result == null) {
-                    // TODO: make an error here
+                    Log.d("retrofit ", "call failed")
+                    completion(ServiceError())
+                } else {
+                    Log.d("retrofit ", "call succeeded")
+                    CoroutineScope(mechanicImportQueue).launch {
+                        insertNestedMechanic(result)
+                        completion(null)
+                    }
+                }
+            }
+        })
+    }
+    
+    fun uploadIdDocument(fileUri: String, side: IdDocumentImageSide, context: Context, completion: (throwable: Throwable?) -> Unit) {
+        val mechanicService = ServiceGenerator.authenticated(context)?.retrofit?.create(MechanicService::class.java)
+        if (mechanicService == null) {
+            completion(ServiceNotAvailable())
+            return
+        }
+        
+        val file = File(fileUri)
+        val requestBody = RequestBody.create(MediaType.parse("image/*"), file)
+        val filePart = MultipartBody.Part.createFormData("image", file.name, requestBody)
+        val call = mechanicService.uploadIdDocument(filePart, side)
+        call.enqueue(object : Callback<ServiceMechanic?> {
+            override fun onFailure(call: Call<ServiceMechanic?>, t: Throwable) {
+                Log.d("retrofit ", "call failed")
+                completion(Error(t.localizedMessage))
+            }
+            
+            override fun onResponse(
+                call: Call<ServiceMechanic?>,
+                response: Response<ServiceMechanic?>
+            ) {
+                Log.d("retrofit ", "call succeeded")
+                val result = response.body()
+                if (result == null) {
                     Log.d("retrofit ", "call failed")
                     completion(ServiceError())
                 } else {
@@ -467,8 +510,7 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
     }
 
     fun updatVerification(context: Context, completion: (throwable: Throwable?) -> Unit) {
-        val stripeService =
-            ServiceGenerator.authenticated(context)?.retrofit?.create(StripeService::class.java)
+        val stripeService = ServiceGenerator.authenticated(context)?.retrofit?.create(StripeService::class.java)
         if (stripeService == null) {
             completion(ServiceNotAvailable())
             return

@@ -269,4 +269,13 @@
     <string name="deduct_explained">How much you can deduct (estimate):</string>
     <string name="miles_deduct">How many miles you can deduct (estimate):</string>
     <string name="save_region">Save region</string>
+    <string name="select_back">Select back</string>
+    <string name="select_front">Select front</string>
+    <string name="provide_details">Please provide one of the following documents:
+        - Passport
+        - Government issued id
+        - Driver\'s license (front and back)</string>
+    <string name="security_reasons">For Car Swaddle to correctly identify you for security and for tax reasons an identify document ay be required.</string>
+    <string name="back_explained">Back of document (only for driver\'s license)</string>
+    <string name="front_explained">Front of document</string>
 </resources>

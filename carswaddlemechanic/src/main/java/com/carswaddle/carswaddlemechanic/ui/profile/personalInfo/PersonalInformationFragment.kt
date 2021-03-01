@@ -88,6 +88,10 @@ class PersonalInformationFragment : Fragment() {
         bankAccountLinearLayout.setOnClickListener { 
             findNavController().navigate(R.id.action_navigation_personalInformation_to_navigation_bank_account)
         }
+
+        identificationDocumentLinearLayout.setOnClickListener {
+            findNavController().navigate(R.id.action_navigation_personalInformation_to_navigation_identification_documents)
+        }
         
         dateOfBirthLinearLayout.setOnClickListener { 
             findNavController().navigate(R.id.action_navigation_personalInformation_to_navigation_date_of_birth)

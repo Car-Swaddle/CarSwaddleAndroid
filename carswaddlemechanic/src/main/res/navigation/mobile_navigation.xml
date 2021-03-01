@@ -202,13 +202,25 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
-        
+        <action
+            android:id="@+id/action_navigation_personalInformation_to_navigation_identification_documents"
+            app:destination="@id/navigation_identification_documents"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+
     </fragment>
 
     <fragment
         android:id="@+id/navigation_identification"
         android:name="com.carswaddle.carswaddlemechanic.ui.profile.personalInfo.details.IdentificationNumberFragment"
         android:label="Identification" />
+
+    <fragment
+        android:id="@+id/navigation_identification_documents"
+        android:name="com.carswaddle.carswaddlemechanic.ui.profile.personalInfo.details.IdentificationDocumentFragment"
+        android:label="Identification Documents" />
 
     <fragment
         android:id="@+id/navigation_street_address"

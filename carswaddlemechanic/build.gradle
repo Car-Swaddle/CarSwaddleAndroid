@@ -122,5 +122,9 @@ dependencies {
     implementation 'com.github.jkwiecien:EasyImage:3.+'
 
     implementation 'com.google.maps.android:android-maps-utils:[2.0,3.0]'
+
+    implementation 'com.github.esafirm.android-image-picker:imagepicker:[2.4.0,3.0.0]'
+
+    implementation 'com.github.florent37:runtime-permission-kotlin:1.1.2'
     
 }
