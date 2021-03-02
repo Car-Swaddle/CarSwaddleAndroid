@@ -16,7 +16,7 @@ data class Mechanic(
     @ColumnInfo val hasSetAvailability: Boolean,
     @ColumnInfo val hasSetServiceRegion: Boolean,
     @ColumnInfo val dateOfBirth: Calendar?,
-    @ColumnInfo val profileImageID: String?,
+    @ColumnInfo var profileImageID: String?,
     @ColumnInfo val identityDocumentID: String?,
     @ColumnInfo val identityDocumentBackID: String?,
     @ColumnInfo val userId: String?,

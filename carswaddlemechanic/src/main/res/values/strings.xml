@@ -278,4 +278,5 @@
     <string name="security_reasons">For Car Swaddle to correctly identify you for security and for tax reasons an identify document ay be required.</string>
     <string name="back_explained">Back of document (only for driver\'s license)</string>
     <string name="front_explained">Front of document</string>
+    <string name="edit_profile_picture">Edit</string>
 </resources>

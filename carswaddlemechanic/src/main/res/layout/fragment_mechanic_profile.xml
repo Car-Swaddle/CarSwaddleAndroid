@@ -2,15 +2,21 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:clipToPadding="false">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:clipChildren="false"
+        android:clipToPadding="false">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:clipToPadding="false"
             android:orientation="vertical">
 
             <LinearLayout
@@ -19,25 +25,67 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_margin="@dimen/content_margin"
+                android:clipChildren="false"
+                android:clipToPadding="false"
                 android:gravity="center"
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <com.google.android.material.card.MaterialCardView
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
-                    app:cardCornerRadius="@dimen/corner_radius"
-                    app:strokeColor="#777">
+                    android:clipChildren="false"
+                    android:clipToPadding="false">
 
-                    <com.carswaddle.carswaddlemechanic.ui.common.MechanicImageView
-                        android:id="@+id/mechanicImageView"
-                        android:layout_width="145dp"
-                        android:layout_height="145dp"
-                        android:background="@color/content" />
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:cardCornerRadius="@dimen/corner_radius"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:strokeColor="#777">
 
-                </com.google.android.material.card.MaterialCardView>
+                        <com.carswaddle.carswaddlemechanic.ui.common.MechanicImageView
+                            android:id="@+id/mechanicImageView"
+                            android:layout_width="145dp"
+                            android:layout_height="145dp"
+                            android:background="@color/content3" />
+
+                    </com.google.android.material.card.MaterialCardView>
+
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:translationX="6dp"
+                        android:translationY="6dp"
+                        app:cardCornerRadius="240dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent">
+
+                        <TextView
+                            android:id="@+id/editTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingVertical="4dp"
+                            android:paddingHorizontal="12dp"
+                            android:clipChildren="false"
+                            android:clipToPadding="false"
+                            android:fontFamily="@font/montserrat_semi_bold"
+                            android:text="@string/edit_profile_picture"
+                            android:textAllCaps="false"
+                            android:textSize="@dimen/title"
+                            android:textColor="@color/brand2"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent" />
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <TextView
                     android:id="@+id/mechanicProfileNameTextView"

@@ -22,7 +22,7 @@ class MechanicImageView @JvmOverloads constructor(
     defStyleRes: Int = 0
 ) : LinearLayout(context, attrs, defStyle, defStyleRes) {
 
-    private val imageView: ImageView
+    val imageView: ImageView
     private var auth = Authentication(context)
 
     var mechanicId: String? = null

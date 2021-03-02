@@ -9,22 +9,25 @@ import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.widget.AppCompatRatingBar
 import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.carswaddle.carswaddleandroid.data.mechanic.Mechanic
+import com.carswaddle.carswaddleandroid.services.IdDocumentImageSide
 import com.carswaddle.carswaddleandroid.services.serviceModels.UpdateMechanic
 import com.carswaddle.carswaddleandroid.services.serviceModels.VerifyField
 import com.carswaddle.carswaddlemechanic.R
 import com.carswaddle.carswaddlemechanic.ui.common.ActionIndicatorView
 import com.carswaddle.carswaddlemechanic.ui.common.MechanicImageView
 import com.carswaddle.carswaddlemechanic.ui.login.AuthActivity
+import com.carswaddle.foundation.generic.PathUtil
 import com.carswaddle.services.Authentication
+import com.esafirm.imagepicker.features.ImagePicker
+import com.esafirm.imagepicker.features.ReturnMode
 
 class MechanicProfileFragment : Fragment() {
 
@@ -47,6 +50,8 @@ class MechanicProfileFragment : Fragment() {
     private lateinit var personalInformationActionIndicator: ActionIndicatorView
     private lateinit var taxDeductionsContainer: LinearLayout
     private lateinit var logoutButton: Button
+    
+    private lateinit var editTextView: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -73,6 +78,8 @@ class MechanicProfileFragment : Fragment() {
         logoutButton = root.findViewById(R.id.profile_logout_button)
         mechanicImageView = root.findViewById(R.id.mechanicImageView)
         personalInformationActionIndicator = root.findViewById(R.id.personalInformationActionIndicator)
+
+        editTextView = root.findViewById(R.id.editTextView)
 
         personalInformationActionIndicator.visibility = View.INVISIBLE
 
@@ -111,6 +118,10 @@ class MechanicProfileFragment : Fragment() {
                     profileContactInfoActionIndicator.visibility = if (it.isEmailVerified == true) View.INVISIBLE else View.VISIBLE
                 }
             }
+        }
+
+        editTextView.setOnClickListener { 
+            showImagePicker()
         }
         
         logoutButton.setOnClickListener {
@@ -155,8 +166,43 @@ class MechanicProfileFragment : Fragment() {
             findNavController().navigate(R.id.action_navigation_mechanic_profile_to_navigation_tax_deductions)
         }
         
-        
         return root
+    }
+    
+    private fun showImagePicker() {
+        ImagePicker.create(this)
+            .single()
+            .returnMode(ReturnMode.ALL)
+            .showCamera(true)
+            .theme(R.style.ImagePickerTheme)
+            .start()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
+            val image = ImagePicker.getFirstImageOrNull(data)
+            val pathUtilPath = PathUtil.getPath(requireContext(), image.uri)
+            Glide.with(mechanicImageView.imageView)
+                .load(image.uri)
+                .into(mechanicImageView.imageView)
+
+            viewModel.uploadProfilePicture(pathUtilPath ?: "", requireContext()) {
+                if (it == null) {
+                    requireActivity().runOnUiThread {
+                        showSuccessfulProfilePictureToast()
+                    }
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    private fun showSuccessfulProfilePictureToast() {
+        Toast.makeText(
+            requireContext(),
+            "Car Swaddle successfully saved your profile picture.",
+            Toast.LENGTH_SHORT
+        ).show()
     }
     
     private fun ratingsText(mechanic: Mechanic): SpannableStringBuilder {

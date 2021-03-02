@@ -106,5 +106,11 @@
         <item name="colorPrimary">@color/brand2</item>
         <item name="colorAccent">@color/brand</item>
     </style>
+
+    <style name="ImagePickerTheme" parent="ef_BaseTheme">
+        <item name="colorPrimary">@color/brand</item>
+        <item name="colorPrimaryDark">@color/brand</item>
+        <item name="colorAccent">@color/brand2</item>
+    </style>
     
 </resources>

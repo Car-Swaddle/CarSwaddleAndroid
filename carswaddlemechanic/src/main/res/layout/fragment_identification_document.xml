@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background">
@@ -39,7 +38,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
-                    
+
                         <ImageView
                             android:id="@+id/frontImageView"
                             android:layout_width="match_parent"
@@ -64,15 +63,14 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <TextView
-                    android:id="@+id/selectFrontTextView"
-                    android:layout_width="wrap_content"
+                <com.carswaddle.carswaddleandroid.ui.view.ProgressButton
+                    android:id="@+id/selectFrontProgressButton"
+                    android:layout_width="160dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:fontFamily="@font/montserrat_semi_bold"
-                    android:text="@string/select_front"
-                    android:textColor="@color/brand"
-                    android:textSize="@dimen/title" />
+                    app:displayText="@string/select_front"
+                    app:progressBarColor="@color/brand"
+                    app:progressButtonStyle="borderless"
+                    app:progressButtonTextColor="@color/brand" />
 
             </LinearLayout>
 
@@ -119,15 +117,14 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <TextView
-                    android:id="@+id/selectBackTextView"
-                    android:layout_width="wrap_content"
+                <com.carswaddle.carswaddleandroid.ui.view.ProgressButton
+                    android:id="@+id/selectBackProgressButton"
+                    android:layout_width="160dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:fontFamily="@font/montserrat_semi_bold"
-                    android:text="@string/select_back"
-                    android:textColor="@color/brand"
-                    android:textSize="@dimen/title" />
+                    app:displayText="@string/select_back"
+                    app:progressBarColor="@color/brand"
+                    app:progressButtonStyle="borderless"
+                    app:progressButtonTextColor="@color/brand" />
 
             </LinearLayout>
 
@@ -146,14 +143,5 @@
             android:text="@string/provide_details" />
 
     </LinearLayout>
-
-    <com.carswaddle.carswaddleandroid.ui.view.ProgressButton
-        android:id="@+id/saveDocumentsButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/content_margin"
-        app:displayText="@string/save_button_title" />
 
 </RelativeLayout>

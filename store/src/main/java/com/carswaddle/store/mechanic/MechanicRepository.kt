@@ -472,7 +472,7 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
         })
     }
     
-    fun uploadIdDocument(fileUri: String, side: IdDocumentImageSide, context: Context, completion: (throwable: Throwable?) -> Unit) {
+    fun uploadMechanicProfileImage(fileUri: String, context: Context, completion: (throwable: Throwable?) -> Unit) {
         val mechanicService = ServiceGenerator.authenticated(context)?.retrofit?.create(MechanicService::class.java)
         if (mechanicService == null) {
             completion(ServiceNotAvailable())
@@ -482,13 +482,56 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
         val file = File(fileUri)
         val requestBody = RequestBody.create(MediaType.parse("image/*"), file)
         val filePart = MultipartBody.Part.createFormData("image", file.name, requestBody)
+        val call = mechanicService.profileImage(filePart)
+        call.enqueue(object : Callback<Map<String, String>> {
+            override fun onFailure(call: Call<Map<String, String>>, t: Throwable) {
+                Log.d("retrofit ", "call failed")
+                completion(Error(t.localizedMessage))
+            }
+            
+            override fun onResponse(call: Call<Map<String, String>>, response: Response<Map<String, String>>) {
+                Log.d("retrofit ", "call succeeded")
+                val result = response.body()
+                if (result == null) {
+                    Log.d("retrofit ", "call failed")
+                    completion(ServiceError())
+                } else {
+                    Log.d("retrofit ", "call succeeded")
+                    CoroutineScope(mechanicImportQueue).launch {
+                        val profileImageId = result["profileImageID"]
+                        if (profileImageId != null) {
+                            val mechanicId = getCurrentMechanicId(context)
+                            var existingMechanic = getMechanic(mechanicId ?: "")
+                            if (existingMechanic != null) {
+                                existingMechanic.profileImageID = profileImageId
+                                mechanicDao.insertMechanic(existingMechanic)
+                            }
+                        }
+                        
+                        completion(null)
+                    }
+                }
+            }
+        })
+    }
+
+    fun uploadIdDocument(fileUri: String, side: IdDocumentImageSide, context: Context, completion: (throwable: Throwable?) -> Unit) {
+        val mechanicService = ServiceGenerator.authenticated(context)?.retrofit?.create(MechanicService::class.java)
+        if (mechanicService == null) {
+            completion(ServiceNotAvailable())
+            return
+        }
+
+        val file = File(fileUri)
+        val requestBody = RequestBody.create(MediaType.parse("image/*"), file)
+        val filePart = MultipartBody.Part.createFormData("image", file.name, requestBody)
         val call = mechanicService.uploadIdDocument(filePart, side)
         call.enqueue(object : Callback<ServiceMechanic?> {
             override fun onFailure(call: Call<ServiceMechanic?>, t: Throwable) {
                 Log.d("retrofit ", "call failed")
                 completion(Error(t.localizedMessage))
             }
-            
+
             override fun onResponse(
                 call: Call<ServiceMechanic?>,
                 response: Response<ServiceMechanic?>

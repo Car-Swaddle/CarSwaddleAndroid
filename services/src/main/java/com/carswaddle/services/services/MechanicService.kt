@@ -17,6 +17,7 @@ private const val mechanicPricing = "/api/mechanic/pricing"
 private const val mechanicRegion = "/api/region"
 private const val reviews = "/api/reviews"
 private const val uploadIdDocument = "api/data/mechanic/identity-document"
+private const val profileImage = "/api/data/profile-picture"
 
 interface MechanicService {
 
@@ -81,6 +82,10 @@ interface MechanicService {
     @Multipart
     @POST(uploadIdDocument)
     fun uploadIdDocument(@Part filePart: MultipartBody.Part, @Query("side") side: IdDocumentImageSide): Call<Mechanic?>
+
+    @Multipart
+    @POST(profileImage)
+    fun profileImage(@Part filePart: MultipartBody.Part): Call<Map<String, String>>
     
 }
 

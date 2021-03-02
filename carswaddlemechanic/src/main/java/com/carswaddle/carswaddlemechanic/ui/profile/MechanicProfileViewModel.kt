@@ -10,6 +10,7 @@ import com.carswaddle.carswaddleandroid.data.mechanic.Mechanic
 import com.carswaddle.carswaddleandroid.data.mechanic.MechanicRepository
 import com.carswaddle.carswaddleandroid.data.user.User
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
+import com.carswaddle.carswaddleandroid.services.IdDocumentImageSide
 import com.carswaddle.carswaddleandroid.services.serviceModels.UpdateMechanic
 import com.carswaddle.store.mechanic.Verification as StoreVerification
 import com.carswaddle.store.AppDatabase
@@ -105,6 +106,11 @@ class MechanicProfileViewModel(application: Application) : AndroidViewModel(appl
             }
         }
     }
+    
+    fun uploadProfilePicture(filePath: String, context: Context, completion: (error: Throwable?) -> Unit) {
+        mechanicRepository.uploadMechanicProfileImage(filePath, context, completion)
+    }
+
 
     private val _mechanic = MutableLiveData<Mechanic?>().apply {
         value = null
