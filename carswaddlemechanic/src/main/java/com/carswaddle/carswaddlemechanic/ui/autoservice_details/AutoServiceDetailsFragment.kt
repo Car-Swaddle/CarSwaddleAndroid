@@ -164,9 +164,9 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
         timeImageLabel.imageType = ImageLabel.ImageType.TIME
 
 
-//        locationMapView.onCreate(savedInstanceState)
+        locationMapView.onCreate(savedInstanceState)
 
-//        locationMapView.getMapAsync(this)
+        locationMapView.getMapAsync(this)
 
         autoServiceDetailsViewModel = ViewModelProvider(requireActivity()).get(AutoServiceDetailsViewModel::class.java)
 
@@ -320,39 +320,6 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
         enableMyLocation()
     }
 
-    private fun updateMapStyle() {
-        try {
-            val mode =
-                context?.resources?.configuration?.uiMode?.and(Configuration.UI_MODE_NIGHT_MASK)
-            var mapStyle = R.raw.standard_map
-            when (mode) {
-                Configuration.UI_MODE_NIGHT_YES -> mapStyle = R.raw.night_mode_map
-                Configuration.UI_MODE_NIGHT_NO -> {
-                }
-                Configuration.UI_MODE_NIGHT_UNDEFINED -> {
-                }
-            }
-            map.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(), mapStyle))
-        } catch (e: Resources.NotFoundException) {
-            Log.e(ContentValues.TAG, "Can't find style. Error: ", e)
-        }
-    }
-
-    private fun statusColor(status: AutoServiceStatus): Int {
-        val colorId = when (status) {
-            AutoServiceStatus.scheduled -> R.color.statusColorScheduled
-            AutoServiceStatus.canceled -> R.color.statusColorCanceled
-            AutoServiceStatus.inProgress -> R.color.statusColorInProgress
-            AutoServiceStatus.completed -> R.color.statusColorCompleted
-        }
-        val t = context?.theme ?: return 0
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            resources.getColor(colorId, t)
-        } else {
-            resources.getColor(colorId)
-        }
-    }
-
     private fun statusBackground(status: AutoServiceStatus): Drawable {
         val drawableResource = when (status) {
             AutoServiceStatus.scheduled -> R.drawable.right_round_scheduled
@@ -394,69 +361,47 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
             )
         }
     }
-
-    private fun updateServerWithReview(rating: Float, text: String) {
-        autoServiceDetailsViewModel.createReview(
-            CreateReview(
-                rating,
-                text
-            )
-        ) { error, autoServiceId ->
-
-        }
-    }
-
     private fun metersToMiles(meters: Float): Float {
         return meters / 1609.34f
     }
 
     // See https://github.com/googlemaps/android-samples/blob/main/ApiDemos/kotlin/app/src/gms/java/com/example/kotlindemos/RawMapViewDemoActivity.kt
     // Need to forward all lifecycle events to map view
-//    override fun onResume() {
-//        super.onResume()
-//        locationMapView.onResume()
-//    }
-//
-//    override fun onStart() {
-//        super.onStart()
-//        locationMapView.onStart()
-//    }
-//
-//    override fun onStop() {
-//        super.onStop()
-//        locationMapView.onStop()
-//    }
-//
-//    override fun onPause() {
-//        locationMapView.onPause()
-//        super.onPause()
-//    }
-//
-//    override fun onDestroy() {
-//        locationMapView.onDestroy()
-//        super.onDestroy()
-//    }
-//
-//    override fun onLowMemory() {
-//        super.onLowMemory()
-//        locationMapView.onLowMemory()
-//    }
+    override fun onResume() {
+        super.onResume()
+        locationMapView.onResume()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        locationMapView.onStart()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        locationMapView.onStop()
+    }
+
+    override fun onPause() {
+        locationMapView.onPause()
+        super.onPause()
+    }
+
+    override fun onDestroy() {
+        locationMapView.onDestroy()
+        super.onDestroy()
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        locationMapView.onLowMemory()
+    }
 
     private fun configureUpdateStatusButton(status: AutoServiceStatus) {
         changeStatusButton.displayText = buttonStatusTitle(status) ?: ""
         changeStatusButton.visibility = changeStatusButtonVisibility(status)
     }
-
-    private fun statusColorStateList(status: AutoServiceStatus): ColorStateList? {
-        val colorId = when (status) {
-            AutoServiceStatus.scheduled -> R.color.statusColorScheduled
-            AutoServiceStatus.canceled -> R.color.statusColorCanceled
-            AutoServiceStatus.inProgress -> R.color.statusColorInProgress
-            AutoServiceStatus.completed -> R.color.statusColorCompleted
-        }
-        return ContextCompat.getColorStateList(CarSwaddleMechanicApp.applicationContext, colorId)
-    }
-
+    
     private fun buttonStatusTitle(status: AutoServiceStatus): String? {
         return when (status) {
             AutoServiceStatus.scheduled -> "Start Service"

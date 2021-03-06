@@ -20,10 +20,13 @@ import com.carswaddle.carswaddleandroid.Extensions.dismissKeyboard
 import com.carswaddle.carswaddleandroid.Extensions.isEmpty
 import com.carswaddle.carswaddleandroid.Extensions.isValidEmail
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
+import com.carswaddle.carswaddlemechanic.MainActivity
 import com.carswaddle.carswaddlemechanic.R
 import com.carswaddle.carswaddlemechanic.R.layout.fragment_sign_up
 import com.carswaddle.carswaddlemechanic.extensions.Link
 import com.carswaddle.carswaddlemechanic.extensions.addLinks
+import com.carswaddle.carswaddlemechanic.ui.sign_up.SetNameActivity
+import com.carswaddle.carswaddlemechanic.ui.sign_up.SetPhoneNumberActivity
 import com.carswaddle.carswaddlemechanic.ui.web.WebActivity
 import com.carswaddle.services.Authentication
 import com.carswaddle.store.AppDatabase
@@ -157,21 +160,20 @@ class SignUpFragment: Fragment() {
                 signUpButton.isEnabled = true
             }
             if (throwable == null && auth.isUserLoggedIn()) {
-
-//                val user = userRepo.getCurrentUser(requireContext())
-//                if (user == null) {
-//                    Log.d("dunno", "something messed up, no user, but signed in")
-//                } else if (user.firstName.isNullOrBlank() || user.lastName.isNullOrBlank()) {
-//                    val intent = Intent(requireActivity(), SetNameActivity::class.java)
-//                    startActivity(intent)
-//                } else if (user.phoneNumber.isNullOrBlank() || user.isPhoneNumberVerified == false || user.isPhoneNumberVerified == false) {
-//                    val intent = Intent(requireActivity(), SetPhoneNumberActivity::class.java)
-//                    startActivity(intent)
-//                } else {
-//                    val intent = Intent(requireActivity(), MainActivity::class.java)
-//                    startActivity(intent)
-//                    requireActivity().finish()
-//                }
+                val user = userRepo.getCurrentUser(requireContext())
+                if (user == null) {
+                    Log.d("dunno", "something messed up, no user, but signed in")
+                } else if (user.firstName.isNullOrBlank() || user.lastName.isNullOrBlank()) {
+                    val intent = Intent(requireActivity(), SetNameActivity::class.java)
+                    startActivity(intent)
+                } else if (user.phoneNumber.isNullOrBlank() || user.isPhoneNumberVerified == false || user.isPhoneNumberVerified == false) {
+                    val intent = Intent(requireActivity(), SetPhoneNumberActivity::class.java)
+                    startActivity(intent)
+                } else {
+                    val intent = Intent(requireActivity(), MainActivity::class.java)
+                    startActivity(intent)
+                    requireActivity().finish()
+                }
             } else {
                 Log.d("dunno", "Unable to sign up")
                 requireActivity().runOnUiThread {

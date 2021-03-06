@@ -13,7 +13,7 @@ import com.carswaddle.carswaddlemechanic.R
 import com.carswaddle.services.Authentication
 
 
-private const val mechanicProfileImage = "/api/data/mechanic/profile-picture/{mechanicId}"
+private const val mechanicProfileImageUrl = "/api/data/mechanic/profile-picture/{mechanicId}"
 
 class MechanicImageView @JvmOverloads constructor(
     context: Context,
@@ -53,7 +53,7 @@ class MechanicImageView @JvmOverloads constructor(
             return null
         }
 
-        var url = mechanicProfileImage
+        var url = mechanicProfileImageUrl
         url = url.replace("{mechanicId}", id)
         url = serverUrl() + url
 

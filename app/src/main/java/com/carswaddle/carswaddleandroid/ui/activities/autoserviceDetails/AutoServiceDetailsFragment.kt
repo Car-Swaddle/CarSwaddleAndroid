@@ -53,7 +53,7 @@ import java.math.RoundingMode
 import java.util.*
 
 
-class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
+class AutoServiceDetailsFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var dateDisplay: DateDisplayView
     private lateinit var mechanicNameTextView: TextView
@@ -304,22 +304,6 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
         enableMyLocation()
     }
     
-    private fun updateMapStyle() {
-        try {
-            val mode =
-                context?.resources?.configuration?.uiMode?.and(Configuration.UI_MODE_NIGHT_MASK)
-            var mapStyle = R.raw.standard_map
-            when (mode) {
-                Configuration.UI_MODE_NIGHT_YES -> mapStyle = R.raw.night_mode_map
-                Configuration.UI_MODE_NIGHT_NO -> { }
-                Configuration.UI_MODE_NIGHT_UNDEFINED -> { }
-            }
-            map.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(), mapStyle))
-        } catch (e: Resources.NotFoundException) {
-            Log.e(TAG, "Can't find style. Error: ", e)
-        }
-    }
-
     private fun statusColor(status: AutoServiceStatus): Int {
         val colorId = when (status) {
             AutoServiceStatus.scheduled -> R.color.statusColorScheduled

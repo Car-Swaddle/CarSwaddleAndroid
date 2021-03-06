@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:backgroundTint="@color/background"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/verifyCodeEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/content_gap"
+        android:minWidth="@dimen/min_width"
+        android:textAlignment="center"
+        android:ems="10"
+        android:text="@string/please_verify"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/sentCodeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/content_margin"
+        android:minWidth="@dimen/min_width"
+        android:textAlignment="center"
+        android:ems="10"
+        android:text="@string/sent_code"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/verifyCodeEditText"/>
+
+    <com.mukesh.OtpView
+        android:id="@+id/codeEntryView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/content_gap"
+        android:inputType="number"
+        android:itemBackground="@color/content2"
+        android:textColor="@color/text"
+        app:OtpItemCount="5"
+        app:OtpItemRadius="@dimen/corner_radius"
+        app:OtpLineColor="@color/clear"
+        app:OtpViewType="rectangle"
+        app:OtpCursorColor="@color/brand"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sentCodeTextView" />
+
+    <com.carswaddle.carswaddleandroid.ui.view.ProgressButton
+        android:id="@+id/verifyCodeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/content_gap"
+        app:displayText="@string/verify_code"
+        style="@style/CarSwaddle.ConfirmButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/codeEntryView" />
+
+    <com.carswaddle.carswaddleandroid.ui.view.ProgressButton
+        android:id="@+id/resendCodeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/content_margin"
+        android:fontFamily="@font/montserrat_bold"
+        app:progressButtonStyle="borderless"
+        app:progressButtonForegroundColor="@color/brand"
+        app:displayText="@string/resend_code"
+        style="?android:attr/borderlessButtonStyle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/verifyCodeButton" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
