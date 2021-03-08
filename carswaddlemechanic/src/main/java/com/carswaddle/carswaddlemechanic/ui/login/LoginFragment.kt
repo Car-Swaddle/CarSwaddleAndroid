@@ -19,6 +19,9 @@ import com.carswaddle.carswaddleandroid.ui.view.ProgressButton
 import com.carswaddle.carswaddlemechanic.MainActivity
 import com.carswaddle.carswaddlemechanic.R.layout.fragment_login
 import com.carswaddle.carswaddlemechanic.R
+import com.carswaddle.carswaddlemechanic.application.CarSwaddleMechanicApp.Companion.applicationContext
+import com.carswaddle.carswaddlemechanic.ui.sign_up.SetNameActivity
+import com.carswaddle.carswaddlemechanic.ui.sign_up.SetPhoneNumberActivity
 import com.carswaddle.services.Authentication
 import com.carswaddle.store.AppDatabase
 
@@ -86,16 +89,16 @@ class LoginFragment : Fragment() {
         forgotPasswordButton.button.setOnClickListener {
             didTapForgotPassword()
         }
-
+        
         updateLoginButton()
 
         return root
     }
 
     private fun didTapForgotPassword() {
-//        val intent = Intent(requireActivity(), ForgotPasswordActivity::class.java)
-//        intent.putExtra(ForgotPasswordActivity.EMAIL, emailEditText.text.toString())
-//        startActivity(intent)
+        val intent = Intent(requireActivity(), ForgotPasswordActivity::class.java)
+        intent.putExtra(ForgotPasswordActivity.EMAIL, emailEditText.text.toString())
+        startActivity(intent)
     }
 
     private fun isLoginButtonEnabled(): Boolean {
@@ -115,20 +118,20 @@ class LoginFragment : Fragment() {
         userRepo.login(emailEditText.text.toString(), passwordEditText.text.toString(), true, requireContext()) { throwable, authResponse ->
             requireActivity().runOnUiThread { loginButton.isLoading = false }
             if (throwable == null && auth.isUserLoggedIn()) {
-//                val user = userRepo.getCurrentUser(applicationContext)
-//                if (user == null) {
-//                    Log.d("dunno", "something messed up, no user, but signed in")
-//                } else if (user.firstName.isNullOrBlank() || user.lastName.isNullOrBlank()) {
-//                    val intent = Intent(requireActivity(), SetNameActivity::class.java)
-//                    startActivity(intent)
-//                } else if (user.phoneNumber.isNullOrBlank() || user.isPhoneNumberVerified == null || user.isPhoneNumberVerified == false) {
-//                    val intent = Intent(requireActivity(), SetPhoneNumberActivity::class.java)
-//                    startActivity(intent)
-//                } else {
+                val user = userRepo.getCurrentUser(applicationContext)
+                if (user == null) {
+                    Log.d("dunno", "something messed up, no user, but signed in")
+                } else if (user.firstName.isNullOrBlank() || user.lastName.isNullOrBlank()) {
+                    val intent = Intent(requireActivity(), SetNameActivity::class.java)
+                    startActivity(intent)
+                } else if (user.phoneNumber.isNullOrBlank() || user.isPhoneNumberVerified == null || user.isPhoneNumberVerified == false) {
+                    val intent = Intent(requireActivity(), SetPhoneNumberActivity::class.java)
+                    startActivity(intent)
+                } else {
                     val intent = Intent(requireActivity(), MainActivity::class.java)
                     startActivity(intent)
                     requireActivity().finish()
-//                }
+                }
             } else {
                 Log.d("dunno", "Unable to login")
                 requireActivity().runOnUiThread {

@@ -205,7 +205,7 @@ class UserRepository(private val userDao: UserDao) {
 
     fun sendResetLink(email: String, context: Context, completion: (error: Throwable?) -> Unit) {
         val auth = serviceGenerator.retrofit?.create(AuthenticationService::class.java)
-        val call = auth?.requestResetPasswordLink(email, "car-swaddle")
+        val call = auth?.requestResetPasswordLink(email, "car-swaddle-mechanic")
         call?.enqueue(object : Callback<Void> {
             override fun onFailure(call: Call<Void>?, t: Throwable?) {
                 Log.d("retrofit ", "call failed")
