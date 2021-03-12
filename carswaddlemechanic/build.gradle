@@ -5,25 +5,34 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 
 android {
+    signingConfigs {
+        release {
+            storeFile file(CUST_RELEASE_STORE_FILE)
+            storePassword CUST_RELEASE_STORE_PASSWORD
+            keyAlias CUST_RELEASE_KEY_ALIAS
+            keyPassword CUST_RELEASE_KEY_PASSWORD
+        }
+    }
+    
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
-
+    
     defaultConfig {
         applicationId "com.carswaddle.carswaddlemechanic"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 10
-        versionName "1.1"
+        versionCode 1
+        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
-//        release {
-//            minifyEnabled false
-//            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-//            signingConfig signingConfigs.Release
-//        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
     }
 
 // To inline the bytecode built with JVM target 1.8 into

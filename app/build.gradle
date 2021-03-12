@@ -6,13 +6,14 @@ apply plugin: 'com.google.gms.google-services'
 
 android {
     signingConfigs {
-        Release {
-            storeFile file('car-swaddle-android.jks')
-            storePassword ''
-            keyAlias 'carswaddle'
-            keyPassword ''
+        release {
+            storeFile file(MECH_RELEASE_STORE_FILE)
+            storePassword MECH_RELEASE_STORE_PASSWORD
+            keyAlias MECH_RELEASE_KEY_ALIAS
+            keyPassword MECH_RELEASE_KEY_PASSWORD
         }
     }
+    
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
 
@@ -30,7 +31,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.Release
+            signingConfig signingConfigs.release
         }
     }
 
