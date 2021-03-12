@@ -7,10 +7,10 @@ apply plugin: 'com.google.gms.google-services'
 android {
     signingConfigs {
         release {
-            storeFile file(MECH_RELEASE_STORE_FILE)
-            storePassword MECH_RELEASE_STORE_PASSWORD
-            keyAlias MECH_RELEASE_KEY_ALIAS
-            keyPassword MECH_RELEASE_KEY_PASSWORD
+            storeFile file(CUST_RELEASE_STORE_FILE)
+            storePassword CUST_RELEASE_STORE_PASSWORD
+            keyAlias CUST_RELEASE_KEY_ALIAS
+            keyPassword CUST_RELEASE_KEY_PASSWORD
         }
     }
     
