@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
 import com.carswaddle.carswaddlemechanic.MainActivity
 import com.carswaddle.carswaddlemechanic.R
+import com.carswaddle.carswaddlemechanic.pushNotifications.MessagingController
 import com.carswaddle.carswaddlemechanic.ui.login.AuthActivity
 import com.carswaddle.carswaddlemechanic.ui.sign_up.SetNameActivity
 import com.carswaddle.carswaddlemechanic.ui.sign_up.SetPhoneNumberActivity
@@ -27,7 +28,7 @@ class SplashActivity: AppCompatActivity() {
         setContentView(R.layout.activity_splash)
 
         // Create here so it can listen if the user logs in
-//        MessagingController.initialize()
+        MessagingController.initialize()
 
         if (auth.isUserLoggedIn()) {
             userRepo.importCurrentUser(this) {
@@ -50,6 +51,7 @@ class SplashActivity: AppCompatActivity() {
                     startActivity(mainIntent)
                     finish()
                 }
+                MessagingController.instance.registerPushToken()
             }
         } else {
             val intent = Intent(this, AuthActivity::class.java)

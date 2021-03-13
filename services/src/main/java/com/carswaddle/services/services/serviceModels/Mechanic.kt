@@ -36,6 +36,7 @@ data class Mechanic (
 data class UpdateMechanic(
     val isActive: Boolean? = null, // Allow new appointments
     val token: String? = null,
+    val pushTokenType: String? = null,
     val dateOfBirth: Date? = null,
     val address: UpdateMechanicAddress? = null,
     val externalAccount: String? = null, // Bank acount token. Use stripe to generate a token to represent the bank account to send up to server

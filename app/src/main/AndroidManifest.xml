@@ -99,7 +99,7 @@
             android:name=".activities.ui.MainActivity"
             android:label="Main"
             android:launchMode="singleTop"
-            android:windowSoftInputMode="adjustPan"></activity>
+            android:windowSoftInputMode="adjustPan" />
 
         <service
             android:name=".pushNotifications.MessagingController"

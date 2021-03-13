@@ -6,6 +6,7 @@ import android.util.Log
 import com.carswaddle.carswaddleandroid.Extensions.carSwaddlePreferences
 import com.carswaddle.carswaddleandroid.data.user.ServiceError
 import com.carswaddle.carswaddleandroid.data.user.User
+import com.carswaddle.carswaddleandroid.data.user.UserRepository
 import com.carswaddle.carswaddleandroid.retrofit.ServiceGenerator
 import com.carswaddle.carswaddleandroid.retrofit.ServiceNotAvailable
 import com.carswaddle.carswaddleandroid.services.IdDocumentImageSide
@@ -29,6 +30,7 @@ import retrofit2.Response
 import java.io.File
 import java.lang.Exception
 import java.net.URI
+import java.util.*
 
 private val currentMechanicIdKey: String = "com.carswaddle.carswaddleandroid.user.currentMechanicId"
 
@@ -433,6 +435,16 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
         }
     }
 
+
+    fun updatePushToken(token: String, context: Context, cacheCompletion: () -> Unit = {}, completion: (throwable: Throwable?) -> Unit) {
+        update(token = token, pushTokenType = PUSH_TOKEN_TYPE, context = context, cacheCompletion = cacheCompletion, completion = completion)
+    }
+
+    private fun update(isActive: Boolean? = null, token: String? = null, pushTokenType: String? = null, dateOfBirth: Date? = null, address: UpdateMechanicAddress? = null, externalAccount: String? = null, ssnLast4: String? = null, personalID: String? = null, chargeForTravel: Boolean? = null, cacheCompletion: () -> Unit, context: Context, completion: (throwable: Throwable?) -> Unit) {
+        val updateMechanic = UpdateMechanic(isActive, token, pushTokenType, dateOfBirth, address, externalAccount, ssnLast4, personalID, chargeForTravel)
+        updateMechanic(updateMechanic, context, cacheCompletion, completion)
+    }
+
     fun updateMechanic(
         updateMechanic: UpdateMechanic,
         context: Context,
@@ -609,6 +621,10 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
         editContext.apply()
     }
 
+    companion object {
+        const val PUSH_TOKEN_TYPE = "FCM"
+    }
+    
 }
 
 

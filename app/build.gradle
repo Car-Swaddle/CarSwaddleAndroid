@@ -102,8 +102,8 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.8.1'
     implementation 'com.haibin:calendarview:3.6.9'
     implementation 'com.stripe:stripe-android:16.1.0'
-    
-    implementation platform('com.google.firebase:firebase-bom:26.1.0')
+
+    implementation platform('com.google.firebase:firebase-bom:[26.0.0,27.0.0]')
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-messaging-ktx'
     

@@ -1,7 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 
 android {
@@ -21,7 +20,7 @@ android {
         applicationId "com.carswaddle.carswaddlemechanic"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 1
+        versionCode 2
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -108,7 +107,7 @@ dependencies {
 
     implementation 'com.stripe:stripe-android:16.1.0'
 
-    implementation platform('com.google.firebase:firebase-bom:26.1.0')
+    implementation platform('com.google.firebase:firebase-bom:[26.0.0,27.0.0]')
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-messaging-ktx'
 

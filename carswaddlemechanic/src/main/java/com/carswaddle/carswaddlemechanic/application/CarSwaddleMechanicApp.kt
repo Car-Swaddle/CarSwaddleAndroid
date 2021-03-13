@@ -5,7 +5,7 @@ import android.app.Application
 import android.content.Context
 import android.content.pm.ActivityInfo
 import android.os.Bundle
-import com.stripe.android.PaymentConfiguration
+
 
 class CarSwaddleMechanicApp: Application() {
 
