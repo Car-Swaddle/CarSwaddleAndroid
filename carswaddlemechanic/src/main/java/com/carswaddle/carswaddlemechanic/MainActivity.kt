@@ -78,9 +78,10 @@ class MainActivity : AppCompatActivity() {
             return
         }
         bottomNav.selectedItemId = R.id.navigation_calendar
+        val bundle = bundleOf("autoServiceId" to autoServiceId)
         navController.navigate(
             R.id.action_navigation_calendar_to_autoServiceDetailsFragment,
-            null
+            bundle
         )
     }
 

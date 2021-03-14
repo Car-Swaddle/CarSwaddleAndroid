@@ -81,7 +81,7 @@ class MessagingController: FirebaseMessagingService() {
             } else {
                 Log.w(TAG, "unable to register device token")
             }
-        }
+        } 
     }
     
     private fun deletePushToken() {

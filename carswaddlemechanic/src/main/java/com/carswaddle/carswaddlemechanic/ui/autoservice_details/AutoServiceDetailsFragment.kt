@@ -219,6 +219,7 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
                 )
             }
             notesView.notesText = autoService.autoService.notes
+            oilTypeImageLabel.text = autoService.oilChange?.oilType?.localizedString() ?: ""
         }
 
         autoServiceDetailsViewModel.oilChange.observe(viewLifecycleOwner) { oilChange ->
