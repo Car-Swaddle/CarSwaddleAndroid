@@ -144,10 +144,14 @@ class SignUpFragment: Fragment() {
 
         statusTextView.visibility = View.GONE
         
+        val p = requireContext().carSwaddlePreferences()
+        val referrerId = p.getString("referrerId", null)
+        
         userRepo.signUp(
             emailEditText.text.toString(),
             passwordEditText.text.toString(),
             false,
+            referrerId,
             requireContext()
         ) { throwable, authResponse ->
             requireActivity().runOnUiThread {
@@ -156,7 +160,8 @@ class SignUpFragment: Fragment() {
                 signUpButton.isEnabled = true
             }
             if (throwable == null && auth.isUserLoggedIn()) {
-                
+                val edit = requireContext().carSwaddlePreferences().edit()
+                edit.putString("referrerId", null)
                 val user = userRepo.getCurrentUser(requireContext())
                 if (user == null) {
                     Log.d("dunno", "something messed up, no user, but signed in")

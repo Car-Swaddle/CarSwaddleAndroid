@@ -49,7 +49,6 @@ class SplashActivity: AppCompatActivity() {
                     val mainIntent = Intent(this, MainActivity::class.java)
                     mainIntent.putExtras(intent)
                     startActivity(mainIntent)
-                    finish()
                 }
                 MessagingController.instance.registerPushToken()
             }
@@ -57,7 +56,6 @@ class SplashActivity: AppCompatActivity() {
             val intent = Intent(this, AuthActivity::class.java)
             startActivity(intent)
         }
-        finish()
     }
 
 }

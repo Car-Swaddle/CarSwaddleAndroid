@@ -106,9 +106,9 @@ class UserRepository(private val userDao: UserDao) {
         })
     }
 
-    fun signUp(email: String, password: String, isMechanic: Boolean, context: Context, completion: (error: Throwable?, response: AuthResponse?) -> Unit) {
+    fun signUp(email: String, password: String, isMechanic: Boolean, referrerId: String?, context: Context, completion: (error: Throwable?, response: AuthResponse?) -> Unit) {
         val auth = serviceGenerator.retrofit.create(AuthenticationService::class.java)
-        val call = auth.signUp(email, password, isMechanic)
+        val call = auth.signUp(email, password, isMechanic, referrerId)
         call.enqueue(object : Callback<AuthResponse> {
             override fun onFailure(call: Call<AuthResponse>?, t: Throwable?) {
                 Log.d("retrofit ", "call failed")
@@ -313,16 +313,20 @@ class UserRepository(private val userDao: UserDao) {
         })
     }
 
+    fun updateReferrerId(referrerId: String?, context: Context, cacheCompletion: () -> Unit = {}, completion: (throwable: Throwable?) -> Unit) {
+        update(null, null, null, null, referrerId, null, null, cacheCompletion, context, completion)
+    }
+
     fun updateName(firstName: String?, lastName: String?, context: Context, cacheCompletion: () -> Unit = {}, completion: (throwable: Throwable?) -> Unit) {
-        update(firstName, lastName, null, null, null, null, cacheCompletion, context, completion)
+        update(firstName, lastName, null, null, null, null, null, cacheCompletion, context, completion)
     }
 
     fun updatePhoneNumber(phoneNumber: String, context: Context, cacheCompletion: () -> Unit = {}, completion: (throwable: Throwable?) -> Unit) {
-        update(null, null, phoneNumber, null, null, null, cacheCompletion, context, completion)
+        update(null, null, phoneNumber, null, null, null, null, cacheCompletion, context, completion)
     }
 
     fun updatePushToken(token: String, context: Context, cacheCompletion: () -> Unit = {}, completion: (throwable: Throwable?) -> Unit) {
-        update(null, null, null, token, null, null, cacheCompletion, context, completion)
+        update(null, null, null, token, null, null, null, cacheCompletion, context, completion)
     }
 
     private fun update(updateUser: UpdateUser, context: Context, cacheCompletion: () -> Unit = {}, completion: (throwable: Throwable?) -> Unit) {
@@ -367,8 +371,8 @@ class UserRepository(private val userDao: UserDao) {
         })
     }
 
-    private fun update(firstName: String?, lastName: String?, phoneNumber: String?, token: String?, timeZone: String?, adminKey: String?, cacheCompletion: () -> Unit, context: Context, completion: (throwable: Throwable?) -> Unit) {
-        val updateUser = UpdateUser(firstName, lastName, phoneNumber, token, PUSH_TOKEN_TYPE, timeZone, adminKey)
+    private fun update(firstName: String?, lastName: String?, phoneNumber: String?, token: String?, referrerId: String?, timeZone: String?, adminKey: String?, cacheCompletion: () -> Unit, context: Context, completion: (throwable: Throwable?) -> Unit) {
+        val updateUser = UpdateUser(firstName, lastName, phoneNumber, token, referrerId, PUSH_TOKEN_TYPE, timeZone, adminKey)
         update(updateUser, context, cacheCompletion, completion)
     }
 
