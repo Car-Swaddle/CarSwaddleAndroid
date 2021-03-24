@@ -145,8 +145,6 @@ class SignUpFragment: Fragment() {
 
         statusTextView.visibility = View.GONE
         
-//        val p = requireContext().carSwaddlePreferences()
-//        val referrerId = p.getString("referrerId", null)
         val intercom = Intercom(requireContext())
         val referrerId = intercom.referrerId
         
