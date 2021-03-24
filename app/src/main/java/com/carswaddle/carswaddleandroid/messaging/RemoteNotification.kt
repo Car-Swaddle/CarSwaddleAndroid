@@ -1,4 +1,4 @@
-package com.carswaddle.carswaddleandroid.pushNotifications
+package com.carswaddle.carswaddleandroid.messaging
 
 import android.os.Bundle
 import com.google.gson.Gson
@@ -6,7 +6,6 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.annotations.SerializedName
 import org.json.JSONException
-import org.json.JSONObject
 import java.util.*
 
 

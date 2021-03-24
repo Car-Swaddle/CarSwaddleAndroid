@@ -2,7 +2,6 @@ package com.carswaddle.carswaddleandroid.activities.ui
 
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -10,7 +9,8 @@ import com.carswaddle.carswaddleandroid.CarSwaddleApp.CarSwaddleApp
 import com.carswaddle.carswaddleandroid.Extensions.carSwaddlePreferences
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
-import com.carswaddle.carswaddleandroid.pushNotifications.MessagingController
+import com.carswaddle.carswaddleandroid.messaging.Intercom
+import com.carswaddle.carswaddleandroid.messaging.MessagingController
 import com.carswaddle.carswaddleandroid.ui.activities.PreAuthenticationActivity
 import com.carswaddle.carswaddleandroid.ui.activities.SetNameActivity
 import com.carswaddle.carswaddleandroid.ui.activities.SetPhoneNumberActivity
@@ -19,6 +19,8 @@ import com.carswaddle.store.AppDatabase
 import com.google.firebase.dynamiclinks.ktx.dynamicLinks
 import com.google.firebase.ktx.Firebase
 
+
+// intent.data.host == "go.carswaddle.com"
 
 class SplashActivity: AppCompatActivity() {
 
@@ -36,25 +38,11 @@ class SplashActivity: AppCompatActivity() {
 
         // Create here so it can listen if the user logs in
         MessagingController.initialize()
-        Firebase.dynamicLinks
-            .getDynamicLink(intent)
-            .addOnSuccessListener(this) { pendingDynamicLinkData -> 
-                if (pendingDynamicLinkData != null) { 
-                    val link = pendingDynamicLinkData.link
-                    link?.getQueryParameter("referrerId").let {
-                        val p = carSwaddlePreferences().edit()
-                            p.putString("referrerId", it)
-                            p.apply()
-                        }
-                    }
-                    Log.w("This is a tag", "test")
-                    runOnUiThread {
-                        navigateToActivity() 
-                    } 
-            }
-                .addOnFailureListener(this) { e ->
-                    Log.w("This is a tag", "getDynamicLink:onFailure", e)
-                }
+
+        val intercom = Intercom(this)
+        intercom.handleDynamicLink(intent, this) { }
+
+        navigateToActivity()
     }
     
     private fun navigateToActivity() {
@@ -77,16 +65,6 @@ class SplashActivity: AppCompatActivity() {
                     val mainIntent = Intent(this, MainActivity::class.java)
                     mainIntent.putExtras(intent)
                     startActivity(mainIntent)
-                }
-                val p = carSwaddlePreferences()
-                val referrerId = p.getString("referrerId", null)
-                if (referrerId != null) {
-                    userRepo.updateReferrerId(referrerId, this, {}) {
-                        Log.w("tag", "got back")
-                    }
-                    val edit = p.edit()
-                    edit.putString("referrerId", null)
-                    edit.apply()
                 }
             }
 

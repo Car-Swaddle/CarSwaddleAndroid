@@ -23,6 +23,7 @@ import com.carswaddle.carswaddleandroid.Extensions.*
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.activities.ui.MainActivity
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
+import com.carswaddle.carswaddleandroid.messaging.Intercom
 import com.carswaddle.carswaddleandroid.ui.view.ProgressButton
 import com.carswaddle.services.Authentication
 import com.carswaddle.store.AppDatabase
@@ -144,8 +145,10 @@ class SignUpFragment: Fragment() {
 
         statusTextView.visibility = View.GONE
         
-        val p = requireContext().carSwaddlePreferences()
-        val referrerId = p.getString("referrerId", null)
+//        val p = requireContext().carSwaddlePreferences()
+//        val referrerId = p.getString("referrerId", null)
+        val intercom = Intercom(requireContext())
+        val referrerId = intercom.referrerId
         
         userRepo.signUp(
             emailEditText.text.toString(),
@@ -160,8 +163,7 @@ class SignUpFragment: Fragment() {
                 signUpButton.isEnabled = true
             }
             if (throwable == null && auth.isUserLoggedIn()) {
-                val edit = requireContext().carSwaddlePreferences().edit()
-                edit.putString("referrerId", null)
+                intercom.wipeReferrerId()
                 val user = userRepo.getCurrentUser(requireContext())
                 if (user == null) {
                     Log.d("dunno", "something messed up, no user, but signed in")

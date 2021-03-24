@@ -1,4 +1,4 @@
-package com.carswaddle.carswaddleandroid.pushNotifications
+package com.carswaddle.carswaddleandroid.messaging
 import android.content.*
 import android.content.ContentValues.TAG
 import android.util.Log

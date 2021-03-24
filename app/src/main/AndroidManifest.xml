@@ -110,7 +110,7 @@
             android:windowSoftInputMode="adjustPan" />
 
         <service
-            android:name=".pushNotifications.MessagingController"
+            android:name=".messaging.MessagingController"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
