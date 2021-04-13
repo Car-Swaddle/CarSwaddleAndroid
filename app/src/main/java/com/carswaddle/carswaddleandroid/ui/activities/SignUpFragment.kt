@@ -145,8 +145,7 @@ class SignUpFragment: Fragment() {
 
         statusTextView.visibility = View.GONE
         
-        val intercom = Intercom(requireContext())
-        val referrerId = intercom.referrerId
+        val referrerId = Intercom.shared.referrerId
         
         userRepo.signUp(
             emailEditText.text.toString(),
@@ -161,7 +160,7 @@ class SignUpFragment: Fragment() {
                 signUpButton.isEnabled = true
             }
             if (throwable == null && auth.isUserLoggedIn()) {
-                intercom.wipeReferrerId()
+                Intercom.shared.wipeReferrerId()
                 val user = userRepo.getCurrentUser(requireContext())
                 if (user == null) {
                     Log.d("dunno", "something messed up, no user, but signed in")

@@ -64,12 +64,29 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter android:label="Car Swaddle">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="carswaddle" />
+            </intent-filter>
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:host="go.carswaddle..com" android:scheme="http"/>
+                <data android:host="go.carswaddle.com" android:scheme="http"/>
                 <data android:host="go.carswaddle.com" android:scheme="https"/>
+            </intent-filter>
+            <!-- Branch App Links (optional) -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" android:host="carswaddle.app.link" />
+                <data android:scheme="https" android:host="carswaddle.test-app.link" />
+                <!-- example-alternate domain is required for App Links when the Journeys/Web SDK and Deepviews are used inside your website.  -->
+                <data android:scheme="https" android:host="carswaddle-alternate.app.link" />
+                <data android:scheme="https" android:host="carswaddle-alternate.test-app.link" />
             </intent-filter>
         </activity>
         <activity
@@ -129,6 +146,10 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="default_notification_channel" />
+
+        <meta-data android:name="io.branch.sdk.BranchKey" android:value="key_live_ggRnLsxMeh9vtBDzlHB9EifbAtlqriAR" />
+        <meta-data android:name="io.branch.sdk.BranchKey.test" android:value="key_test_gmPgHCvQlmYytFwzpINsnefhFuiysbC9" />
+        
     </application>
 
 </manifest>

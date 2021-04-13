@@ -16,9 +16,11 @@ import com.carswaddle.carswaddleandroid.ui.activities.SetNameActivity
 import com.carswaddle.carswaddleandroid.ui.activities.SetPhoneNumberActivity
 import com.carswaddle.services.Authentication
 import com.carswaddle.store.AppDatabase
-import com.google.firebase.dynamiclinks.ktx.dynamicLinks
-import com.google.firebase.ktx.Firebase
-
+import io.branch.indexing.BranchUniversalObject
+import io.branch.referral.Branch
+import io.branch.referral.BranchError
+import io.branch.referral.util.LinkProperties
+import org.json.JSONObject
 
 // intent.data.host == "go.carswaddle.com"
 
@@ -38,11 +40,22 @@ class SplashActivity: AppCompatActivity() {
 
         // Create here so it can listen if the user logs in
         MessagingController.initialize()
-
-        val intercom = Intercom(this)
-        intercom.handleDynamicLink(intent, this) { }
-
+        
         navigateToActivity()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        
+        Intercom.shared.setup(this)
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        this.intent = intent
+        // Branch reinit (in case Activity is already in foreground when Branch link is clicked)
+//        Branch.sessionBuilder(this).withCallback(branchListener).reInit()
+        Intercom.shared.setupFromNewIntent(this)
     }
     
     private fun navigateToActivity() {
