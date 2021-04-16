@@ -23,7 +23,7 @@ interface AuthenticationService {
     @Headers(headerPrefix + applicationFormURLEncoded)
     @FormUrlEncoded
     @POST("/signup")
-    fun signUp(@Field("email") email: String?, @Field("password") password: String, @Query("isMechanic") isMechanic: Boolean): Call<AuthResponse>
+    fun signUp(@Field("email") email: String?, @Field("password") password: String, @Query("isMechanic") isMechanic: Boolean, @Query("referrerID") referrerId: String?): Call<AuthResponse>
 
     @Headers(headerPrefix + applicationJSON)
     @GET("/api/sms/verify")
