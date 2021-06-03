@@ -141,7 +141,7 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
         chatImageView.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
                 val phoneNumber =
-                    autoServiceDetailsViewModel.autoServiceElement.value?.mechanicUser?.phoneNumber
+                    autoServiceDetailsViewModel.autoServiceElement.value?.user?.phoneNumber
                         ?: return
                 val intent = Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", phoneNumber, null))
                 startActivity(intent)
@@ -151,7 +151,7 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
         phoneImageView.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
                 val phoneNumber =
-                    autoServiceDetailsViewModel.autoServiceElement.value?.mechanicUser?.phoneNumber
+                    autoServiceDetailsViewModel.autoServiceElement.value?.user?.phoneNumber
                         ?: return
                 val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber))
                 startActivity(intent)
