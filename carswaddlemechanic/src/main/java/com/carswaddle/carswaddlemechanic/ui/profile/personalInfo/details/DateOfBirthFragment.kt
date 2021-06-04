@@ -109,11 +109,12 @@ class DateOfBirthFragment : Fragment(), DatePickerDialog.OnDateSetListener {
             Toast.LENGTH_SHORT
         ).show()
     }
-
+    
     override fun onDateSet(picker: DatePicker?, year: Int, monthOfYear: Int, dayOfMonth: Int) {
         val p = picker
         if (p != null) {
             selectedDate = this.getDateFromDatePicker(p)?.toCalendar()
+            updateDisplayedDate()
         }
     }
 
