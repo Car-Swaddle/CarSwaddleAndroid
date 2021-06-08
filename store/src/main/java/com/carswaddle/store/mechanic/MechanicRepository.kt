@@ -43,6 +43,10 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
         return mechanicDao.getMechanic(mechanicId)
     }
 
+    fun getOilChangePricing(mechanicId: String): com.carswaddle.store.mechanic.OilChangePricing? {
+        return mechanicDao.getOilChangePricing(mechanicId)
+    }
+
     fun getVerification(mechanicId: String): com.carswaddle.store.mechanic.Verification? {
         return mechanicDao.getVerification(mechanicId)
     }
@@ -321,17 +325,17 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
     }
 
     fun getOilChangePricing(
+        mechanicId: String? = null,
         context: Context,
         completion: (error: Throwable?, oilChangePricing: StoreOilChangePricing?) -> Unit
     ): Call<OilChangePricing>? {
-        val mechanicService =
-            ServiceGenerator.authenticated(context)?.retrofit?.create(MechanicService::class.java)
+        val mechanicService = ServiceGenerator.authenticated(context)?.retrofit?.create(MechanicService::class.java)
         if (mechanicService == null) {
             completion(ServiceNotAvailable("No able to make service to make network call"), null)
             return null
         }
 
-        val call = mechanicService.getOilChangePricing()
+        val call = mechanicService.getOilChangePricing(mechanicId)
         call.enqueue(object : Callback<OilChangePricing> {
 
             override fun onFailure(call: Call<OilChangePricing>, t: Throwable) {
@@ -349,6 +353,7 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
                 } else {
                     CoroutineScope(Dispatchers.IO).launch {
                         val o = StoreOilChangePricing(result)
+                        mechanicDao.insertOilChangePricing(o)
                         completion(null, o)
                     }
                 }
@@ -413,6 +418,7 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
         
         val storedMechanic = StoreMechanic(mechanic, existingMechanic?.averageRating, existingMechanic?.numberOfRatings, existingMechanic?.autoServicesProvided)
         mechanicDao.insertMechanic(storedMechanic)
+        val oilChangePricing = mechanicDao.getOilChangePricing(mechanic.id)
 
         var storedTimeSpans = arrayListOf<TemplateTimeSpan>()
         mechanic.scheduleTimeSpans.let {
@@ -429,7 +435,7 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
         Log.w("mechanic insertion", "mechanic inserted $storedMechanic")
 
         if (storedUser != null) {
-            return MechanicListElements(storedMechanic, storedUser, storedTimeSpans)
+            return MechanicListElements(storedMechanic, storedUser, storedTimeSpans, oilChangePricing)
         } else {
             return null
         }
@@ -631,7 +637,8 @@ class MechanicRepository(private val mechanicDao: MechanicDao) {
 data class MechanicListElements(
     val mechanic: com.carswaddle.carswaddleandroid.data.mechanic.Mechanic,
     val user: User,
-    val timeSpans: List<TemplateTimeSpan>
+    val timeSpans: List<TemplateTimeSpan>,
+    val oilChangePricing: StoreOilChangePricing?
 )
 
 

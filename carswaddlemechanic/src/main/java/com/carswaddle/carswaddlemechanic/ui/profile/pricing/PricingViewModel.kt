@@ -35,7 +35,7 @@ class PricingViewModel(application: Application) : AndroidViewModel(application)
     val oilChangePricing: LiveData<OilChangePricing?> = _oilchangePricing
 
     private fun importOilChangePricing(context: Context, completion: (error: Throwable?, oilChangePricing: OilChangePricing?) -> Unit) {
-        mechanicRepo.getOilChangePricing(context) { error, oilChangePricing ->
+        mechanicRepo.getOilChangePricing(null, context) { error, oilChangePricing ->
             val o = oilChangePricing
             if (o == null) {
                 completion(error, null)

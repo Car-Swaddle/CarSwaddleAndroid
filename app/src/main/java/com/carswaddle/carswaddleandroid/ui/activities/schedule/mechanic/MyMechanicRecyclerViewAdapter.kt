@@ -65,6 +65,13 @@ class MyMechanicRecyclerViewAdapter(
         holder.ratingBar.rating = item.mechanic.averageRating?.toFloat() ?: 0.0F
         holder.mechanicImageView.mechanicId = item.mechanic.id
         
+        val price = item.oilChangePricing?.synthetic
+        if (price != null) {
+            holder.priceTextView.text = String.format("$%.2f", price / 100.0)
+        } else {
+            holder.priceTextView.text = "$--"
+        }
+        
         var roundedValue = "-"
         if (item.mechanic.averageRating != null) {
             roundedValue = (Math.round(
@@ -109,6 +116,7 @@ class MyMechanicRecyclerViewAdapter(
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val nameTextView: TextView = view.findViewById(R.id.name)
         val ratingBar: AppCompatRatingBar = view.findViewById(R.id.ratingBar)
+        val priceTextView: TextView = view.findViewById(R.id.priceTextView)
         val ratingTextView: TextView = view.findViewById(R.id.ratings)
         val servicesCompletedTextView: TextView = view.findViewById(R.id.services_completed)
         val mechanicImageView: MechanicImageView = view.findViewById(R.id.mechanicImageView)

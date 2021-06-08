@@ -51,7 +51,7 @@ interface MechanicService {
 
     @Headers(ContentType.headerPrefix + ContentType.applicationJSON)
     @GET(mechanicPricing)
-    fun getOilChangePricing(): Call<OilChangePricing>
+    fun getOilChangePricing(@Query("mechanicId") mechanicId: String?): Call<OilChangePricing>
 
     @Headers(ContentType.headerPrefix + ContentType.applicationJSON)
     @PUT(mechanicPricing)
