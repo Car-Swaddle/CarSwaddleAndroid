@@ -21,6 +21,11 @@
             android:layout_height="wrap_content"/>
 
         <com.carswaddle.carswaddleandroid.ui.view.PriceRow
+            android:id="@+id/bookingFeePriceRow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.carswaddle.carswaddleandroid.ui.view.PriceRow
             android:id="@+id/row2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>

@@ -1,10 +1,8 @@
 package com.carswaddle.services.services.serviceModels
 
 data class Price (
-    var identifier: String,
-    val autoServiceId: String, 
-    var oilChangeCost: Int,
-    var distanceCost: Int,
+    var oilChange: Int,
+    var distance: Int,
     var bookingFee: Int,
     var processingFee: Int,
     var subtotal: Int,
@@ -15,7 +13,7 @@ data class Price (
 ) {
     
     val oilChangeTotal: Int get() {
-        return subtotal + processingFee + bookingFee
+        return subtotal + distance
     }
 
     val discountTotal: Int? get() {

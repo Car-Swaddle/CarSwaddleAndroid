@@ -16,6 +16,7 @@ class PriceFragment : Fragment() {
     private lateinit var row2: PriceRow
     private lateinit var row3: PriceRow
     private lateinit var row4: PriceRow
+    private lateinit var bookingFeePriceRow: PriceRow
 
     var price: Price? = null
         set(value) {
@@ -42,18 +43,21 @@ class PriceFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         row1 = view.findViewById(R.id.row1)
-        row1.label = "Oil change"
+        row1.label = getString(R.string.oil_change)
+        bookingFeePriceRow = view.findViewById(R.id.bookingFeePriceRow)
+        bookingFeePriceRow.label = getString(R.string.booking_fee)
         row2 = view.findViewById(R.id.row2)
-        row2.label = "Sales tax"
+        row2.label = getString(R.string.sales_tax)
         row3 = view.findViewById(R.id.row3)
-        row3.label = "Discount"
+        row3.label = getString(R.string.discount)
         row3.visibility = GONE // hide discount by default
         row4 = view.findViewById(R.id.row4)
-        row4.label = "Total"
+        row4.label = getString(R.string.total)
     }
 
     private fun updatePrice(price: Price) {
         row1.value = String.format("%.2f", price.oilChangeTotal / 100.0)
+        bookingFeePriceRow.value = String.format("%.2f", (price.bookingFee + price.processingFee) / 100.0)
         row2.value = String.format("%.2f", price.salesTaxTotal / 100.0)
         val discount = price.discountTotal
         if (discount == null || discount == 0) {
