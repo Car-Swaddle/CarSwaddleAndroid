@@ -92,6 +92,9 @@ class ProgressTextView @JvmOverloads constructor(
     init {
         LayoutInflater.from(context).inflate(R.layout.progress_text_view, this, true)
 
+        textView = findViewById(R.id.progressTextView)
+        progressBar = findViewById(R.id.progressBar)
+
         val a = context.obtainStyledAttributes(attrs, R.styleable.progress_text_view)
         val enabledColor =
             a.getColorStateList(R.styleable.progress_text_view_text_view_enabled_text_color)
@@ -104,10 +107,7 @@ class ProgressTextView @JvmOverloads constructor(
         if (disabledColor != null) {
             disabledTextColor = disabledColor
         }
-
-        textView = findViewById(R.id.progressTextView)
-        progressBar = findViewById(R.id.progressBar)
-
+        
         progressBar.visibility = GONE
 
         val s: CharSequence? = a.getString(R.styleable.progress_text_view_text_view_display_text)
