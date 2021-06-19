@@ -20,6 +20,7 @@ import com.carswaddle.carswaddleandroid.Extensions.isValidEmail
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.R.layout.fragment_login
 import com.carswaddle.carswaddleandroid.data.user.UserRepository
+import com.carswaddle.carswaddleandroid.messaging.Intercom
 import com.carswaddle.carswaddleandroid.ui.activities.ForgotPasswordActivity
 import com.carswaddle.carswaddleandroid.ui.activities.SetNameActivity
 import com.carswaddle.carswaddleandroid.ui.activities.SetPhoneNumberActivity
@@ -115,34 +116,49 @@ class LoginFragment : Fragment() {
         loginButton.isLoading = true
         
         statusTextView.visibility = View.GONE
+        val referrerId = Intercom.shared.referrerId
         
-        val auth = Authentication(requireContext())
         userRepo.login(emailEditText.text.toString(), passwordEditText.text.toString(), false, requireContext()) { throwable, authResponse ->
-            requireActivity().runOnUiThread { loginButton.isLoading = false }
-            if (throwable == null && auth.isUserLoggedIn()) {
-                val user = userRepo.getCurrentUser(applicationContext)
-                if (user == null) {
-                    Log.d("dunno", "something messed up, no user, but signed in")
-                } else if (user.firstName.isNullOrBlank() || user.lastName.isNullOrBlank()) {
-                    val intent = Intent(requireActivity(), SetNameActivity::class.java)
-                    startActivity(intent)
-                } else if (user.phoneNumber.isNullOrBlank() || user.isPhoneNumberVerified == null || user.isPhoneNumberVerified == false) {
-                    val intent = Intent(requireActivity(), SetPhoneNumberActivity::class.java)
-                    startActivity(intent)
-                } else {
-                    val intent = Intent(requireActivity(), MainActivity::class.java)
-                    startActivity(intent)
-                    requireActivity().finish()
+            if (throwable == null) {
+                userRepo.updateReferrerId(referrerId, requireContext(), {}) {
+                    if (it != null) {
+                        Log.w("Intercom", "error update user with referrer")
+                    }
+                    requireActivity().runOnUiThread { loginButton.isLoading = false }
+                    finishLogin(throwable)
                 }
             } else {
-                Log.d("dunno", "Unable to login")
-                requireActivity().runOnUiThread {
-                    val text = getString(R.string.login_failure)
-                    statusTextView.visibility = View.VISIBLE
-                    statusTextView.setText(text)
-                }
+                requireActivity().runOnUiThread { loginButton.isLoading = false }
+                finishLogin(throwable)
             }
         }
     }
 
+    private fun finishLogin(throwable: Throwable?) {
+        val auth = Authentication(requireContext())
+        if (throwable == null && auth.isUserLoggedIn()) {
+            val user = userRepo.getCurrentUser(applicationContext)
+            if (user == null) {
+                Log.d("dunno", "something messed up, no user, but signed in")
+            } else if (user.firstName.isNullOrBlank() || user.lastName.isNullOrBlank()) {
+                val intent = Intent(requireActivity(), SetNameActivity::class.java)
+                startActivity(intent)
+            } else if (user.phoneNumber.isNullOrBlank() || user.isPhoneNumberVerified == null || user.isPhoneNumberVerified == false) {
+                val intent = Intent(requireActivity(), SetPhoneNumberActivity::class.java)
+                startActivity(intent)
+            } else {
+                val intent = Intent(requireActivity(), MainActivity::class.java)
+                startActivity(intent)
+                requireActivity().finish()
+            }
+        } else {
+            Log.d("dunno", "Unable to login")
+            requireActivity().runOnUiThread {
+                val text = getString(R.string.login_failure)
+                statusTextView.visibility = View.VISIBLE
+                statusTextView.setText(text)
+            }
+        }
+    }
+    
 }
