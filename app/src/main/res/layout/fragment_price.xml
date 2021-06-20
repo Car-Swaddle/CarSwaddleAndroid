@@ -16,7 +16,7 @@
         android:paddingTop="8dp">
 
         <com.carswaddle.carswaddleandroid.ui.view.PriceRow
-            android:id="@+id/row1"
+            android:id="@+id/oilChangePriceRow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
@@ -26,12 +26,7 @@
             android:layout_height="wrap_content"/>
 
         <com.carswaddle.carswaddleandroid.ui.view.PriceRow
-            android:id="@+id/row2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <com.carswaddle.carswaddleandroid.ui.view.PriceRow
-            android:id="@+id/row3"
+            android:id="@+id/discountPriceRow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
@@ -42,7 +37,7 @@
             android:background="@color/contentDivider"/>
 
         <com.carswaddle.carswaddleandroid.ui.view.PriceRow
-            android:id="@+id/row4"
+            android:id="@+id/totalPriceRow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
