@@ -5,10 +5,7 @@ import android.content.Intent
 import android.util.Log
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.carswaddle.carswaddleandroid.Extensions.carSwaddlePreferences
-<<<<<<< HEAD:store/src/main/java/com/carswaddle/store/user/UserRepository.kt
-=======
 import com.carswaddle.carswaddleandroid.data.mechanic.Mechanic
->>>>>>> V-C2.0.0:app/src/main/java/com/carswaddle/carswaddleandroid/data/user/UserRepository.kt
 import com.carswaddle.carswaddleandroid.retrofit.ServiceGenerator
 import com.carswaddle.carswaddleandroid.retrofit.ServiceNotAvailable
 import com.carswaddle.carswaddleandroid.retrofit.serviceGenerator
@@ -169,9 +166,7 @@ class UserRepository(private val userDao: UserDao) {
                 } else {
                     completion(null)
                 }
-                
-<<<<<<< HEAD:store/src/main/java/com/carswaddle/store/user/UserRepository.kt
-=======
+       
             }
         })
     }
@@ -204,7 +199,6 @@ class UserRepository(private val userDao: UserDao) {
                     // Code is between 200 and 299 inclusive
                     completion(null)
                 }
->>>>>>> V-C2.0.0:app/src/main/java/com/carswaddle/carswaddleandroid/data/user/UserRepository.kt
             }
         })
     }
