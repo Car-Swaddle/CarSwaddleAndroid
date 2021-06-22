@@ -147,11 +147,14 @@ class SelectMechanicViewModel(application: Application) : AndroidViewModel(appli
                     if (user == null) {
                         continue
                     }
+                    
+                    val pricing = mechanicRepo.getOilChangePricing(mechanic.id)
 
-                    val m = MechanicListElements(mechanic, user, timeSpans)
+                    val m = MechanicListElements(mechanic, user, timeSpans, pricing)
                     fetchedMechanics.add(m)
                     
                     loadStats(mechanic.id)
+                    loadOilChangePricing(mechanic.id)
                 }
 
                 _mechanics.postValue(fetchedMechanics)
@@ -181,7 +184,7 @@ class SelectMechanicViewModel(application: Application) : AndroidViewModel(appli
             endDate.set(Calendar.SECOND, 0)
             endDate.set(Calendar.MILLISECOND, 0)
              
-            val filterAutoServiceStatus = listOf<AutoServiceStatus>(
+            val filterAutoServiceStatus = listOf(
                 AutoServiceStatus.scheduled,
                 AutoServiceStatus.inProgress,
                 AutoServiceStatus.completed
@@ -248,10 +251,11 @@ class SelectMechanicViewModel(application: Application) : AndroidViewModel(appli
 
             val mechanicElement = mechanicElements[index]
             val mechanic = mechanicRepo.getMechanic(mechanicId)
+            val oilChangePricing = mechanicRepo.getOilChangePricing(mechanicId)
             if (mechanic == null) {
                 return@getStats
             }
-            val newElement = MechanicListElements(mechanic, mechanicElement.user, mechanicElement.timeSpans)
+            val newElement = MechanicListElements(mechanic, mechanicElement.user, mechanicElement.timeSpans, oilChangePricing)
             mechanicElements[index] = newElement
 
             if (mechanicElements == null) {
@@ -260,37 +264,36 @@ class SelectMechanicViewModel(application: Application) : AndroidViewModel(appli
             _mechanics.postValue(mechanicElements!!)
         }
     }
+    
+    fun loadOilChangePricing(mechanicId: String) {
+        mechanicRepo.getOilChangePricing(mechanicId, getApplication()) { error, oilChangePricing ->
+            // Get the right mechanic and create a new mutablelive data object with the new changes inserted in for the right mechanic
+            var mechanicElements: MutableList<MechanicListElements>? = mechanics.value?.toMutableList()
 
-//    suspend private fun fetchAutoServiceListElements(autoServiceId: String): AutoServiceListElements? {
-//        try {
-//            val autoService = autoServiceRepo.getAutoService(autoServiceId)
-//            val vehicleId = autoService?.vehicleId
-//            val locationId = autoService?.locationId
-//            if (autoService == null || vehicleId == null || locationId == null) {
-//                return null
-//            }
-//            val mechanic = mechanicRepo.getMechanic(autoService.mechanicId)
-//            val vehicle = vehicleRepo.getVehicle(vehicleId)
-//            val location = locationRepo.getLocation(locationId)
-//            val mechanicUser = userRepo.getUser(mechanic?.userId ?: "")
-//            val serviceEntities = serviceEntityRepo.getServiceEntities(autoServiceId)
-//
-//            if (mechanic == null || vehicle == null || location == null || mechanicUser == null) {
-//                return null
-//            }
-//
-//            return AutoServiceListElements(
-//                autoService,
-//                mechanic,
-//                vehicle,
-//                location,
-//                mechanicUser,
-//                serviceEntities
-//            )
-//        } catch (e: Exception) {
-//            print(e)
-//            return null
-//        }
-//    }
+            if (mechanicElements == null) {
+                return@getOilChangePricing
+            }
+
+            val index = mechanicElements.indexOfFirst { it.mechanic.id == mechanicId }
+
+            if (index == null) {
+                return@getOilChangePricing
+            }
+
+            val mechanicElement = mechanicElements[index]
+            val mechanic = mechanicRepo.getMechanic(mechanicId)
+            val oilChangePricing = mechanicRepo.getOilChangePricing(mechanicId)
+            if (mechanic == null) {
+                return@getOilChangePricing
+            }
+            val newElement = MechanicListElements(mechanic, mechanicElement.user, mechanicElement.timeSpans, oilChangePricing)
+            mechanicElements[index] = newElement
+
+            if (mechanicElements == null) {
+                return@getOilChangePricing
+            }
+            _mechanics.postValue(mechanicElements!!)
+        }
+    }
 
 }

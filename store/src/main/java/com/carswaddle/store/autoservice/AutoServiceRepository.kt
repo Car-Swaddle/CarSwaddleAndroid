@@ -40,6 +40,14 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
         return autoServiceDao.getAutoService(autoServiceId)
     }
 
+    suspend fun getAutoService(startDate: Calendar, endDate: Calendar, mechanicId: String): List<DataAutoService> {
+        return autoServiceDao.getAutoServices(startDate, endDate, mechanicId)
+    }
+
+    suspend fun getMechanic(mechanicId: String): Mechanic? {
+        return autoServiceDao.getMechanic(mechanicId)
+    }
+
     fun createAndPayForAutoService(
         createAutoService: CreateAutoService,
         context: Context,
@@ -141,8 +149,17 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
         context: Context,
         completion: (error: Throwable?, autoServiceId: String?) -> Unit
     ) {
+        setAutoServiceStatus(AutoServiceStatus.canceled, autoServiceId, context, completion)
+    }
+
+    fun setAutoServiceStatus(
+        autoServiceStatus: AutoServiceStatus,
+        autoServiceId: String,
+        context: Context,
+        completion: (error: Throwable?, autoServiceId: String?) -> Unit
+    ) {
         val updateAutoService = UpdateAutoService(
-            AutoServiceStatus.canceled.toString(),
+            autoServiceStatus,
             null,
             null,
             null,
@@ -389,14 +406,22 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
         autoServiceDao.insertLocation(location)
         val vehicle = Vehicle(autoService.vehicle)
         autoServiceDao.insertVehicle(vehicle)
-
+        
+        val u = autoService.user
+        if (u != null) {
+            val user = User(u)
+            autoServiceDao.insertUser(user)
+        }
+        
         val review = autoService.reviewFromUser
         if (review != null) {
             val review = Review(review)
             autoServiceDao.insertReview(review)
         }
 
-        val mechanic = Mechanic(autoService.mechanic)
+        val existingMechanic = getMechanic(autoService.mechanicID)
+        
+        val mechanic = Mechanic(autoService.mechanic, existingMechanic?.averageRating, existingMechanic?.numberOfRatings, existingMechanic?.autoServicesProvided)
         autoServiceDao.insertMechanic(mechanic)
         autoService.mechanic.user?.let {
             autoServiceDao.insertUser(User(it))

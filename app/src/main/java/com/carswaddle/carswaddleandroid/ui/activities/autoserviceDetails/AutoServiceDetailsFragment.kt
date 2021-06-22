@@ -29,16 +29,18 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.carswaddle.carswaddleandroid.Extensions.updateMapStyle
+import com.carswaddle.carswaddleandroid.ImageLabel
 import com.carswaddle.carswaddleandroid.R
 import com.carswaddle.carswaddleandroid.data.oilChange.OilChange
 import com.carswaddle.carswaddleandroid.services.serviceModels.AutoServiceStatus
 import com.carswaddle.carswaddleandroid.services.serviceModels.CreateReview
 import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.AutoServiceListElements
 import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.DateDisplayView
-import com.carswaddle.carswaddleandroid.ui.activities.autoservicelist.ImageLabel
 import com.carswaddle.carswaddleandroid.ui.activities.schedule.LocationFragment
 import com.carswaddle.carswaddleandroid.ui.activities.schedule.saltLakeAndProvo
+import com.carswaddle.carswaddleandroid.ui.view.ProgressButton
 import com.carswaddle.carswaddleandroid.util.PermissionUtils
+import com.carswaddle.ui.NotesView
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -51,7 +53,7 @@ import java.math.RoundingMode
 import java.util.*
 
 
-class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
+class AutoServiceDetailsFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var dateDisplay: DateDisplayView
     private lateinit var mechanicNameTextView: TextView
@@ -302,22 +304,6 @@ class AutoServiceDetailsFragment() : Fragment(), OnMapReadyCallback {
         enableMyLocation()
     }
     
-    private fun updateMapStyle() {
-        try {
-            val mode =
-                context?.resources?.configuration?.uiMode?.and(Configuration.UI_MODE_NIGHT_MASK)
-            var mapStyle = R.raw.standard_map
-            when (mode) {
-                Configuration.UI_MODE_NIGHT_YES -> mapStyle = R.raw.night_mode_map
-                Configuration.UI_MODE_NIGHT_NO -> { }
-                Configuration.UI_MODE_NIGHT_UNDEFINED -> { }
-            }
-            map.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(), mapStyle))
-        } catch (e: Resources.NotFoundException) {
-            Log.e(TAG, "Can't find style. Error: ", e)
-        }
-    }
-
     private fun statusColor(status: AutoServiceStatus): Int {
         val colorId = when (status) {
             AutoServiceStatus.scheduled -> R.color.statusColorScheduled

@@ -22,17 +22,15 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import java.util.*
 
 
 
-public val saltLakeAndProvo = LatLng(40.4456955, -111.8971674)
+val saltLakeAndProvo = LatLng(40.4456955, -111.8971674)
 
 /**
  * A simple [Fragment] subclass.

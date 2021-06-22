@@ -10,7 +10,7 @@ import java.util.*
 
 
 data class UpdateAutoService(
-    val status: String?,
+    val status: AutoServiceStatus?,
     val notes: String?,
     val vehicleID: String?,
     val mechanicID: String?,

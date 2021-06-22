@@ -16,11 +16,13 @@ data class ContentType(val rawValue: String) {
         public const val applicationZIP = "application/zip"
         public const val imageJPEG = "image/jpeg"
         public const val imagePNG = "image/png"
+        public const val anyImage = "image/*"
         public const val textHTML = "text/html;charset=utf-8"
         public const val any = "*/*"
+        public const val multipartFormPrefix = "multipart/form-data; boundary= "
 
         public fun multipartFormContentType(boundary: String): ContentType {
-            return ContentType("multipart/form-data; boundary= " + boundary)
+            return ContentType(multipartFormPrefix + boundary)
         }
     }
 }

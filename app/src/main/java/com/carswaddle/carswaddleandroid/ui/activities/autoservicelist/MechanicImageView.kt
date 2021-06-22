@@ -27,27 +27,27 @@ class MechanicImageView @JvmOverloads constructor(
     private val imageView: ImageView
     private var auth = Authentication(context)
 
-    var mechanicId: String? = null 
-    set(newValue) {
-        field = newValue
-        updateImage()
-    }
+    var mechanicId: String? = null
+        set(newValue) {
+            field = newValue
+            updateImage()
+        }
 
     init {
         LayoutInflater.from(context).inflate(R.layout.mechanic_image_view, this, true)
         imageView = findViewById(R.id.imageView)
     }
-    
+
     private fun updateImage() {
         val url = glideUrl()
         if (url == null) {
             return
         }
-         Glide.with(context)
-             .load(url)
-             .into(imageView)
+        Glide.with(context)
+            .load(url)
+            .into(imageView)
     }
-    
+
     private fun glideUrl(): GlideUrl? {
         val id = mechanicId
         val token = auth.getAuthToken()
@@ -59,10 +59,11 @@ class MechanicImageView @JvmOverloads constructor(
         url = url.replace("{mechanicId}", id)
         url = serverUrl() + url
 
-        return GlideUrl(url,
+        return GlideUrl(
+            url,
             LazyHeaders.Builder()
-            .addHeader("Authorization", "Bearer " + token)
-            .build()
+                .addHeader("Authorization", "Bearer " + token)
+                .build()
         )
     }
 

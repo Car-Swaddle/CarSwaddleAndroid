@@ -5,6 +5,10 @@ import android.content.Intent
 import android.util.Log
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.carswaddle.carswaddleandroid.Extensions.carSwaddlePreferences
+<<<<<<< HEAD:store/src/main/java/com/carswaddle/store/user/UserRepository.kt
+=======
+import com.carswaddle.carswaddleandroid.data.mechanic.Mechanic
+>>>>>>> V-C2.0.0:app/src/main/java/com/carswaddle/carswaddleandroid/data/user/UserRepository.kt
 import com.carswaddle.carswaddleandroid.retrofit.ServiceGenerator
 import com.carswaddle.carswaddleandroid.retrofit.ServiceNotAvailable
 import com.carswaddle.carswaddleandroid.retrofit.serviceGenerator
@@ -20,7 +24,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 private val currentUserIdKey: String = "com.carswaddle.carswaddleandroid.user.currentUserId"
-
+private val currentMechanicIdKey: String = "com.carswaddle.carswaddleandroid.user.currentMechanicId"
 
 // Declares the DAO as a private property in the constructor. Pass in the DAO
 // instead of the whole database, because you only need access to the DAO
@@ -30,13 +34,21 @@ class UserRepository(private val userDao: UserDao) {
         userDao.insertUser(user)
     }
 
+    suspend fun insert(mechanic: Mechanic) = withContext(Dispatchers.IO + NonCancellable) {
+        userDao.insertMechanic(mechanic)
+    }
+
+    suspend fun getMechanic(mechanicId: String): Mechanic? {
+        return userDao.getMechanic(mechanicId)
+    }
+
     suspend fun update(user: User, updateUser: UpdateUser) = withContext(Dispatchers.IO + NonCancellable) {
         userDao.insertUser(User(user, updateUser))
     }
 
-    fun login(email: String, password: String, context: Context, completion: (error: Throwable?, response: AuthResponse?) -> Unit) {
+    fun login(email: String, password: String, isMechanic: Boolean, context: Context, completion: (error: Throwable?, response: AuthResponse?) -> Unit) {
         val auth = serviceGenerator.retrofit.create(AuthenticationService::class.java)
-        val call = auth.login(email, password, false)
+        val call = auth.login(email, password, isMechanic)
         call.enqueue(object : Callback<AuthResponse> {
             override fun onFailure(call: Call<AuthResponse>?, t: Throwable?) {
                 Log.d("retrofit ", "call failed")
@@ -54,10 +66,18 @@ class UserRepository(private val userDao: UserDao) {
                     }
                 }
                 val user = result?.user
+                val mechanic = result?.mechanic
                 if (user != null) {
                     CoroutineScope(Dispatchers.IO).launch {
                         insert(User(user))
                         setCurrentUserId(user.id, context)
+                        
+                        if (mechanic != null) {
+                            val existingMechanic = getMechanic(mechanic.id)
+                            insert(Mechanic(mechanic, existingMechanic?.averageRating, existingMechanic?.numberOfRatings, existingMechanic?.autoServicesProvided))
+                            setCurrentMechanicId(mechanic.id, context)
+                        }
+                        
                         completion(null, result)
                         CoroutineScope(Dispatchers.Default).launch {
                             val intent = Intent(USER_DID_LOGIN)
@@ -89,9 +109,9 @@ class UserRepository(private val userDao: UserDao) {
         })
     }
 
-    fun signUp(email: String, password: String, context: Context, completion: (error: Throwable?, response: AuthResponse?) -> Unit) {
+    fun signUp(email: String, password: String, isMechanic: Boolean, referrerId: String?, context: Context, completion: (error: Throwable?, response: AuthResponse?) -> Unit) {
         val auth = serviceGenerator.retrofit.create(AuthenticationService::class.java)
-        val call = auth.signUp(email, password, false)
+        val call = auth.signUp(email, password, isMechanic, referrerId)
         call.enqueue(object : Callback<AuthResponse> {
             override fun onFailure(call: Call<AuthResponse>?, t: Throwable?) {
                 Log.d("retrofit ", "call failed")
@@ -150,13 +170,48 @@ class UserRepository(private val userDao: UserDao) {
                     completion(null)
                 }
                 
+<<<<<<< HEAD:store/src/main/java/com/carswaddle/store/user/UserRepository.kt
+=======
+            }
+        })
+    }
+    
+    fun sendEmailVerification(context: Context, completion: (throwable: Throwable?) -> Unit) {
+        val auth = ServiceGenerator.authenticated(context)?.retrofit?.create(UserService::class.java)
+        if (auth == null) {
+            completion(ServiceNotAvailable())
+            return
+        }
+        val call = auth?.sendEmailVerification()
+        call?.enqueue(object : Callback<Map<String, Any>> {
+            override fun onFailure(call: Call<Map<String, Any>>?, t: Throwable?) {
+                Log.d("retrofit ", "call failed")
+                completion(t)
+            }
+
+            override fun onResponse(call: Call<Map<String, Any>>?, response: Response<Map<String, Any>>?) {
+                Log.d("retrofit ", "call succeeded")
+                val code = response?.code()
+                if (code == null) {
+                    completion(null)
+                } else if (code == 404) {
+                    val e = EmailNotFoundError("No email was found")
+                    completion(e)
+                } else if (code < 200 || code >= 300) {
+                    val e = EmailNotFoundError("Unable to send email")
+                    completion(e)
+                } else {
+                    // Code is between 200 and 299 inclusive
+                    completion(null)
+                }
+>>>>>>> V-C2.0.0:app/src/main/java/com/carswaddle/carswaddleandroid/data/user/UserRepository.kt
             }
         })
     }
 
     fun sendResetLink(email: String, context: Context, completion: (error: Throwable?) -> Unit) {
         val auth = serviceGenerator.retrofit?.create(AuthenticationService::class.java)
-        val call = auth?.requestResetPasswordLink(email, "car-swaddle")
+        val call = auth?.requestResetPasswordLink(email, "car-swaddle-mechanic")
         call?.enqueue(object : Callback<Void> {
             override fun onFailure(call: Call<Void>?, t: Throwable?) {
                 Log.d("retrofit ", "call failed")
@@ -264,16 +319,20 @@ class UserRepository(private val userDao: UserDao) {
         })
     }
 
+    fun updateReferrerId(referrerId: String?, context: Context, cacheCompletion: () -> Unit = {}, completion: (throwable: Throwable?) -> Unit) {
+        update(null, null, null, null, referrerId, null, null, cacheCompletion, context, completion)
+    }
+
     fun updateName(firstName: String?, lastName: String?, context: Context, cacheCompletion: () -> Unit = {}, completion: (throwable: Throwable?) -> Unit) {
-        update(firstName, lastName, null, null, null, null, cacheCompletion, context, completion)
+        update(firstName, lastName, null, null, null, null, null, cacheCompletion, context, completion)
     }
 
     fun updatePhoneNumber(phoneNumber: String, context: Context, cacheCompletion: () -> Unit = {}, completion: (throwable: Throwable?) -> Unit) {
-        update(null, null, phoneNumber, null, null, null, cacheCompletion, context, completion)
+        update(null, null, phoneNumber, null, null, null, null, cacheCompletion, context, completion)
     }
 
     fun updatePushToken(token: String, context: Context, cacheCompletion: () -> Unit = {}, completion: (throwable: Throwable?) -> Unit) {
-        update(null, null, null, token, null, null, cacheCompletion, context, completion)
+        update(null, null, null, token, null, null, null, cacheCompletion, context, completion)
     }
 
     private fun update(updateUser: UpdateUser, context: Context, cacheCompletion: () -> Unit = {}, completion: (throwable: Throwable?) -> Unit) {
@@ -318,8 +377,8 @@ class UserRepository(private val userDao: UserDao) {
         })
     }
 
-    private fun update(firstName: String?, lastName: String?, phoneNumber: String?, token: String?, timeZone: String?, adminKey: String?, cacheCompletion: () -> Unit, context: Context, completion: (throwable: Throwable?) -> Unit) {
-        val updateUser = UpdateUser(firstName, lastName, phoneNumber, token, PUSH_TOKEN_TYPE, timeZone, adminKey)
+    private fun update(firstName: String?, lastName: String?, phoneNumber: String?, token: String?, referrerId: String?, timeZone: String?, adminKey: String?, cacheCompletion: () -> Unit, context: Context, completion: (throwable: Throwable?) -> Unit) {
+        val updateUser = UpdateUser(firstName, lastName, phoneNumber, token, referrerId, PUSH_TOKEN_TYPE, timeZone, adminKey)
         update(updateUser, context, cacheCompletion, completion)
     }
 
@@ -342,6 +401,17 @@ class UserRepository(private val userDao: UserDao) {
         editContext.putString(currentUserIdKey, userId)
         editContext.apply()
     }
+
+    fun setCurrentMechanicId(mechanicId: String, context: Context) {
+        val editContext = context.carSwaddlePreferences().edit()
+        editContext.putString(currentMechanicIdKey, mechanicId)
+        editContext.apply()
+    }
+
+    fun getCurrentMechanicId(context: Context): String? {
+        val preferences = context.carSwaddlePreferences()
+        return preferences.getString(currentMechanicIdKey, null)
+    }
     
     companion object {
         
@@ -359,3 +429,5 @@ class UserRepository(private val userDao: UserDao) {
 class EmailNotFoundError(message: String) : Throwable(message) {}
 
 class ServiceError() : Throwable() {}
+
+class MechanicIdIsUnavailable() : Throwable() {}

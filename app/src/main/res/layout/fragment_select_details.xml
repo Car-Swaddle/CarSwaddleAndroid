@@ -124,15 +124,17 @@
 
                 </LinearLayout>
                 
-                <com.carswaddle.carswaddleandroid.ui.view.ProgressTextView
+                <com.carswaddle.ui.ProgressTextView
                     android:id="@+id/redeemTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:layout_marginStart="8dp"
                     android:clickable="true"
+                    app:text_view_enabled_text_color="@color/brand"
+                    app:text_view_disabled_text_color="@color/brandAlpha"
                     app:text_view_display_text="@string/redeem"
-                    android:textColor="#387DFF"
+                    android:textColor="@color/brand"
                     android:textSize="16sp" />
 
             </LinearLayout>

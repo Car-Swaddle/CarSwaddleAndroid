@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.carswaddle.carswaddleandroid.R;
 
+
 /**
  * https://github.com/googlemaps/android-samples/blob/master/ApiDemos/java/app/src/gms/java/com/example/mapdemo/PermissionUtils.java
  * Utility class for access to runtime permissions.

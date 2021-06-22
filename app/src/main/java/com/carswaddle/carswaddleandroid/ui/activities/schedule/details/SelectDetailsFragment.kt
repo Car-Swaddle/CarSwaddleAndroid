@@ -2,7 +2,6 @@ package com.carswaddle.carswaddleandroid.ui.activities.schedule.details
 
 import android.app.AlertDialog
 import android.content.Intent
-import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.provider.CalendarContract
@@ -28,11 +27,12 @@ import com.carswaddle.carswaddleandroid.data.vehicle.Vehicle
 import com.carswaddle.carswaddleandroid.services.CouponErrorType
 import com.carswaddle.carswaddleandroid.services.serviceModels.*
 import com.carswaddle.carswaddleandroid.ui.view.ProgressButton
-import com.carswaddle.carswaddleandroid.ui.view.ProgressTextView
+import com.carswaddle.ui.ProgressTextView
 import com.carswaddle.services.services.serviceModels.Price
 import com.stripe.android.PaymentSession
 import com.stripe.android.PaymentSessionConfig
 import com.stripe.android.PaymentSessionData
+import com.stripe.android.Stripe
 import com.stripe.android.model.PaymentMethod
 import java.util.*
 
@@ -96,7 +96,7 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String, val schedu
         paymentLayout.setOnClickListener {
             paymentSession.presentPaymentMethodSelection()
         }
-
+        
         selectDetailsViewModel.couponError.observe(
             viewLifecycleOwner,
             Observer<CouponErrorType?> { errorType ->

@@ -3,17 +3,248 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_calendar">
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.carswaddle.carswaddlemechanic.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_calendar"
+        android:name="com.carswaddle.carswaddlemechanic.ui.calendar.calendarfragment.CalendarFragment"
+        android:label="@string/day_autoservices_title"
+        tools:layout="@layout/fragment_calendar" >
+        <action
+            android:id="@+id/action_navigation_calendar_to_autoServiceDetailsFragment"
+            app:destination="@id/autoServiceDetailsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.carswaddle.carswaddlemechanic.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_earnings"
+        android:name="com.carswaddle.carswaddlemechanic.ui.earnings.EarningsFragment"
+        android:label="@string/earnings_title"
+        tools:layout="@layout/fragment_earnings" >
+        <action
+            android:id="@+id/action_navigation_earnings_to_depositsFragment"
+            app:destination="@id/navigation_payouts"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_navigation_earnings_to_transactionsFragment"
+            app:destination="@id/navigation_transactions"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_mechanic_profile"
+        android:name="com.carswaddle.carswaddlemechanic.ui.profile.MechanicProfileFragment"
+        android:label="@string/mechanic_profile"
+        tools:layout="@layout/fragment_mechanic_profile" >
+        <action
+            android:id="@+id/action_navigation_mechanic_profile_to_navigation_contact"
+            app:destination="@id/navigation_contact"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_navigation_mechanic_profile_to_navigation_reviewListFragment"
+            app:destination="@id/navigation_reviewListFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_navigation_mechanic_profile_to_navigation_availability"
+            app:destination="@id/navigation_availability"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_navigation_mechanic_profile_to_navigation_setPricing"
+            app:destination="@id/navigation_setPricing"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_navigation_mechanic_profile_to_navigation_personalInformation"
+            app:destination="@id/navigation_personalInformation"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_navigation_mechanic_profile_to_navigation_tax_deductions"
+            app:destination="@id/navigation_tax_deductions"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_navigation_mechanic_profile_to_navigation_region"
+            app:destination="@id/navigation_region"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_contact"
+        android:name="com.carswaddle.carswaddlemechanic.ui.profile.contact.ContactInfoFragment"
+        android:label="@string/contact_info_title"
+        tools:layout="@layout/fragment_mechanic_contact_info" />
+
+    <fragment
+        android:id="@+id/navigation_availability"
+        android:name="com.carswaddle.carswaddlemechanic.ui.profile.availability.AvailabilityListFragment"
+        android:label="Availability"
+        tools:layout="@layout/fragment_availability_list" />
+    
+    <fragment
+        android:id="@+id/autoServiceDetailsFragment"
+        android:name="com.carswaddle.carswaddlemechanic.ui.autoservice_details.AutoServiceDetailsFragment"
+        android:label="@string/service_details" />
+
+    <fragment
+        android:id="@+id/navigation_payouts"
+        android:name="com.carswaddle.carswaddlemechanic.ui.earnings.deposits.PayoutsFragment"
+        android:label="@string/deposits_title" >
+        <action
+            android:id="@+id/action_navigation_payouts_to_navigation_transaction_details"
+            app:destination="@id/navigation_transaction_details"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_navigation_payouts_to_navigation_transactions"
+            app:destination="@id/navigation_transactions"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_transactions"
+        android:name="com.carswaddle.carswaddlemechanic.ui.earnings.transactions.TransactionsFragment"
+        android:label="@string/transactions_title" >
+        <action
+            android:id="@+id/action_navigation_transactions_to_navigation_transaction_details"
+            app:destination="@id/navigation_transaction_details"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_transaction_details"
+        android:name="com.carswaddle.carswaddlemechanic.ui.earnings.transaction_details.TransactionDetailsFragment"
+        android:label="@string/transaction_details_title"
+        tools:layout="@layout/fragment_transaction_details" >
+        <action
+            android:id="@+id/action_navigation_transaction_details_to_autoServiceDetailsFragment"
+            app:destination="@id/autoServiceDetailsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
+    
+    <fragment
+        android:id="@+id/navigation_reviewListFragment"
+        android:name="com.carswaddle.carswaddlemechanic.ui.profile.reviews.ReviewListFragment"
+        android:label="ReviewListFragment" />
+
+    <fragment
+        android:id="@+id/navigation_setPricing"
+        android:name="com.carswaddle.carswaddlemechanic.ui.profile.pricing.PricingFragment"
+        android:label="@string/pricing" />
+
+    <fragment
+        android:id="@+id/navigation_personalInformation"
+        android:name="com.carswaddle.carswaddlemechanic.ui.profile.personalInfo.PersonalInformationFragment"
+        android:label="Personal Information" >
+        <action
+            android:id="@+id/action_navigation_personalInformation_to_navigation_identification"
+            app:destination="@id/navigation_identification"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_navigation_personalInformation_to_navigation_street_address"
+            app:destination="@id/navigation_street_address"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_navigation_personalInformation_to_navigation_bank_account"
+            app:destination="@id/navigation_bank_account"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_navigation_personalInformation_to_navigation_date_of_birth"
+            app:destination="@id/navigation_date_of_birth"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_navigation_personalInformation_to_navigation_identification_documents"
+            app:destination="@id/navigation_identification_documents"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_identification"
+        android:name="com.carswaddle.carswaddlemechanic.ui.profile.personalInfo.details.IdentificationNumberFragment"
+        android:label="Identification" />
+
+    <fragment
+        android:id="@+id/navigation_identification_documents"
+        android:name="com.carswaddle.carswaddlemechanic.ui.profile.personalInfo.details.IdentificationDocumentFragment"
+        android:label="Identification Documents" />
+
+    <fragment
+        android:id="@+id/navigation_street_address"
+        android:name="com.carswaddle.carswaddlemechanic.ui.profile.personalInfo.details.StreetAddressFragment"
+        android:label="Street address" />
+
+    <fragment
+        android:id="@+id/navigation_bank_account"
+        android:name="com.carswaddle.carswaddlemechanic.ui.profile.personalInfo.details.BankAccountFragment"
+        android:label="Bank account" />
+
+    <fragment
+        android:id="@+id/navigation_date_of_birth"
+        android:name="com.carswaddle.carswaddlemechanic.ui.profile.personalInfo.details.DateOfBirthFragment"
+        android:label="Date of birth" />
+
+    <fragment
+        android:id="@+id/navigation_tax_deductions"
+        android:name="com.carswaddle.carswaddlemechanic.ui.profile.taxDeductions.TaxDeductionsFragment"
+        android:label="Tax Deductions" />
+
+    <fragment
+        android:id="@+id/navigation_region"
+        android:name="com.carswaddle.carswaddlemechanic.ui.profile.serviceRegion.ServiceRegionFragment"
+        android:label="Service Region" />
+
 </navigation>

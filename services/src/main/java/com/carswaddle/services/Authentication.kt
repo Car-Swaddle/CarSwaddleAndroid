@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.util.Log
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.carswaddle.carswaddleandroid.Extensions.carSwaddlePreferences
+import com.carswaddle.carswaddleandroid.retrofit.ServiceGenerator
 import com.carswaddle.carswaddleandroid.retrofit.serviceGenerator
 import com.carswaddle.carswaddleandroid.services.AuthenticationService
 import com.carswaddle.carswaddleandroid.services.serviceModels.AuthResponse
@@ -47,7 +48,9 @@ class Authentication(private val context: Context) {
             val intent = Intent(USER_DID_LOGOUT)
             LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
         }
-
+        
+        ServiceGenerator.reset()
+        
         completion(null, null)
     }
 

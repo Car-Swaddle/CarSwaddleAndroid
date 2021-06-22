@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="view_progress_button">
+        <attr name="displayText" format="string" localization="suggested" />
+        <attr name="progressButtonTextColor" format="reference" />
+        <attr name="progressBarColor" format="reference" />
+        <attr name="progressButtonForegroundColor" format="reference" />
+        <attr name="progressButtonStyle" format="enum">
+            <enum name="filledBrand" value="0" />
+            <enum name="filledAlternate" value="1" />
+            <enum name="filledComplete" value="2" />
+            <enum name="filledStart" value="3" />
+            <enum name="borderless" value="4" />
+            <enum name="outline" value="5" />
+        </attr>
+    </declare-styleable>
+    <declare-styleable name="progress_text_view">
+        <attr name="text_view_display_text" format="string" localization="suggested" />
+        <attr name="text_view_enabled_text_color" format="reference" />
+        <attr name="text_view_disabled_text_color" format="reference" />
+    </declare-styleable>
+    <declare-styleable name="LabeledEditText">
+        <attr name="label" format="string" localization="suggested" />
+        <attr name="value" format="string" localization="suggested" />
+        <attr name="android:inputType"/>
+    </declare-styleable>
+</resources>

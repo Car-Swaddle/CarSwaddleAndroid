@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.mukesh.OtpView
+                android:id="@+id/routingNumberOtpView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/content_margin"
+                android:layout_marginTop="@dimen/content_margin"
+                android:inputType="number"
+                android:itemBackground="@color/content2"
+                android:textColor="@color/text"
+                app:OtpCursorColor="@color/brand"
+                app:OtpItemCount="9"
+                app:OtpItemRadius="@dimen/corner_radius"
+                app:OtpItemSpacing="3dp"
+                app:OtpItemWidth="36dp"
+                app:OtpLineColor="@color/clear"
+                app:OtpViewType="rectangle" />
+
+            <TextView
+                android:id="@+id/labeledEditText_textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/content_margin"
+                android:layout_marginEnd="@dimen/content_margin"
+                android:layout_marginBottom="@dimen/content_margin"
+                android:text="@string/routing_number" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/content_margin">
+
+                <com.carswaddle.ui.LabeledEditText
+                    android:id="@+id/accountNumberLabeledEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:label="Bank account number (8 to 12 digits)"
+                    android:inputType="number"
+                    app:value="" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/content_margin">
+
+                <com.carswaddle.ui.LabeledEditText
+                    android:id="@+id/accountHolderLabeledEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:label="@string/account_holder_name"
+                    android:inputType="textPersonName"
+                    app:value="" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <com.carswaddle.carswaddleandroid.ui.view.ProgressButton
+        android:id="@+id/saveBankAccountButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/content_margin"
+        app:displayText="@string/save_button_title" />
+
+</RelativeLayout>

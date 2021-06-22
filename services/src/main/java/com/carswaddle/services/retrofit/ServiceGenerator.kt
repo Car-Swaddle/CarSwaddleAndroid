@@ -67,7 +67,11 @@ class ServiceGenerator(baseURL: String, okHttpClient: OkHttpClient) {
     companion object {
 
         private var authenticated: ServiceGenerator? = null
-
+        
+        public fun reset() {
+            authenticated = null
+        }
+        
         public fun authenticated(context: Context): ServiceGenerator? {
             if (this.authenticated == null) {
                 val authToken = Authentication(context).getAuthToken()
@@ -92,3 +96,5 @@ class ServiceGenerator(baseURL: String, okHttpClient: OkHttpClient) {
 
 
 class ServiceNotAvailable(message: String = "Cannot create a Service to make network request") : Throwable(message) {}
+
+class EmptyResponseBody() : Throwable() {}

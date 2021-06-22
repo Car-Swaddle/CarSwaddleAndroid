@@ -6,13 +6,14 @@ apply plugin: 'com.google.gms.google-services'
 
 android {
     signingConfigs {
-        Release {
-            storeFile file('car-swaddle-android.jks')
-            storePassword ''
-            keyAlias 'carswaddle'
-            keyPassword ''
+        release {
+            storeFile file(CUST_RELEASE_STORE_FILE)
+            storePassword CUST_RELEASE_STORE_PASSWORD
+            keyAlias CUST_RELEASE_KEY_ALIAS
+            keyPassword CUST_RELEASE_KEY_PASSWORD
         }
     }
+    
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
 
@@ -20,8 +21,8 @@ android {
         applicationId "com.carswaddle.carswaddleandroid"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 12
-        versionName "1.1.1"
+        versionCode 200
+        versionName "2.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -30,7 +31,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.Release
+            signingConfig signingConfigs.release
         }
     }
 
@@ -75,7 +76,6 @@ dependencies {
     api 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0-beta01'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'com.google.android.material:material:1.2.1'
 
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     kapt 'com.github.bumptech.glide:compiler:4.11.0'
@@ -98,19 +98,16 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
-
     implementation 'com.android.volley:volley:1.1.1'
-
     implementation 'com.squareup.retrofit2:retrofit:2.8.1'
-
     implementation 'com.haibin:calendarview:3.6.9'
-
     implementation 'com.stripe:stripe-android:16.1.0'
 
-    implementation platform('com.google.firebase:firebase-bom:26.1.0')
+    implementation platform('com.google.firebase:firebase-bom:[26.0.0,27.0.0]')
+    implementation 'com.google.firebase:firebase-dynamic-links-ktx'
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-messaging-ktx'
-
+    
     def room_version = "2.2.5"
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
@@ -120,9 +117,19 @@ dependencies {
     implementation project(':store')
     implementation project(':foundation')
     implementation project(":services")
+    implementation project(":ui")
     
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.1'
 
     implementation 'com.airbnb.android:lottie:3.5.0'
+
+    // required for all Android apps
+    implementation 'io.branch.sdk.android:library:5.+'
+    // required if your app is in the Google Play Store (tip: avoid using bundled play services libs)
+    implementation 'com.google.firebase:firebase-appindexing:19.0.0'
+    implementation 'com.google.android.gms:play-services-ads-identifier:16+'
+    // optional
+    // Chrome Tab matching (enables 100% guaranteed matching based on cookies)
+    implementation 'androidx.browser:browser:1.0.0'
     
 }

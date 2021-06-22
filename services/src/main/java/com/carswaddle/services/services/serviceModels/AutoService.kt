@@ -23,7 +23,8 @@ data class AutoService (
     val vehicle: Vehicle,
     val serviceEntities: List<ServiceEntity>,
     val reviewFromUser: Review?,
-    val reviewFromMechanic: Review?
+    val reviewFromMechanic: Review?,
+    val user: User?
 )
 
 enum class AutoServiceStatus {

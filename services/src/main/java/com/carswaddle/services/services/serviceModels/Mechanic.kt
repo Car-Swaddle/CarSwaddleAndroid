@@ -32,3 +32,35 @@ data class Mechanic (
     val oilChangePricing: OilChangePricing?,
     val chargeForTravel: Boolean
 )
+
+data class UpdateMechanic(
+    val isActive: Boolean? = null, // Allow new appointments
+    val token: String? = null,
+    val pushTokenType: String? = null,
+    val dateOfBirth: Date? = null,
+    val address: UpdateMechanicAddress? = null,
+    val externalAccount: String? = null, // Bank acount token. Use stripe to generate a token to represent the bank account to send up to server
+    val ssnLast4: String? = null,
+    val personalID: String? = null, // Social Security number
+    val chargeForTravel: Boolean? = null
+)
+
+
+data class UpdateMechanicAddress(
+    val line1: String,
+    val line2: String?,
+    val postalCode: String,
+    val city: String,
+    val state: String,
+    val country: String?
+)
+
+
+data class UpdateAvailability(
+    val spans: List<UpdateTemplateTimeSpan>
+)
+
+
+data class ReviewResponse(
+    val reviewsGivenToMechanic: List<Review>
+)
