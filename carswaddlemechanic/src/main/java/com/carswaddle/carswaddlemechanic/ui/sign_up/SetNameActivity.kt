@@ -45,6 +45,8 @@ class SetNameActivity : AppCompatActivity() {
         lastNameEditText.afterTextChanged {
             updateButtonEnabledness()
         }
+        
+        updateButtonEnabledness()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -70,7 +72,7 @@ class SetNameActivity : AppCompatActivity() {
     }
 
     private fun updateButtonEnabledness() {
-        saveButton.isButtonEnabled = !TextUtils.isEmpty(firstNameEditText.text) && !TextUtils.isEmpty(firstNameEditText.text)
+        saveButton.isButtonEnabled = !TextUtils.isEmpty(firstNameEditText.text) && !TextUtils.isEmpty(lastNameEditText.text)
     }
 
     private fun savePhoneNumber() {
