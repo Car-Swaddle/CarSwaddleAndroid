@@ -40,6 +40,8 @@ class SetPhoneNumberActivity: AppCompatActivity() {
         phoneNumberEditText.afterTextChanged {
             updateButtonEnabledness()
         }
+        
+        updateButtonEnabledness()
     }
 
     private fun updateButtonEnabledness() {
