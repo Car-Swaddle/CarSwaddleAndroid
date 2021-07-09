@@ -7,10 +7,10 @@ apply plugin: 'com.google.gms.google-services'
 android {
     signingConfigs {
         release {
-            storeFile file(CUST_RELEASE_STORE_FILE)
-            storePassword CUST_RELEASE_STORE_PASSWORD
-            keyAlias CUST_RELEASE_KEY_ALIAS
-            keyPassword CUST_RELEASE_KEY_PASSWORD
+            storeFile file('/Users/kylekendall/Desktop/car-swaddle-android.jks')
+            storePassword 'mWUVaxegMLXuHLEQ6uR7c!3T'
+            keyAlias 'carswaddle'
+            keyPassword 'mWUVaxegMLXuHLEQ6uR7c!3T'
         }
     }
     

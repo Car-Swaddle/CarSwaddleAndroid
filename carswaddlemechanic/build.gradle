@@ -6,10 +6,10 @@ apply plugin: 'com.google.gms.google-services'
 android {
     signingConfigs {
         release {
-            storeFile file(MECH_RELEASE_STORE_FILE)
-            storePassword MECH_RELEASE_STORE_PASSWORD
-            keyAlias MECH_RELEASE_KEY_ALIAS
-            keyPassword MECH_RELEASE_KEY_PASSWORD
+            storeFile file('/Users/kylekendall/Desktop/car-swaddle-mechanic-android-keystore.jks')
+            storePassword 'L65LwT3CUQPVbyZa2reuyJNnwAvC36'
+            keyAlias 'car-swaddle-mechanic-alias'
+            keyPassword 'L65LwT3CUQPVbyZa2reuyJNnwAvC36'
         }
     }
     
@@ -20,8 +20,8 @@ android {
         applicationId "com.carswaddle.carswaddlemechanic"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 5
-        versionName "1.0"
+        versionCode 16
+        versionName "1.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
