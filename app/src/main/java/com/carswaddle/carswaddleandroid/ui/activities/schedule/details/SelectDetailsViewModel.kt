@@ -54,6 +54,10 @@ class SelectDetailsViewModel(application: Application) : AndroidViewModel(applic
             }
         }
     }
+
+    fun checkCode(code: String, completion: (error: Throwable?) -> Unit) {
+
+    }
     
     fun loadPrice(latitude: Double, longitude: Double, mechanicId: String, oilType: OilType, coupon: String?, completion: (error: Throwable?) -> Unit) {
         val location = LocationJSON(latitude, longitude)

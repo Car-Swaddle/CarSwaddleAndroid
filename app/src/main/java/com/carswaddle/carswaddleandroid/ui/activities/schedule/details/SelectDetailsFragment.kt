@@ -167,6 +167,7 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String, val schedu
 
         redeemTextView = view.findViewById(R.id.redeemTextView)
         redeemTextView.textView.setOnClickListener {
+            // TODO - different logic for handling redemption codes
             updatePrice()
         }
 

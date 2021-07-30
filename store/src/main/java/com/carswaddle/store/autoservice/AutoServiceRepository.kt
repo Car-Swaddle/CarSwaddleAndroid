@@ -14,6 +14,7 @@ import com.carswaddle.carswaddleandroid.retrofit.ServiceNotAvailable
 import com.carswaddle.carswaddleandroid.services.*
 import com.carswaddle.carswaddleandroid.services.serviceModels.*
 import com.carswaddle.carswaddleandroid.services.serviceModels.AutoService
+import com.carswaddle.services.services.serviceModels.CodeCheckResponse
 import com.carswaddle.services.services.serviceModels.Price
 import com.carswaddle.services.services.serviceModels.PriceResponse
 import com.carswaddle.carswaddleandroid.data.autoservice.AutoService as DataAutoService
@@ -398,6 +399,33 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
         })
 
         return call
+    }
+
+    fun getCodeCheck(code: String, context: Context, completion: (exception: Throwable?, codeCheckResponse: CodeCheckResponse?) -> Unit) {
+        val priceService = ServiceGenerator.authenticated(context)?.retrofit?.create(
+            PriceService::class.java
+        )
+        if (priceService == null) {
+            completion(ServiceNotAvailable(), null)
+            return
+        }
+
+        val call = priceService.getCodeCheck(code)
+        call.enqueue(object : Callback<CodeCheckResponse> {
+            override fun onFailure(call: Call<CodeCheckResponse>, t: Throwable) {
+                Log.d("retrofit ", "call failed")
+                completion(t, null)
+            }
+
+            override fun onResponse(
+                call: Call<CodeCheckResponse>,
+                response: Response<CodeCheckResponse>
+            ) {
+                Log.d("retrofit ", "call succeeded")
+                val result = response.body()
+                completion(null, result)
+            }
+        })
     }
 
     suspend private fun insertNestedAutoService(autoService: AutoService): DataAutoService {

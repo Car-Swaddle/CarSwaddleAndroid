@@ -1,5 +1,6 @@
 package com.carswaddle.carswaddleandroid.services
 
+import com.carswaddle.services.services.serviceModels.CodeCheckResponse
 import com.carswaddle.services.services.serviceModels.PriceResponse
 import retrofit2.Call
 import retrofit2.http.*
@@ -11,6 +12,10 @@ interface PriceService {
     @Headers(ContentType.headerPrefix + ContentType.applicationJSON)
     @POST(priceEndpoint)
     fun getPrice(@Body priceRequest: PriceRequest): Call<PriceResponse>
+
+    @Headers(ContentType.headerPrefix + ContentType.applicationJSON)
+    @GET("$priceEndpoint/codes/{code}")
+    fun getCodeCheck(@Path("code") code: String): Call<CodeCheckResponse>
     
 }
 
