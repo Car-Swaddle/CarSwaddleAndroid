@@ -14,7 +14,7 @@ import com.carswaddle.carswaddleandroid.retrofit.ServiceNotAvailable
 import com.carswaddle.carswaddleandroid.services.*
 import com.carswaddle.carswaddleandroid.services.serviceModels.*
 import com.carswaddle.carswaddleandroid.services.serviceModels.AutoService
-import com.carswaddle.services.services.serviceModels.CodeCheckResponse
+import com.carswaddle.services.services.serviceModels.CodeCheck
 import com.carswaddle.services.services.serviceModels.Price
 import com.carswaddle.services.services.serviceModels.PriceResponse
 import com.carswaddle.carswaddleandroid.data.autoservice.AutoService as DataAutoService
@@ -89,6 +89,7 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
         mechanicId: String,
         oiltype: OilType,
         coupon: String?,
+        giftCardCodes: Collection<String>,
         context: Context,
         completion: (error: Throwable?, price: Price?) -> Unit
     ) {
@@ -99,7 +100,7 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
             return
         }
 
-        val priceRequest = PriceRequest(location, mechanicId, oiltype.toString(), coupon)
+        val priceRequest = PriceRequest(location, mechanicId, oiltype.toString(), coupon, giftCardCodes)
         val call = priceService.getPrice(priceRequest)
         call.enqueue(object : Callback<PriceResponse> {
 
@@ -401,7 +402,7 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
         return call
     }
 
-    fun getCodeCheck(code: String, context: Context, completion: (exception: Throwable?, codeCheckResponse: CodeCheckResponse?) -> Unit) {
+    fun getCodeCheck(code: String, context: Context, completion: (exception: Throwable?, codeCheck: CodeCheck?) -> Unit) {
         val priceService = ServiceGenerator.authenticated(context)?.retrofit?.create(
             PriceService::class.java
         )
@@ -411,19 +412,17 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
         }
 
         val call = priceService.getCodeCheck(code)
-        call.enqueue(object : Callback<CodeCheckResponse> {
-            override fun onFailure(call: Call<CodeCheckResponse>, t: Throwable) {
-                Log.d("retrofit ", "call failed")
+        call.enqueue(object : Callback<CodeCheck> {
+            override fun onFailure(call: Call<CodeCheck>, t: Throwable) {
+                Log.w("AutoServiceRepository", "code check call failed")
                 completion(t, null)
             }
 
             override fun onResponse(
-                call: Call<CodeCheckResponse>,
-                response: Response<CodeCheckResponse>
+                call: Call<CodeCheck>,
+                response: Response<CodeCheck>
             ) {
-                Log.d("retrofit ", "call succeeded")
-                val result = response.body()
-                completion(null, result)
+                completion(null, response.body())
             }
         })
     }

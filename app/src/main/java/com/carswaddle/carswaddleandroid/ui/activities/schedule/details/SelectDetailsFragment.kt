@@ -27,6 +27,7 @@ import com.carswaddle.carswaddleandroid.data.vehicle.Vehicle
 import com.carswaddle.carswaddleandroid.services.CouponErrorType
 import com.carswaddle.carswaddleandroid.services.serviceModels.*
 import com.carswaddle.carswaddleandroid.ui.view.ProgressButton
+import com.carswaddle.services.services.serviceModels.CodeCheck
 import com.carswaddle.ui.ProgressTextView
 import com.carswaddle.services.services.serviceModels.Price
 import com.stripe.android.PaymentSession
@@ -35,6 +36,7 @@ import com.stripe.android.PaymentSessionData
 import com.stripe.android.Stripe
 import com.stripe.android.model.PaymentMethod
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class SelectDetailsFragment(val point: Point, val mechanicId: String, val scheduledDate: Date) : Fragment() {
@@ -50,7 +52,8 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String, val schedu
     private var newVehicleId: String? = null
     private var hasScrolledToFirstVehicleIndex: Boolean = false
 
-    private var coupon: String? = null
+    private var currentCode: String? = null
+    private var codes: MutableMap<String, CodeCheck> = HashMap()
 
     private lateinit var couponEditText: EditText
 
@@ -157,18 +160,31 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String, val schedu
         )
 
         couponEditText.addTextChangedListener {
-            coupon = it.toString()
-            if (coupon?.isEmpty() == true || coupon == null) {
-                redeemTextView.isTextViewEnabled = false
-            } else {
-                redeemTextView.isTextViewEnabled = true
-            }
+            currentCode = it.toString()
+            redeemTextView.isTextViewEnabled =
+                currentCode != null && currentCode?.isNotEmpty() == true && !codes.containsKey(currentCode)
         }
 
         redeemTextView = view.findViewById(R.id.redeemTextView)
         redeemTextView.textView.setOnClickListener {
-            // TODO - different logic for handling redemption codes
-            updatePrice()
+            val code = currentCode;
+            if (code != null) {
+                redeemTextView.isLoading = true
+                selectDetailsViewModel.checkCode(code) { error, codeCheck ->
+                    activity?.runOnUiThread {
+                        redeemTextView.isLoading = false
+                    }
+                    if (error != null || codeCheck == null) {
+                        // TODO Show generic error
+                    } else if (codeCheck.error != null) {
+                        // TODO Redemption error
+                    } else {
+                        codes[code] = codeCheck
+                        // Add to checked codes, update price
+                        updatePrice()
+                    }
+                }
+            }
         }
 
         redeemTextView.isTextViewEnabled = false
@@ -461,18 +477,18 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String, val schedu
     }
 
     private fun updatePrice() {
-        if (coupon != null && coupon?.isEmpty() == false) {
-            redeemTextView.isLoading = true
-        } else {
-            payButton.isLoading = true
-        }
-        
+        var coupon: String? = null;
+        val giftCardCodes = ArrayList<String>()
+        // TODO - iterate through checked codes
+
+        payButton.isLoading = true
         selectDetailsViewModel.loadPrice(
             point.latitude(),
             point.longitude(),
             mechanicId,
             oilTypeAdapter.selectedOilType,
-            coupon
+            coupon,
+            giftCardCodes
         ) {
             activity?.runOnUiThread {
                 redeemTextView.isLoading = false

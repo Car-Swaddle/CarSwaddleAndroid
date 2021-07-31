@@ -9,7 +9,9 @@ data class Price (
     var taxes: Int,
     var discount: Int?, // The discount on the mechanic's portion of the transaction
     var bookingFeeDiscount: Int?, // The discount on the Car Swaddle portion of the transaction
-    var total: Int
+    var total: Int,
+    var giftCard: Int?, // Discount off total from gift card redemptions
+    var serviceTotal: Int?
 ) {
     
     val oilChangeTotal: Int get() {

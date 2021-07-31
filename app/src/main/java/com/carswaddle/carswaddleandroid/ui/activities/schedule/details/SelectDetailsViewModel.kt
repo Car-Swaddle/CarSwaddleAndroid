@@ -13,6 +13,7 @@ import com.carswaddle.carswaddleandroid.services.CouponErrorType
 import com.carswaddle.carswaddleandroid.services.LocationJSON
 import com.carswaddle.carswaddleandroid.services.serviceModels.CreateAutoService
 import com.carswaddle.carswaddleandroid.services.serviceModels.OilType
+import com.carswaddle.services.services.serviceModels.CodeCheck
 import com.carswaddle.services.services.serviceModels.Price
 import com.carswaddle.store.AppDatabase
 import kotlinx.coroutines.launch
@@ -55,13 +56,13 @@ class SelectDetailsViewModel(application: Application) : AndroidViewModel(applic
         }
     }
 
-    fun checkCode(code: String, completion: (error: Throwable?) -> Unit) {
-
+    fun checkCode(code: String, completion: (error: Throwable?, codeCheck: CodeCheck?) -> Unit) {
+        autoServiceRepo.getCodeCheck(code, getApplication(), completion)
     }
     
-    fun loadPrice(latitude: Double, longitude: Double, mechanicId: String, oilType: OilType, coupon: String?, completion: (error: Throwable?) -> Unit) {
+    fun loadPrice(latitude: Double, longitude: Double, mechanicId: String, oilType: OilType, coupon: String?, giftCardCodes: Collection<String>, completion: (error: Throwable?) -> Unit) {
         val location = LocationJSON(latitude, longitude)
-        autoServiceRepo.getPrice(location, mechanicId, oilType, coupon, getApplication()) { error, price ->
+        autoServiceRepo.getPrice(location, mechanicId, oilType, coupon, giftCardCodes, getApplication()) { error, price ->
             Log.w("price", "Got price back")
             val p = price
             if (p != null) {
