@@ -12,10 +12,9 @@ import com.carswaddle.carswaddleandroid.ui.view.PriceRow
 
 class PriceFragment : Fragment() {
 
-    private lateinit var row1: PriceRow
-    private lateinit var row2: PriceRow
-    private lateinit var row3: PriceRow
-    private lateinit var row4: PriceRow
+    private lateinit var oilChangePriceRow: PriceRow
+    private lateinit var discountPriceRow: PriceRow
+    private lateinit var totalPriceRow: PriceRow
     private lateinit var bookingFeePriceRow: PriceRow
 
     var price: Price? = null
@@ -42,33 +41,31 @@ class PriceFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        row1 = view.findViewById(R.id.row1)
-        row1.label = getString(R.string.oil_change)
+        oilChangePriceRow = view.findViewById(R.id.oilChangePriceRow)
+        oilChangePriceRow.label = getString(R.string.oil_change)
         bookingFeePriceRow = view.findViewById(R.id.bookingFeePriceRow)
         bookingFeePriceRow.label = getString(R.string.booking_fee)
-        row2 = view.findViewById(R.id.row2)
-        row2.label = getString(R.string.sales_tax)
-        row3 = view.findViewById(R.id.row3)
-        row3.label = getString(R.string.discount)
-        row3.visibility = GONE // hide discount by default
-        row4 = view.findViewById(R.id.row4)
-        row4.label = getString(R.string.total)
+        discountPriceRow = view.findViewById(R.id.discountPriceRow)
+        discountPriceRow.label = getString(R.string.discount)
+        discountPriceRow.visibility = GONE // hide discount by default
+        totalPriceRow = view.findViewById(R.id.totalPriceRow)
+        totalPriceRow.label = getString(R.string.total)
     }
 
     private fun updatePrice(price: Price) {
-        row1.value = String.format("%.2f", price.oilChangeTotal / 100.0)
-        bookingFeePriceRow.value = String.format("%.2f", (price.bookingFee + price.processingFee) / 100.0)
-        row2.value = String.format("%.2f", price.salesTaxTotal / 100.0)
+        oilChangePriceRow.value = String.format("%.2f", price.oilChangeTotal / 100.0)
+        bookingFeePriceRow.value = String.format("%.2f", (price.bookingFee + price.processingFee + price.salesTaxTotal) / 100.0)
+//        row2.value = String.format("%.2f", price.salesTaxTotal / 100.0)
         val discount = price.discountTotal
         if (discount == null || discount == 0) {
-            row3.visibility = View.GONE
-            row3.value = ""
+            discountPriceRow.visibility = View.GONE
+            discountPriceRow.value = ""
         } else {
-            row3.visibility = View.VISIBLE
-            row3.value = String.format("%.2f", discount / 100.0)
+            discountPriceRow.visibility = View.VISIBLE
+            discountPriceRow.value = String.format("%.2f", discount / 100.0)
         }
-        
-        row4.value = String.format("$%.2f", price.total / 100.0)
+
+        totalPriceRow.value = String.format("$%.2f", price.total / 100.0)
     }
     
 }
