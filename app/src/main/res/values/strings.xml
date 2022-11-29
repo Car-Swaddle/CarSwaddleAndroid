@@ -152,11 +152,11 @@
     <string name="save_vehicle">Save vehicle</string>
     <string name="vehicle_name">Vehicle name</string>
     <string name="license_plate">License plate</string>
-    <string name="depleted_redemptions">This coupon code has already been redeemed</string>
-    <string name="expired_code">This coupon code is expired</string>
-    <string name="incorrect_code">This coupon code is invalid</string>
-    <string name="incorrect_mechanic">This coupon code is only valid for another mechanic</string>
-    <string name="other_coupon_error">This coupon code is invalid</string>
+    <string name="depleted_redemptions">This code has already been redeemed</string>
+    <string name="expired_code">This code is expired</string>
+    <string name="incorrect_code">This code is invalid</string>
+    <string name="incorrect_mechanic">This code is only valid for another mechanic</string>
+    <string name="other_coupon_error">This code is invalid</string>
     <string name="coupon_code_success">Successfully redeemed coupon!</string>
     <string name="select_payment_method">Select payment method</string>
     <string name="default_card_copy">Card</string>

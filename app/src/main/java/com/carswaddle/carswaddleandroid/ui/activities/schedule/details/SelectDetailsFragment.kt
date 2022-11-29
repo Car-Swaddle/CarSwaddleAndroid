@@ -27,6 +27,7 @@ import com.carswaddle.carswaddleandroid.data.vehicle.Vehicle
 import com.carswaddle.carswaddleandroid.services.CouponErrorType
 import com.carswaddle.carswaddleandroid.services.serviceModels.*
 import com.carswaddle.carswaddleandroid.ui.view.ProgressButton
+import com.carswaddle.services.services.serviceModels.CodeCheck
 import com.carswaddle.ui.ProgressTextView
 import com.carswaddle.services.services.serviceModels.Price
 import com.stripe.android.PaymentSession
@@ -35,6 +36,8 @@ import com.stripe.android.PaymentSessionData
 import com.stripe.android.Stripe
 import com.stripe.android.model.PaymentMethod
 import java.util.*
+import java.util.stream.Collectors
+import kotlin.collections.ArrayList
 
 
 class SelectDetailsFragment(val point: Point, val mechanicId: String, val scheduledDate: Date) : Fragment() {
@@ -50,7 +53,7 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String, val schedu
     private var newVehicleId: String? = null
     private var hasScrolledToFirstVehicleIndex: Boolean = false
 
-    private var coupon: String? = null
+    private var currentCode: String? = null
 
     private lateinit var couponEditText: EditText
 
@@ -96,52 +99,53 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String, val schedu
         paymentLayout.setOnClickListener {
             paymentSession.presentPaymentMethodSelection()
         }
+
+        selectDetailsViewModel.codeChecks.observe(viewLifecycleOwner) { codeChecks ->
+            // TODO - process and show
+        }
         
-        selectDetailsViewModel.couponError.observe(
-            viewLifecycleOwner,
-            Observer<CouponErrorType?> { errorType ->
-                if (errorType != null) {
-                    couponStatusTextView.visibility = View.VISIBLE
-                    couponStatusTextView.text = context?.let { errorType.localizedString(it) }
-                    val c = context
-                    if (c != null) {
-                        couponStatusTextView.setTextColor(ContextCompat.getColor(c, R.color.error))
-                    }
-                    couponStatusTextView.setLayoutParams(
-                        LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT
-                        )
-                    )
-                } else if (couponEditText.text.isEmpty() == false && errorType == null) {
-                    couponStatusTextView.visibility = View.VISIBLE
-                    couponStatusTextView.text = getString(R.string.coupon_code_success)
-                    val c = context
-                    if (c != null) {
-                        couponStatusTextView.setTextColor(
-                            ContextCompat.getColor(
-                                c,
-                                R.color.success
-                            )
-                        )
-                    }
-                    couponStatusTextView.setLayoutParams(
-                        LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT
-                        )
-                    )
-                } else {
-                    couponStatusTextView.visibility = View.INVISIBLE
-                    couponStatusTextView.setLayoutParams(
-                        LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT,
-                            0
-                        )
-                    )
+        selectDetailsViewModel.couponError.observe(viewLifecycleOwner) { errorType ->
+            if (errorType != null) {
+                couponStatusTextView.visibility = View.VISIBLE
+                couponStatusTextView.text = context?.let { errorType.localizedString(it) }
+                val c = context
+                if (c != null) {
+                    couponStatusTextView.setTextColor(ContextCompat.getColor(c, R.color.error))
                 }
+                couponStatusTextView.setLayoutParams(
+                    LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    )
+                )
+//                } else if (couponEditText.text.isEmpty() == false && errorType == null) {
+//                    couponStatusTextView.visibility = View.VISIBLE
+//                    couponStatusTextView.text = getString(R.string.coupon_code_success)
+//                    val c = context
+//                    if (c != null) {
+//                        couponStatusTextView.setTextColor(
+//                            ContextCompat.getColor(
+//                                c,
+//                                R.color.success
+//                            )
+//                        )
+//                    }
+//                    couponStatusTextView.setLayoutParams(
+//                        LinearLayout.LayoutParams(
+//                            LinearLayout.LayoutParams.MATCH_PARENT,
+//                            LinearLayout.LayoutParams.WRAP_CONTENT
+//                        )
+//                    )
+            } else {
+                couponStatusTextView.visibility = View.INVISIBLE
+                couponStatusTextView.setLayoutParams(
+                    LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        0
+                    )
+                )
             }
-        )
+        }
 
         selectDetailsViewModel.price.observe(
             viewLifecycleOwner,
@@ -157,17 +161,21 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String, val schedu
         )
 
         couponEditText.addTextChangedListener {
-            coupon = it.toString()
-            if (coupon?.isEmpty() == true || coupon == null) {
-                redeemTextView.isTextViewEnabled = false
-            } else {
-                redeemTextView.isTextViewEnabled = true
-            }
+            currentCode = it.toString()
+            redeemTextView.isTextViewEnabled = currentCode != null && currentCode?.isNotEmpty() == true
         }
 
         redeemTextView = view.findViewById(R.id.redeemTextView)
         redeemTextView.textView.setOnClickListener {
-            updatePrice()
+            val code = currentCode;
+            if (code != null) {
+                redeemTextView.isLoading = true
+                selectDetailsViewModel.checkCode(code) { error ->
+                    activity?.runOnUiThread {
+                        redeemTextView.isLoading = false
+                    }
+                }
+            }
         }
 
         redeemTextView.isTextViewEnabled = false
@@ -460,18 +468,22 @@ class SelectDetailsFragment(val point: Point, val mechanicId: String, val schedu
     }
 
     private fun updatePrice() {
-        if (coupon != null && coupon?.isEmpty() == false) {
-            redeemTextView.isLoading = true
-        } else {
-            payButton.isLoading = true
+        var couponCode: String? = null
+        var giftCardCodes: List<String> = ArrayList()
+        val codeChecks = selectDetailsViewModel.codeChecks.value
+        if (codeChecks != null) {
+            couponCode = codeChecks.values.stream().filter { x -> x.coupon?.identifier != null }.map { x -> x.coupon?.identifier }.findFirst().orElse(null)
+            giftCardCodes = codeChecks.values.stream().filter { x -> x.giftCard?.code != null }.map { x -> x.giftCard?.code!! }.collect(Collectors.toList())
         }
-        
+
+        payButton.isLoading = true
         selectDetailsViewModel.loadPrice(
             point.latitude(),
             point.longitude(),
             mechanicId,
             oilTypeAdapter.selectedOilType,
-            coupon
+            couponCode,
+            giftCardCodes
         ) {
             activity?.runOnUiThread {
                 redeemTextView.isLoading = false

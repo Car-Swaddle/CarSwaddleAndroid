@@ -14,6 +14,7 @@ import com.carswaddle.carswaddleandroid.retrofit.ServiceNotAvailable
 import com.carswaddle.carswaddleandroid.services.*
 import com.carswaddle.carswaddleandroid.services.serviceModels.*
 import com.carswaddle.carswaddleandroid.services.serviceModels.AutoService
+import com.carswaddle.services.services.serviceModels.CodeCheck
 import com.carswaddle.services.services.serviceModels.Price
 import com.carswaddle.services.services.serviceModels.PriceResponse
 import com.carswaddle.carswaddleandroid.data.autoservice.AutoService as DataAutoService
@@ -88,6 +89,7 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
         mechanicId: String,
         oiltype: OilType,
         coupon: String?,
+        giftCardCodes: Collection<String>,
         context: Context,
         completion: (error: Throwable?, price: Price?) -> Unit
     ) {
@@ -98,7 +100,7 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
             return
         }
 
-        val priceRequest = PriceRequest(location, mechanicId, oiltype.toString(), coupon)
+        val priceRequest = PriceRequest(location, mechanicId, oiltype.toString(), coupon, giftCardCodes)
         val call = priceService.getPrice(priceRequest)
         call.enqueue(object : Callback<PriceResponse> {
 
@@ -398,6 +400,31 @@ class AutoServiceRepository(private val autoServiceDao: AutoServiceDao) {
         })
 
         return call
+    }
+
+    fun getCodeCheck(code: String, context: Context, completion: (exception: Throwable?, codeCheck: CodeCheck?) -> Unit) {
+        val priceService = ServiceGenerator.authenticated(context)?.retrofit?.create(
+            PriceService::class.java
+        )
+        if (priceService == null) {
+            completion(ServiceNotAvailable(), null)
+            return
+        }
+
+        val call = priceService.getCodeCheck(code)
+        call.enqueue(object : Callback<CodeCheck> {
+            override fun onFailure(call: Call<CodeCheck>, t: Throwable) {
+                Log.w("AutoServiceRepository", "code check call failed")
+                completion(t, null)
+            }
+
+            override fun onResponse(
+                call: Call<CodeCheck>,
+                response: Response<CodeCheck>
+            ) {
+                completion(null, response.body())
+            }
+        })
     }
 
     suspend private fun insertNestedAutoService(autoService: AutoService): DataAutoService {

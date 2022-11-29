@@ -13,10 +13,10 @@ import com.carswaddle.carswaddleandroid.services.CouponErrorType
 import com.carswaddle.carswaddleandroid.services.LocationJSON
 import com.carswaddle.carswaddleandroid.services.serviceModels.CreateAutoService
 import com.carswaddle.carswaddleandroid.services.serviceModels.OilType
+import com.carswaddle.services.services.serviceModels.CodeCheck
 import com.carswaddle.services.services.serviceModels.Price
 import com.carswaddle.store.AppDatabase
 import kotlinx.coroutines.launch
-
 
 class SelectDetailsViewModel(application: Application) : AndroidViewModel(application) {
     
@@ -43,6 +43,13 @@ class SelectDetailsViewModel(application: Application) : AndroidViewModel(applic
         get() = _couponError
 
     private val _couponError = MutableLiveData<CouponErrorType?>()
+
+    val codeChecks: LiveData<LinkedHashMap<String, CodeCheck>>
+        get() = _codeChecks
+
+    private val _codeChecks = MutableLiveData<LinkedHashMap<String, CodeCheck>>()
+
+    private val codeCheckMap = LinkedHashMap<String, CodeCheck>()
     
     private val _vehicles = MutableLiveData<List<Vehicle>>()
     
@@ -54,10 +61,36 @@ class SelectDetailsViewModel(application: Application) : AndroidViewModel(applic
             }
         }
     }
-    
-    fun loadPrice(latitude: Double, longitude: Double, mechanicId: String, oilType: OilType, coupon: String?, completion: (error: Throwable?) -> Unit) {
+
+    fun checkCode(code: String, completion: (error: Throwable?) -> Unit) {
+        autoServiceRepo.getCodeCheck(code, getApplication()) { error, codeCheck ->
+            if (error != null || codeCheck == null) {
+                _couponError.postValue(CouponErrorType.OTHER)
+            } else if (codeCheck.error != null) {
+                _couponError.postValue(codeCheck.error)
+            } else {
+                if (codeCheck.coupon != null) {
+                    val existingCouponCode = codeCheckMap.values.stream().filter { x -> x.coupon != null }.map { x -> x.coupon?.identifier }.findFirst().orElse(null)
+                    if (existingCouponCode != null) {
+                        codeCheckMap.remove(existingCouponCode)
+                    }
+                }
+                codeCheckMap[code] = codeCheck
+                _couponError.postValue(null)
+                _codeChecks.postValue(codeCheckMap)
+            }
+            completion(error)
+        }
+    }
+
+    fun removeCode(code: String) {
+        codeCheckMap.remove(code)
+        _codeChecks.postValue(codeCheckMap)
+    }
+
+    fun loadPrice(latitude: Double, longitude: Double, mechanicId: String, oilType: OilType, coupon: String?, giftCardCodes: Collection<String>, completion: (error: Throwable?) -> Unit) {
         val location = LocationJSON(latitude, longitude)
-        autoServiceRepo.getPrice(location, mechanicId, oilType, coupon, getApplication()) { error, price ->
+        autoServiceRepo.getPrice(location, mechanicId, oilType, coupon, giftCardCodes, getApplication()) { error, price ->
             Log.w("price", "Got price back")
             val p = price
             if (p != null) {
